@@ -1,29 +1,44 @@
 <html>
-  <script> 
-  var songScore = 0;
-  
-  function props songScore += 1;
-  function diss songScore -= 1;
-  </script>
-
+ 
 <head>
 <title>Hip Hop Scoreboard</title>
+
+<script>
+  var songScore = 0;
+ 
+  function props(val) {
+   songScore += 1;
+ } 
+   function diss(val) {
+   songScore -= 1;
+ }    
+   
+</script>
 </head>
 
 <body>
-<!-- Top Nav -->
+<!-- Top Nav with Home | Scoreboard | Search Bar-->
 
 <!-- Display lyrics -->
 <H1> Song Name by Artist</H1>
-<p> Lyric content goes here <p>
-  
-<!-- Build props/diss button, floating to right side of browser -->
-  
-<button type="button">Props</button> <!-- on click, initiate function props adding 1 to songScore -->
-<button type="button">Diss</button> <!-- on click, initiate function diss subtracting 1 from songScore -->
-<!-- Upvote/downvote activates every 4 lines, only available once per 4 line bar -->
+  <p> <!--Lyric content goes here -->
+    <br> line #1
+    <br> line #2
+    <br> line #3
+    <br> line #4
+      <!-- Upvote downvote displays every 4 lines, only available once per 4 line bar -->
+      <button type="button" onclick="props()">Props</button> <!-- on click, initiate function "props" adding 1 to songScore -->
+      <button type="button" onclick="diss()">Diss</button> <!-- on click, initiate function "diss" subtracting 1 from songScore -->
+    <br> line #5
+    <br> line #6
+    <br> line #7
+    <br> line #8
+      <!-- Upvote/downvote displays every 4 lines, only available once per 4 line bar -->
+      <button type="button" onclick="props()">Props</button> <!-- on click, initiate function props adding 1 to songScore -->
+      <button type="button" onclick="diss()">Diss</button> <!-- on click, initiate function diss subtracting 1 from songScore -->
+</p>
 
-<button type="button">Submit Score</button> <!-- Submit Button: submit songScore to database in the Artist's table-->
+<button type="button">Submit Score</button> <!-- Submit Button: submit variable "songScore" to database in the Artist's table-->
 
 </body>
 
