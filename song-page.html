@@ -1,9 +1,13 @@
 <html>
-
+  <script> 
+  var songScore = 0;
+  
+  function props songScore += 1;
+  function diss songScore -= 1;
+  </script>
 
 <head>
 <title>Hip Hop Scoreboard</title>
-
 </head>
 
 <body>
@@ -11,12 +15,15 @@
 
 <!-- Display lyrics -->
 <H1> Song Name by Artist</H1>
-
-
 <p> Lyric content goes here <p>
-<!-- Upvote/downvote lyric every 4 lines -->
+  
+<!-- Build props/diss button, floating to right side of browser -->
+  
+<button type="button">Props</button> <!-- on click, initiate function props adding 1 to songScore -->
+<button type="button">Diss</button> <!-- on click, initiate function diss subtracting 1 from songScore -->
+<!-- Upvote/downvote activates every 4 lines, only available once per 4 line bar -->
 
-<!-- Submit Button: submits points to database in the Artist's table-->
+<button type="button">Submit Score</button> <!-- Submit Button: submit songScore to database in the Artist's table-->
 
 </body>
 
