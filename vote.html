@@ -4,14 +4,34 @@
 <title>Hip Hop Scoreboard</title>
 
 <script>
-  var songScore = 0;
- 
-  function upV(val) {
-   songScore += 1;
- } 
-   function downV(val) {
-   songScore -= 2;
- }    
+
+ var textState = 0;
+ var songScore = 0;
+
+  function myFunction() {
+    if (textState == 0) {
+      document.getElementById('text').style.cssText = 'color: green';
+      textState += 1;
+      songScore += 1;
+      $('#score').text(songScore);
+    }
+
+    else if (textState == 1) {
+      document.getElementById('text').style.cssText = 'color: red';
+      textState += 1;
+      songScore -= 2;
+      $('#score').text(songScore);
+    }
+
+    else if (textState == 2) {
+      document.getElementById('text').style.cssText = 'color: black';
+      textState = 0;
+      songScore += 1;
+      $('#score').text(songScore);
+    }
+  }
+  $('#score').text(songScore);
+
    
 var songData = [
   {
@@ -23,38 +43,34 @@ var songData = [
       "Jay-Z", 
       "J. Ivy"],
   }
-  // Add record here
 ]; 
- 
-</script>
+</script> 
 </head>
 
 <body>
 <!-- Top Nav with Home | Scoreboard | Search Bar-->
 
 
+
+ <button type="button" id="text" onClick="myFunction()">Submit</button> <!-- on submit send songScore to database -->
+
+ 
+ 
 <H1> Song Name by Artist</H1>
-  <p id="lyric">  
-    <br> line #1   </p><!--  make this word turn green/red on 1/2 clicks & add 1pt/sub 2pts to varScore -->
-    
- <p>
-    <br> line #2
-    <br> line #3
-    <br> line #4
+   <p id="lyric" onClick="myFunction()">line one</p>
+   <p id="lyric" onClick="myFunction()">line two</p>
+    <br> line three
+    <br> line four
    
    <!-- show total value of score varScore below text -->
+  
+  
    <script>
+     <p id="score" onClick="myFunction()">-</p>
+   </script>
 
-    while(lock = false) {
-    document.getElementById("lyric").innerHTML = "New text!";)
-    }
-</script>
    
-          <br> line #5
-    <br> line #6
-    <br> line #7
-    <br> line #8
- </p>
+
 
 <button type="button">Submit Score</button> <!-- add "songScore" to database in the Artist's table-->
 
