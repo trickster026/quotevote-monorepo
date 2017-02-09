@@ -1,0 +1,81 @@
+/* Javascript Study Sessions----
+
+
+To Review: {
+Get HTTP Protocol Request: https://www.youtube.com/watch?v=l473EQSkZqc,
+Matt's HHSB Code: https://jsfiddle.net/pixelsauce/5auzoqrh/,
+10 Best Web Dev Channels: https://www.thebalance.com/the-10-best-web-development-youtube-channels-2071397,
+}
+
+
+Helpful Links {
+Visualize Code Execution: http://pythontutor.com/javascript.html,
+JSBin: http://jsbin.com/juyobagiji/edit?js,console,
+Gitter Dev Chat: https://gitter.im/,
+Visualize Data with JS: http://www.highcharts.com/,
+}
+
+
+--------------------------------------
+//xX.xX.xX x:XX - x:XX (x minutes)
+
+Lessons {
+Falsy Bouncer Lesson FCC: https://www.freecodecamp.com/challenges/falsy-bouncer
+}
+
+
+//2.9.17 aiChatbotWorkshop | 9AM - 12PM ()
+
+
+PodioChatbot {
+Podio API: https://developers.podio.com/examples,
+Podio API Get Item: https://developers.podio.com/doc/items/get-item-22360,
+}
+
+GroupMEChatbot {
+GroupMe Bot NodeJS: https://github.com/groupme/bot-tutorial-nodejs#pull,
+GroupMe General tutorial: https://dev.groupme.com/tutorials/bots,
+Claudia.JS: https://github.com/claudiajs/claudia-bot-builder/blob/master/docs/API.md#groupme-setup,
+Reddit Thread Help: https://www.reddit.com/r/node/comments/47hd9f/has_anyone_here_made_a_groupme_bot_or_really_any/,
+Fancy GroupMe Bot: https://www.npmjs.com/package/fancy-groupme-bot,
+api.ai GroupMe Bot: https://discuss.api.ai/t/groupme-bot/891,
+}
+
+
+aiPlatforms {
+Microsoft: Bot framework,
+IBM: Watson,
+Amazon: Alexa/Lex,
+Google: Api.ai,
+Facebook: Wit.ai,
+}
+
+
+
+--------------------------------------
+//2.8.17 Hampton SOHO Study Session | 8:20PM - 11:40PM (150 minutes)
+
+Lessons {
+Mutations Lesson FCC: https://www.freecodecamp.com/challenges/mutations,
+Free Code Camp Mutations - YouTube: https://www.youtube.com/watch?v=Wvv01k3b4vc,
+indexOf() and .some(): https://www.youtube.com/watch?v=33o7FrFyqPg
+toLowerCase: http://www.w3schools.com/jsref/jsref_tolowercase.asp,
+.split: http://www.w3schools.com/jsref/jsref_split.asp,
+Mutations Solution: https://www.freecodecamp.com/challenges/mutations#?solution=%20%20function%20mutation(arr)%20%7B%0A%20%20%20%20arr.sort(function(a%2C%20b)%7B%0A%20%20%20%20%20%20return%20a.length%20-%20b.length%3B%0A%20%20%20%20%7D)%3B%0A%20%20%20%20return%20arr%5B0%5D.toLowerCase().split(%22%22).every(function(x)%7B%0A%20%20%20%20%20%20if%20(arr%5B1%5D.toLowerCase().indexOf(x)%20%3D%3D%3D%20-1)%7B%0A%20%20%20%20%20%20%20%20return%20false%3B%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20else%20%7B%0A%20%20%20%20%20%20%20%20%20%20return%20true%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D)%3B%0A%20%20%7D%0A%0Amutation(%5B%22floor%22%2C%20%22for%22%5D)%3B%0A
+Mutations Final Code: MutationsFCC.js
+}
+
+
+Setup Atom {
+Javascript Evaluator Package: https://atom.io/packages/eval-javascript,
+Atom Runner: https://github.com/lsegal/atom-runner,
+Cannot Get Atom Runner to Work: https://discuss.atom.io/t/javascript-doesnt-run-properly/28298/6,
+My Code Editor: Atom, Setup & Packages: https://www.youtube.com/watch?v=hPC6keUUiTA,
+Running Programs With Atom: https://www.youtube.com/watch?v=QyVnWjZzGVY,
+}
+
+
+
+
+
+*/
