@@ -1,0 +1,64 @@
+{
+  "User": {
+   "UserID": "UserID# indicates order of registration",
+   "Email": "Email used for registration",
+   "Username": "User alias",
+   "Password": "Account password",
+   "Logins": "Dates when user logged in",
+   "Avatar": "User profile picture",
+   "VoteCount": "Total number of votes cast",
+   "UpPointsCast": "Total number of upvotes cast",
+   "DownPointsCast": "Total number of downvotes cast",
+   "UserSongVotes": {
+     "SongID": "Song that the user voted on",
+     "VoteScore": "Not sure how to calculate yet (0% to 100%)",
+     "UpPointsCast": "Number of up points in user's vote",
+     "DownPointsCast": "Number of down points in user's vote",
+     "TotalPoints": "Sum of up points and down points",
+     "DateVoted": "Date vote was cast",
+     "Public": "Should the vote be displayed in user profile?",
+    },
+   "FantasyLabel": {
+     "LabelName": "Unique user label name (one per user)",
+     "UserFantasyPoints": "Number of points acquired through signed artists",
+     "SignedArtists":{
+       "Lineup1": "First artist signed (user receives 100% of points)",
+       "Lineup2": "Second artist signed (user receives 80% of points)",
+       "Lineup3": "Third artist signed (user receives 60% of points)",
+       "Lineup4": "Fourth artist signed (user receives 40% of points)",
+       "Lineup5": "Fith artist signed (user receives 20% of points)",
+      },
+    },
+  },
+
+  "Artist": {
+    "ArtistID": "ArtistID# indicating order added to database",
+    "ArtistName": "Name of the artist (unique)",
+    "ArtistAvatar": "Image of artist",
+    "Points": {
+      "OriginalPoints": "Points earned from an artist's original songs",
+      "FeaturedPoints": "Points earned from features on other artist's songs",
+      "FeaturePoints": "Points earned by featured artists on their songs (50% of points earned by artists featured on their songs)",
+      "ArtistUpPoints": "Total number of up points earned",
+      "ArtistDownPoints": "Total number of down points received",
+      "TotalPoints": "Difference between up points and down points",
+    },
+    "ArtistSongs": {
+      "SongName": "Title of song",
+      "SongScore": "Not sure how to calculate yet... (between 0% and 100%)",
+      "Album": "Title of album the song is on",
+      "SongUpPoints": "Total up points for song",
+      "SongDownPoints": "Total down points for song",
+      "SongTotalPoints": "Sum of up and down points",
+      "SongVoteCount": "Total number of votes cast",
+      "Words": {
+        "WordID": "Unique identifier for every word in song's lyrics (UserID.ArtistID.SongName.SpanID.DateCreated)",
+        "WordString": "Text of word",
+        "WordUpPoints": "Total up points for word in song",
+        "WordDownPoints": "Total down points for word in song",
+        "WordTotalPoints": "Difference between word's up and down points",
+        "WordColor": "Color between green and red determined by word's total score (0% = full green, 50% = White, 100% = full red)"
+      },
+    "FeatureSongs": "SongIDs that artist is featured on",
+  }
+}
