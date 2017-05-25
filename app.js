@@ -7,11 +7,11 @@ server.listen(3000)
 var io = require('socket.io').listen(server)
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var expressValidator = require('express-validator')
+// var expressValidator = require('express-validator')
 var flash = require('connect-flash')
 var session = require('express-session')
 var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy
+// var LocalStrategy = require('passport-local').Strategy
 var mongoose = require('mongoose')
 var path = require('path')
 

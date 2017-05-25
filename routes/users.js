@@ -68,6 +68,7 @@ function ensureAuthenticated (req, res, next) {
   }
 }
 
+// an experimental route to test passportjs authentication
 router.get('/auth', ensureAuthenticated, function (req, res) {
   res.send('you are authenticated')
 })
