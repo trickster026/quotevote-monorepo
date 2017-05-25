@@ -10,8 +10,7 @@ var LocalStrategy = require('passport-local').Strategy
 var mongoose = require('mongoose')
 var path = require('path')
 
-
-//connect to database
+// connect to database
 mongoose.connect('mongodb://localhost:27017/myappdatabase')
 
 // require routes
@@ -44,7 +43,7 @@ app.use(passport.session())
 
 // connect-flash middleware
 app.use(flash())
-//set static folder
+// set static folder
 app.use(express.static('public'))
 
 // routes
