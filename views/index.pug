@@ -13,3 +13,7 @@ link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css
           input.form-control(type='text', placeholder='password', name='password')
           br
           button.btn.btn-default(type='submit') Submit
+script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js')
+script.
+  var socket = io();
+  socket.on('message', function(data){document.write(data)});
