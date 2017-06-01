@@ -31,7 +31,7 @@ router.post('/register', function (req, res) {
 passport.use(new LocalStrategy(
   function (username, password, done) {
     var user = username
-    if (user == 'johny') {
+    if (user === 'johny') {
       var err = 'error'
       done(err)
     } else {

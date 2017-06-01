@@ -4,7 +4,8 @@
   "description": "Hip Hop Score Board",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app.js",
+    "build": "webpack "
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,9 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.1",
     "socket.io": "^2.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "webpack": "^2.6.1"
   }
 }
