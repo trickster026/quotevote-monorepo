@@ -1,12 +1,14 @@
 class TrendingSongs extends React.Component {
   render() {
     return (
-        <div class="col-md-6" style="border-right: 1px solid black">
+        <div className="col-md-6">
             <h2>Trending Songs</h2>
             <ol>
-                <li>Hit'em Up</li>
-                <li>WHo shot Ya</li>
-                ...
+                <li>Song1</li>
+                <li>Song2</li>
+                <li>Song3</li>
+                <li>Song4</li>
+                <li>Song5</li>
             </ol>
         </div>
     );
