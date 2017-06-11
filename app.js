@@ -18,9 +18,9 @@ var path = require('path')
 io.on('connection', function (socket) {
   console.log('A user connected')
   // Send a message after a timeout of 4seconds
-  setTimeout(function () {
-    socket.send('message sent from socket io after 4 seconds')
-  }, 4000)
+//  setTimeout(function () {
+//    socket.send('message sent from socket io after 4 seconds')
+//  }, 4000)
   // Whenever someone disconnects this piece of code executed
   socket.on('disconnect', function () {
     console.log('A user disconnected')
