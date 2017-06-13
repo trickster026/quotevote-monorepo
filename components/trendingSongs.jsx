@@ -1,7 +1,10 @@
 class TrendingSongs extends React.Component {
   render() {
+    var border = {
+        border: '1px solid black'
+    };
     return (
-        <div className="col-md-6">
+        <div className="col-md-6" style={style}>
             <h2>Trending Songs</h2>
             <ol>
                 <li>Song1</li>

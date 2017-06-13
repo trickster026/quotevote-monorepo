@@ -1,7 +1,10 @@
 class ArtistInfo extends React.Component {
   render() {
+    var border = {
+        border: '1px solid black'
+    };
     return (
-        <div className="col-md-6">
+        <div className="col-md-6" style={border}>
             <div className="row">
                 <div className="col-md-6">
                     <img src="http://lorempixel.com/400/200" width="200px" height="200px" />
