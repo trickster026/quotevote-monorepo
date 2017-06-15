@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+var User = require('../models/user')
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 
@@ -36,6 +37,10 @@ function ensureAuthenticated (req, res, next) {
 
 router.get('/', function (req, res) {
   res.render('index')
+})
+
+router.post('/login', passport.authenticate('local', { successRedirect: 'http://localhost:3000/home.html', failureRedirect: 'http://localhost:3000/' }), function (req, res) {
+  // res.render('login')
 })
 
 router.get('/home', ensureAuthenticated, function (req, res) {
