@@ -7,10 +7,9 @@ var mongoose = require('mongoose')
 
 passport.use(new LocalStrategy(
   function (username, password, done) {
-     var user = username
-    if (user === 'cod3ncoff33' && password === 'wateva' || user === '') {
+    if (username === 'cod3ncoff33' && password === 'wateva' || username === 'flyblackbox' && password === 'hhsb1234') {
       var err = 'error'
-      done(null, user)
+      done(null, username)
     } else {
       done(null, false)
     }
