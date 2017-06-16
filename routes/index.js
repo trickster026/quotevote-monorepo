@@ -3,15 +3,16 @@ var router = express.Router()
 var User = require('../models/user')
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
+var mongoose = require('mongoose')
 
 passport.use(new LocalStrategy(
   function (username, password, done) {
-    var user = username
-    if (user === 'johny') {
+     var user = username
+    if (user === 'cod3ncoff33' && password === 'wateva' || user === '') {
       var err = 'error'
-      done(err)
-    } else {
       done(null, user)
+    } else {
+      done(null, false)
     }
   }))
 
@@ -39,7 +40,7 @@ router.get('/', function (req, res) {
   res.render('index')
 })
 
-router.post('/login', passport.authenticate('local', { successRedirect: 'http://localhost:3000/home.html', failureRedirect: 'http://localhost:3000/' }), function (req, res) {
+router.post('/login', passport.authenticate('local', { successRedirect: 'http://localhost:3000/home', failureRedirect: 'http://localhost:3000/' }), function (req, res) {
   // res.render('login')
 })
 
