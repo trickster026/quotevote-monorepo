@@ -27,9 +27,6 @@ io.on('connection', function (socket) {
   })
 })
 
-// connect to database
-mongoose.connect('mongodb://localhost:27017/myappdatabase')
-
 // require routes
 var routes = require('./routes/index')
 var users = require('./routes/users')
