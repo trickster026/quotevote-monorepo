@@ -30,6 +30,7 @@ io.on('connection', function (socket) {
 // require routes
 var routes = require('./routes/index')
 var users = require('./routes/users')
+var admin = require('./routes/admin')
 
 // initialise express app
 // var app = express()
@@ -63,6 +64,7 @@ app.use(express.static('public'))
 // routes
 app.use('/', routes)
 app.use('/users', users)
+app.use('/admin', admin)
 
 // app.listen(3000 , function () {
 //   console.log('server started on port 3000');
