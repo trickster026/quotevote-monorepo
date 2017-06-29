@@ -35,6 +35,13 @@ var admin = require('./routes/admin')
 // initialise express app
 // var app = express()
 
+// set socket io to be used in different routes
+app.use(function(req, res, next) {
+  req.io = io
+  next()
+})
+
+
 // set views folder
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
