@@ -28,7 +28,7 @@ io.on('connection', function (socket) {
 })
 
 // require routes
-var routes = require('./routes/index')
+var index = require('./routes/index')
 var users = require('./routes/users')
 var admin = require('./routes/admin')
 
@@ -49,8 +49,8 @@ app.set('view engine', 'pug')
 app.set('port', 3000)
 
 // bodyParser middleware
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
 // cokkieParser
 app.use(cookieParser())
 // session middleware
@@ -69,7 +69,7 @@ app.use(flash())
 app.use(express.static('public'))
 
 // routes
-app.use('/', routes)
+app.use('/', index)
 app.use('/users', users)
 app.use('/admin', admin)
 
