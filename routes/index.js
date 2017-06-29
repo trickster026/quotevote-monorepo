@@ -36,6 +36,10 @@ function ensureAuthenticated (req, res, next) {
 }
 
 router.get('/', function (req, res) {
+  // var io = req.io;
+  //   setTimeout(function() {
+  //      io.emit('yay', 'test'); 
+  //   }.bind(this), 1000);
   res.render('index')
 })
 
