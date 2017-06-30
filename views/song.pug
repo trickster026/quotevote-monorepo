@@ -1,0 +1,39 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(http-equiv='X-UA-Compatible', content='ie=edge')
+    title submit song
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', type='text/css', media='screen', title='no title', charset='utf-8')
+  body
+    .container
+      .row
+        .col-md-12
+          form(method='post', action='http://localhost:3000/admin/addSong')
+            .form-group
+              label(for='Artist Name')
+                | Artist Name
+              input.form-control(type='text', name='artistName')
+            .form-group
+              label(for='Song Name')
+                | Song Name
+              input.form-control(type='text', name='songName')
+            .form-group
+              label(for='exampleInputEmail1')
+                | Album
+              input.form-control(type='text', name='albumName')
+            .form-group
+              label(for='exampleInputEmail1')
+                | Release Year
+              input.form-control(type='text', name='releaseYear')
+            .form-group
+              label(for='exampleInputPassword1')
+                | Featured Artist
+              input.form-control(type='text', name='featuredArtists')
+            input.btn(type='submit', value='submit')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js', charset='utf-8')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', charset='utf-8')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js')
+    script.
+      var socket = io();
