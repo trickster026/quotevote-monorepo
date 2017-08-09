@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Scoreboardpage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" media="screen"
+        title="bootstrap" charset="utf-8">
+</head>
+
+<body>
+    <nav id="navBar" class="navbar navbar-inverse" role="navigation">
+        
+    </nav>
+    <br />
+    <br />
+    <div class="container">
+        <div class="row">
+            <div id="topArtists" class="col-md-6" style="border: 1px solid black">
+                
+            </div>
+            <div id="topUsers" class="col-md-6" style="border: 1px solid black;">
+                
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script type="text/babel">
+        class TopArtists extends React.Component {
+            render() {
+                var border = {
+                    border: '1px solid black'
+                };
+                return (
+                    <div>
+                        <h2>Top Artists</h2>
+                        <ol>
+                            <li>Artist1</li>
+                            <li>Artist2</li>
+                            <li>Artist3</li>
+                            <li>Artist4</li>
+                            <li>Artist5</li>
+                        </ol>
+                    </div>
+                );
+            }
+            }
+
+            class TopUsers extends React.Component {
+                render() {
+                    var border = {
+                        border: '1px solid black'
+                    };
+                    return (
+                        <div>
+                            <h2>Top Users</h2>
+                            <ol>
+                                <li>Username1</li>
+                                <li>Username2</li>
+                                <li>Username3</li>
+                                <li>Username4</li>
+                                <li>Username5</li>
+                            </ol>
+                        </div>
+                    );
+                }
+                }
+
+                class NavBar extends React.Component {
+                    render() {
+                        return (
+                            <div className="container">
+                                <div className="navbar-header">
+                                    <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsible">
+                                        <span className="sr-only">Toggle navigation</span>
+                                        <span className="icon-bar"></span>
+                                        <span className="icon-bar"></span>
+                                        <span className="icon-bar"></span>
+                                    </button>
+                                    <a className="navbar-brand" href="#">HHSB</a>
+                                </div>
+
+                                <div className="navbar-collapse collapse" id="navbar-collapsible">
+
+                                    <ul className="nav navbar-nav navbar-left">
+                                        <li><a href="#">Home</a></li>
+                                        <li><a href="#">ScoreBoard</a></li>
+                                    </ul>
+
+                                    <form className="navbar-form navbar-right ">
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input type="text" className="form-control" />
+                                                <span className="input-group-btn">
+                                                    <button className="btn btn-default"><span className="glyphicon glyphicon-search"></span></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        );
+                    }
+                    }
+            
+            ReactDOM.render(<TopArtists />,document.getElementById('topArtists'));
+            ReactDOM.render(<TopUsers />,document.getElementById('topUsers'));
+            ReactDOM.render(<NavBar />,document.getElementById('navBar'));
+    </script>
+</body>
+
+</html>
