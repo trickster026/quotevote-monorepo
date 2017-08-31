@@ -1,6 +1,14 @@
+/* Boardroom Contract for Organizational Governance
+//This script is meant to facilitate company decision making.
+  +Board members can submit proposals with a deadline, and all other members can vote to accept or reject.
+  +If the proposal's score is positive when the deadline hits, it is archived as a company policy.
+  +If the proposal's score is negative, it is rejected and archived.
+  +Board members can challenge a decision after the deadline is reached to force a revote.
+  +Each board member will have a voting weight which determines how many points they are able to commit to the proposal.
+
+To Do:
 //Finish challenge function
-//Allow voting only once per member per proposals
-//
+//Allow voting only once per member per proposals*/
 
 pragma solidity ^0.4.6;
 
@@ -40,7 +48,7 @@ contract Boardroom is Owner {
         bool challenged;        //Reopened for vote by someone with more weight than final for/against score
         address[] yesVotes;     //Who voted up
         address[] noVotes;      //Who voted down
-        uint score;            //What is the total score
+        uint score;             //What is the total score
 
     }
 
