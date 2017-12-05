@@ -1,8 +1,0 @@
-/ -- login page
-
-After logging in
-
-/home -- (homepage)
-/scoreboard -- (scoreboard)
-/{username} -- (user profile page)
-/{artistname} -- (artist profile page)

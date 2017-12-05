@@ -1,39 +1,16 @@
 {
   "name": "hhsb",
-  "version": "1.0.0",
-  "description": "Hip Hop Score Board",
-  "main": "app.js",
-  "scripts": {
-    "start": "nodemon app.js",
-    "build": "webpack "
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/flyblackbox/HHSB.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/flyblackbox/HHSB/issues"
-  },
-  "homepage": "https://github.com/flyblackbox/HHSB#readme",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.17.2",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.4.3",
-    "express": "4.15.2",
-    "express-messages": "^1.0.1",
-    "express-session": "^1.15.3",
-    "express-validator": "^3.2.0",
-    "mongoose": "^4.10.0",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
-    "pug": "^2.0.0-rc.1",
-    "socket.io": "^2.0.1"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.0.17"
   },
-  "devDependencies": {
-    "nodemon": "^1.11.0",
-    "webpack": "^2.6.1"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
