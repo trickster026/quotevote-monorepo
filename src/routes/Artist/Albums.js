@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react"
-import { Accordion, Icon } from "semantic-ui-react"
+import { Accordion, Icon, Menu } from "semantic-ui-react"
 
 class Albums extends PureComponent {
   render = () => {
     return (
-      <Accordion styled>
+      <Accordion as={Menu} vertical styled>
         <Accordion.Title active>
           <Icon name="dropdown" />
           Album 1
@@ -13,7 +13,7 @@ class Albums extends PureComponent {
 
         <Accordion.Title>
           <Icon name="dropdown" />
-          Album 1
+          Album 2
         </Accordion.Title>
         <Accordion.Content>Song 1</Accordion.Content>
       </Accordion>

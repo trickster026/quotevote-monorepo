@@ -4,7 +4,7 @@ import { Card, Feed } from "semantic-ui-react"
 class TopArtists extends PureComponent {
   render = () => {
     return (
-      <Card fluid style={{ minHeight: "100%" }}>
+      <Card fluid>
         <Card.Content>
           <Card.Header>Top Artists</Card.Header>
         </Card.Content>

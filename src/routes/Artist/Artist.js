@@ -4,6 +4,7 @@ import Profile from "../../components/Profile/Profile"
 import TopArtists from "../../components/TopArtists/TopArtists"
 import Albums from "./Albums"
 import MusicPlayer from "./MusicPlayer"
+import LyricsSection from "./LyricsSection/LyricsSection"
 
 class Artist extends PureComponent {
   render = () => {
@@ -25,6 +26,12 @@ class Artist extends PureComponent {
             </Grid.Column>
             <Grid.Column width={10}>
               <MusicPlayer />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column>
+              <LyricsSection />
             </Grid.Column>
           </Grid.Row>
         </Grid>

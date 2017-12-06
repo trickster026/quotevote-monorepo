@@ -23,7 +23,7 @@ class Profile extends PureComponent {
   render = () => {
     const { artist } = this.props
     return (
-      <Segment as={Container} compact padded fluid>
+      <Segment as={Container} compact padded fluid basic>
         <Item.Group>
           <Item>
             <Item.Image>

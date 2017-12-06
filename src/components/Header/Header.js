@@ -6,7 +6,7 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     return (
-      <Menu attached="top" color="blue" size="huge" inverted borderless>
+      <Menu attached="top" color="red" size="huge" inverted borderless>
         <Menu.Menu position="left">
           <Menu.Item>
             <Icon name="music" />
@@ -16,7 +16,7 @@ class HeaderComponent extends PureComponent {
           <Menu.Item>SIGN OUT</Menu.Item>
         </Menu.Menu>
 
-        <Menu.Menu position="right" borderless>
+        <Menu.Menu position="right">
           <Menu.Item>
             <Input
               placeholder="Song name..."
