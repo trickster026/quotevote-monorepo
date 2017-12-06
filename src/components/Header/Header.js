@@ -1,17 +1,18 @@
 import React, { PureComponent } from "react"
-import { Menu, Input, Icon } from "semantic-ui-react"
+import { Menu, Input, Image } from "semantic-ui-react"
+import hihopImage from "../../assets/hiphop.png"
 
 class HeaderComponent extends PureComponent {
   state = { search: "" }
 
   render = () => {
     return (
-      <Menu attached="top" color="red" size="huge" inverted borderless>
+      <Menu attached="top" color="grey" size="huge" inverted borderless>
         <Menu.Menu position="left">
           <Menu.Item>
-            <Icon name="music" />
-            HIPHOP SCOREBOARD (Temp)
+            <Image src={hihopImage} />
           </Menu.Item>
+          <Menu.Item>SCOREBOARD</Menu.Item>
           <Menu.Item>ACCOUNT</Menu.Item>
           <Menu.Item>SIGN OUT</Menu.Item>
         </Menu.Menu>
