@@ -1,34 +1,44 @@
-import React, { PureComponent } from "react"
-import { Menu, Input, Image } from "semantic-ui-react"
+import React, {PureComponent} from "react"
+import {Link} from 'react-router-dom'
+import {Menu, Input, Image, Container} from "semantic-ui-react"
 import hihopImage from "../../assets/hiphop.png"
 
 class HeaderComponent extends PureComponent {
-  state = { search: "" }
+    state = {search: ""}
 
-  render = () => {
-    return (
-      <Menu attached="top" color="grey" size="huge" inverted borderless>
-        <Menu.Menu position="left">
-          <Menu.Item>
-            <Image src={hihopImage} />
-          </Menu.Item>
-          <Menu.Item>SCOREBOARD</Menu.Item>
-          <Menu.Item>ACCOUNT</Menu.Item>
-          <Menu.Item>SIGN OUT</Menu.Item>
-        </Menu.Menu>
+    render = () => {
 
-        <Menu.Menu position="right">
-          <Menu.Item>
-            <Input
-              placeholder="Song name..."
-              label="Search"
-              labelPosition="right"
-            />
-          </Menu.Item>
-        </Menu.Menu>
-      </Menu>
-    )
-  }
+        return (
+            <Menu attached="top" color="grey" size="huge" inverted borderless>
+                <Container>
+                    <Menu.Menu position="left">
+                        <Menu.Item as={Link} name='home' to='/' >
+                            <Image src={hihopImage}/>
+                        </Menu.Item>
+                        <Menu.Item as={Link} name='scoreboard' to='/artist/1' >
+                            SCOREBOARD
+                        </Menu.Item>
+                        <Menu.Item as={Link} name='account' to='/user/1'>
+                            ACCOUNT
+                        </Menu.Item>
+                        <Menu.Item as='a' name='sign-out'>
+                            SIGN OUT
+                        </Menu.Item>
+                    </Menu.Menu>
+
+                    <Menu.Menu position="right" borderless>
+                        <Menu.Item>
+                            <Input
+                                placeholder="Song name..."
+                                label="Search"
+                                labelPosition="right"
+                            />
+                        </Menu.Item>
+                    </Menu.Menu>
+                </Container>
+            </Menu>
+        )
+    }
 }
 
 export default HeaderComponent
