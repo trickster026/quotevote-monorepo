@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Header from "../Header/Header"
 import Artist from "../../routes/Artist/artistContainer"
 import User from "../../routes/User/User"
-// import Footer from "../Footer/Footer"
+import Home from "../../routes/Home/Home"
 import { Route, Switch } from "react-router-dom"
 
 class App extends Component {
@@ -11,10 +11,10 @@ class App extends Component {
       <div>
         <Header />
         <Switch>
-          <Route path="/artist/:artistId" component={Artist} />
+          <Route path="/artist/:artistName" component={Artist} />
           <Route path="/user/:userId" component={User} />
+          <Route path="/" component={Home} />
         </Switch>
-        {/*<Footer />*/}
       </div>
     )
   }
