@@ -1,12 +1,5 @@
 import React, { PureComponent } from "react"
-import {
-  Segment,
-  Container,
-  Header,
-  Label,
-  Button,
-  Divider
-} from "semantic-ui-react"
+import { Segment, Container, Header, Label, Button } from "semantic-ui-react"
 import { arrayOf, object } from "prop-types"
 
 class LyricsSection extends PureComponent {

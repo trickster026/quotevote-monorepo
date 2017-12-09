@@ -8,8 +8,19 @@ import {
   Table
 } from "semantic-ui-react"
 import defaultImage from "../../assets/image.png"
+import { string, number, shape } from "prop-types"
 
 class Profile extends PureComponent {
+  static propTypes = {
+    artist: shape({
+      name: string,
+      score: number,
+      up: number,
+      down: number,
+      followers: number
+    })
+  }
+
   static defaultProps = {
     artist: {
       name: "Kendrick Lamar",
@@ -27,7 +38,12 @@ class Profile extends PureComponent {
         <Item.Group>
           <Item>
             <Item.Image>
-              <Image src={defaultImage} width={300} height={300} />
+              <Image
+                verticalAlign="middle"
+                src={artist.image || defaultImage}
+                width={300}
+                height={300}
+              />
               <Button fluid color="orange" style={{ marginTop: "10px" }}>
                 Follow
               </Button>
