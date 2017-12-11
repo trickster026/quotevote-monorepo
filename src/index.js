@@ -11,13 +11,24 @@ import { HttpLink } from "apollo-link-http"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { ApolloLink, concat } from "apollo-link"
 
-const httpLink = new HttpLink({ uri: "http://localhost:5000/graphql" })
+// const httpLink = new HttpLink({ uri: "" })
+
+const baseUri =
+  process.env.NODE_ENV == "production"
+    ? "http://107.20.29.153/graphql"
+    : "http://localhost:5000/graphql"
+
+const httpLink = new HttpLink({ uri: baseUri })
+localStorage.setItem(
+  "token",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYnJvbkBlbWFpbC5jb20iLCJfaWQiOiI1OWIwMDM3NTBlMzc2NjA0MTQ0MDE3MWYiLCJpYXQiOjE1MTI5OTYwNzh9.MhDHKSGYU2F8fpeWxOT7b4jimD9-N4FwBZe4z-OT4YE"
+)
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      authorization: localStorage.getItem("token") || null
+      authorization: localStorage.getItem("token")
     }
   })
 
