@@ -6,10 +6,13 @@ import "semantic-ui-css/semantic.min.css"
 import { BrowserRouter as Router } from "react-router-dom"
 
 import { ApolloProvider } from "react-apollo"
+import { Provider } from "react-redux"
 import { ApolloClient } from "apollo-client"
 import { HttpLink } from "apollo-link-http"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { ApolloLink, concat } from "apollo-link"
+
+import store from "./reducers/store"
 
 const httpLink = new HttpLink({ uri: "http://localhost:5000/graphql" })
 
@@ -33,9 +36,11 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Router>
-      <App />
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
   </ApolloProvider>,
   document.getElementById("root")
 )

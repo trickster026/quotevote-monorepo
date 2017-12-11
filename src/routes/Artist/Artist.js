@@ -64,7 +64,7 @@ class Artist extends PureComponent {
 
           <Grid.Row>
             <Grid.Column>
-              <LyricsSection />
+              <LyricsSection songId={41413} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

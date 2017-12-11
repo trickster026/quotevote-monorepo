@@ -1,117 +1,146 @@
 import React, { PureComponent } from "react"
-import { Segment, Container, Header, Label, Button } from "semantic-ui-react"
+import { cloneDeep } from "lodash"
+import { graphql, compose } from "react-apollo"
+import { connect } from "react-redux"
+import { GET_VERSES } from "../../../graphql/queries"
+import {
+  Segment,
+  Container,
+  Header,
+  Label,
+  Button,
+  Popup
+} from "semantic-ui-react"
 import { arrayOf, object } from "prop-types"
+import "./Lyrics.css"
+import store from "../../../reducers/store"
 
 class LyricsSection extends PureComponent {
-  state = { activeVerse: null, hoveredVerse: null }
+  state = { hasVoted: false }
 
   static propTypes = {
     lyrics: arrayOf(object)
   }
 
   static defaultProps = {
-    lyrics: [
-      {
-        verse:
-          "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ",
-        score: 0,
-        verse_id: 0
-      },
-      {
-        verse:
-          "tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas ",
-        score: 2,
-        verse_id: 2
-      },
-      {
-        verse:
-          "semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ",
-        score: 5,
-        verse_id: 12
-      },
-      {
-        verse:
-          "ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean ",
-        score: 1,
-        verse_id: 20
-      },
-      {
-        verse:
-          "fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. ",
-        score: 5,
-        verse_id: 29
-      },
-      {
-        verse:
-          "Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor ",
-        score: 4,
-        verse_id: 10
-      },
-      {
-        verse:
-          "neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, ",
-        score: 100,
-        verse_id: 100
-      },
-      {
-        verse: "accumsan porttitor, facilisis luctus, metus",
-        score: 900,
-        verse_id: 900
-      }
-    ]
+    songId: 41413
   }
 
-  handleLyricsClick = id => {
-    this.setState({ activeVerse: id })
+  componentWillReceiveProps = nextProps => {
+    console.log("nextprops", nextProps)
+    if (nextProps.verses && !nextProps.hasInitializeLyrics) {
+      this.props.dispatch({
+        type: "INITIALIZE_VERSES",
+        payload: nextProps.verses
+      })
+    }
   }
 
-  handleRemoveLabel = () => {
-    this.setState({ activeVerse: null, hoveredVerse: null })
+  handleAdd = (verse, index, event) => {
+    let newVerse = cloneDeep(verse)
+    let score = verse.score
+    score = score + 1
+    newVerse.score = score
+
+    let currentVerse = newVerse
+    currentVerse.index = index
+    this.setState({ hasVoted: true })
+
+    this.props.dispatch({ type: "REPLACE_VERSES", payload: currentVerse })
   }
 
-  handleLyricsHover = id => {
-    this.setState({ hoveredVerse: id })
+  handleDeduct = (verse, event) => {
+    console.log("verse", verse)
+    this.setState({ hasVoted: true })
+  }
+
+  renderLyrics = (verse, index, currentLine) => {
+    const currentVerse = store
+      .getState()
+      .verses.find(item => item.line === currentLine && item.id === verse.id)
+    if (currentLine === verse.line) {
+      return (
+        <Popup
+          hoverable
+          key={`${verse.line}_${verse.id}`}
+          trigger={<span>{` ${verse.word} `}</span>}
+        >
+          {this.state.hasVoted ? (
+            <Label>Score: {currentVerse.score}</Label>
+          ) : (
+            <div>
+              <Button
+                icon="plus"
+                onClick={this.handleAdd.bind(this, verse, index)}
+              />
+              <Button
+                icon="minus"
+                onClick={this.handleAdd.bind(this, verse, index)}
+              />
+            </div>
+          )}
+        </Popup>
+      )
+    }
+    return (
+      <Popup
+        hoverable
+        key={`${verse.line}_${verse.id}`}
+        trigger={<span>{` ${verse.word}\n`}</span>}
+      >
+        {this.state.hasVoted ? (
+          <Label>Score: {currentVerse.score}</Label>
+        ) : (
+          <div>
+            <Button
+              icon="plus"
+              onClick={this.handleAdd.bind(this, verse, index)}
+            />
+            <Button
+              icon="minus"
+              onClick={this.handleAdd.bind(this, verse, index)}
+            />
+          </div>
+        )}
+      </Popup>
+    )
   }
 
   render = () => {
-    const lyrics = (
-      <div style={{ fontSize: "16px" }}>
-        {this.props.lyrics.map(line => (
-          <div
-            key={line.verse_id}
-            style={{ paddingTop: "5px", paddingBottom: "5px" }}
-            onDoubleClick={this.handleLyricsClick.bind(this, line.verse_id)}
-            onMouseOver={this.handleLyricsHover.bind(this, line.verse_id)}
-          >
-            {this.state.hoveredVerse === line.verse_id ? (
-              <strong>{line.verse}</strong>
-            ) : (
-              line.verse
-            )}
-            {this.state.activeVerse === line.verse_id && (
-              <Label pointing="left">
-                <Button color="green" icon="plus" size="mini" compact />
-                <Button color="red" icon="minus" size="mini" compact />
-                <Button color="teal" size="mini" compact>
-                  {`+ ${line.score}`}
-                </Button>
-              </Label>
-            )}
-          </div>
-        ))}
-      </div>
-    )
+    let verses = []
+    let currentLine = 0
+    if (this.props.verses) {
+      verses = this.props.verses.map((verse, index) => {
+        currentLine = currentLine !== verse.line ? verse.line : currentLine
+        return this.renderLyrics(verse, index, currentLine)
+      })
+    }
+
     return (
       <div onMouseLeave={this.handleRemoveLabel}>
         <Header attached="top" as="h4">
           Lyrics
         </Header>
         <Segment attached>
-          <Container>{lyrics}</Container>
+          <Container>
+            <p>{verses}</p>
+          </Container>
         </Segment>
       </div>
     )
   }
 }
 
-export default LyricsSection
+const mapStateToProps = state => state
+
+export default compose(
+  connect(mapStateToProps),
+  graphql(GET_VERSES, {
+    options: ownProps => ({
+      variables: { song_id: ownProps.songId }
+    }),
+    props: ({ data: { verses } }) => {
+      return { verses }
+    }
+  })
+)(LyricsSection)
