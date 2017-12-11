@@ -25,3 +25,15 @@ export const GET_SONG = gql`
     }
   }
 `
+
+export const GET_USER_INFO = gql`
+  query getUser($user_id: String!) {
+    user(user_id: $user_id) {
+      _id
+      name
+      username
+      email
+      avatar
+    }
+  }
+`
