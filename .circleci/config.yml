@@ -5,17 +5,8 @@
 version: 2
 jobs:
   build-job:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:8.9.2
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+    working_directory: hhsb
     branches:
       only:
         - develop
@@ -39,21 +30,34 @@ jobs:
       - run: yarn build
 
    deploy-job:
-    docker:
-      - image: circleci/node:8.9.2
-    working_directory: ~/repo
+
+    working_directory: hhsb
 
     branches:
       only:
         - develop
+
     steps:
+
       - run:
-          name: Install dependencies
-          command: yarn install
+          name: Set AWS region
+          command: aws configure set region us-east-1
+
+      - run:
+          name: Configure CDN true
+          command: aws configure set preview.cloudfront true
+
+      - run:
+          name: Set invalidation
+          command: aws configure set preview.create-invalidation true
 
       - run:
           name: Deploy to S3 if tests pass and branch is develop
           command: aws s3 sync build/ s3://web.hiphopscoreboard.com/ --delete
+
+      - run:
+          name: Trigger CDN invalidation
+          command:  - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$E3RIU72B7OZJRL\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
 
 workflows:
   version: 2
