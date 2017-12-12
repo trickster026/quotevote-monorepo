@@ -5,7 +5,6 @@
 version: 2
 jobs:
   build-job:
-
     working_directory: hhsb
     branches:
       only:
@@ -27,10 +26,9 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm run build
+      - run: yarn build
 
-   deploy-job:
-
+  deploy-job:
     working_directory: hhsb
 
     branches:
@@ -38,7 +36,6 @@ jobs:
         - develop
 
     steps:
-
       - run:
           name: Set AWS region
           command: aws configure set region us-east-1
