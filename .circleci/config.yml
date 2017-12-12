@@ -66,4 +66,5 @@ workflows:
             - build-job
           filters:
             branches:
-              only: develop
+              only:
+                - develop
