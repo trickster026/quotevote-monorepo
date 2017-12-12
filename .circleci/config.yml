@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: hhsbweb
+      - image: circleci/node:7.10
            environment:
                 NODE_ENV: production
 
@@ -16,7 +16,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-    working_directory: /tmp/hhsbweb
+    working_directory: ~/repo
 
     branches:
       only:
@@ -45,14 +45,9 @@ jobs:
 
       - run: yarn build
 
-    deploy:
-        docker:
-          - image: hhsbweb
-        working_directory: /tmp/hhsbweb
-        steps:
-          - run:
-              name: Deploy to S3 if tests pass and branch is develop
-              command: aws s3 sync build/ s3://web.hiphopscoreboard.com/ --delete
+      - run:
+          name: Deploy to S3 if tests pass and branch is develop
+          command: aws s3 sync build/ s3://web.hiphopscoreboard.com/ --delete
 
 workflows:
   version: 2
