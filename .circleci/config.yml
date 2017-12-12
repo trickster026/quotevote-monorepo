@@ -56,7 +56,7 @@ jobs:
 
       - run:
           name: Deploy to S3 if tests pass and branch is develop
-          command: aws s3 ls "s3://web.hiphopscoreboard.com/" || aws s3 sync s3://web.hiphopscoreboard.com/ --delete
+          command: aws s3 sync . s3://web.hiphopscoreboard.com --delete
 
       - run:
           name: Trigger CDN invalidation
