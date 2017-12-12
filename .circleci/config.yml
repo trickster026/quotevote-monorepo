@@ -52,7 +52,7 @@ jobs:
         steps:
           - run:
               name: Deploy to S3 if tests pass and branch is develop
-              command: aws s3 sync builds/ s3://web.hiphopscoreboard.com/ --delete
+              command: aws s3 sync build/ s3://web.hiphopscoreboard.com/ --delete
 
 workflows:
   version: 2
