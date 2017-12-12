@@ -6,9 +6,7 @@ version: 2
 jobs:
   build-job:
     working_directory: hhsb
-    branches:
-      only:
-        - develop
+
     steps:
       - checkout
 
@@ -30,10 +28,6 @@ jobs:
 
   deploy-job:
     working_directory: hhsb
-
-    branches:
-      only:
-        - develop
 
     steps:
       - run:
@@ -66,5 +60,4 @@ workflows:
             - build-job
           filters:
             branches:
-              only:
-                - develop
+              only: develop
