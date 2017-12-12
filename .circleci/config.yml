@@ -7,14 +7,14 @@ jobs:
   build-job:
     docker:
       # specify the version you desire here
-      - image: hhsb1.0
+      - image: circleci/node:8.9.2
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-    working_directory: ~/hhsb
+    working_directory: ~/repo
 
     branches:
       only:
@@ -36,17 +36,21 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+      - run: yarn build
+
       # run tests!
       - run:
           command: |
             echo "success!"
 
-      - run: yarn build
-
-  deploy-job:
+   deploy-job:
     docker:
-      - image: hhsb1.0
-    working_directory: ~/hhsb
+      - image: circleci/node:8.9.2
+    working_directory: ~/repo
+
+    branches:
+      only:
+        - develop
     steps:
       - run:
           name: Install modules
@@ -64,3 +68,6 @@ workflows:
       - deploy-job:
           requires:
             - build-job
+          filters:
+            branches:
+              only: develop
