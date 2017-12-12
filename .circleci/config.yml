@@ -5,6 +5,10 @@
 version: 2
 jobs:
   build-job:
+    machine:
+      node:
+        version: 8.9.2
+
     working_directory: hhsb
 
     steps:
@@ -27,6 +31,11 @@ jobs:
       - run: yarn build
 
   deploy-job:
+
+    machine:
+      node:
+        version: 8.9.2
+
     working_directory: hhsb
 
     steps:
