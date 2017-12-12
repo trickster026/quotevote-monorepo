@@ -54,7 +54,7 @@ jobs:
 
       - run:
           name: Trigger CDN invalidation
-          command:  - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$E3RIU72B7OZJRL\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
+          command: aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$E3RIU72B7OZJRL\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
 
 workflows:
   version: 2
