@@ -9,7 +9,7 @@ jobs:
       node:
         version: 8.9.2
 
-    working_directory: hhsb
+    working_directory: /tmp/hhsb
 
     steps:
       - checkout
@@ -36,7 +36,7 @@ jobs:
       node:
         version: 8.9.2
 
-    working_directory: hhsb
+    working_directory: /tmp/hhsb
 
     steps:
       - run:
