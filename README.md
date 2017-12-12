@@ -1,3 +1,5 @@
+# HIPHOP Scoreboard [![CircleCI](https://circleci.com/gh/flyblackbox/HHSB.svg?style=svg&circle-token=465046e0c1cf8512fc3e01674f6d1134c22fccc1)](https://circleci.com/gh/flyblackbox/HHSB)
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
