@@ -38,11 +38,6 @@ jobs:
 
       - run: yarn build
 
-      # run tests!
-      - run:
-          command: |
-            echo "success!"
-
    deploy-job:
     docker:
       - image: circleci/node:8.9.2
@@ -53,7 +48,7 @@ jobs:
         - develop
     steps:
       - run:
-          name: Install modules
+          name: Install dependencies
           command: yarn install
 
       - run:
