@@ -55,8 +55,16 @@ jobs:
           command: aws configure set preview.create-invalidation true
 
       - run:
-          name: Deploy to S3 if tests pass and branch is develop
-          command: aws s3 sync . s3://web.hiphopscoreboard.com --delete && aws s3 sync . s3://web.hiphopscoreboard.com
+          name: Folder/File list
+          command: ls
+
+      - run:
+          name: Sync folder/files s3
+          command: aws s3 sync . s3://web.hiphopscoreboard.com/ --delete
+
+      - run:
+          name: Upload folder/files to s3
+          command: aws s3 cp . s3://web.hiphopscoreboard.com/ --recursive
 
       - run:
           name: Trigger CDN invalidation
