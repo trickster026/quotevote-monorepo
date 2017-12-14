@@ -58,6 +58,7 @@ class LyricsSection extends PureComponent {
     const currentVerse = store
       .getState()
       .verses.find(item => item.line === currentLine && item.id === verse.id)
+
     if (currentLine === verse.line) {
       return (
         <Popup
@@ -81,29 +82,35 @@ class LyricsSection extends PureComponent {
           )}
         </Popup>
       )
+    } else {
+      return (
+        <Popup
+          hoverable
+          key={`${verse.line}_${verse.id}`}
+          trigger={
+            <span>
+              {` ${verse.word} `}
+              <br />
+            </span>
+          }
+        >
+          {this.state.hasVoted ? (
+            <Label>Score: {currentVerse.score}</Label>
+          ) : (
+            <div>
+              <Button
+                icon="plus"
+                onClick={this.handleAdd.bind(this, verse, index)}
+              />
+              <Button
+                icon="minus"
+                onClick={this.handleAdd.bind(this, verse, index)}
+              />
+            </div>
+          )}
+        </Popup>
+      )
     }
-    return (
-      <Popup
-        hoverable
-        key={`${verse.line}_${verse.id}`}
-        trigger={<span>{` ${verse.word}\n`}</span>}
-      >
-        {this.state.hasVoted ? (
-          <Label>Score: {currentVerse.score}</Label>
-        ) : (
-          <div>
-            <Button
-              icon="plus"
-              onClick={this.handleAdd.bind(this, verse, index)}
-            />
-            <Button
-              icon="minus"
-              onClick={this.handleAdd.bind(this, verse, index)}
-            />
-          </div>
-        )}
-      </Popup>
-    )
   }
 
   render = () => {
@@ -111,8 +118,9 @@ class LyricsSection extends PureComponent {
     let currentLine = 0
     if (this.props.verses) {
       verses = this.props.verses.map((verse, index) => {
+        const sentence = this.renderLyrics(verse, index, currentLine)
         currentLine = currentLine !== verse.line ? verse.line : currentLine
-        return this.renderLyrics(verse, index, currentLine)
+        return sentence
       })
     }
 
