@@ -8,7 +8,7 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     return (
-      <Menu attached="top" color="grey" size="huge" inverted borderless>
+      <Menu attached="top" color="grey" size="huge" inverted>
         <Container>
           <Menu.Menu position="left">
             <Menu.Item as={Link} name="home" to="/">
@@ -29,7 +29,7 @@ class HeaderComponent extends PureComponent {
             </Menu.Item>
           </Menu.Menu>
 
-          <Menu.Menu position="right" borderless>
+          <Menu.Menu position="right">
             <Menu.Item>
               <Input
                 placeholder="Song name..."

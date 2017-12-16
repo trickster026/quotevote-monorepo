@@ -4,7 +4,7 @@ import Profile from "../../components/Profile/Profile"
 import TopArtists from "../../components/TopArtists/TopArtists"
 import Albums from "./Albums"
 import MusicPlayer from "./MusicPlayer"
-import LyricsSection from "./LyricsSection/LyricsSection"
+import Lyrics from "./Lyrics/lyricsContainer"
 import { string, number, arrayOf, shape } from "prop-types"
 
 class Artist extends PureComponent {
@@ -64,7 +64,7 @@ class Artist extends PureComponent {
 
           <Grid.Row>
             <Grid.Column>
-              <LyricsSection songId={41413} />
+              <Lyrics songId={41413} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

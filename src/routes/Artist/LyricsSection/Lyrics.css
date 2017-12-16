@@ -1,8 +1,0 @@
-.lyrics-break {
-  display: inline;
-}
-
-.lyrics-break:after {
-  content: "\a";
-  white-space: pre;
-}
