@@ -5,10 +5,6 @@ import Lyrics from "./Lyrics"
 import { GET_SONG } from "../../../graphql/queries"
 
 class LyricsContainer extends PureComponent {
-  componentWillReceiveProps = nextProps => {
-    console.log("lyrics", nextProps)
-  }
-
   render = () => {
     return (
       <div>

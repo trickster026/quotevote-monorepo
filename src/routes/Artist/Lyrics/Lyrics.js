@@ -8,36 +8,59 @@ import {
   Container,
   Button
 } from "semantic-ui-react"
-import { string } from "prop-types"
+import { string, number } from "prop-types"
 
 class Lyrics extends PureComponent {
-  state = { loading: true, highlightedWords: "" }
+  state = { loading: true, highlightedWords: "", hasVoted: false, points: 0 }
 
   static propTypes = {
-    lyrics: string
+    lyrics: string,
+    songScore: number
   }
 
   static defaultProps = {
-    lyrics: []
+    lyrics: "",
+    songScore: 0
   }
 
   componentWillReceiveProps = nextProps => {
     if (nextProps.lyrics && nextProps.lyrics.length > 0) {
       this.setState({ loading: false })
     }
+
+    if (nextProps.songScore) {
+      this.setState({ songScore: nextProps.songScore })
+    }
   }
 
   handleHighlight = event => {
-    console.log("window", window.getSelection().toString())
-
-    this.setState({ highlightedWords: window.getSelection().toString() })
+    this.setState({
+      highlightedWords: window
+        .getSelection()
+        .toString()
+        .trim()
+    })
   }
+
+  handleVoting = event => {
+    this.setState(prevState => ({
+      hasVoted: true,
+      points: prevState.points + prevState.highlightedWords.split(" ").length
+    }))
+  }
+
+  renderScoreAndQuotes = () => (
+    <div>
+      <Button inverted>{`+ ${this.state.points}`}</Button>
+      <Button icon="quote right" inverted />
+    </div>
+  )
 
   renderVotingButtons = () => (
     <div>
-      <Button color="green" inverted icon="plus" />
-      <Button color="white" inverted icon="circle" />
-      <Button color="red" inverted icon="minus" />
+      <Button color="green" inverted icon="plus" onClick={this.handleVoting} />
+      <Button inverted icon="circle" onClick={this.handleVoting} />
+      <Button color="red" inverted icon="minus" onClick={this.handleVoting} />
     </div>
   )
 
@@ -67,7 +90,11 @@ class Lyrics extends PureComponent {
                     hoverable
                     key={lineIndex}
                     trigger={<span>{` ${word} `}</span>}
-                    content={this.renderVotingButtons()}
+                    content={
+                      this.state.hasVoted
+                        ? this.renderScoreAndQuotes()
+                        : this.renderVotingButtons()
+                    }
                   />
                 )
               }
