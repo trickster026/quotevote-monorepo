@@ -1,5 +1,11 @@
 import gql from "graphql-tag"
 
+export const GET_VOTE = gql`
+  query getVote($id: String!) {
+    vote(id: $id)
+  }
+`
+
 export const GET_ARTIST_INFO = gql`
   query getArtistInfo($artist_id: Int!) {
     artist(artist_id: $artist_id)

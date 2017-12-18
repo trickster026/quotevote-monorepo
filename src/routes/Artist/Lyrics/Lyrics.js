@@ -24,12 +24,17 @@ class Lyrics extends PureComponent {
   }
 
   componentWillReceiveProps = nextProps => {
+    console.log("nextprops", nextProps)
     if (nextProps.lyrics && nextProps.lyrics.length > 0) {
       this.setState({ loading: false })
     }
 
     if (nextProps.songScore) {
       this.setState({ songScore: nextProps.songScore })
+    }
+
+    if (nextProps.points) {
+      this.setState({ points: nextProps.points })
     }
   }
 
@@ -43,10 +48,31 @@ class Lyrics extends PureComponent {
   }
 
   handleVoting = event => {
-    this.setState(prevState => ({
-      hasVoted: true,
-      points: prevState.points + prevState.highlightedWords.split(" ").length
-    }))
+    this.setState(
+      prevState => ({
+        hasVoted: true,
+        points: prevState.points + prevState.highlightedWords.split(" ").length
+      }),
+      () => {
+        ;(async () => {
+          await this.props.updateVote({
+            mutation: this.props.mutation,
+            variables: {
+              vote: {
+                id: "5a37a486c27953edc3c34748",
+                song_id: "5a37a486c27953edc3c34748",
+                user_id: "5a37a486c27953edc3c34748",
+                start_index: 5,
+                end_index: 10,
+                is_upvote: true,
+                tokens: 5,
+                phrase: this.state.highlightedWords
+              }
+            }
+          })
+        })()
+      }
+    )
   }
 
   renderScoreAndQuotes = () => (
