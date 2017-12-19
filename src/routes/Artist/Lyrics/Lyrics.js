@@ -24,7 +24,6 @@ class Lyrics extends PureComponent {
   }
 
   componentWillReceiveProps = nextProps => {
-    console.log("nextprops", nextProps)
     if (nextProps.lyrics && nextProps.lyrics.length > 0) {
       this.setState({ loading: false })
     }
@@ -54,23 +53,16 @@ class Lyrics extends PureComponent {
         points: prevState.points + prevState.highlightedWords.split(" ").length
       }),
       () => {
-        ;(async () => {
-          await this.props.updateVote({
-            mutation: this.props.mutation,
-            variables: {
-              vote: {
-                id: "5a37a486c27953edc3c34748",
-                song_id: "5a37a486c27953edc3c34748",
-                user_id: "5a37a486c27953edc3c34748",
-                start_index: 5,
-                end_index: 10,
-                is_upvote: true,
-                tokens: 5,
-                phrase: this.state.highlightedWords
-              }
-            }
-          })
-        })()
+        this.props.updateVote({
+          id: "5a37a486c27953edc3c34748",
+          song_id: "5a37a486c27953edc3c34748",
+          user_id: "5a37a486c27953edc3c34748",
+          start_index: 5,
+          end_index: 10,
+          is_upvote: true,
+          tokens: 5,
+          phrase: this.state.highlightedWords
+        })
       }
     )
   }

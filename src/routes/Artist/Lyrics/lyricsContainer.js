@@ -5,22 +5,24 @@ import Lyrics from "./Lyrics"
 import { GET_SONG, GET_VOTE } from "../../../graphql/queries"
 import { UPDATE_VOTE } from "../../../graphql/mutations"
 class LyricsContainer extends PureComponent {
-  componentWillReceiveProps = nextProps => {
-    console.log("nextprops", nextProps)
-  }
-
   render = () => {
-    let updateVote
+    let mutation
     if (this.props.client) {
-      updateVote = this.props.client.mutate
+      mutation = () => {
+        return async payload => {
+          return await this.props.client.mutate({
+            mutation: UPDATE_VOTE,
+            variables: { vote: payload }
+          })
+        }
+      }
     }
 
     return (
       <div>
         <Lyrics
           lyrics={this.props.lyrics}
-          updateVote={updateVote}
-          mutation={UPDATE_VOTE}
+          updateVote={mutation()}
           points={this.props.score}
         />
       </div>
