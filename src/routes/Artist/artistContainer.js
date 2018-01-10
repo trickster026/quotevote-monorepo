@@ -7,17 +7,18 @@ class artistContainer extends PureComponent {
   state = { artist: {} }
 
   componentWillReceiveProps = nextProps => {
-    console.log("received props", nextProps)
-    const _artist = nextProps.artist
-    const artist = {
-      name: _artist.name,
-      score: 0,
-      up: 0,
-      down: 0,
-      followers: _artist.followers_count,
-      image: _artist.image_url
+    if (nextProps.artist) {
+      const _artist = nextProps.artist
+      const artist = {
+        name: _artist.name,
+        score: 0,
+        up: 0,
+        down: 0,
+        followers: _artist.followers_count,
+        image: _artist.image_url
+      }
+      this.setState({ artist })
     }
-    this.setState({ artist })
   }
 
   render = () => {

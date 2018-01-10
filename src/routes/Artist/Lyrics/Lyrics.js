@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import {
   Segment,
-  Popup,
+  Label,
   Header,
   Dimmer,
   Loader,
@@ -9,6 +9,8 @@ import {
   Button
 } from "semantic-ui-react"
 import { string, number } from "prop-types"
+import SelectionPopover from "./SelectionPopover"
+import "./Lyrics.css"
 
 class Lyrics extends PureComponent {
   state = { loading: true, highlightedWords: "", hasVoted: false, points: 0 }
@@ -37,20 +39,11 @@ class Lyrics extends PureComponent {
     }
   }
 
-  handleHighlight = event => {
-    this.setState({
-      highlightedWords: window
-        .getSelection()
-        .toString()
-        .trim()
-    })
-  }
-
   handleVoting = event => {
     this.setState(
       prevState => ({
         hasVoted: true,
-        points: prevState.points + prevState.highlightedWords.split(" ").length
+        points: prevState.highlightedWords.split(" ").length
       }),
       () => {
         this.props.updateVote({
@@ -77,12 +70,12 @@ class Lyrics extends PureComponent {
   renderVotingButtons = () => (
     <div>
       <Button color="green" inverted icon="plus" onClick={this.handleVoting} />
-      <Button inverted icon="circle" onClick={this.handleVoting} />
+      <Button inverted icon="circle" />
       <Button color="red" inverted icon="minus" onClick={this.handleVoting} />
     </div>
   )
 
-  renderLoading = () => {
+  renderMain = () => {
     const { lyrics } = this.props
 
     if (this.state.loading) {
@@ -94,36 +87,34 @@ class Lyrics extends PureComponent {
         </Segment>
       )
     } else {
-      let formattedLyrics = lyrics.split("\n")
-
-      formattedLyrics = formattedLyrics.map((line, index) => (
-        <div key={index}>
-          {line &&
-            line.split(/\s/g).map((word, lineIndex) => {
-              if (this.state.highlightedWords.length > 0) {
-                return (
-                  <Popup
-                    size="mini"
-                    inverted
-                    hoverable
-                    key={lineIndex}
-                    trigger={<span>{` ${word} `}</span>}
-                    content={
-                      this.state.hasVoted
-                        ? this.renderScoreAndQuotes()
-                        : this.renderVotingButtons()
-                    }
-                  />
-                )
-              }
-              return <span key={lineIndex}>{` ${word} `}</span>
-            })}
-          <br />
-        </div>
-      ))
       return (
         <Segment attached>
-          <Container text>{formattedLyrics}</Container>
+          <Container text>
+            <div style={{ position: "relative" }}>
+              <div data-selectable>
+                <p className="lyrics-segment">{lyrics}</p>
+              </div>
+              <SelectionPopover
+                showPopover={this.state.showPopover}
+                topOffset={60}
+                onSelect={selection => {
+                  this.setState({
+                    showPopover: true,
+                    highlightedWords: selection
+                  })
+                }}
+                onDeselect={() => {
+                  this.setState({ showPopover: false })
+                }}
+              >
+                <Label pointing="below" color="black">
+                  {this.state.hasVoted
+                    ? this.renderScoreAndQuotes()
+                    : this.renderVotingButtons()}
+                </Label>
+              </SelectionPopover>
+            </div>
+          </Container>
         </Segment>
       )
     }
@@ -131,11 +122,11 @@ class Lyrics extends PureComponent {
 
   render = () => {
     return (
-      <div onMouseUp={this.handleHighlight} onMouseDown={this.handleHighlight}>
+      <div className="lyrics-selection">
         <Header inverted attached="top" as="h4">
           Lyrics
         </Header>
-        {this.renderLoading()}
+        {this.renderMain()}
       </div>
     )
   }

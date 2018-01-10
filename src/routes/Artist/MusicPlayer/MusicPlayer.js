@@ -1,7 +1,20 @@
 import React, { PureComponent } from "react"
 import { Icon, Segment, Header, Grid } from "semantic-ui-react"
+import PropTypes from "prop-types"
 
 class MusicPlayer extends PureComponent {
+  static propTypes = {
+    score: PropTypes.number.isRequired,
+    upvote: PropTypes.number.isRequired,
+    downvote: PropTypes.number.isRequired
+  }
+
+  static defaultProps = {
+    score: 0,
+    upvote: 0,
+    downvote: 0
+  }
+
   render = () => {
     return (
       <div>
@@ -10,12 +23,13 @@ class MusicPlayer extends PureComponent {
         </Header>
         <Segment attached textAlign="center">
           <Grid>
-            <Grid.Row>
+            <Grid.Row textAlign="left">
               <Grid.Column verticalAlign="middle" width={6}>
                 <Header as="h4">
-                  Artist Name - Song Name
+                  <Header.Content>Artist Name - Song Name</Header.Content>
                   <Header.Subheader>
-                    Score: 1000 Up: 100 Down: 100
+                    Score: {this.props.score} Up: {this.props.upvote} Down:
+                    {this.props.downvote}
                   </Header.Subheader>
                 </Header>
               </Grid.Column>

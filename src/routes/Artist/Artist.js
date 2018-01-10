@@ -3,7 +3,7 @@ import { Grid, Container, Segment } from "semantic-ui-react"
 import Profile from "../../components/Profile/Profile"
 import TopArtists from "../../components/TopArtists/TopArtists"
 import Albums from "./Albums"
-import MusicPlayer from "./MusicPlayer"
+import MusicPlayer from "./MusicPlayer/musicPlayerContainer"
 import Lyrics from "./Lyrics/lyricsContainer"
 import { string, number, arrayOf, shape } from "prop-types"
 

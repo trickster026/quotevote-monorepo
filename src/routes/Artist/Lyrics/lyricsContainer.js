@@ -2,7 +2,7 @@ import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
 import Lyrics from "./Lyrics"
-import { GET_SONG, GET_VOTE } from "../../../graphql/queries"
+import { GET_SONG } from "../../../graphql/queries"
 import { UPDATE_VOTE } from "../../../graphql/mutations"
 class LyricsContainer extends PureComponent {
   render = () => {
@@ -42,16 +42,6 @@ export default withApollo(
       props: ({ data: { song } }) => {
         if (song && song.lyricist_data) {
           return { lyrics: song.lyricist_data.lyrics }
-        }
-      }
-    }),
-    graphql(GET_VOTE, {
-      options: ownProps => ({
-        variables: { id: "5a37a486c27953edc3c34748" }
-      }),
-      props: ({ data: { vote } }) => {
-        if (vote && vote.score) {
-          return { score: vote.score }
         }
       }
     })
