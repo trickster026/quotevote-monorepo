@@ -13,7 +13,13 @@ import SelectionPopover from "./SelectionPopover"
 import "./Lyrics.css"
 
 class Lyrics extends PureComponent {
-  state = { loading: true, highlightedWords: "", hasVoted: false, points: 0 }
+  state = {
+    loading: true,
+    highlightedWords: "",
+    hasVoted: false,
+    points: 0,
+    isUpvote: true
+  }
 
   static propTypes = {
     lyrics: string,
@@ -40,38 +46,66 @@ class Lyrics extends PureComponent {
   }
 
   handleVoting = event => {
+    const { name } = event.target
     this.setState(
       prevState => ({
         hasVoted: true,
-        points: prevState.highlightedWords.split(" ").length
+        points: prevState.highlightedWords.split(/\s/g).length,
+        isUpvote: name === "upvote"
       }),
       () => {
         this.props.updateVote({
-          id: "5a37a486c27953edc3c34748",
-          song_id: "5a37a486c27953edc3c34748",
+          song_id: this.props.songId,
           user_id: "5a37a486c27953edc3c34748",
-          start_index: 5,
-          end_index: 10,
-          is_upvote: true,
-          tokens: 5,
-          phrase: this.state.highlightedWords
+          start_index: this.state.startIndex,
+          end_index: this.state.endIndex,
+          is_upvote: this.state.isUpvote
         })
       }
     )
   }
 
+  handleSelect = selection => {
+    const text = selection.toString()
+    const startIndex = selection.anchorOffset
+    const endIndex = startIndex + text.length
+
+    console.log("text: ", selection)
+
+    this.setState({
+      startIndex,
+      endIndex,
+      showPopover: true,
+      highlightedWords: text
+    })
+  }
+
   renderScoreAndQuotes = () => (
     <div>
-      <Button inverted>{`+ ${this.state.points}`}</Button>
+      <Button inverted>
+        {`${this.state.isUpvote ? "+" : "-"} ${this.state.points}`}
+      </Button>
       <Button icon="quote right" inverted />
     </div>
   )
 
   renderVotingButtons = () => (
     <div>
-      <Button color="green" inverted icon="plus" onClick={this.handleVoting} />
+      <Button
+        color="green"
+        inverted
+        icon="plus"
+        name="upvote"
+        onClick={this.handleVoting}
+      />
       <Button inverted icon="circle" />
-      <Button color="red" inverted icon="minus" onClick={this.handleVoting} />
+      <Button
+        color="red"
+        inverted
+        icon="minus"
+        name="downvote"
+        onClick={this.handleVoting}
+      />
     </div>
   )
 
@@ -97,12 +131,7 @@ class Lyrics extends PureComponent {
               <SelectionPopover
                 showPopover={this.state.showPopover}
                 topOffset={60}
-                onSelect={selection => {
-                  this.setState({
-                    showPopover: true,
-                    highlightedWords: selection
-                  })
-                }}
+                onSelect={this.handleSelect}
                 onDeselect={() => {
                   this.setState({ showPopover: false })
                 }}

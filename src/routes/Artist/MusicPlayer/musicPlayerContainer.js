@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { graphql } from "react-apollo"
 import MusicPlayer from "./MusicPlayer"
-import { GET_VOTE } from "../../../graphql/queries"
+import { GET_SCORE } from "../../../graphql/queries"
 
 class MusicPlayerContainer extends PureComponent {
   componentWillReceiveProps = nextProps => {
@@ -13,13 +13,11 @@ class MusicPlayerContainer extends PureComponent {
   }
 }
 
-export default graphql(GET_VOTE, {
+export default graphql(GET_SCORE, {
   options: ownProps => ({
-    variables: { id: "5a37a486c27953edc3c34748" }
+    variables: { id: ownProps.songId }
   }),
-  props: ({ data: { vote } }) => {
-    if (vote && vote.score) {
-      return { score: vote.score }
-    }
+  props: ({ data: { scoreBySong } }) => {
+    return { score: scoreBySong }
   }
 })(MusicPlayerContainer)

@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
 import Lyrics from "./Lyrics"
 import { GET_SONG } from "../../../graphql/queries"
-import { UPDATE_VOTE } from "../../../graphql/mutations"
+import { CREATE_VOTE } from "../../../graphql/mutations"
 class LyricsContainer extends PureComponent {
   render = () => {
     let mutation
@@ -11,7 +11,7 @@ class LyricsContainer extends PureComponent {
       mutation = () => {
         return async payload => {
           return await this.props.client.mutate({
-            mutation: UPDATE_VOTE,
+            mutation: CREATE_VOTE,
             variables: { vote: payload }
           })
         }
@@ -24,6 +24,7 @@ class LyricsContainer extends PureComponent {
           lyrics={this.props.lyrics}
           updateVote={mutation()}
           points={this.props.score}
+          songId={this.props.songId}
         />
       </div>
     )

@@ -1,8 +1,8 @@
 import gql from "graphql-tag"
 
-export const GET_VOTE = gql`
-  query getVote($id: String!) {
-    vote(id: $id)
+export const GET_SCORE = gql`
+  query getVote($id: Int!) {
+    scoreBySong(song_id: $id)
   }
 `
 

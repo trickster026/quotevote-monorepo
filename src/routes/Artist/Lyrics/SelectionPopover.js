@@ -75,7 +75,7 @@ class SelectionPopover extends Component {
 
   handleMouseUp = () => {
     if (selectionExists()) {
-      this.props.onSelect(window.getSelection().toString())
+      this.props.onSelect(window.getSelection())
       return this.computePopoverBox()
     }
     this.props.onDeselect()

@@ -58,7 +58,7 @@ class Artist extends PureComponent {
               />
             </Grid.Column>
             <Grid.Column width={10}>
-              <MusicPlayer />
+              <MusicPlayer songId={41413} />
             </Grid.Column>
           </Grid.Row>
 
