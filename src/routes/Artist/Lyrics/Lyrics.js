@@ -56,7 +56,6 @@ class Lyrics extends PureComponent {
           isUpvote: name === "upvote"
         }),
         () => {
-          console.log("state ", name)
           this.props.updateVote({
             song_id: this.props.songId,
             user_id: "5a37a486c27953edc3c34748",
@@ -73,8 +72,6 @@ class Lyrics extends PureComponent {
     const text = selection.toString()
     const startIndex = selection.anchorOffset
     const endIndex = startIndex + text.length
-
-    console.log("text: ", selection)
 
     this.setState({
       startIndex,

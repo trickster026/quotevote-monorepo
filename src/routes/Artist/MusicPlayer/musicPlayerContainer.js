@@ -4,10 +4,6 @@ import MusicPlayer from "./MusicPlayer"
 import { GET_SCORE } from "../../../graphql/queries"
 
 class MusicPlayerContainer extends PureComponent {
-  componentWillReceiveProps = nextProps => {
-    console.log("music player", nextProps)
-  }
-
   render = () => {
     return <MusicPlayer {...this.props} />
   }
