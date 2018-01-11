@@ -47,22 +47,26 @@ class Lyrics extends PureComponent {
 
   handleVoting = event => {
     const { name } = event.target
-    this.setState(
-      prevState => ({
-        hasVoted: true,
-        points: prevState.highlightedWords.split(/\s/g).length,
-        isUpvote: name === "upvote"
-      }),
-      () => {
-        this.props.updateVote({
-          song_id: this.props.songId,
-          user_id: "5a37a486c27953edc3c34748",
-          start_index: this.state.startIndex,
-          end_index: this.state.endIndex,
-          is_upvote: this.state.isUpvote
-        })
-      }
-    )
+
+    if (name) {
+      this.setState(
+        prevState => ({
+          hasVoted: true,
+          points: prevState.highlightedWords.split(/\s+/g).length,
+          isUpvote: name === "upvote"
+        }),
+        () => {
+          console.log("state ", name)
+          this.props.updateVote({
+            song_id: this.props.songId,
+            user_id: "5a37a486c27953edc3c34748",
+            start_index: this.state.startIndex,
+            end_index: this.state.endIndex,
+            is_upvote: this.state.isUpvote
+          })
+        }
+      )
+    }
   }
 
   handleSelect = selection => {
