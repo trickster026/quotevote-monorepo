@@ -1,7 +1,11 @@
 import React, { PureComponent } from "react"
-import { graphql } from "react-apollo"
+import { graphql, compose } from "react-apollo"
 import MusicPlayer from "./MusicPlayer"
-import { GET_SCORE } from "../../../graphql/queries"
+import {
+  GET_SCORE,
+  GET_UPVOTES_PER_SONG,
+  GET_DOWNVOTES_PER_SONG
+} from "../../../graphql/queries"
 
 class MusicPlayerContainer extends PureComponent {
   render = () => {
@@ -9,11 +13,25 @@ class MusicPlayerContainer extends PureComponent {
   }
 }
 
-export default graphql(GET_SCORE, {
-  options: ownProps => ({
-    variables: { id: ownProps.songId }
+export default compose(
+  graphql(GET_SCORE, {
+    options: ownProps => ({
+      variables: { id: ownProps.songId }
+    }),
+    props: ({ data: { scoreBySong } }) => {
+      return { score: scoreBySong }
+    }
   }),
-  props: ({ data: { scoreBySong } }) => {
-    return { score: scoreBySong }
-  }
-})(MusicPlayerContainer)
+  graphql(GET_UPVOTES_PER_SONG, {
+    options: ownProps => ({
+      variables: { song_id: ownProps.songId }
+    }),
+    props: ({ data: { upvotes } }) => ({ upvotes })
+  }),
+  graphql(GET_DOWNVOTES_PER_SONG, {
+    options: ownProps => ({
+      variables: { song_id: ownProps.songId }
+    }),
+    props: ({ data: { downvotes } }) => ({ downvotes })
+  })
+)(MusicPlayerContainer)

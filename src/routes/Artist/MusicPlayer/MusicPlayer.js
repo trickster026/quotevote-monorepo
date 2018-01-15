@@ -5,14 +5,14 @@ import PropTypes from "prop-types"
 class MusicPlayer extends PureComponent {
   static propTypes = {
     score: PropTypes.number.isRequired,
-    upvote: PropTypes.number.isRequired,
-    downvote: PropTypes.number.isRequired
+    upvotes: PropTypes.number.isRequired,
+    downvotes: PropTypes.number.isRequired
   }
 
   static defaultProps = {
     score: 0,
-    upvote: 0,
-    downvote: 0
+    upvotes: 0,
+    downvotes: 0
   }
 
   render = () => {
@@ -28,8 +28,8 @@ class MusicPlayer extends PureComponent {
                 <Header as="h4">
                   <Header.Content>Artist Name - Song Name</Header.Content>
                   <Header.Subheader>
-                    Score: {this.props.score} Up: {this.props.upvote} Down:
-                    {this.props.downvote}
+                    Score: {this.props.score} Up: {this.props.upvotes} Down:
+                    {this.props.downvotes}
                   </Header.Subheader>
                 </Header>
               </Grid.Column>

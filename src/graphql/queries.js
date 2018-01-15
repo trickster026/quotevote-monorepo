@@ -6,6 +6,18 @@ export const GET_SCORE = gql`
   }
 `
 
+export const GET_UPVOTES_PER_SONG = gql`
+  query upvotes($song_id: Int!) {
+    upvotes(song_id: $song_id)
+  }
+`
+
+export const GET_DOWNVOTES_PER_SONG = gql`
+  query downvotes($song_id: Int!) {
+    downvotes(song_id: $song_id)
+  }
+`
+
 export const GET_ARTIST_INFO = gql`
   query getArtistInfo($artist_id: Int!) {
     artist(artist_id: $artist_id)
