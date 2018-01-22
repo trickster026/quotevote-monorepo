@@ -6,6 +6,14 @@ export const GET_SCORE = gql`
   }
 `
 
+export const GET_ARTIST_SCORE = gql`
+  query getArtistScores($id: Int!) {
+    score(artist_id: $id)
+    upvotes(artist_id: $id)
+    downvotes(artist_id: $id)
+  }
+`
+
 export const GET_UPVOTES_PER_SONG = gql`
   query upvotes($song_id: Int!) {
     upvotes(song_id: $song_id)

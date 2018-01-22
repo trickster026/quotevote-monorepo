@@ -55,12 +55,14 @@ const mapStateToProps = state => {
   const {
     currentSongScore,
     currentSongUpvotes,
-    currentSongDownvotes
+    currentSongDownvotes,
+    currentArtist
   } = state.artist
   return {
     score: currentSongScore,
     upvotes: currentSongUpvotes,
-    downvotes: currentSongDownvotes
+    downvotes: currentSongDownvotes,
+    artistId: currentArtist
   }
 }
 

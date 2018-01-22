@@ -61,7 +61,14 @@ class Lyrics extends PureComponent {
 
       // localStorage.setItem("hhsb.voted", true)
 
-      const { score, upvotes, downvotes, updateSong, onVoting } = this.props
+      const {
+        score,
+        upvotes,
+        downvotes,
+        updateSong,
+        artistId,
+        onVoting
+      } = this.props
       let totalUpvotes = isUpvote ? upvotes + 1 : upvotes
       let totalDownvotes = !isUpvote ? downvotes + 1 : downvotes
       updateSong({
@@ -73,6 +80,7 @@ class Lyrics extends PureComponent {
       onVoting({
         song_id: this.props.songId,
         user_id: "5a37a486c27953edc3c34748",
+        artist_id: artistId,
         start_index: this.state.startIndex,
         end_index: this.state.endIndex,
         is_upvote: isUpvote

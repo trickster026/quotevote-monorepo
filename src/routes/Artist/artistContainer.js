@@ -1,7 +1,11 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
-import { GET_ARTIST_INFO, GET_TRACKS } from "../../graphql/queries"
+import {
+  GET_ARTIST_INFO,
+  GET_TRACKS,
+  GET_ARTIST_SCORE
+} from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
 
@@ -9,14 +13,13 @@ class artistContainer extends PureComponent {
   state = { artist: {} }
 
   componentWillReceiveProps = async nextProps => {
-    console.log("component updated")
     if (nextProps.artist) {
       const _artist = nextProps.artist
       const artist = {
         name: _artist.name,
-        score: 0,
-        up: 0,
-        down: 0,
+        score: nextProps.artistScores.score,
+        up: nextProps.artistScores.upvotes,
+        down: nextProps.artistScores.downvotes,
         followers: _artist.followers_count,
         image: _artist.image_url
       }
@@ -25,6 +28,10 @@ class artistContainer extends PureComponent {
 
     if (nextProps.songId) {
       this.props.dispatch(songScores(nextProps.songId))
+      this.props.dispatch({
+        type: "UPDATE_CURRENT_SONG",
+        payload: { currentArtist: this.props.match.params.artistId * 1 }
+      })
     }
   }
 
@@ -78,9 +85,16 @@ export default withApollo(
           }
         }
       },
-      props: ({ data: { artist }, ownProps: { client } }) => ({
-        artist: artist && artist.response,
-        query: client.query
+      props: ({ data: { artist } }) => ({
+        artist: artist && artist.response
+      })
+    }),
+    graphql(GET_ARTIST_SCORE, {
+      options: ownProps => ({
+        variables: { id: ownProps && ownProps.match.params.artistId * 1 }
+      }),
+      props: ({ data: { score, upvotes, downvotes } }) => ({
+        artistScores: { score, upvotes, downvotes }
       })
     })
   )(artistContainer)
