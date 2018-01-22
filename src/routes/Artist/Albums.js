@@ -1,12 +1,12 @@
 import React, { PureComponent } from "react"
+import { connect } from "react-redux"
 import {
   Accordion,
   Icon,
   Menu,
   Segment,
   Dimmer,
-  Loader,
-  List
+  Loader
 } from "semantic-ui-react"
 import { bool, arrayOf, shape, string, number } from "prop-types"
 
@@ -43,6 +43,10 @@ class Albums extends PureComponent {
     this.setState({ activeIndex: newIndex })
   }
 
+  handleSongClick = (event, data) => {
+    this.props.changeSong(data.id)
+  }
+
   renderLoader = () => (
     <Segment style={{ minHeight: "100px" }}>
       <Dimmer active>
@@ -53,6 +57,7 @@ class Albums extends PureComponent {
 
   renderComponent = () => {
     const { activeIndex } = this.state
+
     const { albums } = this.props
     return (
       <Accordion as={Menu} vertical fluid>
@@ -67,17 +72,16 @@ class Albums extends PureComponent {
               <Icon name="dropdown" />
               <strong>{album.name}</strong>
             </Accordion.Title>
-            <Accordion.Content active={activeIndex === album.id}>
-              <List>
-                {album.songs &&
-                  album.songs.map((song, index) => (
-                    <List.Item key={index}>
-                      <List.Icon name="music" />
-                      <List.Content>{song.title}</List.Content>
-                    </List.Item>
-                  ))}
-              </List>
-            </Accordion.Content>
+            <Accordion.Content
+              active={activeIndex === album.id}
+              content={album.songs.map(song => (
+                <Menu.Menu key={song.songId}>
+                  <Menu.Item id={song.songId} onClick={this.handleSongClick}>
+                    {song.title}
+                  </Menu.Item>
+                </Menu.Menu>
+              ))}
+            />
           </Menu.Item>
         ))}
       </Accordion>
@@ -93,4 +97,13 @@ class Albums extends PureComponent {
   }
 }
 
-export default Albums
+const mapDispatchToProps = dispatch => ({
+  changeSong: songId => {
+    dispatch({
+      type: "UPDATE_CURRENT_SONG",
+      payload: { currentSongId: songId }
+    })
+  }
+})
+
+export default connect(null, mapDispatchToProps)(Albums)

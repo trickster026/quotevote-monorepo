@@ -58,13 +58,13 @@ class Artist extends PureComponent {
               />
             </Grid.Column>
             <Grid.Column width={10}>
-              <MusicPlayer songId={41413} />
+              <MusicPlayer songId={this.props.currentSong} />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
             <Grid.Column>
-              <Lyrics songId={41413} />
+              <Lyrics songId={this.props.currentSong} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

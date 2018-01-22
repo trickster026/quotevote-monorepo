@@ -15,6 +15,10 @@ class MusicPlayer extends PureComponent {
     downvotes: 0
   }
 
+  componentDidUpdate = () => {
+    console.log("it updated")
+  }
+
   render = () => {
     return (
       <div>

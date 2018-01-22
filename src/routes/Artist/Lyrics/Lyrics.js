@@ -8,7 +8,7 @@ import {
   Container,
   Button
 } from "semantic-ui-react"
-import { string, number } from "prop-types"
+import { string } from "prop-types"
 import SelectionPopover from "./SelectionPopover"
 import "./Lyrics.css"
 
@@ -22,13 +22,11 @@ class Lyrics extends PureComponent {
   }
 
   static propTypes = {
-    lyrics: string,
-    songScore: number
+    lyrics: string
   }
 
   static defaultProps = {
-    lyrics: "",
-    songScore: 0
+    lyrics: ""
   }
 
   componentWillReceiveProps = nextProps => {
@@ -36,35 +34,49 @@ class Lyrics extends PureComponent {
       this.setState({ loading: false })
     }
 
-    if (nextProps.songScore) {
-      this.setState({ songScore: nextProps.songScore })
-    }
-
     if (nextProps.points) {
       this.setState({ points: nextProps.points })
     }
   }
 
-  handleVoting = event => {
-    const { name } = event.target
+  componentDidMount = () => {
+    this.setState({
+      hasVoted: localStorage.getItem("hhsb.voted")
+    })
+  }
 
+  handleVoting = event => {
+    const { name } = event.currentTarget
     if (name) {
-      this.setState(
-        prevState => ({
-          hasVoted: true,
-          points: prevState.highlightedWords.split(/\s+/g).length,
-          isUpvote: name === "upvote"
-        }),
-        () => {
-          this.props.updateVote({
-            song_id: this.props.songId,
-            user_id: "5a37a486c27953edc3c34748",
-            start_index: this.state.startIndex,
-            end_index: this.state.endIndex,
-            is_upvote: this.state.isUpvote
-          })
-        }
-      )
+      const isUpvote = name === "upvote"
+      console.log("is upvote", isUpvote)
+      let points = this.state.highlightedWords.split(/\s+/g).length
+      points = isUpvote ? points : -1 * points
+
+      this.setState({
+        hasVoted: true,
+        points,
+        isUpvote
+      })
+
+      // localStorage.setItem("hhsb.voted", true)
+
+      const { score, upvotes, downvotes, updateSong, onVoting } = this.props
+      let totalUpvotes = isUpvote ? upvotes + 1 : upvotes
+      let totalDownvotes = !isUpvote ? downvotes + 1 : downvotes
+      updateSong({
+        currentSongScore: score + points,
+        currentSongUpvotes: totalUpvotes,
+        currentSongDownvotes: totalDownvotes
+      })
+
+      onVoting({
+        song_id: this.props.songId,
+        user_id: "5a37a486c27953edc3c34748",
+        start_index: this.state.startIndex,
+        end_index: this.state.endIndex,
+        is_upvote: isUpvote
+      })
     }
   }
 
@@ -83,9 +95,7 @@ class Lyrics extends PureComponent {
 
   renderScoreAndQuotes = () => (
     <div>
-      <Button inverted>
-        {`${this.state.isUpvote ? "+" : "-"} ${this.state.points}`}
-      </Button>
+      <Button inverted>{`${this.state.points}`}</Button>
       <Button icon="quote right" inverted />
     </div>
   )
@@ -111,8 +121,6 @@ class Lyrics extends PureComponent {
   )
 
   renderMain = () => {
-    const { lyrics } = this.props
-
     if (this.state.loading) {
       return (
         <Segment attached style={{ minHeight: "100px" }}>
@@ -127,7 +135,7 @@ class Lyrics extends PureComponent {
           <Container text>
             <div style={{ position: "relative" }}>
               <div data-selectable>
-                <p className="lyrics-segment">{lyrics}</p>
+                <p className="lyrics-segment">{this.props.lyrics}</p>
               </div>
               <SelectionPopover
                 showPopover={this.state.showPopover}
