@@ -8,7 +8,7 @@ import {
   Container,
   Button
 } from "semantic-ui-react"
-import { string } from "prop-types"
+import { string, number, func } from "prop-types"
 import SelectionPopover from "./SelectionPopover"
 import "./Lyrics.css"
 
@@ -22,11 +22,18 @@ class Lyrics extends PureComponent {
   }
 
   static propTypes = {
-    lyrics: string
+    lyrics: string,
+    score: number,
+    upvotes: number,
+    downvotes: number,
+    onVoting: func
   }
 
   static defaultProps = {
-    lyrics: ""
+    lyrics: "",
+    score: 0,
+    upvotes: 0,
+    downvotes: 0
   }
 
   componentWillReceiveProps = nextProps => {
