@@ -101,6 +101,7 @@ class Lyrics extends PureComponent {
     const endIndex = startIndex + text.length
 
     this.setState({
+      hasVoted: false,
       startIndex,
       endIndex,
       showPopover: true,
