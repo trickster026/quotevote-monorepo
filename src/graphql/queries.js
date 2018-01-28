@@ -44,6 +44,7 @@ export const GET_SONG = gql`
     song(song_id: $song_id) {
       _id
       lyrics
+      title
     }
   }
 `

@@ -44,7 +44,7 @@ class LyricsContainer extends PureComponent {
           query: GET_SONG,
           variables: { song_id: songId }
         })).data
-
+        this.props.updateSong({ currentSongTitle: song.title })
         return song.lyrics
       }
     }
