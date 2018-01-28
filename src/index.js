@@ -16,7 +16,7 @@ import store from "./reducers/store"
 
 const baseUri =
   process.env.NODE_ENV === "production"
-    ? "http://107.20.29.153/graphql"
+    ? "http://34.239.105.165:5000/graphql"
     : "http://localhost:5000/graphql"
 
 localStorage.setItem(

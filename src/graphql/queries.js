@@ -60,3 +60,9 @@ export const GET_USER_INFO = gql`
     }
   }
 `
+
+export const GET_TOP_ARTISTS = gql`
+  query getTopArtists {
+    topArtists(user_id: 1)
+  }
+`

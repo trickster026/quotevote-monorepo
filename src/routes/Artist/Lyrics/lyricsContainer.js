@@ -2,7 +2,11 @@ import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { withApollo } from "react-apollo"
 import Lyrics from "./Lyrics"
-import { GET_SONG, GET_ARTIST_INFO } from "../../../graphql/queries"
+import {
+  GET_SONG,
+  GET_ARTIST_INFO,
+  GET_TOP_ARTISTS
+} from "../../../graphql/queries"
 import { CREATE_VOTE } from "../../../graphql/mutations"
 import PropTypes from "prop-types"
 class LyricsContainer extends PureComponent {
@@ -30,6 +34,9 @@ class LyricsContainer extends PureComponent {
             {
               query: GET_ARTIST_INFO,
               variables: { artist_id: this.props.artistId }
+            },
+            {
+              query: GET_TOP_ARTISTS
             }
           ]
         })
