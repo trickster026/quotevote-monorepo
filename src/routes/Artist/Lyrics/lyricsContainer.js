@@ -2,10 +2,15 @@ import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { withApollo } from "react-apollo"
 import Lyrics from "./Lyrics"
-import { GET_SONG } from "../../../graphql/queries"
+import { GET_SONG, GET_ARTIST_INFO } from "../../../graphql/queries"
 import { CREATE_VOTE } from "../../../graphql/mutations"
+import PropTypes from "prop-types"
 class LyricsContainer extends PureComponent {
   state = { lyrics: "" }
+
+  static propTypes = {
+    songId: PropTypes.number.isRequired
+  }
 
   componentWillReceiveProps = async nextProps => {
     if (nextProps.songId) {
@@ -20,7 +25,13 @@ class LyricsContainer extends PureComponent {
       return async payload => {
         return await this.props.client.mutate({
           mutation: CREATE_VOTE,
-          variables: { vote: payload }
+          variables: { vote: payload },
+          refetchQueries: [
+            {
+              query: GET_ARTIST_INFO,
+              variables: { artist_id: this.props.artistId }
+            }
+          ]
         })
       }
     }
@@ -34,7 +45,7 @@ class LyricsContainer extends PureComponent {
           variables: { song_id: songId }
         })).data
 
-        return song.lyricist_data.lyrics
+        return song.lyrics
       }
     }
   }
@@ -56,13 +67,15 @@ const mapStateToProps = state => {
     currentSongScore,
     currentSongUpvotes,
     currentSongDownvotes,
-    currentArtist
+    currentArtist,
+    currentSongId
   } = state.artist
   return {
     score: currentSongScore,
     upvotes: currentSongUpvotes,
     downvotes: currentSongDownvotes,
-    artistId: currentArtist
+    artistId: currentArtist,
+    songId: currentSongId
   }
 }
 

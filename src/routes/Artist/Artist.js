@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Grid, Container, Segment } from "semantic-ui-react"
+import { Grid, Container, Segment, Dimmer, Loader } from "semantic-ui-react"
 import Profile from "../../components/Profile/Profile"
 import TopArtists from "../../components/TopArtists/TopArtists"
 import Albums from "./Albums"
@@ -59,12 +59,8 @@ class Artist extends PureComponent {
             </Grid.Column>
             <Grid.Column width={10}>
               <MusicPlayer songId={this.props.currentSong} />
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column>
-              <Lyrics songId={this.props.currentSong} />
+              <br />
+              <Lyrics />
             </Grid.Column>
           </Grid.Row>
         </Grid>

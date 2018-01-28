@@ -44,7 +44,7 @@ class Albums extends PureComponent {
   }
 
   handleSongClick = (event, data) => {
-    this.props.changeSong(data.id)
+    this.props.changeSong({ id: data.id, title: data.title })
   }
 
   renderLoader = () => (
@@ -76,7 +76,11 @@ class Albums extends PureComponent {
               active={activeIndex === album.id}
               content={album.songs.map(song => (
                 <Menu.Menu key={song.songId}>
-                  <Menu.Item id={song.songId} onClick={this.handleSongClick}>
+                  <Menu.Item
+                    id={song.songId}
+                    title={song.title}
+                    onClick={this.handleSongClick}
+                  >
                     {song.title}
                   </Menu.Item>
                 </Menu.Menu>
@@ -98,10 +102,10 @@ class Albums extends PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  changeSong: songId => {
+  changeSong: song => {
     dispatch({
       type: "UPDATE_CURRENT_SONG",
-      payload: { currentSongId: songId }
+      payload: { currentSongId: song.id, currentSongTitle: song.title }
     })
   }
 })

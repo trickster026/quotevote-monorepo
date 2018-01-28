@@ -12,7 +12,9 @@ class MusicPlayer extends PureComponent {
   static defaultProps = {
     score: 0,
     upvotes: 0,
-    downvotes: 0
+    downvotes: 0,
+    artistName: "Artist Name",
+    songTitle: "Song Name"
   }
 
   componentDidUpdate = () => {
@@ -30,7 +32,9 @@ class MusicPlayer extends PureComponent {
             <Grid.Row textAlign="left">
               <Grid.Column verticalAlign="middle" width={6}>
                 <Header as="h4">
-                  <Header.Content>Artist Name - Song Name</Header.Content>
+                  <Header.Content>
+                    {this.props.artistName} - {this.props.songTitle}
+                  </Header.Content>
                   <Header.Subheader>
                     Score: {this.props.score} Up: {this.props.upvotes} Down:
                     {this.props.downvotes}

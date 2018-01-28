@@ -25,7 +25,10 @@ class artistContainer extends PureComponent {
       this.props.dispatch(songScores(nextProps.songId))
       this.props.dispatch({
         type: "UPDATE_CURRENT_SONG",
-        payload: { currentArtist: this.props.match.params.artistId * 1 }
+        payload: {
+          currentArtist: this.props.match.params.artistId * 1,
+          currentArtistName: this.props.name
+        }
       })
     }
   }

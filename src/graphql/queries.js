@@ -39,16 +39,11 @@ export const GET_TRACKS = gql`
   }
 `
 
-export const GET_VERSES = gql`
-  query getVerses($song_id: Int!) {
-    verses(song_id: $song_id)
-  }
-`
-
 export const GET_SONG = gql`
   query getSong($song_id: Int!) {
     song(song_id: $song_id) {
-      lyricist_data
+      _id
+      lyrics
     }
   }
 `
