@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Grid, Container, Segment } from "semantic-ui-react"
+import { Grid, Container, Segment, Loader, Dimmer } from "semantic-ui-react"
 import Profile from "../../components/Profile/Profile"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import ErrorBoundary from "../../components/ErrorBoundary"
@@ -39,36 +39,44 @@ class Artist extends PureComponent {
   }
 
   render = () => {
-    return (
-      <ErrorBoundary>
-        <Segment as={Container} basic>
-          <Grid>
-            <Grid.Row columns={2}>
-              <Grid.Column>
-                <Profile artist={this.props.artist} />
-              </Grid.Column>
-              <Grid.Column>
-                <TopArtists />
-              </Grid.Column>
-            </Grid.Row>
+    if (this.props.loading) {
+      return (
+        <Dimmer active inverted>
+          <Loader size="massive" />
+        </Dimmer>
+      )
+    } else {
+      return (
+        <ErrorBoundary>
+          <Segment as={Container} basic>
+            <Grid>
+              <Grid.Row columns={2}>
+                <Grid.Column>
+                  <Profile artist={this.props.artist} />
+                </Grid.Column>
+                <Grid.Column>
+                  <TopArtists />
+                </Grid.Column>
+              </Grid.Row>
 
-            <Grid.Row>
-              <Grid.Column width={6}>
-                <Albums
-                  albums={this.props.albums}
-                  loading={this.props.albums.length <= 0}
-                />
-              </Grid.Column>
-              <Grid.Column width={10}>
-                <MusicPlayer songId={this.props.currentSong} />
-                <br />
-                <Lyrics />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </ErrorBoundary>
-    )
+              <Grid.Row>
+                <Grid.Column width={6}>
+                  <Albums
+                    albums={this.props.albums}
+                    loading={this.props.albums.length <= 0}
+                  />
+                </Grid.Column>
+                <Grid.Column width={10}>
+                  <MusicPlayer songId={this.props.currentSong} />
+                  <br />
+                  <Lyrics />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+        </ErrorBoundary>
+      )
+    }
   }
 }
 

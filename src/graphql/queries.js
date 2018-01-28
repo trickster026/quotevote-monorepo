@@ -43,8 +43,11 @@ export const GET_SONG = gql`
   query getSong($song_id: Int!) {
     song(song_id: $song_id) {
       _id
-      lyrics
       title
+      lyrics
+      total_score
+      upvotes
+      downvotes
     }
   }
 `
@@ -64,5 +67,14 @@ export const GET_USER_INFO = gql`
 export const GET_TOP_ARTISTS = gql`
   query getTopArtists {
     topArtists(limit: 5)
+  }
+`
+
+export const SEARCH = gql`
+  query search($query: String!) {
+    lyricistSearch(query: $query) {
+      query
+      response
+    }
   }
 `

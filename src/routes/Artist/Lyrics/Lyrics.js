@@ -56,7 +56,6 @@ class Lyrics extends PureComponent {
     const { name } = event.currentTarget
     if (name) {
       const isUpvote = name === "upvote"
-      console.log("is upvote", isUpvote)
       let points = this.state.highlightedWords.split(/\s+/g).length
       points = isUpvote ? points : -1 * points
 

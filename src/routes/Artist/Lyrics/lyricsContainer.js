@@ -37,6 +37,10 @@ class LyricsContainer extends PureComponent {
             },
             {
               query: GET_TOP_ARTISTS
+            },
+            {
+              query: GET_SONG,
+              variables: { song_id: this.props.songId }
             }
           ]
         })

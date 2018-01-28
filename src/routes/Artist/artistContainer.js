@@ -39,6 +39,7 @@ class artistContainer extends PureComponent {
         artist={this.state.artist}
         albums={this.props.albums}
         currentSong={this.props.songId}
+        loading={this.props.loading}
       />
     )
   }
@@ -61,7 +62,7 @@ export default withApollo(
         }
       },
       props: ({
-        data: { albumsByArtist },
+        data: { albumsByArtist, loading },
         ownProps: { updateSong, currentSongId }
       }) => {
         let firstSongId
@@ -70,7 +71,8 @@ export default withApollo(
         }
         return {
           albums: albumsByArtist,
-          songId: firstSongId
+          songId: firstSongId,
+          loading
         }
       }
     }),
@@ -83,7 +85,7 @@ export default withApollo(
           }
         }
       },
-      props: ({ data: { artist } }) => {
+      props: ({ data: { artist, loading } }) => {
         if (artist) {
           const {
             downvotes,
