@@ -1,11 +1,7 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
-import {
-  GET_ARTIST_INFO,
-  GET_TRACKS,
-  GET_ARTIST_SCORE
-} from "../../graphql/queries"
+import { GET_ARTIST_INFO, GET_TRACKS } from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
 
@@ -13,15 +9,14 @@ class artistContainer extends PureComponent {
   state = { artist: {} }
 
   componentWillReceiveProps = async nextProps => {
-    if (nextProps.artist) {
-      const _artist = nextProps.artist
+    if (nextProps.score) {
       const artist = {
-        name: _artist.name,
-        score: nextProps.artistScores.score,
-        up: nextProps.artistScores.upvotes,
-        down: nextProps.artistScores.downvotes,
-        followers: _artist.followers_count,
-        image: _artist.image_url
+        name: nextProps.name,
+        score: nextProps.score,
+        up: nextProps.upvotes,
+        down: nextProps.downvotes,
+        followers: nextProps.followers,
+        image: nextProps.image
       }
       this.setState({ artist })
     }
@@ -85,17 +80,26 @@ export default withApollo(
           }
         }
       },
-      props: ({ data: { artist } }) => ({
-        artist: artist && artist.response
-      })
-    }),
-    graphql(GET_ARTIST_SCORE, {
-      options: ownProps => ({
-        variables: { id: ownProps && ownProps.match.params.artistId * 1 }
-      }),
-      props: ({ data: { score, upvotes, downvotes } }) => ({
-        artistScores: { score, upvotes, downvotes }
-      })
+      props: ({ data: { artist } }) => {
+        if (artist) {
+          const {
+            downvotes,
+            followers,
+            name,
+            total_score,
+            upvotes,
+            image_url
+          } = artist
+          return {
+            downvotes,
+            followers,
+            name,
+            score: total_score,
+            image: image_url,
+            upvotes
+          }
+        }
+      }
     })
   )(artistContainer)
 )
