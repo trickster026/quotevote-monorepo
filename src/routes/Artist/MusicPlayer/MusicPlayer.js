@@ -1,6 +1,9 @@
 import React, { PureComponent } from "react"
-import { Icon, Segment, Header, Grid } from "semantic-ui-react"
+import { Segment, Header, Grid } from "semantic-ui-react"
 import PropTypes from "prop-types"
+
+const mp3 =
+  "https://s3.amazonaws.com/prod.tracker2/resource/86893622/10%20The%20Notorious%20B.I.G%20-%20Juicy.mp3?response-content-disposition=inline&response-content-type=audio%2Fmpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJJBSFJ4TCVKKGAIA%2F20180128%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20180128T132045Z&X-Amz-Expires=1800&X-Amz-SignedHeaders=host&X-Amz-Signature=fcba3ac983cb4c472e87e40ee604d8dcae96f5b7f32e4e75136165e8ef3a512d"
 
 class MusicPlayer extends PureComponent {
   static propTypes = {
@@ -42,9 +45,9 @@ class MusicPlayer extends PureComponent {
                 </Header>
               </Grid.Column>
               <Grid.Column width={10}>
-                <Icon size="large" name="step backward" />
-                <Icon size="large" name="play" />
-                <Icon size="large" name="step forward" />
+                <audio controls>
+                  <source src={mp3} type="audio/mp3" />
+                </audio>
               </Grid.Column>
             </Grid.Row>
           </Grid>
