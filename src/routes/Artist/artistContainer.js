@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
-import { GET_ARTIST_INFO, GET_TRACKS } from "../../graphql/queries"
+import { GET_TRACKS } from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
 
@@ -38,8 +38,9 @@ class artistContainer extends PureComponent {
       <Artist
         artist={this.state.artist}
         albums={this.props.albums}
-        currentSong={this.props.songId}
+        songId={this.props.songId}
         loading={this.props.loading}
+        artistId={this.props.match.params.artistId * 1}
       />
     )
   }
@@ -73,36 +74,6 @@ export default withApollo(
           albums: albumsByArtist,
           songId: firstSongId,
           loading
-        }
-      }
-    }),
-    graphql(GET_ARTIST_INFO, {
-      options: ownProps => {
-        const artistId = ownProps && ownProps.match.params.artistId * 1
-        return {
-          variables: {
-            artist_id: artistId
-          }
-        }
-      },
-      props: ({ data: { artist, loading } }) => {
-        if (artist) {
-          const {
-            downvotes,
-            followers,
-            name,
-            total_score,
-            upvotes,
-            image_url
-          } = artist
-          return {
-            downvotes,
-            followers,
-            name,
-            score: total_score,
-            image: image_url,
-            upvotes
-          }
         }
       }
     })

@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
-import { withApollo } from "react-apollo"
+import { withApollo, graphql, compose } from "react-apollo"
 import Lyrics from "./Lyrics"
 import {
   GET_SONG,
@@ -14,14 +14,6 @@ class LyricsContainer extends PureComponent {
 
   static propTypes = {
     songId: PropTypes.number.isRequired
-  }
-
-  componentWillReceiveProps = async nextProps => {
-    if (nextProps.songId) {
-      this.setState({
-        lyrics: await this.lyrics()(nextProps.songId)
-      })
-    }
   }
 
   mutation = () => {
@@ -48,45 +40,15 @@ class LyricsContainer extends PureComponent {
     }
   }
 
-  lyrics = () => {
-    if (this.props.client) {
-      return async songId => {
-        const { song } = (await this.props.client.query({
-          query: GET_SONG,
-          variables: { song_id: songId }
-        })).data
-        this.props.updateSong({ currentSongTitle: song.title })
-        return song.lyrics
-      }
-    }
-  }
-
   render = () => {
     const { client, ...others } = this.props
     return (
       <Lyrics
         {...others}
-        lyrics={this.state.lyrics}
+        lyrics={this.props.lyrics}
         onVoting={this.mutation()}
       />
     )
-  }
-}
-
-const mapStateToProps = state => {
-  const {
-    currentSongScore,
-    currentSongUpvotes,
-    currentSongDownvotes,
-    currentArtist,
-    currentSongId
-  } = state.artist
-  return {
-    score: currentSongScore,
-    upvotes: currentSongUpvotes,
-    downvotes: currentSongDownvotes,
-    artistId: currentArtist,
-    songId: currentSongId
   }
 }
 
@@ -97,5 +59,20 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withApollo(
-  connect(mapStateToProps, mapDispatchToProps)(LyricsContainer)
+  compose(
+    connect(null, mapDispatchToProps),
+    graphql(GET_SONG, {
+      options: ({ songId }) => ({ variables: { song_id: songId } }),
+      props: ({ data: { song } }) => {
+        if (song) {
+          return {
+            lyrics: song.lyrics,
+            score: song.total_score,
+            upvotes: song.upvotes,
+            downvotes: song.downvotes
+          }
+        }
+      }
+    })
+  )(LyricsContainer)
 )

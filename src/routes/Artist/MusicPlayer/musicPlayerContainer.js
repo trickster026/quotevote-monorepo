@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react"
-import { connect } from "react-redux"
+import { graphql, compose } from "react-apollo"
+import { GET_SONG, GET_ARTIST_INFO } from "../../../graphql/queries"
 import MusicPlayer from "./MusicPlayer"
 
 class MusicPlayerContainer extends PureComponent {
@@ -8,21 +9,28 @@ class MusicPlayerContainer extends PureComponent {
   }
 }
 
-const mapStateToProps = state => {
-  const {
-    currentSongScore,
-    currentSongUpvotes,
-    currentSongDownvotes,
-    currentArtistName,
-    currentSongTitle
-  } = state.artist
-  return {
-    score: currentSongScore,
-    upvotes: currentSongUpvotes,
-    downvotes: currentSongDownvotes,
-    artistName: currentArtistName,
-    songTitle: currentSongTitle
-  }
-}
-
-export default connect(mapStateToProps)(MusicPlayerContainer)
+export default compose(
+  graphql(GET_SONG, {
+    options: ({ songId }) => ({ variables: { song_id: songId } }),
+    props: ({ data: { song } }) => {
+      if (song) {
+        return {
+          score: song.total_score,
+          upvotes: song.upvotes,
+          downvotes: song.downvotes,
+          songTitle: song.title
+        }
+      }
+    }
+  }),
+  graphql(GET_ARTIST_INFO, {
+    options: ({ artistId }) => ({ variables: { artist_id: artistId } }),
+    props: ({ data: { artist } }) => {
+      if (artist) {
+        return {
+          artistName: artist.name
+        }
+      }
+    }
+  })
+)(MusicPlayerContainer)

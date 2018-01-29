@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { Grid, Container, Segment, Loader, Dimmer } from "semantic-ui-react"
-import Profile from "../../components/Profile/Profile"
+import Profile from "./Profile/profileContainer"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import ErrorBoundary from "../../components/ErrorBoundary"
 import Albums from "./Albums"
@@ -30,7 +30,9 @@ class Artist extends PureComponent {
           })
         )
       })
-    )
+    ),
+    artistId: number,
+    songId: number
   }
 
   static defaultProps = {
@@ -39,11 +41,13 @@ class Artist extends PureComponent {
   }
 
   render = () => {
-    if (this.props.loading) {
+    if (this.props.loading || !this.props.songId || !this.props.artistId) {
       return (
-        <Dimmer active inverted>
-          <Loader size="massive" />
-        </Dimmer>
+        <Segment basic fluid style={{ top: "40vh" }}>
+          <Dimmer active inverted>
+            <Loader size="massive" />
+          </Dimmer>
+        </Segment>
       )
     } else {
       return (
@@ -52,7 +56,7 @@ class Artist extends PureComponent {
             <Grid>
               <Grid.Row columns={2}>
                 <Grid.Column>
-                  <Profile artist={this.props.artist} />
+                  <Profile artistId={this.props.artistId} />
                 </Grid.Column>
                 <Grid.Column>
                   <TopArtists />
@@ -60,16 +64,22 @@ class Artist extends PureComponent {
               </Grid.Row>
 
               <Grid.Row>
-                <Grid.Column width={6}>
+                <Grid.Column width={5}>
                   <Albums
                     albums={this.props.albums}
                     loading={this.props.albums.length <= 0}
                   />
                 </Grid.Column>
-                <Grid.Column width={10}>
-                  <MusicPlayer songId={this.props.currentSong} />
+                <Grid.Column width={11}>
+                  <MusicPlayer
+                    songId={this.props.songId}
+                    artistId={this.props.artistId}
+                  />
                   <br />
-                  <Lyrics />
+                  <Lyrics
+                    songId={this.props.songId}
+                    artistId={this.props.artistId}
+                  />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
