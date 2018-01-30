@@ -5,6 +5,7 @@ import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { Menu, Search, Image, Container } from "semantic-ui-react"
 import hihopImage from "../../assets/hiphop.png"
+import { tokenValidator } from "../../actions/creators/loginActionCreator"
 
 class HeaderComponent extends PureComponent {
   state = { search: "" }
@@ -78,6 +79,14 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     const { isLoading, value, results } = this.state
+
+    const userId =
+      "user" in this.props.login
+        ? this.props.login.user._id
+        : "59b006a2dba5fb0027f48c76"
+
+    console.log("header props", this.props)
+
     return (
       <Menu attached="top" color="grey" size="huge" inverted>
         <Container>
@@ -88,15 +97,15 @@ class HeaderComponent extends PureComponent {
             <Menu.Item as={Link} name="scoreboard" to="/artist/1">
               SCOREBOARD
             </Menu.Item>
-            <Menu.Item
-              as={Link}
-              name="account"
-              to="/user/59b006a2dba5fb0027f48c76"
-            >
+            <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
               ACCOUNT
             </Menu.Item>
-            <Menu.Item as="a" name="sign-out">
-              SIGN OUT
+            <Menu.Item
+              as={Link}
+              name="sign-out"
+              to={tokenValidator() ? "/logout" : "/login"}
+            >
+              {tokenValidator() ? "LOGOUT" : "LOGIN"}
             </Menu.Item>
           </Menu.Menu>
 
@@ -117,4 +126,8 @@ class HeaderComponent extends PureComponent {
   }
 }
 
-export default withApollo(withRouter(connect()(HeaderComponent)))
+const mapStateToProps = state => {
+  return state
+}
+
+export default withApollo(withRouter(connect(mapStateToProps)(HeaderComponent)))

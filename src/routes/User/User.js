@@ -23,6 +23,8 @@ class User extends PureComponent {
   }
 
   render = () => {
+    console.log(this.props)
+
     return (
       <Segment as={Container} basic>
         <Grid>
