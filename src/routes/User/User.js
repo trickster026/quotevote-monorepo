@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { Grid, Container, Segment } from "semantic-ui-react"
 import UserProfile from "../../components/Profile/UserProfile"
-import TopArtists from "../../components/TopArtists/TopArtists"
+import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import FantasyLabel from "./FantasyLabel"
 import UserWall from "./UserWall"
 import { string, number, shape } from "prop-types"
@@ -23,8 +23,6 @@ class User extends PureComponent {
   }
 
   render = () => {
-    console.log(this.props)
-
     return (
       <Segment as={Container} basic>
         <Grid>
