@@ -26,7 +26,9 @@ class Lyrics extends PureComponent {
     score: number,
     upvotes: number,
     downvotes: number,
-    onVoting: func
+    onVoting: func,
+    songId: number,
+    artistId: number
   }
 
   static defaultProps = {

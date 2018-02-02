@@ -9,7 +9,9 @@ class MusicPlayer extends PureComponent {
   static propTypes = {
     score: PropTypes.number.isRequired,
     upvotes: PropTypes.number.isRequired,
-    downvotes: PropTypes.number.isRequired
+    downvotes: PropTypes.number.isRequired,
+    artistName: PropTypes.string,
+    songTitle: PropTypes.string
   }
 
   static defaultProps = {
@@ -18,10 +20,6 @@ class MusicPlayer extends PureComponent {
     downvotes: 0,
     artistName: "Artist Name",
     songTitle: "Song Name"
-  }
-
-  componentDidUpdate = () => {
-    console.log("it updated")
   }
 
   render = () => {

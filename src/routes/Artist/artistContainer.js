@@ -4,9 +4,16 @@ import { graphql, compose, withApollo } from "react-apollo"
 import { GET_TRACKS } from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
+import PropTypes from "prop-types"
 
 class artistContainer extends PureComponent {
   state = { artist: {} }
+
+  static propTypes = {
+    albums: PropTypes.array,
+    songId: PropTypes.number,
+    loading: PropTypes.bool
+  }
 
   componentWillReceiveProps = async nextProps => {
     if (nextProps.score) {
@@ -36,7 +43,6 @@ class artistContainer extends PureComponent {
   render = () => {
     return (
       <Artist
-        artist={this.state.artist}
         albums={this.props.albums}
         songId={this.props.songId}
         loading={this.props.loading}

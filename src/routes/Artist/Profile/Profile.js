@@ -13,6 +13,7 @@ import { string, number } from "prop-types"
 class Profile extends PureComponent {
   static propTypes = {
     name: string,
+    image: string,
     score: number,
     up: number,
     down: number,

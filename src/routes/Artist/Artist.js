@@ -10,14 +10,6 @@ import { string, number, arrayOf, shape } from "prop-types"
 
 class Artist extends PureComponent {
   static propTypes = {
-    artist: shape({
-      name: string,
-      score: number,
-      up: number,
-      down: number,
-      followers: number,
-      image: string
-    }),
     albums: arrayOf(
       shape({
         name: string,
@@ -36,14 +28,13 @@ class Artist extends PureComponent {
   }
 
   static defaultProps = {
-    artist: {},
     albums: []
   }
 
   render = () => {
     if (this.props.loading || !this.props.songId || !this.props.artistId) {
       return (
-        <Segment basic fluid style={{ top: "40vh" }}>
+        <Segment basic style={{ top: "40vh" }}>
           <Dimmer active inverted>
             <Loader size="massive" />
           </Dimmer>

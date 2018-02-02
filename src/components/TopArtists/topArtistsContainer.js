@@ -2,10 +2,11 @@ import React, { PureComponent } from "react"
 import { graphql } from "react-apollo"
 import TopArtists from "./TopArtists"
 import { GET_TOP_ARTISTS } from "../../graphql/queries"
+import PropTypes from "prop-types"
 
 class TopArtistsContainer extends PureComponent {
-  componentWillReceiveProps = nextProps => {
-    console.log("next props", nextProps)
+  static propTypes = {
+    topArtists: PropTypes.array
   }
 
   render = () => {

@@ -1,7 +1,12 @@
 import React, { PureComponent } from "react"
 import { Card, List } from "semantic-ui-react"
+import PropTypes from "prop-types"
 
 class TopArtists extends PureComponent {
+  static propTypes = {
+    artists: PropTypes.array
+  }
+
   render = () => {
     const { artists } = this.props
     return (

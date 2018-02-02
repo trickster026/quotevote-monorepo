@@ -6,9 +6,16 @@ import { Link, withRouter } from "react-router-dom"
 import { Menu, Search, Image, Container } from "semantic-ui-react"
 import hihopImage from "../../assets/hiphop.png"
 import { tokenValidator } from "../../actions/creators/loginActionCreator"
+import PropTypes from "prop-types"
 
 class HeaderComponent extends PureComponent {
   state = { search: "" }
+
+  static propTypes = {
+    login: PropTypes.object.isRequired,
+    client: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
 
   componentWillMount = () => {
     this.resetComponent()
