@@ -92,8 +92,6 @@ class HeaderComponent extends PureComponent {
         ? this.props.login.user._id
         : "59b006a2dba5fb0027f48c76"
 
-    console.log("header props", this.props)
-
     return (
       <Menu attached="top" color="grey" size="huge" inverted>
         <Container>

@@ -6,6 +6,8 @@ import Login from "../../routes/Login/Login"
 import Home from "../../routes/Home/Home"
 import { Route, Switch } from "react-router-dom"
 import PrivateRoute from "../../routes/Login/PrivateRoute"
+import Signup from "../../routes/Signup/Signup"
+import Terms from "../../routes/Terms/Terms"
 
 class App extends Component {
   render() {
@@ -16,6 +18,8 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/logout" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/terms" component={Terms} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
         </Switch>

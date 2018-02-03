@@ -2,10 +2,12 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunk from "redux-thunk"
 import artist from "./artistReducer"
 import login from "./loginReducer"
+import signup from "./signupReducer"
 
 const rootReducer = combineReducers({
   artist,
-  login
+  login,
+  signup
 })
 
 const store = createStore(

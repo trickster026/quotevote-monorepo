@@ -1,6 +1,14 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
-import { Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react"
+import {
+  Button,
+  Container,
+  Form,
+  Grid,
+  Header,
+  Message,
+  Segment
+} from "semantic-ui-react"
 import { func, object } from "prop-types"
 import { connect } from "react-redux"
 import {
@@ -62,20 +70,8 @@ export class Login extends PureComponent {
     loginFailed = loginFailed && errorMessage !== ""
 
     return (
-      <div className="login-form">
-        <style>
-          {`
-                      body > div,
-                      body > div > div,
-                      body > div > div > div.login-form {
-                        height: 90%;
-                      }`}
-        </style>
-        <Grid
-          textAlign="center"
-          style={{ height: "100%" }}
-          verticalAlign="middle"
-        >
+      <Segment as={Container} basic>
+        <Grid centered>
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as="h2" textAlign="center">
               Log-in to your account
@@ -126,7 +122,7 @@ export class Login extends PureComponent {
             </Message>
           </Grid.Column>
         </Grid>
-      </div>
+      </Segment>
     )
   }
 }
