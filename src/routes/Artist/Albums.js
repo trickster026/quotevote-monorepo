@@ -44,6 +44,9 @@ class Albums extends PureComponent {
   }
 
   handleSongClick = (event, data) => {
+    const { songId } = this.state
+    const newSongId = songId === data.id ? -1 : data.id
+    this.setState({ songId: newSongId })
     this.props.changeSong({ id: data.id, title: data.title })
   }
 
@@ -56,7 +59,7 @@ class Albums extends PureComponent {
   )
 
   renderComponent = () => {
-    const { activeIndex } = this.state
+    const { activeIndex, songId } = this.state
 
     const { albums } = this.props
     return (
@@ -64,6 +67,7 @@ class Albums extends PureComponent {
         {albums.map(album => (
           <Menu.Item key={album.id}>
             <Accordion.Title
+              inverted
               key={album.id}
               active={activeIndex === album.id}
               index={album.id}
@@ -78,6 +82,7 @@ class Albums extends PureComponent {
                 <Menu.Menu key={song.songId}>
                   <Menu.Item
                     id={song.songId}
+                    active={songId === song.songId}
                     title={song.title}
                     onClick={this.handleSongClick}
                   >
