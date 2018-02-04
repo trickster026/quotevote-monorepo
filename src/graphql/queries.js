@@ -45,6 +45,7 @@ export const GET_SONG = gql`
       _id
       title
       lyrics
+      media
       total_score
       upvotes
       downvotes

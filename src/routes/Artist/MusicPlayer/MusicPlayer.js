@@ -1,25 +1,20 @@
 import React, { PureComponent } from "react"
-import { Segment, Header, Grid } from "semantic-ui-react"
+import { Segment, Header, Grid, Label } from "semantic-ui-react"
+import SpotifyPlayer from "react-spotify-player"
 import PropTypes from "prop-types"
-
-const mp3 =
-  "https://s3.amazonaws.com/scoreboard.com/10+The+Notorious+B.I.G+-+Juicy.mp3"
 
 class MusicPlayer extends PureComponent {
   static propTypes = {
     score: PropTypes.number.isRequired,
     upvotes: PropTypes.number.isRequired,
     downvotes: PropTypes.number.isRequired,
-    artistName: PropTypes.string,
-    songTitle: PropTypes.string
+    spotifyUri: PropTypes.string.isRequired
   }
 
   static defaultProps = {
     score: 0,
     upvotes: 0,
-    downvotes: 0,
-    artistName: "Artist Name",
-    songTitle: "Song Name"
+    downvotes: 0
   }
 
   render = () => {
@@ -31,21 +26,24 @@ class MusicPlayer extends PureComponent {
         <Segment attached textAlign="center">
           <Grid>
             <Grid.Row textAlign="left">
-              <Grid.Column verticalAlign="middle" width={6}>
-                <Header as="h4">
-                  <Header.Content>
-                    {this.props.artistName} - {this.props.songTitle}
-                  </Header.Content>
-                  <Header.Subheader>
-                    Score: {this.props.score} Up: {this.props.upvotes} Down:
-                    {this.props.downvotes}
-                  </Header.Subheader>
-                </Header>
-              </Grid.Column>
-              <Grid.Column width={10}>
-                <audio controls>
-                  <source src={mp3} type="audio/mp3" />
-                </audio>
+              <Grid.Column verticalAlign="middle" width={16}>
+                <SpotifyPlayer
+                  uri={this.props.spotifyUri}
+                  size={{ width: "100%", height: 80 }}
+                  view="list"
+                  theme="white"
+                />
+                <Label.Group color="black">
+                  <Label>
+                    Score<Label.Detail>{this.props.score}</Label.Detail>
+                  </Label>
+                  <Label>
+                    Upvotes<Label.Detail>{this.props.upvotes}</Label.Detail>
+                  </Label>
+                  <Label>
+                    Downvotes<Label.Detail>{this.props.downvotes}</Label.Detail>
+                  </Label>
+                </Label.Group>
               </Grid.Column>
             </Grid.Row>
           </Grid>

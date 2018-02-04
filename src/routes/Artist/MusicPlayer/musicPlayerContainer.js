@@ -14,11 +14,15 @@ export default compose(
     options: ({ songId }) => ({ variables: { song_id: songId } }),
     props: ({ data: { song } }) => {
       if (song) {
-        return {
-          score: song.total_score,
-          upvotes: song.upvotes,
-          downvotes: song.downvotes,
-          songTitle: song.title
+        const spotify = song.media.find(item => item.provider === "spotify")
+        if (spotify) {
+          return {
+            score: song.total_score,
+            upvotes: song.upvotes,
+            downvotes: song.downvotes,
+            songTitle: song.title,
+            spotifyUri: spotify.native_uri
+          }
         }
       }
     }
