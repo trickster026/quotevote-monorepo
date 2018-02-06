@@ -17,12 +17,12 @@ class Albums extends PureComponent {
     loading: bool,
     albums: arrayOf(
       shape({
-        title: string,
-        album_id: number,
+        name: string,
+        id: number,
         songs: arrayOf(
           shape({
-            title: string,
-            album_id: number,
+            name: string,
+            id: number,
             song_id: number
           })
         )
@@ -44,9 +44,6 @@ class Albums extends PureComponent {
   }
 
   handleSongClick = (event, data) => {
-    const { songId } = this.state
-    const newSongId = songId === data.id ? -1 : data.id
-    this.setState({ songId: newSongId })
     this.props.changeSong({ id: data.id, title: data.title })
   }
 
@@ -59,30 +56,28 @@ class Albums extends PureComponent {
   )
 
   renderComponent = () => {
-    const { activeIndex, songId } = this.state
+    const { activeIndex } = this.state
 
     const { albums } = this.props
     return (
       <Accordion as={Menu} vertical fluid>
         {albums.map(album => (
-          <Menu.Item key={album.album_id}>
+          <Menu.Item key={album.id}>
             <Accordion.Title
-              inverted
-              key={album.album_id}
-              active={activeIndex === album.album_id}
-              index={album.album_id}
+              key={album.id}
+              active={activeIndex === album.id}
+              index={album.id}
               onClick={this.handleClick}
             >
               <Icon name="dropdown" />
               <strong>{album.title}</strong>
             </Accordion.Title>
             <Accordion.Content
-              active={activeIndex === album.album_id}
+              active={activeIndex === album.id}
               content={album.songs.map(song => (
                 <Menu.Menu key={song.song_id}>
                   <Menu.Item
-                    id={song.song_id}
-                    active={songId === song.song_id}
+                    id={song.songId}
                     title={song.title}
                     onClick={this.handleSongClick}
                   >

@@ -20,7 +20,7 @@ class MusicPlayer extends PureComponent {
   render = () => {
     return (
       <div>
-        <Header inverted attached="top" as="h4">
+        <Header attached="top" as="h4">
           Music Player
         </Header>
         <Segment attached textAlign="center">
