@@ -17,13 +17,13 @@ class Albums extends PureComponent {
     loading: bool,
     albums: arrayOf(
       shape({
-        title: string,
-        album_id: number,
+        name: string,
+        id: number,
         songs: arrayOf(
           shape({
             title: string,
-            album_id: number,
-            song_id: number
+            albumId: number,
+            songId: number
           })
         )
       })
@@ -65,24 +65,24 @@ class Albums extends PureComponent {
     return (
       <Accordion as={Menu} vertical fluid>
         {albums.map(album => (
-          <Menu.Item key={album.album_id}>
+          <Menu.Item key={album.id}>
             <Accordion.Title
               inverted
-              key={album.album_id}
-              active={activeIndex === album.album_id}
-              index={album.album_id}
+              key={album.id}
+              active={activeIndex === album.id}
+              index={album.id}
               onClick={this.handleClick}
             >
               <Icon name="dropdown" />
-              <strong>{album.title}</strong>
+              <strong>{album.name}</strong>
             </Accordion.Title>
             <Accordion.Content
-              active={activeIndex === album.album_id}
+              active={activeIndex === album.id}
               content={album.songs.map(song => (
-                <Menu.Menu key={song.song_id}>
+                <Menu.Menu key={song.songId}>
                   <Menu.Item
-                    id={song.song_id}
-                    active={songId === song.song_id}
+                    id={song.songId}
+                    active={songId === song.songId}
                     title={song.title}
                     onClick={this.handleSongClick}
                   >

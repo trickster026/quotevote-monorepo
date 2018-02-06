@@ -39,25 +39,6 @@ export const GET_TRACKS = gql`
   }
 `
 
-export const GET_ALBUMS = gql`
-  query($artist_id: Int!) {
-    albums(artist_id: $artist_id) {
-      _id
-      artist_id
-      album_id
-      title
-      songs {
-        _id
-        artist_ids
-        featured_artist_ids
-        song_id
-        album_id
-        title
-      }
-    }
-  }
-`
-
 export const GET_SONG = gql`
   query getSong($song_id: Int!) {
     song(song_id: $song_id) {

@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
-import { GET_ALBUMS } from "../../graphql/queries"
+import { GET_TRACKS } from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
 import PropTypes from "prop-types"
@@ -59,7 +59,7 @@ const mapStateToProps = ({ artist }) => ({
 export default withApollo(
   compose(
     connect(mapStateToProps),
-    graphql(GET_ALBUMS, {
+    graphql(GET_TRACKS, {
       options: ownProps => {
         const artistId = ownProps && ownProps.match.params.artistId * 1
         return {
@@ -69,16 +69,17 @@ export default withApollo(
         }
       },
       props: ({
-        data: { albums, loading },
+        data: { albumsByArtist, loading },
         ownProps: { updateSong, currentSongId }
       }) => {
-        if (albums && albums[0]) {
-          const firstSongId = currentSongId || albums[0].songs[0].song_id
-          return {
-            albums: albums,
-            songId: firstSongId,
-            loading
-          }
+        let firstSongId
+        if (albumsByArtist && albumsByArtist[0]) {
+          firstSongId = currentSongId || albumsByArtist[0].firstSong
+        }
+        return {
+          albums: albumsByArtist,
+          songId: firstSongId,
+          loading
         }
       }
     })
