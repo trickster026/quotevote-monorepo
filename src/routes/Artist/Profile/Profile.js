@@ -8,7 +8,7 @@ import {
   Table
 } from "semantic-ui-react"
 import defaultImage from "../../../assets/image.png"
-import { string, number } from "prop-types"
+import { string, number, array } from "prop-types"
 
 class Profile extends PureComponent {
   static propTypes = {
@@ -17,7 +17,7 @@ class Profile extends PureComponent {
     score: number,
     up: number,
     down: number,
-    followers: number
+    followers: array
   }
 
   static defaultProps = {
@@ -66,7 +66,7 @@ class Profile extends PureComponent {
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Followers</Table.Cell>
-                      <Table.Cell>{followers}</Table.Cell>
+                      <Table.Cell>{followers.length}</Table.Cell>
                     </Table.Row>
                   </Table.Body>
                 </Table>

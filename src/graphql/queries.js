@@ -28,7 +28,9 @@ export const GET_ARTIST_INFO = gql`
       total_score
       upvotes
       downvotes
-      followers
+      followers {
+        avatar
+      }
     }
   }
 `
