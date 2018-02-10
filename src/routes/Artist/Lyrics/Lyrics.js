@@ -6,7 +6,8 @@ import {
   Dimmer,
   Loader,
   Container,
-  Button
+  Button,
+  Popup
 } from "semantic-ui-react"
 import { string, number, func, array } from "prop-types"
 import SelectionPopover from "./SelectionPopover"
@@ -120,7 +121,14 @@ class Lyrics extends PureComponent {
   renderScoreAndQuotes = () => (
     <div>
       <Button inverted>{`${this.state.points}`}</Button>
-      <Button icon="quote right" inverted onClick={this.handleShareQuote} />
+      <Popup
+        trigger={
+          <Button icon="quote right" inverted onClick={this.handleShareQuote} />
+        }
+        on="click"
+        content="Shared on your wall"
+        hideOnScroll
+      />
     </div>
   )
 

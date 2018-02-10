@@ -2,7 +2,7 @@ import React, { PureComponent } from "react"
 import { Grid, Container, Segment } from "semantic-ui-react"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import Welcome from "./Welcome"
-import TrendingSongs from "./TrendingSongs"
+import TrendingSongs from "./TrendingSongs/trendingSongsContainer"
 import RecommendedSong from "./RecommendedSong"
 import NewsFeed from "./NewsFeed"
 

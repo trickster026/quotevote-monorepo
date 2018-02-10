@@ -83,3 +83,9 @@ export const SEARCH = gql`
     }
   }
 `
+
+export const GET_TRENDING_SONGS = gql`
+  query trendingSongs($limit: Int!) {
+    trendingSongs(limit: $limit)
+  }
+`

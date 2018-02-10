@@ -47,7 +47,7 @@ class Profile extends PureComponent {
                 style={{ marginTop: "10px" }}
                 onClick={this.props.onFollow}
               >
-                {this.props.isFollower ? "Unfollow" : "Follow"}
+                {this.props.isFollower ? "UNFOLLOW" : "FOLLOW"}
               </Button>
             </Item.Image>
 
