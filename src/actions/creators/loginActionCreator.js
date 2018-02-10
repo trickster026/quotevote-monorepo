@@ -47,7 +47,7 @@ const getToken = async (username, password, dispatch) => {
   try {
     const baseUri =
       process.env.NODE_ENV === "production"
-        ? "http://107.20.29.153/login"
+        ? "http://34.239.105.165:5000/login"
         : "http://localhost:5000/login"
 
     const response = await axios.post(
@@ -58,11 +58,7 @@ const getToken = async (username, password, dispatch) => {
       },
       {
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers":
-            "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With",
-          "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS"
+          "Content-Type": "application/json"
         }
       }
     )
