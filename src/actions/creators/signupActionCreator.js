@@ -44,7 +44,7 @@ const registerUser = async user => {
   try {
     const baseUri =
       process.env.NODE_ENV === "production"
-        ? "http://34.239.105.165:5000/register"
+        ? "http://107.20.29.153/register"
         : "http://localhost:5000/register"
 
     const response = await axios.post(baseUri, user, {
