@@ -86,11 +86,9 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     const { isLoading, value, results } = this.state
-
+    const { login } = this.props
     const userId =
-      "user" in this.props.login
-        ? this.props.login.user._id
-        : "59b006a2dba5fb0027f48c76"
+      login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
     return (
       <Menu attached="top" color="grey" size="huge" inverted>

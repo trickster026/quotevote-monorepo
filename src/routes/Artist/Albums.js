@@ -67,7 +67,6 @@ class Albums extends PureComponent {
         {albums.map(album => (
           <Menu.Item key={album.id}>
             <Accordion.Title
-              inverted
               key={album.id}
               active={activeIndex === album.id}
               index={album.id}

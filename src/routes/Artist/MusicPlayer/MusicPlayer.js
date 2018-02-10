@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Segment, Header, Grid, Label } from "semantic-ui-react"
+import { Segment, Header, Grid, Label, Dimmer, Loader } from "semantic-ui-react"
 import SpotifyPlayer from "react-spotify-player"
 import PropTypes from "prop-types"
 
@@ -8,7 +8,7 @@ class MusicPlayer extends PureComponent {
     score: PropTypes.number.isRequired,
     upvotes: PropTypes.number.isRequired,
     downvotes: PropTypes.number.isRequired,
-    spotifyUri: PropTypes.string.isRequired
+    spotifyUri: PropTypes.string
   }
 
   static defaultProps = {
@@ -27,12 +27,20 @@ class MusicPlayer extends PureComponent {
           <Grid>
             <Grid.Row textAlign="left">
               <Grid.Column verticalAlign="middle" width={16}>
-                <SpotifyPlayer
-                  uri={this.props.spotifyUri}
-                  size={{ width: "100%", height: 80 }}
-                  view="list"
-                  theme="white"
-                />
+                {!this.props.spotifyUri ? (
+                  <Segment basic>
+                    <Dimmer active>
+                      <Loader size="small" />
+                    </Dimmer>
+                  </Segment>
+                ) : (
+                  <SpotifyPlayer
+                    uri={this.props.spotifyUri}
+                    size={{ width: "100%", height: 80 }}
+                    view="list"
+                    theme="white"
+                  />
+                )}
                 <Label.Group color="black">
                   <Label>
                     Score<Label.Detail>{this.props.score}</Label.Detail>

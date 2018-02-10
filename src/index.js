@@ -7,12 +7,13 @@ import { BrowserRouter as Router } from "react-router-dom"
 
 import { ApolloProvider } from "react-apollo"
 import { Provider } from "react-redux"
+import { PersistGate } from "redux-persist/integration/react"
 import { ApolloClient } from "apollo-client"
 import { HttpLink } from "apollo-link-http"
 import { InMemoryCache } from "apollo-cache-inmemory"
 import { ApolloLink, concat } from "apollo-link"
 
-import store from "./reducers/store"
+import store, { persistor } from "./reducers/store"
 
 const baseUri =
   process.env.NODE_ENV === "production"
@@ -46,9 +47,11 @@ export const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <App />
+        </Router>
+      </PersistGate>
     </Provider>
   </ApolloProvider>,
   document.getElementById("root")

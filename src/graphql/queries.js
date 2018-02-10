@@ -29,6 +29,7 @@ export const GET_ARTIST_INFO = gql`
       upvotes
       downvotes
       followers {
+        _id
         avatar
       }
     }

@@ -25,7 +25,7 @@ class Profile extends PureComponent {
     score: 0,
     up: 0,
     down: 0,
-    followers: 0
+    followers: []
   }
 
   render = () => {
@@ -41,8 +41,13 @@ class Profile extends PureComponent {
                 width={300}
                 height={300}
               />
-              <Button fluid color="orange" style={{ marginTop: "10px" }}>
-                Follow
+              <Button
+                fluid
+                color={this.props.isFollower ? "red" : "orange"}
+                style={{ marginTop: "10px" }}
+                onClick={this.props.onFollow}
+              >
+                {this.props.isFollower ? "Unfollow" : "Follow"}
               </Button>
             </Item.Image>
 
