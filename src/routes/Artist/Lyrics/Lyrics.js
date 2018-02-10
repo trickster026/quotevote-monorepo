@@ -8,7 +8,7 @@ import {
   Container,
   Button
 } from "semantic-ui-react"
-import { string, number, func } from "prop-types"
+import { string, number, func, array } from "prop-types"
 import SelectionPopover from "./SelectionPopover"
 import "./Lyrics.css"
 
@@ -28,7 +28,8 @@ class Lyrics extends PureComponent {
     downvotes: number,
     onVoting: func,
     songId: number,
-    artistId: number
+    artistId: number,
+    quotes: array
   }
 
   static defaultProps = {
@@ -110,10 +111,16 @@ class Lyrics extends PureComponent {
     })
   }
 
+  handleShareQuote = event => {
+    this.props.onShare({
+      quotes: [this.state.highlightedWords, ...this.props.quotes]
+    })
+  }
+
   renderScoreAndQuotes = () => (
     <div>
       <Button inverted>{`${this.state.points}`}</Button>
-      <Button icon="quote right" inverted />
+      <Button icon="quote right" inverted onClick={this.handleShareQuote} />
     </div>
   )
 

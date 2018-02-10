@@ -15,7 +15,8 @@ class UserContainer extends PureComponent {
       vote_cast: 0,
       image: _user.avatar,
       followers: 65,
-      following: 24
+      following: 24,
+      quotes: _user.quotes.slice(0, 5)
     }
     this.setState({ user })
   }

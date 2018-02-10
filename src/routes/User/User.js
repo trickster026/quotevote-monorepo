@@ -3,7 +3,7 @@ import { Grid, Container, Segment } from "semantic-ui-react"
 import UserProfile from "../../components/Profile/UserProfile"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import FantasyLabel from "./FantasyLabel"
-import UserWall from "./UserWall"
+import UserWall from "./UserWall/UserWall"
 import { string, number, shape } from "prop-types"
 
 class User extends PureComponent {
@@ -23,12 +23,13 @@ class User extends PureComponent {
   }
 
   render = () => {
+    const { user } = this.props
     return (
       <Segment as={Container} basic>
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <UserProfile user={this.props.user} />
+              <UserProfile user={user} />
             </Grid.Column>
             <Grid.Column>
               <TopArtists />
@@ -40,7 +41,7 @@ class User extends PureComponent {
               <FantasyLabel />
             </Grid.Column>
             <Grid.Column width={10}>
-              <UserWall />
+              <UserWall quotes={user.quotes} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

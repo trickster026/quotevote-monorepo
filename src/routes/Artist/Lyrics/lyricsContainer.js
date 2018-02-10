@@ -5,9 +5,10 @@ import Lyrics from "./Lyrics"
 import {
   GET_SONG,
   GET_ARTIST_INFO,
-  GET_TOP_ARTISTS
+  GET_TOP_ARTISTS,
+  GET_USER_INFO
 } from "../../../graphql/queries"
-import { CREATE_VOTE } from "../../../graphql/mutations"
+import { CREATE_VOTE, UPDATE_USER } from "../../../graphql/mutations"
 import PropTypes from "prop-types"
 class LyricsContainer extends PureComponent {
   state = { lyrics: "" }
@@ -16,7 +17,7 @@ class LyricsContainer extends PureComponent {
     songId: PropTypes.number.isRequired
   }
 
-  mutation = () => {
+  vote = () => {
     if (this.props.client) {
       return async payload => {
         return await this.props.client.mutate({
@@ -40,16 +41,36 @@ class LyricsContainer extends PureComponent {
     }
   }
 
+  shareQuote = () => {
+    if (this.props.client) {
+      return async payload => {
+        return await this.props.client.mutate({
+          mutation: UPDATE_USER,
+          variables: { user: { _id: this.props.userId, ...payload } },
+          refetchQueries: [
+            {
+              query: GET_USER_INFO,
+              variables: { user_id: this.props.userId }
+            }
+          ]
+        })
+      }
+    }
+  }
+
   render = () => {
     const { client, ...others } = this.props
     return (
-      <Lyrics
-        {...others}
-        lyrics={this.props.lyrics}
-        onVoting={this.mutation()}
-      />
+      <Lyrics onVoting={this.vote()} onShare={this.shareQuote()} {...others} />
     )
   }
+}
+
+const mapStateToProps = ({ login }) => {
+  if (login && login.user) {
+    return { userId: login.user._id }
+  }
+  return null
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -60,7 +81,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default withApollo(
   compose(
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     graphql(GET_SONG, {
       options: ({ songId }) => ({ variables: { song_id: songId } }),
       props: ({ data: { song } }) => {
@@ -71,6 +92,14 @@ export default withApollo(
             upvotes: song.upvotes,
             downvotes: song.downvotes
           }
+        }
+      }
+    }),
+    graphql(GET_USER_INFO, {
+      options: ({ userId }) => ({ variables: { user_id: userId } }),
+      props: ({ data: { user } }) => {
+        if (user) {
+          return { quotes: user.quotes }
         }
       }
     })

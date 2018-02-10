@@ -33,3 +33,15 @@ export const UNFOLLOW = gql`
     }
   }
 `
+
+export const UPDATE_USER = gql`
+  mutation($user: UserInput) {
+    updateUser(user: $user) {
+      _id
+      name
+      username
+      email
+      quotes
+    }
+  }
+`
