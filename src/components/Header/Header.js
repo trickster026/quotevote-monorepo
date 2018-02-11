@@ -90,7 +90,7 @@ class HeaderComponent extends PureComponent {
         artistId: 0
       }))
 
-    const results = {
+    let results = {
       users: {
         name: "Users",
         results: usersData
@@ -100,6 +100,8 @@ class HeaderComponent extends PureComponent {
         results: lyricistData
       }
     }
+
+    if (!usersData.length) delete results.users
 
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent()

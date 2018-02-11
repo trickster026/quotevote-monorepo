@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { Grid, Container, Segment } from "semantic-ui-react"
-import UserProfile from "../../components/Profile/UserProfile"
+import UserProfile from "./UserProfile"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import FantasyLabel from "./FantasyLabel"
 import UserWall from "./UserWall/UserWall"
@@ -23,13 +23,13 @@ class User extends PureComponent {
   }
 
   render = () => {
-    const { user } = this.props
+    const { user, ...others } = this.props
     return (
       <Segment as={Container} basic>
         <Grid doubling stackable>
           <Grid.Row columns={2}>
             <Grid.Column>
-              <UserProfile user={user} />
+              <UserProfile user={user} {...others} />
             </Grid.Column>
             <Grid.Column>
               <TopArtists />

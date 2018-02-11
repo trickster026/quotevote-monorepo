@@ -65,6 +65,8 @@ export const GET_USER_INFO = gql`
       email
       avatar
       quotes
+      _followersId
+      _followingId
     }
   }
 `

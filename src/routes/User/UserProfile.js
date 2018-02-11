@@ -1,17 +1,18 @@
 import React, { PureComponent } from "react"
 import {
-  Image,
   Button,
-  Segment,
   Container,
+  Image,
   Item,
+  Segment,
   Table
 } from "semantic-ui-react"
-import { string, number, shape } from "prop-types"
+import { number, shape, string } from "prop-types"
 
 class UserProfile extends PureComponent {
   static propTypes = {
     user: shape({
+      user_id: string,
       name: string,
       points: number,
       vote_cast: number,
@@ -23,6 +24,7 @@ class UserProfile extends PureComponent {
 
   static defaultProps = {
     user: {
+      user_id: "",
       name: "John Doe",
       points: 59,
       vote_cast: 24,
@@ -34,15 +36,22 @@ class UserProfile extends PureComponent {
   }
 
   render = () => {
-    const { user } = this.props
+    const { user, onFollow } = this.props
+    const visibility = user.showFollowButton ? "visible" : "hidden"
     return (
       <Segment as={Container} compact padded fluid>
         <Item.Group>
           <Item>
             <Item.Image>
               <Image src={user.image} width={300} height={300} />
-              <Button fluid color="orange" style={{ marginTop: "10px" }}>
-                Follow
+
+              <Button
+                fluid
+                color={user.isFollower ? "red" : "orange"}
+                style={{ marginTop: "10px", visibility }}
+                onClick={onFollow}
+              >
+                {user.isFollower ? "UNFOLLOW" : "FOLLOW"}
               </Button>
             </Item.Image>
 

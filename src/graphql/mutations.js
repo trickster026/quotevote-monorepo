@@ -45,3 +45,33 @@ export const UPDATE_USER = gql`
     }
   }
 `
+
+export const FOLLOW_USERS = gql`
+  mutation followUser($user_id: String!) {
+    followUser(user_id: $user_id, action: "follow") {
+      _id
+      name
+      username
+      email
+      avatar
+      quotes
+      _followersId
+      _followingId
+    }
+  }
+`
+
+export const UNFOLLOW_USERS = gql`
+  mutation followUser($user_id: String!) {
+    followUser(user_id: $user_id, action: "unfollow") {
+      _id
+      name
+      username
+      email
+      avatar
+      quotes
+      _followersId
+      _followingId
+    }
+  }
+`
