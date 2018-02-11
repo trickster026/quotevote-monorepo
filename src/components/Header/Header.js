@@ -45,18 +45,21 @@ class HeaderComponent extends PureComponent {
   }
 
   handleResultSelect = (e, { result }) => {
-    const { artistId, songId } = result
+    const { artistId, songId, userId } = result
     const { history } = this.props
 
-    this.props.dispatch({
-      type: "UPDATE_CURRENT_SONG",
-      payload: {
-        currentArtist: artistId,
-        currentSongId: songId
-      }
-    })
-
-    history.push(`/artist/${artistId}`)
+    if (userId) {
+      history.push(`/user/${userId}`)
+    } else {
+      this.props.dispatch({
+        type: "UPDATE_CURRENT_SONG",
+        payload: {
+          currentArtist: artistId,
+          currentSongId: songId
+        }
+      })
+      history.push(`/artist/${artistId}`)
+    }
   }
 
   handleSearchChange = async (e, { value }) => {
@@ -64,15 +67,39 @@ class HeaderComponent extends PureComponent {
 
     const { lyricistSearch } = (await this.search()(value)).data
 
-    const results =
+    const lyricistData =
       lyricistSearch &&
-      lyricistSearch.response.map(result => ({
+      lyricistSearch.response[0].category.results.map(result => ({
         title: result.title,
         image: result.image,
         description: result.artistName,
         artistId: result.artistId,
-        songId: result.songId
+        songId: result.songId,
+        userId: 0
       }))
+    console.log(lyricistData)
+
+    const usersData =
+      lyricistSearch &&
+      lyricistSearch.response[1].category.results.map(result => ({
+        title: result.name,
+        image: result.avatar,
+        description: "",
+        userId: result._id,
+        songId: 0,
+        artistId: 0
+      }))
+
+    const results = {
+      users: {
+        name: "Users",
+        results: usersData
+      },
+      lyricist: {
+        name: "Songs",
+        results: lyricistData
+      }
+    }
 
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent()
@@ -115,6 +142,7 @@ class HeaderComponent extends PureComponent {
           <Menu.Menu position="right">
             <Menu.Item>
               <Search
+                category
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={this.handleSearchChange}
