@@ -89,3 +89,9 @@ export const GET_TRENDING_SONGS = gql`
     trendingSongs(limit: $limit)
   }
 `
+
+export const GET_RECOMMENDED_SONGS = gql`
+  query recommendedSongs($limit: Int!) {
+    recommendedSongs(limit: $limit)
+  }
+`

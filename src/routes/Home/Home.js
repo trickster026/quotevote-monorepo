@@ -3,7 +3,7 @@ import { Grid, Container, Segment } from "semantic-ui-react"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import Welcome from "./Welcome"
 import TrendingSongs from "./TrendingSongs/trendingSongsContainer"
-import RecommendedSong from "./RecommendedSong"
+import RecommendedSong from "./RecommendedSongs/recommendedSongsContainer"
 import NewsFeed from "./NewsFeed"
 
 class Home extends PureComponent {
