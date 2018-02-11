@@ -4,7 +4,7 @@ import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import Welcome from "./Welcome"
 import TrendingSongs from "./TrendingSongs/trendingSongsContainer"
 import RecommendedSong from "./RecommendedSongs/recommendedSongsContainer"
-import NewsFeed from "./NewsFeed"
+import NewsFeed from "./NewsFeed/newsFeedContainer"
 
 class Home extends PureComponent {
   render = () => {

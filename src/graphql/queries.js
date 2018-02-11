@@ -95,3 +95,9 @@ export const GET_RECOMMENDED_SONGS = gql`
     recommendedSongs(limit: $limit)
   }
 `
+
+export const GET_NEWS_FEED = gql`
+  query activities($limit: Int!) {
+    activities(limit: $limit)
+  }
+`
