@@ -38,7 +38,27 @@ export const GET_ARTIST_INFO = gql`
 
 export const GET_TRACKS = gql`
   query getTracks($artist_id: Int!) {
-    albumsByArtist(artist_id: $artist_id)
+    albums(artist_id: $artist_id) {
+      _id
+      artist_id
+      album_id
+      title
+      songs {
+        _id
+        artist_ids
+        featured_artist_ids
+        song_id
+        album_id
+        full_title
+        title
+        lyrics
+        media
+        thumbnail
+        total_score
+        upvotes
+        downvotes
+      }
+    }
   }
 `
 

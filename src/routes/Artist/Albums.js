@@ -65,23 +65,23 @@ class Albums extends PureComponent {
     return (
       <Accordion as={Menu} vertical fluid>
         {albums.map(album => (
-          <Menu.Item key={album.id}>
+          <Menu.Item key={album.album_id}>
             <Accordion.Title
-              key={album.id}
-              active={activeIndex === album.id}
-              index={album.id}
+              key={album.album_id}
+              active={activeIndex === album.album_id}
+              index={album.album_id}
               onClick={this.handleClick}
             >
               <Icon name="dropdown" />
-              <strong>{album.name}</strong>
+              <strong>{album.title}</strong>
             </Accordion.Title>
             <Accordion.Content
-              active={activeIndex === album.id}
+              active={activeIndex === album.album_id}
               content={album.songs.map(song => (
-                <Menu.Menu key={song.songId}>
+                <Menu.Menu key={song.song_id}>
                   <Menu.Item
-                    id={song.songId}
-                    active={songId === song.songId}
+                    id={song.song_id}
+                    active={songId === song.song_id}
                     title={song.title}
                     onClick={this.handleSongClick}
                   >
