@@ -10,7 +10,7 @@ class Home extends PureComponent {
   render = () => {
     return (
       <Segment as={Container} basic>
-        <Grid>
+        <Grid doubling stackable>
           <Grid.Row columns={2}>
             <Grid.Column width={8}>
               <Welcome />

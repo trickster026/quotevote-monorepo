@@ -91,7 +91,7 @@ class HeaderComponent extends PureComponent {
       login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
     return (
-      <Menu attached="top" color="grey" size="huge" inverted>
+      <Menu attached="top" color="grey" size="huge" inverted stackable>
         <Container>
           <Menu.Menu position="left">
             <Menu.Item as={Link} name="home" to="/">

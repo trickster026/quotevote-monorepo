@@ -44,7 +44,7 @@ class Artist extends PureComponent {
       return (
         <ErrorBoundary>
           <Segment as={Container} basic>
-            <Grid>
+            <Grid doubling stackable>
               <Grid.Row columns={2}>
                 <Grid.Column>
                   <Profile artistId={this.props.artistId} />

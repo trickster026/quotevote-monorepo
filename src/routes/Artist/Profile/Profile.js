@@ -38,8 +38,7 @@ class Profile extends PureComponent {
               <Image
                 verticalAlign="middle"
                 src={image || defaultImage}
-                width={300}
-                height={300}
+                size="small"
               />
               <Button
                 fluid

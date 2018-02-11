@@ -26,7 +26,7 @@ class User extends PureComponent {
     const { user } = this.props
     return (
       <Segment as={Container} basic>
-        <Grid>
+        <Grid doubling stackable>
           <Grid.Row columns={2}>
             <Grid.Column>
               <UserProfile user={user} />
