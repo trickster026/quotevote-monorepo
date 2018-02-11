@@ -66,9 +66,9 @@ class LyricsContainer extends PureComponent {
   }
 }
 
-const mapStateToProps = ({ login }) => {
-  if (login && login.user) {
-    return { userId: login.user._id }
+const mapStateToProps = ({ login, artist }) => {
+  if (login && login.user && artist && artist.currentSongId) {
+    return { userId: login.user._id, songId: artist.currentSongId }
   }
   return null
 }
