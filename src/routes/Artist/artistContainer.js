@@ -72,13 +72,9 @@ export default withApollo(
         data: { albums, loading },
         ownProps: { updateSong, currentSongId }
       }) => {
-        let firstSongId
-        if (albums && albums[0]) {
-          firstSongId = currentSongId || albums[0].songs[0]
-        }
         return {
           albums: albums,
-          songId: firstSongId,
+          songId: currentSongId,
           loading
         }
       }

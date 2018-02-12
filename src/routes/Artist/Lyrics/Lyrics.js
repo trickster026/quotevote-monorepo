@@ -162,31 +162,44 @@ class Lyrics extends PureComponent {
         </Segment>
       )
     } else {
-      return (
-        <Segment attached>
-          <Container text>
-            <div style={{ position: "relative" }}>
-              <div data-selectable>
-                <p className="lyrics-segment">{this.props.lyrics}</p>
+      if (this.props.lyrics) {
+        return (
+          <Segment attached>
+            <Container text>
+              <div style={{ position: "relative" }}>
+                <div data-selectable>
+                  <p className="lyrics-segment">{this.props.lyrics}</p>
+                </div>
+                <SelectionPopover
+                  showPopover={this.state.showPopover}
+                  topOffset={60}
+                  onSelect={this.handleSelect}
+                  onDeselect={() => {
+                    this.setState({ showPopover: false })
+                  }}
+                >
+                  <Label pointing="below" color="black">
+                    {this.state.hasVoted
+                      ? this.renderScoreAndQuotes()
+                      : this.renderVotingButtons()}
+                  </Label>
+                </SelectionPopover>
               </div>
-              <SelectionPopover
-                showPopover={this.state.showPopover}
-                topOffset={60}
-                onSelect={this.handleSelect}
-                onDeselect={() => {
-                  this.setState({ showPopover: false })
-                }}
-              >
-                <Label pointing="below" color="black">
-                  {this.state.hasVoted
-                    ? this.renderScoreAndQuotes()
-                    : this.renderVotingButtons()}
-                </Label>
-              </SelectionPopover>
-            </div>
-          </Container>
-        </Segment>
-      )
+            </Container>
+          </Segment>
+        )
+      } else {
+        return (
+          <Segment attached>
+            <Header as="h3">
+              <Header.Content>Select a song</Header.Content>
+              <Header.Subheader>
+                Click on song in the albums list in the left panel
+              </Header.Subheader>
+            </Header>
+          </Segment>
+        )
+      }
     }
   }
 
