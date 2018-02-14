@@ -89,7 +89,7 @@ class Lyrics extends PureComponent {
 
       onVoting({
         song_id: this.props.songId,
-        user_id: "5a37a486c27953edc3c34748",
+        user_id: this.props.userId,
         artist_id: artistId,
         start_index: this.state.startIndex,
         end_index: this.state.endIndex,
