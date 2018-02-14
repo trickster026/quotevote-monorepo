@@ -19,7 +19,6 @@ class NewsFeed extends PureComponent {
   }
 
   render = () => {
-    console.log("props", this.props)
     return (
       <div>
         <Header inverted attached="top" as="h4">

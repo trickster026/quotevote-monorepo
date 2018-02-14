@@ -81,7 +81,6 @@ class HeaderComponent extends PureComponent {
         songId: result.songId,
         userId: 0
       }))
-    console.log(lyricistData)
 
     const usersData =
       lyricistSearch &&
