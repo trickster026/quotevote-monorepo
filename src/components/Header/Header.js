@@ -8,6 +8,9 @@ import hihopImage from "../../assets/hiphop.png"
 import { tokenValidator } from "../../actions/creators/loginActionCreator"
 import PropTypes from "prop-types"
 
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYnJvbkBlbWFpbC5jb20iLCJfaWQiOiI1OWIwMDM3NTBlMzc2NjA0MTQ0MDE3MWYiLCJpYXQiOjE1MTI5OTYwNzh9.MhDHKSGYU2F8fpeWxOT7b4jimD9-N4FwBZe4z-OT4YE"
+
 class HeaderComponent extends PureComponent {
   state = { search: "" }
 
@@ -29,6 +32,7 @@ class HeaderComponent extends PureComponent {
       return async payload => {
         return await this.props.client.query({
           query: SEARCH,
+          context: { token },
           variables: { query: payload },
           refetchQueries: [
             {

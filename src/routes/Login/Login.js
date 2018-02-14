@@ -33,16 +33,16 @@ export class Login extends PureComponent {
       this.props.logout(this.props.history)
     }
 
-    let times = 0
-    const interval = setInterval(() => {
-      times += 1
-      if (this.state.username) {
-        this.password.setState({ ...this.state.password, hasValue: true })
-        clearInterval(interval)
-      } else if (times >= 10) {
-        clearInterval(interval)
-      }
-    }, 100)
+    // let times = 0
+    // const interval = setInterval(() => {
+    //   times += 1
+    //   if (this.state.username) {
+    //     this.password.setState({ ...this.state.password, hasValue: true })
+    //     clearInterval(interval)
+    //   } else if (times >= 10) {
+    //     clearInterval(interval)
+    //   }
+    // }, 100)
   }
 
   handleInputs = event => {
