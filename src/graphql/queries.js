@@ -87,6 +87,8 @@ export const GET_USER_INFO = gql`
       quotes
       _followersId
       _followingId
+      vote_cast
+      points
     }
   }
 `
@@ -94,6 +96,17 @@ export const GET_USER_INFO = gql`
 export const GET_TOP_ARTISTS = gql`
   query getTopArtists {
     topArtists(limit: 5)
+  }
+`
+
+export const GET_USER_LABELS = gql`
+  query getUserFantasyLabels($user_id: String!) {
+    userFantasyLabels(user_id: $user_id) {
+      user_id
+      artist_id
+      name
+      score
+    }
   }
 `
 

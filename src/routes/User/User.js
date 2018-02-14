@@ -15,32 +15,48 @@ class User extends PureComponent {
       image: string,
       followers: number,
       following: number
+    }),
+    fantasyLabels: shape({
+      user_id: string,
+      artist_id: number,
+      name: string,
+      score: number
     })
   }
 
   static defaultProps = {
-    user: {}
+    user: {
+      user_id: "59b003750e3766041440171f",
+      name: "John Doe",
+      points: 999999,
+      vote_cast: 999999,
+      image:
+        "https://www.digitalwallonia.be/wp-content/plugins/evenement/src/front/assets/img//contact-default.png",
+      followers: 999999,
+      following: 999999
+    },
+    fantasyLabels: {}
   }
 
   render = () => {
-    const { user, ...others } = this.props
+    const { user, userFantasyLabels, ...others } = this.props
     return (
       <Segment as={Container} basic>
         <Grid doubling stackable>
           <Grid.Row columns={2}>
-            <Grid.Column>
+            <Grid.Column width={8}>
               <UserProfile user={user} {...others} />
             </Grid.Column>
-            <Grid.Column>
+            <Grid.Column width={8}>
               <TopArtists />
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
-            <Grid.Column width={6}>
-              <FantasyLabel />
+            <Grid.Column width={8}>
+              <FantasyLabel fantasyLabels={userFantasyLabels} />
             </Grid.Column>
-            <Grid.Column width={10}>
+            <Grid.Column width={8}>
               <UserWall quotes={user.quotes} />
             </Grid.Column>
           </Grid.Row>

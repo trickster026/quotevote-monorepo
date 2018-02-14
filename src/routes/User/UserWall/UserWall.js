@@ -10,7 +10,7 @@ class UserWall extends PureComponent {
 
   renderQuotes = () => {
     const { quotes } = this.props
-    console.log("quotes", quotes)
+
     if (quotes && quotes.length > 0) {
       return this.props.quotes.map((quote, index) => (
         <Feed className="userwall" key={index}>

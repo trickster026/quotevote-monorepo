@@ -1,36 +1,40 @@
 import React, { PureComponent } from "react"
-import { Card, Feed } from "semantic-ui-react"
+import { List, Header, Segment } from "semantic-ui-react"
+import PropTypes from "prop-types"
 
 class FantasyLabel extends PureComponent {
-    render = () => {
-        return (
-            <Card fluid style={{ minHeight: "100%" }}>
-              <Card.Content>
-                <Card.Header>Fantasy Label</Card.Header>
-              </Card.Content>
-              <Card.Content>
-                <Feed>
-                  <Feed.Event>
-                    <Feed.Label>2 Pac</Feed.Label>
-                  </Feed.Event>
+  static propTypes = {
+    fantasyLabels: PropTypes.array
+  }
 
-                  <Feed.Event>
-                    <Feed.Label>Notorious BIG</Feed.Label>
-                  </Feed.Event>
+  renderFantasyLabels = () => {
+    const { fantasyLabels } = this.props
+    return (
+      <List ordered relaxed>
+        {fantasyLabels &&
+          fantasyLabels.map(fantasyLabel => (
+            <List.Item key={fantasyLabel.artist_id}>
+              <List.Content>
+                <List.Header>{fantasyLabel.name}</List.Header>
+              </List.Content>
+            </List.Item>
+          ))}
+      </List>
+    )
+  }
 
-                  <Feed.Event>
-                    <Feed.Label>Nas</Feed.Label>
-                  </Feed.Event>
-
-                  <Feed.Event>
-                    <Feed.Label>JayZ</Feed.Label>
-                  </Feed.Event>
-
-                </Feed>
-              </Card.Content>
-            </Card>
-        )
-    }
+  render = () => {
+    return (
+      <div>
+        <Header inverted attached="top" as="h4">
+          Fantasy Label
+        </Header>
+        <Segment attached textAlign="left">
+          {this.renderFantasyLabels()}
+        </Segment>
+      </div>
+    )
+  }
 }
 
 export default FantasyLabel
