@@ -77,7 +77,9 @@ class Lyrics extends PureComponent {
         downvotes,
         updateSong,
         artistId,
-        onVoting
+        onVoting,
+        userId,
+        songId
       } = this.props
       let totalUpvotes = isUpvote ? upvotes + 1 : upvotes
       let totalDownvotes = !isUpvote ? downvotes + 1 : downvotes
@@ -88,8 +90,8 @@ class Lyrics extends PureComponent {
       })
 
       onVoting({
-        song_id: this.props.songId,
-        user_id: this.props.userId,
+        song_id: songId,
+        user_id: userId,
         artist_id: artistId,
         start_index: this.state.startIndex,
         end_index: this.state.endIndex,

@@ -14,8 +14,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: "root",
-  storage: localForage,
-  blacklist: ["artist"]
+  storage: localForage
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
