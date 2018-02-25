@@ -26,7 +26,7 @@ class FantasyLabel extends PureComponent {
   render = () => {
     return (
       <div>
-        <Header inverted attached="top" as="h4">
+        <Header className="header-module" inverted attached="top" as="h4">
           Fantasy Label
         </Header>
         <Segment attached textAlign="left">

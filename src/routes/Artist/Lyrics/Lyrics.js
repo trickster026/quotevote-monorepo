@@ -208,7 +208,7 @@ class Lyrics extends PureComponent {
   render = () => {
     return (
       <div className="lyrics-selection">
-        <Header inverted attached="top" as="h4">
+        <Header className="header-module" inverted attached="top" as="h4">
           Lyrics
         </Header>
         {this.renderMain()}
