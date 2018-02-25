@@ -35,7 +35,7 @@ class RecommendedSongs extends PureComponent {
     }
     return (
       <div>
-        <Header inverted attached="top" as="h4">
+        <Header className="header-module" inverted attached="top" as="h4">
           Recommended Songs
         </Header>
         <Segment attached>

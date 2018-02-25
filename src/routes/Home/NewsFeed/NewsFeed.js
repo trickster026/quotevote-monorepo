@@ -21,7 +21,7 @@ class NewsFeed extends PureComponent {
   render = () => {
     return (
       <div>
-        <Header inverted attached="top" as="h4">
+        <Header className="header-module" inverted attached="top" as="h4">
           Public News Feed
         </Header>
         <Segment attached>

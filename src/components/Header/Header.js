@@ -123,40 +123,46 @@ class HeaderComponent extends PureComponent {
       login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
     return (
-      <Menu attached="top" color="grey" size="huge" inverted stackable>
-        <Container>
-          <Menu.Menu position="left">
-            <Menu.Item as={Link} name="home" to="/">
-              <Image src={hihopImage} />
-            </Menu.Item>
-            <Menu.Item as={Link} name="scoreboard" to="/artist/1">
-              SCOREBOARD
-            </Menu.Item>
-            <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
-              ACCOUNT
-            </Menu.Item>
-            <Menu.Item
-              as={Link}
-              name="sign-out"
-              to={tokenValidator() ? "/logout" : "/login"}
-            >
-              {tokenValidator() ? "LOGOUT" : "LOGIN"}
-            </Menu.Item>
-          </Menu.Menu>
+      <Menu
+        className="header-module"
+        attached="top"
+        color="grey"
+        size="huge"
+        inverted
+        stackable
+      >
+        <Menu.Menu position="left">
+          <Menu.Item as={Link} name="home" to="/">
+            <Image src={hihopImage} />
+          </Menu.Item>
+          <Menu.Item as={Link} name="scoreboard" to="/artist/1">
+            SCOREBOARD
+          </Menu.Item>
+          <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
+            ACCOUNT
+          </Menu.Item>
+          <Menu.Item
+            as={Link}
+            name="sign-out"
+            to={tokenValidator() ? "/logout" : "/login"}
+          >
+            {tokenValidator() ? "LOGOUT" : "LOGIN"}
+          </Menu.Item>
+        </Menu.Menu>
 
-          <Menu.Menu position="right">
-            <Menu.Item>
-              <Search
-                category
-                loading={isLoading}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={this.handleSearchChange}
-                results={results}
-                value={value}
-              />
-            </Menu.Item>
-          </Menu.Menu>
-        </Container>
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Search
+              className="header-search"
+              category
+              loading={isLoading}
+              onResultSelect={this.handleResultSelect}
+              onSearchChange={this.handleSearchChange}
+              results={results}
+              value={value}
+            />
+          </Menu.Item>
+        </Menu.Menu>
       </Menu>
     )
   }

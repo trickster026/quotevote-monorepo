@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react"
-import { Card, List } from "semantic-ui-react"
+import { Header, Segment, List } from "semantic-ui-react"
 import PropTypes from "prop-types"
+import "./TopArtist.css"
 
 class TopArtists extends PureComponent {
   static propTypes = {
@@ -10,24 +11,25 @@ class TopArtists extends PureComponent {
   render = () => {
     const { artists } = this.props
     return (
-      <Card fluid>
-        <Card.Content>
-          <Card.Header>Top Artists</Card.Header>
-        </Card.Content>
-        <Card.Content>
-          <List ordered relaxed>
+      <div>
+        <Header className="header-module" inverted attached="top" as="h4">
+          Top Artists
+        </Header>
+        <Segment className="top-artist-segment" attached>
+          <List relaxed>
             {artists &&
               artists.map(artist => (
-                <List.Item key={artist.artistId}>
+                <List.Item className="list-item" key={artist.artistId}>
                   <List.Content>
-                    <List.Header>{artist.artistName}</List.Header>
-                    Score - {artist.totalScore}
+                    <List.Header className="list-item-header">
+                      {`${artist.artistName} - ${artist.totalScore}`}
+                    </List.Header>
                   </List.Content>
                 </List.Item>
               ))}
           </List>
-        </Card.Content>
-      </Card>
+        </Segment>
+      </div>
     )
   }
 }

@@ -8,11 +8,12 @@ import { Route, Switch } from "react-router-dom"
 import PrivateRoute from "../../routes/Login/PrivateRoute"
 import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
+import "./App.css"
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className="app">
         <Header />
         <Switch>
           <Route exact path="/" component={Home} />

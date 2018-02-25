@@ -1,28 +1,37 @@
-.App {
-  text-align: center;
+.app {
+  background-color: #292929 !important;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.header-module {
+  border-radius: 0% !important;
+  background-color: #323c40 !important;
+  border: 1px solid #000000 !important;
+  -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
+  -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.list-item {
+  color: #ffffff !important;
+  padding: 10px !important;
+  border-radius: 0% !important;
+  background-color: #323c40 !important;
+  border: 1px solid #000000 !important;
+  -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
+  -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 2px rgba(0, 0, 0, 0.4) !important;
 }
 
-.App-title {
-  font-size: 1.5em;
+.list-item-header {
+  color: #ffffff !important;
 }
 
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.header-search > input {
+  border-radius: 0% !important;
 }
