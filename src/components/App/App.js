@@ -8,6 +8,7 @@ import { Route, Switch } from "react-router-dom"
 import PrivateRoute from "../../routes/Login/PrivateRoute"
 import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
+import Route404 from "../../routes/404.js"
 import "./App.css"
 
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
           <Route path="/terms" component={Terms} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
+          <Route component={Route404} />
         </Switch>
       </div>
     )
