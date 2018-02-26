@@ -118,7 +118,7 @@ export class Login extends PureComponent {
               </Segment>
             </Form>
             <Message>
-              New to us? <a href="/signup">Sign Up</a>
+              New to us? <a href="/invite">Request an invitation</a>
             </Message>
           </Grid.Column>
         </Grid>

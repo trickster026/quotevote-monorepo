@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
-import { SEARCH, GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
+import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Menu, Search, Image } from "semantic-ui-react"
+import { Container, Image, Menu, Search } from "semantic-ui-react"
 import hihopImage from "../../assets/hiphop.png"
 import { tokenValidator } from "../../actions/creators/loginActionCreator"
 import PropTypes from "prop-types"
@@ -117,54 +117,54 @@ class HeaderComponent extends PureComponent {
   }
 
   render = () => {
-    const { isLoading, value, results } = this.state
-    const { login } = this.props
-    const userId =
-      login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
+    const pathName = this.props.location.pathname
 
-    return (
-      <Menu
-        className="header-module"
-        attached="top"
-        color="grey"
-        size="huge"
-        inverted
-        stackable
-      >
-        <Menu.Menu position="left">
-          <Menu.Item as={Link} name="home" to="/">
-            <Image src={hihopImage} />
-          </Menu.Item>
-          <Menu.Item as={Link} name="scoreboard" to="/artist/1">
-            SCOREBOARD
-          </Menu.Item>
-          <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
-            ACCOUNT
-          </Menu.Item>
-          <Menu.Item
-            as={Link}
-            name="sign-out"
-            to={tokenValidator() ? "/logout" : "/login"}
-          >
-            {tokenValidator() ? "LOGOUT" : "LOGIN"}
-          </Menu.Item>
-        </Menu.Menu>
+    if (pathName === "/invite") {
+      return ""
+    } else {
+      const { isLoading, value, results } = this.state
+      const { login } = this.props
+      const userId =
+        login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
-        <Menu.Menu position="right">
-          <Menu.Item>
-            <Search
-              className="header-search"
-              category
-              loading={isLoading}
-              onResultSelect={this.handleResultSelect}
-              onSearchChange={this.handleSearchChange}
-              results={results}
-              value={value}
-            />
-          </Menu.Item>
-        </Menu.Menu>
-      </Menu>
-    )
+      return (
+        <Menu attached="top" color="grey" size="huge" inverted stackable>
+          <Container>
+            <Menu.Menu position="left">
+              <Menu.Item as={Link} name="home" to="/">
+                <Image src={hihopImage} />
+              </Menu.Item>
+              <Menu.Item as={Link} name="scoreboard" to="/artist/1">
+                SCOREBOARD
+              </Menu.Item>
+              <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
+                ACCOUNT
+              </Menu.Item>
+              <Menu.Item
+                as={Link}
+                name="sign-out"
+                to={tokenValidator() ? "/logout" : "/login"}
+              >
+                {tokenValidator() ? "LOGOUT" : "LOGIN"}
+              </Menu.Item>
+            </Menu.Menu>
+
+            <Menu.Menu position="right">
+              <Menu.Item>
+                <Search
+                  category
+                  loading={isLoading}
+                  onResultSelect={this.handleResultSelect}
+                  onSearchChange={this.handleSearchChange}
+                  results={results}
+                  value={value}
+                />
+              </Menu.Item>
+            </Menu.Menu>
+          </Container>
+        </Menu>
+      )
+    }
   }
 }
 

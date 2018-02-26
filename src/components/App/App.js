@@ -10,6 +10,7 @@ import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
 import "./App.css"
+import InviteRequest from "../../routes/InviteRequestPage/InviteRequestPage"
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
           <Route path="/logout" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
+          <Route path="/invite" component={InviteRequest} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
           <Route component={Route404} />
