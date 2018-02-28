@@ -75,3 +75,9 @@ export const UNFOLLOW_USERS = gql`
     }
   }
 `
+
+export const USER_REQUEST_INVITE = gql`
+  mutation sendUserInvite($email: String!) {
+    sendUserInvite(mail_to: $email)
+  }
+`
