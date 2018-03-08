@@ -161,7 +161,10 @@ class HeaderComponent extends PureComponent {
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item>Edit Profile</Dropdown.Item>
-                      <Dropdown.Item>Manage User Invites</Dropdown.Item>
+                      <Dropdown.Item
+                          as={Link}
+                          name="account"
+                          to={`/invites/manage`}>Manage User Invites</Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item as={Link} name="sign-out" to="/logout">
                         Logout

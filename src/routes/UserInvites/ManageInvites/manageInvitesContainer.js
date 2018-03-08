@@ -9,9 +9,7 @@ class ManageInvitesContainer extends PureComponent {
     state = {userInviteRequests: []}
 
     componentWillReceiveProps = nextProps => {
-
         const _userInviteRequests = nextProps.userInviteRequests
-        console.log(_userInviteRequests);
         this.setState({userInviteRequests: _userInviteRequests})
     }
 
