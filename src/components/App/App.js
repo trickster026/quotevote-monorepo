@@ -10,7 +10,8 @@ import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
 import "./App.css"
-import InviteRequest from "../../routes/InviteRequestPage/InviteRequestPage"
+import RequestInvite from "../../routes/UserInvites/RequestInvite/RequestInvite"
+import ManageInvites from "../../routes/UserInvites/ManageInvites/manageInvitesContainer"
 import EditProfile from "../../routes/User/EditProfile/EditProfile"
 
 class App extends Component {
@@ -24,7 +25,8 @@ class App extends Component {
           <Route path="/logout" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
-          <Route path="/invite" component={InviteRequest} />
+          <Route path="/invite" component={RequestInvite} />
+          <Route path="/invites/manage" component={ManageInvites} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
           <PrivateRoute path="/user/:userId" component={User} />
