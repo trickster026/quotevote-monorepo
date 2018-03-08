@@ -82,3 +82,9 @@ export const USER_REQUEST_INVITE = gql`
     sendUserInvite(mail_to: $email)
   }
 `
+
+export const UPDATE_USER_INVITE_REQUEST = gql`
+  mutation updateUserInviteRequest($user_invite_id: String!, $action: String!) {
+    sendUserInviteApproval(user_invite_id: $user_invite_id, action: $action)
+  }
+`

@@ -127,100 +127,79 @@ class HeaderComponent extends PureComponent {
       const userId =
         login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
-      if (tokenValidator()) {
-        return this.renderLoggedInHeader(userId, isLoading, value, results)
-      } else {
-        return this.renderLoggedOutHeader()
-      }
+      return (
+        <Menu
+          attached="top"
+          color="grey"
+          size="huge"
+          inverted
+          stackable
+          borderless
+        >
+          <Container>
+            <Menu.Menu position="left">
+              <Menu.Item as={Link} name="home" to="/">
+                <Image src={hihopImage} />
+              </Menu.Item>
+              <Menu.Item as={Link} name="scoreboard" to="/artist/1">
+                SCOREBOARD
+              </Menu.Item>
+              {!tokenValidator() ? (
+                <Menu.Item as={Link} name="sign-in" to="/login">
+                  LOGIN
+                </Menu.Item>
+              ) : (
+                <Menu.Item>
+                  <Dropdown item text="ACCOUNT" pointing>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        as={Link}
+                        name="account"
+                        to={`/user/${userId}`}
+                      >
+                        User Scoreboard
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        as={Link}
+                        name="account"
+                        to={`/user/edit/${userId}`}
+                      >
+                        Edit Profile
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as={Link}
+                        name="account"
+                        to={`/invites/manage`}
+                      >
+                        Manage User Invites
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item as={Link} name="sign-out" to="/logout">
+                        Logout
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Item>
+              )}
+            </Menu.Menu>
+
+            <Menu.Menu position="right">
+              <Menu.Item>
+                <Search
+                  category
+                  loading={isLoading}
+                  onResultSelect={this.handleResultSelect}
+                  onSearchChange={this.handleSearchChange}
+                  results={results}
+                  value={value}
+                />
+              </Menu.Item>
+            </Menu.Menu>
+          </Container>
+        </Menu>
+      )
     }
-  }
-  renderLoggedOutHeader = () => {
-    return (
-      <Menu
-        attached="top"
-        color="grey"
-        size="huge"
-        inverted
-        stackable
-        borderless
-      >
-        <Container>
-          <Menu.Menu position="left">
-            <Menu.Item as={Link} name="home" to="/">
-              <Image src={hihopImage} />
-            </Menu.Item>
-          </Menu.Menu>
-          <Menu.Menu position="right">
-            <Menu.Item as={Link} name="sign-in" to="/login">
-              LOGIN
-            </Menu.Item>
-          </Menu.Menu>
-        </Container>
-      </Menu>
-    )
-  }
-
-  renderLoggedInHeader = (userId, isLoading, value, results) => {
-    return (
-      <Menu
-        attached="top"
-        color="grey"
-        size="huge"
-        inverted
-        stackable
-        borderless
-      >
-        <Container>
-          <Menu.Menu position="left">
-            <Menu.Item as={Link} name="home" to="/">
-              <Image src={hihopImage} />
-            </Menu.Item>
-            <Menu.Item as={Link} name="scoreboard" to="/artist/1">
-              SCOREBOARD
-            </Menu.Item>
-            <Menu.Item>
-              <Dropdown item text="ACCOUNT" pointing>
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    as={Link}
-                    name="account"
-                    to={`/user/${userId}`}
-                  >
-                    User Scoreboard
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item
-                    as={Link}
-                    name="account-edit"
-                    to={`/user/edit/${userId}`}
-                  >
-                    Edit Profile
-                  </Dropdown.Item>
-                  <Dropdown.Item>Manage User Invites</Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item as={Link} name="sign-out" to="/logout">
-                    Logout
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Menu.Item>
-          </Menu.Menu>
-
-          <Menu.Menu position="right">
-            <Menu.Item>
-              <Search
-                category
-                loading={isLoading}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={this.handleSearchChange}
-                results={results}
-                value={value}
-              />
-            </Menu.Item>
-          </Menu.Menu>
-        </Container>
-      </Menu>
-    )
   }
 }
 
