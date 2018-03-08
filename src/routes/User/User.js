@@ -26,14 +26,14 @@ class User extends PureComponent {
 
   static defaultProps = {
     user: {
-      user_id: "59b003750e3766041440171f",
-      name: "John Doe",
-      points: 999999,
-      vote_cast: 999999,
+      user_id: "",
+      name: "",
+      points: 0,
+      vote_cast: 0,
       image:
         "https://www.digitalwallonia.be/wp-content/plugins/evenement/src/front/assets/img//contact-default.png",
-      followers: 999999,
-      following: 999999
+      followers: 0,
+      following: 0
     },
     fantasyLabels: {}
   }
