@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
 import { Dimmer, Loader, Button } from "semantic-ui-react"
-import { USER_REQUEST_INVITE } from "../../graphql/mutations"
+import { USER_REQUEST_INVITE } from "../../../graphql/mutations"
 import nl2br from "react-newline-to-break"
-import "./InviteRequestPage.css"
-import bgImage from "../../assets/invite_background.png"
+import "./RequestInvite.css"
+import bgImage from "../../../assets/invite_background.png"
 
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYnJvbkBlbWFpbC5jb20iLCJfaWQiOiI1OWIwMDM3NTBlMzc2NjA0MTQ0MDE3MWYiLCJpYXQiOjE1MTI5OTYwNzh9.MhDHKSGYU2F8fpeWxOT7b4jimD9-N4FwBZe4z-OT4YE"

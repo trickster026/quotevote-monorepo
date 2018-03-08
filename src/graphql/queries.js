@@ -136,3 +136,16 @@ export const GET_NEWS_FEED = gql`
     activities(limit: $limit)
   }
 `
+
+
+export const GET_USER_REQUEST_INVITES = gql`
+    query inviteRequests {
+      userInviteRequests {
+        _id
+        email
+        status
+        _userId
+        created
+      }
+    }
+`

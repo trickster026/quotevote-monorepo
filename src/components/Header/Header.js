@@ -140,6 +140,9 @@ class HeaderComponent extends PureComponent {
               <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
                 ACCOUNT
               </Menu.Item>
+              <Menu.Item as={Link} name="manage-invites" to={`/invites/manage`}>
+                INVITE REQUESTS
+              </Menu.Item>
               <Menu.Item
                 as={Link}
                 name="sign-out"

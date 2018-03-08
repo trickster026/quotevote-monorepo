@@ -10,7 +10,8 @@ import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
 import "./App.css"
-import InviteRequest from "../../routes/InviteRequestPage/InviteRequestPage"
+import ManageInvites from "../../routes/UserInvites/ManageInvites/manageInvitesContainer"
+import InviteRequest from "../../routes/UserInvites/RequestInvite/RequestInvite"
 
 class App extends Component {
   render() {
@@ -24,6 +25,7 @@ class App extends Component {
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
           <Route path="/invite" component={InviteRequest} />
+          <Route path="/invites/manage" component={ManageInvites} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
           <Route component={Route404} />
