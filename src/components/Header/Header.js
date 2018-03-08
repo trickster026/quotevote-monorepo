@@ -3,7 +3,7 @@ import { withApollo } from "react-apollo"
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Container, Image, Menu, Search } from "semantic-ui-react"
+import { Container, Image, Menu, Search, Dropdown } from "semantic-ui-react"
 import hihopImage from "../../assets/hiphop.png"
 import { tokenValidator } from "../../actions/creators/loginActionCreator"
 import PropTypes from "prop-types"
@@ -128,7 +128,14 @@ class HeaderComponent extends PureComponent {
         login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
 
       return (
-        <Menu attached="top" color="grey" size="huge" inverted stackable>
+        <Menu
+          attached="top"
+          color="grey"
+          size="huge"
+          inverted
+          stackable
+          borderless
+        >
           <Container>
             <Menu.Menu position="left">
               <Menu.Item as={Link} name="home" to="/">
@@ -137,19 +144,32 @@ class HeaderComponent extends PureComponent {
               <Menu.Item as={Link} name="scoreboard" to="/artist/1">
                 SCOREBOARD
               </Menu.Item>
-              <Menu.Item as={Link} name="account" to={`/user/${userId}`}>
-                ACCOUNT
-              </Menu.Item>
-              <Menu.Item as={Link} name="manage-invites" to={`/invites/manage`}>
-                INVITE REQUESTS
-              </Menu.Item>
-              <Menu.Item
-                as={Link}
-                name="sign-out"
-                to={tokenValidator() ? "/logout" : "/login"}
-              >
-                {tokenValidator() ? "LOGOUT" : "LOGIN"}
-              </Menu.Item>
+              {!tokenValidator() ? (
+                <Menu.Item as={Link} name="sign-in" to="/login">
+                  LOGIN
+                </Menu.Item>
+              ) : (
+                <Menu.Item>
+                  <Dropdown item text="ACCOUNT" pointing>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        as={Link}
+                        name="account"
+                        to={`/user/${userId}`}
+                      >
+                        User Scoreboard
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item>Edit Profile</Dropdown.Item>
+                      <Dropdown.Item>Manage User Invites</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item as={Link} name="sign-out" to="/logout">
+                        Logout
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Menu.Item>
+              )}
             </Menu.Menu>
 
             <Menu.Menu position="right">
