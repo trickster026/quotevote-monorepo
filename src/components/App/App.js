@@ -30,6 +30,7 @@ class App extends Component {
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
           <PrivateRoute path="/user/:userId" component={User} />
+          <PrivateRoute path="/:username" component={User} />
           <Route component={Route404} />
         </Switch>
       </div>

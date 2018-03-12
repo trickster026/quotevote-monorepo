@@ -94,9 +94,11 @@ export default withApollo(
     graphql(GET_USER_INFO, {
       options: ownProps => {
         const userId = ownProps && ownProps.match.params.userId
+        const username = ownProps && ownProps.match.params.username
         return {
           variables: {
-            user_id: userId
+            user_id: typeof userId === "undefined" ? "" : userId,
+            username
           }
         }
       },
@@ -107,9 +109,11 @@ export default withApollo(
     graphql(GET_USER_LABELS, {
       options: ownProps => {
         const userId = ownProps && ownProps.match.params.userId
+        const username = ownProps && ownProps.match.params.username
         return {
           variables: {
-            user_id: userId
+            user_id: typeof userId === "undefined" ? "" : userId,
+            username
           }
         }
       },
