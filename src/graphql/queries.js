@@ -148,3 +148,19 @@ export const GET_USER_REQUEST_INVITES = gql`
     }
   }
 `
+
+export const GET_USER_VOTE_LOGS = gql`
+  query getUserVoteLogs($user_id: String!, $username: String) {
+    userVoteLogs(user_id: $user_id, username: $username) {
+      _id
+      _userId
+      _voteId
+      songTitle
+      songArtist
+      description
+      action
+      tokens
+      created
+    }
+  }
+`

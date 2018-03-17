@@ -42,7 +42,10 @@ class UserContainer extends PureComponent {
       isFollower: isFollower,
       showFollowButton
     }
-    this.setState({ user, userFantasyLabels })
+
+    const searchUser = nextProps.match.params.username
+    const userId = nextProps.match.params.userId
+    this.setState({ user, userFantasyLabels, searchUser, userId })
   }
 
   handleFollow = async event => {
@@ -78,6 +81,8 @@ class UserContainer extends PureComponent {
           user={this.state.user}
           userFantasyLabels={this.state.userFantasyLabels}
           onFollow={this.handleFollow}
+          searchUser={this.state.searchUser}
+          userId={this.state.userId}
         />
       </div>
     )

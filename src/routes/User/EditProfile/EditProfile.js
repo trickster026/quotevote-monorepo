@@ -65,24 +65,20 @@ class EditProfile extends PureComponent {
 
   handleSave = async event => {
     const { defaultValues } = this.state
-    console.log(this.props)
-    console.log(this.state)
     if (defaultValues) {
-      const userInput = {
+      let userInput = {
         _id: this.props.loginUserId,
         name:
-          "name" in defaultValues
-            ? defaultValues.name
-            : this.props.defaultValues.name,
+          "name" in defaultValues ? defaultValues.name : this.props.user.name,
         avatar:
           "imageUploadedSrc" in this.state
             ? this.state.imageUploadedSrc
-            : this.props.defaultValues.imageUploadedSrc
+            : this.props.user.avatar
       }
 
-      if ("password" in defaultValues) {
-        if (defaultValues.password !== "password") {
-          userInput.password = defaultValues.password
+      if ("confirmPassword" in defaultValues) {
+        if (defaultValues.confirmPassword !== "password") {
+          userInput.password = defaultValues.confirmPassword
         }
       }
 
