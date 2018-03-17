@@ -5,9 +5,7 @@ import { USER_REQUEST_INVITE } from "../../../graphql/mutations"
 import nl2br from "react-newline-to-break"
 import "./RequestInvite.css"
 import bgImage from "../../../assets/invite_background.png"
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYnJvbkBlbWFpbC5jb20iLCJfaWQiOiI1OWIwMDM3NTBlMzc2NjA0MTQ0MDE3MWYiLCJpYXQiOjE1MTI5OTYwNzh9.MhDHKSGYU2F8fpeWxOT7b4jimD9-N4FwBZe4z-OT4YE"
+import { APP_TOKEN } from "../../../utils/constants"
 
 class InviteRequest extends PureComponent {
   state = { isLoading: false, requestInvite: false }
@@ -28,7 +26,7 @@ class InviteRequest extends PureComponent {
       const result = await this.props.client.mutate({
         mutation: USER_REQUEST_INVITE,
         variables: { email },
-        context: { token }
+        context: { token: APP_TOKEN }
       })
 
       if (result && result.data.sendUserInvite.code === "SUCCESS") {

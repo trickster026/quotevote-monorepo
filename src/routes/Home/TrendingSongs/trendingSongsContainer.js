@@ -4,9 +4,7 @@ import { withRouter } from "react-router-dom"
 import { graphql, compose } from "react-apollo"
 import { GET_TRENDING_SONGS } from "../../../graphql/queries"
 import TrendingSongs from "./TrendingSongs"
-
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYnJvbkBlbWFpbC5jb20iLCJfaWQiOiI1OWIwMDM3NTBlMzc2NjA0MTQ0MDE3MWYiLCJpYXQiOjE1MTI5OTYwNzh9.MhDHKSGYU2F8fpeWxOT7b4jimD9-N4FwBZe4z-OT4YE"
+import { APP_TOKEN } from "../../../utils/constants"
 
 class TrendingSongsContainer extends PureComponent {
   render = () => {
@@ -32,7 +30,7 @@ export default withRouter(
     graphql(GET_TRENDING_SONGS, {
       options: ownProps => ({
         variables: { limit: 5 },
-        context: { token }
+        context: { token: APP_TOKEN }
       }),
       props: ({ data: { trendingSongs, loading } }) => ({
         songs: trendingSongs

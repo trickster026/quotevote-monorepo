@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { GET_USER_INFO, GET_USER_LABELS } from "../../graphql/queries"
 import User from "../User/User"
 import { FOLLOW_USERS, UNFOLLOW_USERS } from "../../graphql/mutations"
+import { APP_TOKEN } from "../../utils/constants"
 
 class UserContainer extends PureComponent {
   state = { artist: {} }
@@ -53,14 +54,17 @@ class UserContainer extends PureComponent {
         variables: {
           user_id: user._id
         },
+        context: { token: APP_TOKEN },
         refetchQueries: [
           {
             query: GET_USER_INFO,
-            variables: { user_id: user._id }
+            variables: { user_id: user._id },
+            context: { token: APP_TOKEN }
           },
           {
             query: GET_USER_LABELS,
-            variables: { user_id: user._id }
+            variables: { user_id: user._id },
+            context: { token: APP_TOKEN }
           }
         ]
       })
@@ -99,7 +103,8 @@ export default withApollo(
           variables: {
             user_id: typeof userId === "undefined" ? "" : userId,
             username
-          }
+          },
+          context: { token: APP_TOKEN }
         }
       },
       props: ({ data: { user } }) => ({
@@ -114,7 +119,8 @@ export default withApollo(
           variables: {
             user_id: typeof userId === "undefined" ? "" : userId,
             username
-          }
+          },
+          context: { token: APP_TOKEN }
         }
       },
       props: ({ data: { userFantasyLabels } }) => ({ userFantasyLabels })
