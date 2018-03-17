@@ -53,7 +53,7 @@ jobs:
 
       - run:
           name: Sync folder/files s3
-          command: aws s3 sync build s3://wwww.hiphopscoreboard.com/ --delete
+          command: aws s3 sync build s3://www.hiphopscoreboard.com/ --delete
 
       - run:
           name: Trigger CDN invalidation for web.hiphopscoreboard.com
