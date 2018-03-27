@@ -2,12 +2,20 @@ import React, { Component } from "react"
 import "./FlipCard.css"
 
 class FlipCard extends Component {
-  state = { flip: true, content: this.props.content }
+  state = {
+    flip: true,
+    content: this.props.content,
+    prevContent: this.props.content
+  }
 
   componentWillReceiveProps = nextProps => {
     this.setState(prev => ({ flip: !prev.flip }))
     setTimeout(() => {
-      this.setState(prev => ({ flip: !prev.flip, content: nextProps.content }))
+      this.setState(prev => ({
+        flip: !prev.flip,
+        content: nextProps.content,
+        prevContent: prev.content
+      }))
     }, 500)
   }
 
@@ -27,7 +35,11 @@ class FlipCard extends Component {
         {this.state.content.split("").map((ch, index) => (
           <ul
             key={index}
-            className={this.state.flip ? "play" : "unplay"}
+            className={
+              this.state.content[index] !== this.state.prevContent[index]
+                ? "play"
+                : "pause"
+            }
             style={flipContainerStyle}
           >
             <li className="flip-clock-before">
