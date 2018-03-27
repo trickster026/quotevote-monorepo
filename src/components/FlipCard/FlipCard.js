@@ -9,14 +9,16 @@ class FlipCard extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    this.setState(prev => ({ flip: !prev.flip }))
-    setTimeout(() => {
-      this.setState(prev => ({
-        flip: !prev.flip,
-        content: nextProps.content,
-        prevContent: prev.content
-      }))
-    }, 500)
+    if (nextProps.content !== this.state.content) {
+      this.setState(prev => ({ flip: !prev.flip }))
+      setTimeout(() => {
+        this.setState(prev => ({
+          flip: !prev.flip,
+          content: nextProps.content,
+          prevContent: prev.content
+        }))
+      }, 500)
+    }
   }
 
   render() {
