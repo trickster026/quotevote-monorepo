@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react"
-import { Grid, Container, Segment, Header } from "semantic-ui-react"
+import { Grid, Container, Segment, Header, Loader } from "semantic-ui-react"
 import UserProfile from "./UserProfile"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import FantasyLabel from "./FantasyLabel"
 import UserWall from "./UserWall/UserWall"
 import VoteLogs from "./VoteLogs/voteLogsContainer"
 import { string, number, shape } from "prop-types"
+import Route404 from "../404"
 
 class User extends PureComponent {
   static propTypes = {
@@ -45,6 +46,7 @@ class User extends PureComponent {
       userFantasyLabels,
       searchUser,
       userId,
+      loading,
       ...others
     } = this.props
     console.log(this.props)
@@ -79,14 +81,17 @@ class User extends PureComponent {
           </Grid>
         </Segment>
       )
-    } else {
+    } else if (loading) {
       return (
         <Segment as={Container} basic>
           <Header as="h4">
-            <Header.Content>User not exists :(</Header.Content>
+            <Loader active inline="centered" />
+            {/*<Header.Content>User not exists :(</Header.Content>*/}
           </Header>
         </Segment>
       )
+    } else {
+      return <Route404 />
     }
   }
 }

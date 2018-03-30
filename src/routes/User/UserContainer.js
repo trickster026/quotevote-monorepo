@@ -7,7 +7,7 @@ import { FOLLOW_USERS, UNFOLLOW_USERS } from "../../graphql/mutations"
 import { APP_TOKEN } from "../../utils/constants"
 
 class UserContainer extends PureComponent {
-  state = { artist: {} }
+  state = { artist: {}, loading: true }
 
   componentWillReceiveProps = nextProps => {
     if (!nextProps.user) {
@@ -22,7 +22,7 @@ class UserContainer extends PureComponent {
         following: 0
       }
 
-      this.setState({ user: tempUser })
+      this.setState({ user: tempUser, loading: false })
       return
     }
 
@@ -45,7 +45,13 @@ class UserContainer extends PureComponent {
 
     const searchUser = nextProps.match.params.username
     const userId = nextProps.match.params.userId
-    this.setState({ user, userFantasyLabels, searchUser, userId })
+    this.setState({
+      user,
+      userFantasyLabels,
+      searchUser,
+      userId,
+      loading: false
+    })
   }
 
   handleFollow = async event => {
@@ -75,6 +81,7 @@ class UserContainer extends PureComponent {
   }
 
   render = () => {
+    console.log("user container", this.props)
     return (
       <div>
         <User
@@ -83,6 +90,7 @@ class UserContainer extends PureComponent {
           onFollow={this.handleFollow}
           searchUser={this.state.searchUser}
           userId={this.state.userId}
+          loading={this.state.loading}
         />
       </div>
     )
