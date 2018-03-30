@@ -7,7 +7,7 @@ import { FOLLOW_USERS, UNFOLLOW_USERS } from "../../graphql/mutations"
 import { APP_TOKEN } from "../../utils/constants"
 
 class UserContainer extends PureComponent {
-  state = { artist: {}, loading: true }
+  state = { artist: {}, loading: true, showHistoryLogs: false }
 
   componentWillReceiveProps = nextProps => {
     if (!nextProps.user) {
@@ -43,6 +43,8 @@ class UserContainer extends PureComponent {
       showFollowButton
     }
 
+    const showHistoryLogs = nextProps.loginUserId === _user._id
+
     const searchUser = nextProps.match.params.username
     const userId = nextProps.match.params.userId
     this.setState({
@@ -50,7 +52,8 @@ class UserContainer extends PureComponent {
       userFantasyLabels,
       searchUser,
       userId,
-      loading: false
+      loading: false,
+      showHistoryLogs
     })
   }
 
@@ -81,7 +84,6 @@ class UserContainer extends PureComponent {
   }
 
   render = () => {
-    console.log("user container", this.props)
     return (
       <div>
         <User
@@ -91,6 +93,7 @@ class UserContainer extends PureComponent {
           searchUser={this.state.searchUser}
           userId={this.state.userId}
           loading={this.state.loading}
+          showHistoryLogs={this.state.showHistoryLogs}
         />
       </div>
     )

@@ -21,11 +21,17 @@ class voteLogsContainer extends PureComponent {
   }
 
   render = () => {
-    return (
-      <Segment as={Container} basic vertical>
-        <VoteLogs userVoteLogs={this.state.userVoteLogs} />
-      </Segment>
-    )
+    const { showHistoryLogs } = this.props
+
+    if (showHistoryLogs) {
+      return (
+        <Segment as={Container} basic vertical>
+          <VoteLogs userVoteLogs={this.state.userVoteLogs} />
+        </Segment>
+      )
+    } else {
+      return ""
+    }
   }
 }
 

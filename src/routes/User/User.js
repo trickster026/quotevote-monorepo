@@ -47,9 +47,9 @@ class User extends PureComponent {
       searchUser,
       userId,
       loading,
+      showHistoryLogs,
       ...others
     } = this.props
-    console.log(this.props)
 
     if (user && user.user_id !== "") {
       return (
@@ -75,7 +75,11 @@ class User extends PureComponent {
 
             <Grid.Row>
               <Grid.Column>
-                <VoteLogs searchUser={searchUser} userId={userId} />
+                <VoteLogs
+                  searchUser={searchUser}
+                  userId={userId}
+                  showHistoryLogs={showHistoryLogs}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>
