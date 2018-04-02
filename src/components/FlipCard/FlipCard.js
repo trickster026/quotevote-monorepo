@@ -1,27 +1,38 @@
 import React, { Component } from "react"
 import "./FlipCard.css"
 
+// function randomCharacters() {
+//   return (
+//     Math.random()
+//       .toString(36)
+//       .substring(2, 15) +
+//     Math.random()
+//       .toString(36)
+//       .substring(2, 15)
+//   )
+// }
+
+const animateFlip = (index, current, prev) => {
+  return current[index] !== prev[index] ? "play" : "pause"
+}
+
 class FlipCard extends Component {
   state = {
-    flip: true,
     content: this.props.content,
     prevContent: this.props.content
   }
 
   componentWillReceiveProps = nextProps => {
+    this.setState(prev => ({ prevContent: prev.content }))
     if (nextProps.content !== this.state.content) {
-      this.setState(prev => ({ flip: !prev.flip }))
       setTimeout(() => {
-        this.setState(prev => ({
-          flip: !prev.flip,
-          content: nextProps.content,
-          prevContent: prev.content
-        }))
-      }, 500)
+        this.setState({ content: nextProps.content })
+      }, 100)
     }
   }
 
   render() {
+    const { content, prevContent } = this.state
     const flipContainerStyle = {
       width: `${this.props.width}px`,
       height: `${this.props.height}px`
@@ -34,34 +45,30 @@ class FlipCard extends Component {
 
     return (
       <div className="flip-clock-small-wrapper" style={{ margin: "0px" }}>
-        {this.state.content.split("").map((ch, index) => (
+        {content.split("").map((ch, index) => (
           <ul
             key={index}
-            className={
-              this.state.content[index] !== this.state.prevContent[index]
-                ? "play"
-                : "pause"
-            }
+            className={animateFlip(index, content, prevContent)}
             style={flipContainerStyle}
           >
             <li className="flip-clock-before">
-              <a href="javascript;;">
+              <a>
                 <div className="up">
                   <div className="shadow" />
                   <div className="inn" style={innerStyle}>
-                    {ch}
+                    {prevContent[index] || ch}
                   </div>
                 </div>
                 <div className="down">
                   <div className="shadow" />
                   <div className="inn" style={innerStyle}>
-                    {ch}
+                    {prevContent[index] || ch}
                   </div>
                 </div>
               </a>
             </li>
             <li className="flip-clock-active">
-              <a href="javascript;;">
+              <a>
                 <div className="up">
                   <div className="shadow" />
                   <div className="inn" style={innerStyle}>
