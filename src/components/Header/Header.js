@@ -139,7 +139,7 @@ class HeaderComponent extends PureComponent {
               <Menu.Item as={Link} name="home" to="/">
                 <Image src={hihopImage} />
               </Menu.Item>
-              <Menu.Item as={Link} name="scoreboard" to="/artist/1">
+              <Menu.Item as={Link} name="scoreboard" to="/scoreboard">
                 SCOREBOARD
               </Menu.Item>
               {!tokenValidator() ? (

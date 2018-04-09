@@ -4,6 +4,7 @@ import Artist from "../../routes/Artist/artistContainer"
 import User from "../../routes/User/UserContainer"
 import Login from "../../routes/Login/Login"
 import Home from "../../routes/Home/Home"
+import Scoreboard from "../../routes/Scoreboard/scoreboardContainer"
 import { Route, Switch } from "react-router-dom"
 import PrivateRoute from "../../routes/Login/PrivateRoute"
 import Signup from "../../routes/Signup/Signup"
@@ -21,6 +22,7 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/scoreboard" component={Scoreboard} />
           <Route path="/login" component={Login} />
           <Route path="/logout" component={Login} />
           <Route path="/signup" component={Signup} />
