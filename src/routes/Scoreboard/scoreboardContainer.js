@@ -40,8 +40,9 @@ export default compose(
           score: user.score,
           name: user.user
         }))
-        return { topUsers: newTopUsers, loading }
+        return { topUsers: newTopUsers }
       }
+      return { loading }
     }
   }),
   graphql(GET_TOP_ARTISTS, {
@@ -56,6 +57,7 @@ export default compose(
         }))
         return { topArtists: newTopArtists }
       }
+      return { loading }
     }
   })
 )(ScoreboardContainer)

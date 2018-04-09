@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Header, Segment, List, Loader } from "semantic-ui-react"
+import { Header, Segment, List, Loader, Dimmer } from "semantic-ui-react"
 import PropTypes from "prop-types"
 import FlipCard from "../FlipCard/FlipCard"
 import "./Flipboard.css"
@@ -20,11 +20,17 @@ class Flipboard extends PureComponent {
   }
 
   renderSegment = () => {
-    const { data } = this.props
-    if (this.props.loading) {
+    const { data, loading } = this.props
+    if (loading) {
       return (
-        <Segment className="flipboard-segment" attached>
-          <Loader size="huge" />
+        <Segment
+          className="flipboard-segment"
+          attached
+          style={{ minHeight: "20vh" }}
+        >
+          <Dimmer active>
+            <Loader size="huge" />
+          </Dimmer>
         </Segment>
       )
     }
