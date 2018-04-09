@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Header, Segment, List } from "semantic-ui-react"
+import { Header, Segment, List, Grid } from "semantic-ui-react"
 import PropTypes from "prop-types"
 import FlipCard from "../FlipCard/FlipCard"
 import "./TopArtist.css"
@@ -37,22 +37,21 @@ class TopArtists extends PureComponent {
                 }
                 return (
                   <div key={index} className="list-item">
-                    <FlipCard
-                      content={`${artistName.toUpperCase()}`}
-                      width={22}
-                      height={30}
-                      fontSize={16}
-                    />
-                    <FlipCard
-                      content={pad(
-                        " ",
-                        PAD_LENGTH,
-                        "SCORE: " + artist.totalScore
-                      )}
-                      width={22}
-                      height={30}
-                      fontSize={16}
-                    />
+                    <Grid columns="equal" verticalAlign="middle">
+                      <Grid.Row>
+                        <Grid.Column>
+                          <h4>{artistName}</h4>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <FlipCard
+                            content={artist.totalScore.toString()}
+                            width={22}
+                            height={30}
+                            fontSize={16}
+                          />
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
                   </div>
                 )
               })}

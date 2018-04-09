@@ -43,48 +43,56 @@ class FlipCard extends Component {
       fontSize: `${this.props.fontSize}px`
     }
 
+    let wrapperStyle = {
+      margin: "0px"
+    }
+    wrapperStyle = this.props.float
+      ? { ...wrapperStyle, float: this.props.float }
+      : wrapperStyle
+
     return (
-      <div className="flip-clock-small-wrapper" style={{ margin: "0px" }}>
-        {content.split("").map((ch, index) => (
-          <ul
-            key={index}
-            className={animateFlip(index, content, prevContent)}
-            style={flipContainerStyle}
-          >
-            <li className="flip-clock-before">
-              <a>
-                <div className="up">
-                  <div className="shadow" />
-                  <div className="inn" style={innerStyle}>
-                    {prevContent[index] || ch}
+      <div className="flip-clock-small-wrapper" style={wrapperStyle}>
+        {content.length > 0 &&
+          content.split("").map((ch, index) => (
+            <ul
+              key={index}
+              className={animateFlip(index, content, prevContent)}
+              style={flipContainerStyle}
+            >
+              <li className="flip-clock-before">
+                <a>
+                  <div className="up">
+                    <div className="shadow" />
+                    <div className="inn" style={innerStyle}>
+                      {prevContent[index] || ch}
+                    </div>
                   </div>
-                </div>
-                <div className="down">
-                  <div className="shadow" />
-                  <div className="inn" style={innerStyle}>
-                    {prevContent[index] || ch}
+                  <div className="down">
+                    <div className="shadow" />
+                    <div className="inn" style={innerStyle}>
+                      {prevContent[index] || ch}
+                    </div>
                   </div>
-                </div>
-              </a>
-            </li>
-            <li className="flip-clock-active">
-              <a>
-                <div className="up">
-                  <div className="shadow" />
-                  <div className="inn" style={innerStyle}>
-                    {ch}
+                </a>
+              </li>
+              <li className="flip-clock-active">
+                <a>
+                  <div className="up">
+                    <div className="shadow" />
+                    <div className="inn" style={innerStyle}>
+                      {ch}
+                    </div>
                   </div>
-                </div>
-                <div className="down">
-                  <div className="shadow" />
-                  <div className="inn" style={innerStyle}>
-                    {ch}
+                  <div className="down">
+                    <div className="shadow" />
+                    <div className="inn" style={innerStyle}>
+                      {ch}
+                    </div>
                   </div>
-                </div>
-              </a>
-            </li>
-          </ul>
-        ))}
+                </a>
+              </li>
+            </ul>
+          ))}
       </div>
     )
   }
