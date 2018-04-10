@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import "./FlipCard.css"
 
 // function randomCharacters() {
@@ -17,6 +18,10 @@ const animateFlip = (index, current, prev) => {
 }
 
 class FlipCard extends Component {
+  static propTypes = {
+    content: PropTypes.string
+  }
+
   state = {
     content: this.props.content,
     prevContent: this.props.content

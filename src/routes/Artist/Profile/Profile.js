@@ -7,9 +7,9 @@ import {
   Item,
   Table
 } from "semantic-ui-react"
-import defaultImage from "../../../assets/image.png"
+import FlipCard from "../../../components/FlipCard/FlipCard"
 import { string, number, array } from "prop-types"
-
+import defaultImage from "../../../assets/image.png"
 class Profile extends PureComponent {
   static propTypes = {
     name: string,
@@ -58,19 +58,47 @@ class Profile extends PureComponent {
                   <Table.Body>
                     <Table.Row>
                       <Table.Cell>Score</Table.Cell>
-                      <Table.Cell>{score}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={score.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Up</Table.Cell>
-                      <Table.Cell>{up}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={up.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Down</Table.Cell>
-                      <Table.Cell>{down}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={down.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Followers</Table.Cell>
-                      <Table.Cell>{followers.length}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={followers.length.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                   </Table.Body>
                 </Table>

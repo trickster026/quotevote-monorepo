@@ -7,6 +7,7 @@ import {
   Segment,
   Table
 } from "semantic-ui-react"
+import FlipCard from "../../components/FlipCard/FlipCard"
 import { number, shape, string } from "prop-types"
 
 class UserProfile extends PureComponent {
@@ -63,19 +64,47 @@ class UserProfile extends PureComponent {
                   <Table.Body>
                     <Table.Row>
                       <Table.Cell>Points</Table.Cell>
-                      <Table.Cell>{user.points}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={user.points.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Vote Cast</Table.Cell>
-                      <Table.Cell>{user.vote_cast}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={user.vote_cast.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Followers</Table.Cell>
-                      <Table.Cell>{user.followers}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={user.followers.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                     <Table.Row>
                       <Table.Cell>Following</Table.Cell>
-                      <Table.Cell>{user.following}</Table.Cell>
+                      <Table.Cell>
+                        <FlipCard
+                          content={user.following.toString()}
+                          width={22}
+                          height={30}
+                          fontSize={16}
+                        />
+                      </Table.Cell>
                     </Table.Row>
                   </Table.Body>
                 </Table>
