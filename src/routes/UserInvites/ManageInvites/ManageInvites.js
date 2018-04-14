@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Button, Card, Header, Segment } from "semantic-ui-react"
+import { Button, Header, Table, Label, Loader } from "semantic-ui-react"
 import moment from "moment"
 import TimeAgo from "react-timeago"
 import PropTypes from "prop-types"
@@ -15,10 +15,8 @@ class ManageInvites extends PureComponent {
         return "orange"
       case "DECLINED":
         return "red"
-      case "APPROVED":
-        return "green"
       default:
-        return "black"
+        return "green"
     }
   }
 
@@ -26,85 +24,88 @@ class ManageInvites extends PureComponent {
     const { handleButtons } = this.props
     if ("NEW" === status) {
       return (
-        <Card.Content extra>
-          <div className="ui two buttons">
-            <Button
-              name="approve"
-              basic
-              color="green"
-              onClick={e => handleButtons(userId, e)}
-            >
-              APPROVE
-            </Button>
-            <Button
-              name="decline"
-              basic
-              color="red"
-              onClick={e => handleButtons(userId, e)}
-            >
-              DECLINE
-            </Button>
-          </div>
-        </Card.Content>
+        <div className="ui two buttons">
+          <Button
+            name="approve"
+            basic
+            color="green"
+            onClick={e => handleButtons(userId, e)}
+          >
+            APPROVE
+          </Button>
+          <Button
+            name="decline"
+            basic
+            color="red"
+            onClick={e => handleButtons(userId, e)}
+          >
+            DECLINE
+          </Button>
+        </div>
       )
     } else if ("APPROVED" === status) {
       return (
-        <Card.Content extra>
-          <div className="ui two buttons">
-            <Button
-              name="resend"
-              basic
-              color="green"
-              onClick={e => handleButtons(userId, e)}
-            >
-              RESEND
-            </Button>
-          </div>
-        </Card.Content>
+        <Button
+          name="resend"
+          basic
+          color="green"
+          onClick={e => handleButtons(userId, e)}
+        >
+          RESEND
+        </Button>
       )
     }
   }
 
   renderUserInviteRequests = () => {
-    const { userInviteRequests } = this.props
-
-    if (userInviteRequests && userInviteRequests.length > 0) {
-      return this.props.userInviteRequests.map((user, index) => (
-        <Card key={index}>
-          <Card.Content>
-            <Card.Header>{user.email}</Card.Header>
-            <Card.Meta>
-              <TimeAgo date={moment(user.created)} />
-            </Card.Meta>
-            <Card.Description
-              style={{ color: this.getStatusColor(user.status) }}
-            >
-              {user.status}
-              <br />
-            </Card.Description>
-          </Card.Content>
-          {this.renderButtons(user.status, user._id)}
-        </Card>
-      ))
-    }
-    return (
-      <Header as="h4">
-        <Header.Content>No user request invites :)</Header.Content>
-      </Header>
-    )
+    return this.props.userInviteRequests.map((user, index) => (
+      <Table.Row key={index}>
+        <Table.Cell>
+          <Header as="h4" image>
+            <Header.Content>
+              {user.email}
+              <Header.Subheader>
+                <TimeAgo date={moment(user.created)} />
+              </Header.Subheader>
+            </Header.Content>
+          </Header>
+        </Table.Cell>
+        <Table.Cell>
+          <Label style={{ color: this.getStatusColor(user.status) }}>
+            {user.status === "RESEND" ? "APPROVED" : user.status}
+          </Label>
+        </Table.Cell>
+        <Table.Cell>{this.renderButtons(user.status, user._id)}</Table.Cell>
+      </Table.Row>
+    ))
   }
 
   render = () => {
-    return (
-      <div>
-        <Header className="header-module" inverted attached="top" as="h4">
-          Manage User Request Invites
+    const { userInviteRequests } = this.props
+    if (userInviteRequests && userInviteRequests.length > 0) {
+      return (
+        <Table fixed>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Email</Table.HeaderCell>
+              <Table.HeaderCell>Status</Table.HeaderCell>
+              <Table.HeaderCell>Action</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          <Table.Body>{this.renderUserInviteRequests()}</Table.Body>
+        </Table>
+      )
+    } else {
+      return (
+        <Header as="h4">
+          <Loader active inline="centered">
+            {" "}
+            Loading Request Invites{" "}
+          </Loader>
         </Header>
-        <Segment attached textAlign="center">
-          <Card.Group>{this.renderUserInviteRequests()}</Card.Group>
-        </Segment>
-      </div>
-    )
+      )
+    }
   }
 }
 

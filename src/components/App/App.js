@@ -12,8 +12,7 @@ import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
 import "./App.css"
 import RequestInvite from "../../routes/UserInvites/RequestInvite/RequestInvite"
-import ManageInvites from "../../routes/UserInvites/ManageInvites/manageInvitesContainer"
-import EditProfile from "../../routes/User/EditProfile/EditProfile"
+import AppSettings from "../../routes/Settings/AppSettings"
 
 class App extends Component {
   render() {
@@ -28,10 +27,9 @@ class App extends Component {
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
           <Route path="/invite" component={RequestInvite} />
-          <Route path="/invites/manage" component={ManageInvites} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
-          <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
           <PrivateRoute path="/user/:userId" component={User} />
+          <PrivateRoute path="/settings" component={AppSettings} />
           <Route path="/:username" component={User} />
           <Route component={Route404} />
         </Switch>

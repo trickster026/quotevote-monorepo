@@ -3,15 +3,7 @@ import { compose, graphql, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { GET_USER_INFO } from "../../../graphql/queries"
 import { UPDATE_USER } from "../../../graphql/mutations"
-import {
-  Button,
-  Container,
-  Grid,
-  Image,
-  Input,
-  Item,
-  Segment
-} from "semantic-ui-react"
+import { Button, Grid, Image, Input, Item } from "semantic-ui-react"
 import ImageUploader from "./ImageUploader/ImageUploader"
 import hipHopLogo from "../../../assets/hiphop.png"
 
@@ -124,116 +116,114 @@ class EditProfile extends PureComponent {
   render() {
     const { formChanged, imageUploadedSrc, defaultValues } = this.state
     return (
-      <Segment as={Container} compact padded>
-        <Grid divided="vertically">
-          <Grid.Row columns={2}>
-            <Grid.Column width={12}>
-              <Item.Group>
-                <Item>
-                  <Item.Image>
-                    <ImageUploader
-                      src={
-                        imageUploadedSrc
-                          ? imageUploadedSrc
-                          : defaultValues.imageUploadedSrc
-                      }
-                      onUpload={this.handleImageChange}
-                    />
-                  </Item.Image>
-                  <Item.Content>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={this.state.defaultValues.name}
-                      placeholder="Name"
-                      icon="user"
-                      iconPosition="left"
-                      size="large"
-                      onChange={e => {
-                        this.handleChange(e)
-                      }}
-                      fluid
-                    />
-                    <br />
-                    <br />
-                    <Input
-                      value={this.state.defaultValues.email}
-                      placeholder="Email"
-                      icon="mail"
-                      iconPosition="left"
-                      size="large"
-                      disabled
-                      fluid
-                    />
-                    <br />
-                    <br />
-                    <Input
-                      value={this.state.defaultValues.username}
-                      placeholder="Username"
-                      icon="lock"
-                      iconPosition="left"
-                      size="large"
-                      disabled
-                      fluid
-                    />
-                    <br />
-                    <br />
-                    <Input
-                      id="password"
-                      name="password"
-                      value={this.state.defaultValues.password}
-                      type="password"
-                      placeholder="Password"
-                      icon="lock"
-                      onChange={e => {
-                        this.handleChange(e)
-                      }}
-                      iconPosition="left"
-                      size="large"
-                      fluid
-                    />
-                    <br />
-                    <br />
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      value={this.state.defaultValues.confirmPassword}
-                      type="password"
-                      onChange={e => {
-                        this.handleChange(e)
-                      }}
-                      placeholder="Confirm Password"
-                      icon="lock"
-                      iconPosition="left"
-                      size="large"
-                      fluid
-                    />
-                    <br />
-                    <br />
-                    <Button
-                      disabled={!formChanged}
-                      label="Save"
-                      onClick={this.handleSave}
-                      primary={true}
-                      style={{ marginRight: "10px", minWidth: "100px" }}
-                    />
-                    <Button
-                      onClick={this.handleCancel}
-                      style={{ marginRight: "10px", minWidth: "100px" }}
-                      primary={false}
-                      label="Cancel"
-                    />
-                  </Item.Content>
-                </Item>
-              </Item.Group>
-            </Grid.Column>
-            <Grid.Column width={4} verticalAlign="bottom">
-              <Image style={{ opacity: 0.1 }} src={hipHopLogo} fluid />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
+      <Grid divided="vertically">
+        <Grid.Row columns={2}>
+          <Grid.Column width={12}>
+            <Item.Group>
+              <Item>
+                <Item.Image>
+                  <ImageUploader
+                    src={
+                      imageUploadedSrc
+                        ? imageUploadedSrc
+                        : defaultValues.imageUploadedSrc
+                    }
+                    onUpload={this.handleImageChange}
+                  />
+                </Item.Image>
+                <Item.Content>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={this.state.defaultValues.name}
+                    placeholder="Name"
+                    icon="user"
+                    iconPosition="left"
+                    size="large"
+                    onChange={e => {
+                      this.handleChange(e)
+                    }}
+                    fluid
+                  />
+                  <br />
+                  <br />
+                  <Input
+                    value={this.state.defaultValues.email}
+                    placeholder="Email"
+                    icon="mail"
+                    iconPosition="left"
+                    size="large"
+                    disabled
+                    fluid
+                  />
+                  <br />
+                  <br />
+                  <Input
+                    value={this.state.defaultValues.username}
+                    placeholder="Username"
+                    icon="lock"
+                    iconPosition="left"
+                    size="large"
+                    disabled
+                    fluid
+                  />
+                  <br />
+                  <br />
+                  <Input
+                    id="password"
+                    name="password"
+                    value={this.state.defaultValues.password}
+                    type="password"
+                    placeholder="Password"
+                    icon="lock"
+                    onChange={e => {
+                      this.handleChange(e)
+                    }}
+                    iconPosition="left"
+                    size="large"
+                    fluid
+                  />
+                  <br />
+                  <br />
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={this.state.defaultValues.confirmPassword}
+                    type="password"
+                    onChange={e => {
+                      this.handleChange(e)
+                    }}
+                    placeholder="Confirm Password"
+                    icon="lock"
+                    iconPosition="left"
+                    size="large"
+                    fluid
+                  />
+                  <br />
+                  <br />
+                  <Button
+                    disabled={!formChanged}
+                    label="Save"
+                    onClick={this.handleSave}
+                    primary={true}
+                    style={{ marginRight: "10px", minWidth: "100px" }}
+                  />
+                  <Button
+                    onClick={this.handleCancel}
+                    style={{ marginRight: "10px", minWidth: "100px" }}
+                    primary={false}
+                    label="Cancel"
+                  />
+                </Item.Content>
+              </Item>
+            </Item.Group>
+          </Grid.Column>
+          <Grid.Column width={4} verticalAlign="bottom">
+            <Image style={{ opacity: 0.1 }} src={hipHopLogo} fluid />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }
@@ -251,7 +241,7 @@ export default withApollo(
     connect(mapStateToProps),
     graphql(GET_USER_INFO, {
       options: ownProps => {
-        const userId = ownProps && ownProps.match.params.userId
+        const userId = ownProps && ownProps.loginUserId
         return {
           variables: {
             user_id: userId

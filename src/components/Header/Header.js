@@ -158,19 +158,8 @@ class HeaderComponent extends PureComponent {
                         User Scoreboard
                       </Dropdown.Item>
                       <Dropdown.Divider />
-                      <Dropdown.Item
-                        as={Link}
-                        name="account"
-                        to={`/user/edit/${userId}`}
-                      >
-                        Edit Profile
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        as={Link}
-                        name="account"
-                        to={`/invites/manage`}
-                      >
-                        Manage User Invites
+                      <Dropdown.Item as={Link} name="settings" to={`/settings`}>
+                        Settings
                       </Dropdown.Item>
                       <Dropdown.Divider />
                       <Dropdown.Item as={Link} name="sign-out" to="/logout">

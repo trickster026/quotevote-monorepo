@@ -88,3 +88,14 @@ export const UPDATE_USER_INVITE_REQUEST = gql`
     sendUserInviteApproval(user_invite_id: $user_invite_id, action: $action)
   }
 `
+
+export const UPDATE_USER_ADMIN_RIGHTS = gql`
+  mutation updateUserAdminRight($user_id: String!, $admin: Boolean!) {
+    updateUserAdminRight(user_id: $user_id, admin: $admin) {
+      _id
+      name
+      admin
+      primary
+    }
+  }
+`

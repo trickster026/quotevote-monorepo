@@ -164,3 +164,16 @@ export const GET_USER_VOTE_LOGS = gql`
     }
   }
 `
+
+export const GET_USERS = gql`
+  query users {
+    users {
+      _id
+      name
+      username
+      email
+      admin
+      primary
+    }
+  }
+`
