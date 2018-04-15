@@ -1,16 +1,9 @@
 import React, { PureComponent } from "react"
-import {
-  Segment,
-  Label,
-  Header,
-  Dimmer,
-  Loader,
-  Container,
-  Button,
-  Popup
-} from "semantic-ui-react"
+import { Segment, Header, Dimmer, Loader, Container } from "semantic-ui-react"
 import { string, number, func, array } from "prop-types"
 import SelectionPopover from "./SelectionPopover"
+import ActionPopup from "./ActionPopup"
+
 import "./Lyrics.css"
 
 class Lyrics extends PureComponent {
@@ -56,10 +49,9 @@ class Lyrics extends PureComponent {
     })
   }
 
-  handleVoting = event => {
+  handleVoting = (event, isUpvote) => {
     const { name } = event.currentTarget
     if (name) {
-      const isUpvote = name === "upvote"
       let points = this.state.highlightedWords.split(/\s+/g).length
       points = isUpvote ? points : -1 * points
 
@@ -105,13 +97,17 @@ class Lyrics extends PureComponent {
     const startIndex = selection.anchorOffset
     const endIndex = startIndex + text.length
 
-    this.setState({
+    this.setState(prev => ({
       hasVoted: false,
       startIndex,
       endIndex,
       showPopover: true,
       highlightedWords: text
-    })
+    }))
+  }
+
+  handleDeselect = () => {
+    this.setState({ showPopover: false })
   }
 
   handleShareQuote = event => {
@@ -119,40 +115,6 @@ class Lyrics extends PureComponent {
       quotes: [this.state.highlightedWords, ...this.props.quotes]
     })
   }
-
-  renderScoreAndQuotes = () => (
-    <div>
-      <Button inverted>{`${this.state.points}`}</Button>
-      <Popup
-        trigger={
-          <Button icon="quote right" inverted onClick={this.handleShareQuote} />
-        }
-        on="click"
-        content="Shared on your wall"
-        hideOnScroll
-      />
-    </div>
-  )
-
-  renderVotingButtons = () => (
-    <div>
-      <Button
-        color="green"
-        inverted
-        icon="plus"
-        name="upvote"
-        onClick={this.handleVoting}
-      />
-      <Button inverted icon="circle" />
-      <Button
-        color="red"
-        inverted
-        icon="minus"
-        name="downvote"
-        onClick={this.handleVoting}
-      />
-    </div>
-  )
 
   renderMain = () => {
     if (this.state.loading) {
@@ -176,15 +138,14 @@ class Lyrics extends PureComponent {
                   showPopover={this.state.showPopover}
                   topOffset={60}
                   onSelect={this.handleSelect}
-                  onDeselect={() => {
-                    this.setState({ showPopover: false })
-                  }}
+                  onDeselect={this.handleDeselect}
                 >
-                  <Label pointing="below" color="black">
-                    {this.state.hasVoted
-                      ? this.renderScoreAndQuotes()
-                      : this.renderVotingButtons()}
-                  </Label>
+                  <ActionPopup
+                    points={this.state.points}
+                    show={this.state.showPopover}
+                    onVote={this.handleVoting}
+                    onShareQuote={this.handleShareQuote}
+                  />
                 </SelectionPopover>
               </div>
             </Container>

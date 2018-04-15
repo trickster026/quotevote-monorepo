@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react"
 import { Segment, Header, Grid, Label, Dimmer, Loader } from "semantic-ui-react"
 import SpotifyPlayer from "react-spotify-player"
+import FlipCard from "../../../components/FlipCard/FlipCard"
 import PropTypes from "prop-types"
 
 class MusicPlayer extends PureComponent {
@@ -42,14 +43,36 @@ class MusicPlayer extends PureComponent {
                   />
                 )}
                 <Label.Group color="black">
-                  <Label>
-                    Score<Label.Detail>{this.props.score}</Label.Detail>
+                  <Label basic>
+                    Score
+                    <Label.Detail>
+                      <FlipCard
+                        content={this.props.score.toString()}
+                        width={22}
+                        height={30}
+                        fontSize={16}
+                      />
+                    </Label.Detail>
                   </Label>
-                  <Label>
-                    Upvotes<Label.Detail>{this.props.upvotes}</Label.Detail>
+                  <Label basic>
+                    Upvotes<Label.Detail>
+                      <FlipCard
+                        content={this.props.upvotes.toString()}
+                        width={22}
+                        height={30}
+                        fontSize={16}
+                      />
+                    </Label.Detail>
                   </Label>
-                  <Label>
-                    Downvotes<Label.Detail>{this.props.downvotes}</Label.Detail>
+                  <Label basic>
+                    Downvotes<Label.Detail>
+                      <FlipCard
+                        content={this.props.downvotes.toString()}
+                        width={22}
+                        height={30}
+                        fontSize={16}
+                      />
+                    </Label.Detail>
                   </Label>
                 </Label.Group>
               </Grid.Column>
