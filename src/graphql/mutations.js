@@ -99,3 +99,9 @@ export const UPDATE_USER_ADMIN_RIGHTS = gql`
     }
   }
 `
+
+export const CREATE_COMMENT = gql`
+  mutation createComment($comment: CommentInput!) {
+    createComment(comment: $comment)
+  }
+`

@@ -42,7 +42,7 @@ class ActionPopup extends PureComponent {
   }
 
   handleCommentChange = (event, data) => {
-    this.setState({ comment: data })
+    this.setState({ comment: data.value })
   }
 
   handleCancelComment = event => {

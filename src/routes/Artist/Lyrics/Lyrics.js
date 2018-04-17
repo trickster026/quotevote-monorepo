@@ -116,6 +116,26 @@ class Lyrics extends PureComponent {
     })
   }
 
+  handleAddComment = (event, comment) => {
+    this.setState({ comment }, () => {
+      if (this.state.comment.length > 0) {
+        const finder = item => {
+          return item[0] === "#"
+        }
+        const hashtag = this.state.comment.split(/\s+/g).find(finder)
+        this.props.onComment({
+          content: this.state.comment,
+          startIndex: this.state.startIndex,
+          endIndex: this.state.endIndex,
+          userId: this.props.userId,
+          songId: this.props.songId,
+          artistId: this.props.artistId,
+          hashtag
+        })
+      }
+    })
+  }
+
   renderMain = () => {
     if (this.state.loading) {
       return (
@@ -145,6 +165,7 @@ class Lyrics extends PureComponent {
                     show={this.state.showPopover}
                     onVote={this.handleVoting}
                     onShareQuote={this.handleShareQuote}
+                    onAddComment={this.handleAddComment}
                   />
                 </SelectionPopover>
               </div>

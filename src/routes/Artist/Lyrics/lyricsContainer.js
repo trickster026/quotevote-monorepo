@@ -8,7 +8,11 @@ import {
   GET_TOP_ARTISTS,
   GET_USER_INFO
 } from "../../../graphql/queries"
-import { CREATE_VOTE, UPDATE_USER } from "../../../graphql/mutations"
+import {
+  CREATE_VOTE,
+  UPDATE_USER,
+  CREATE_COMMENT
+} from "../../../graphql/mutations"
 import PropTypes from "prop-types"
 class LyricsContainer extends PureComponent {
   state = { lyrics: "" }
@@ -41,6 +45,17 @@ class LyricsContainer extends PureComponent {
     }
   }
 
+  comment = () => {
+    if (this.props.client) {
+      return async payload => {
+        return await this.props.client.mutate({
+          mutation: CREATE_COMMENT,
+          variables: { comment: payload }
+        })
+      }
+    }
+  }
+
   shareQuote = () => {
     if (this.props.client) {
       return async payload => {
@@ -61,7 +76,12 @@ class LyricsContainer extends PureComponent {
   render = () => {
     const { client, ...others } = this.props
     return (
-      <Lyrics onVoting={this.vote()} onShare={this.shareQuote()} {...others} />
+      <Lyrics
+        onVoting={this.vote()}
+        onShare={this.shareQuote()}
+        onComment={this.comment()}
+        {...others}
+      />
     )
   }
 }
