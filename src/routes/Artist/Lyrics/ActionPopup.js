@@ -39,6 +39,9 @@ class ActionPopup extends PureComponent {
 
   handleAddComment = event => {
     this.props.onAddComment(event, this.state.comment)
+    setTimeout(() => {
+      this.setState({ isCommenting: false })
+    }, 500)
   }
 
   handleCommentChange = (event, data) => {

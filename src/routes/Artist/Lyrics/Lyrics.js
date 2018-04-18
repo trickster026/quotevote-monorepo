@@ -1,8 +1,9 @@
 import React, { PureComponent } from "react"
 import { Segment, Header, Dimmer, Loader, Container } from "semantic-ui-react"
-import { string, number, func, array } from "prop-types"
+import { ToastContainer, toast } from "react-toastify"
 import SelectionPopover from "./SelectionPopover"
 import ActionPopup from "./ActionPopup"
+import { string, number, func, array } from "prop-types"
 
 import "./Lyrics.css"
 
@@ -117,13 +118,13 @@ class Lyrics extends PureComponent {
   }
 
   handleAddComment = (event, comment) => {
-    this.setState({ comment }, () => {
+    this.setState({ comment }, async () => {
       if (this.state.comment.length > 0) {
         const finder = item => {
           return item[0] === "#"
         }
         const hashtag = this.state.comment.split(/\s+/g).find(finder)
-        this.props.onComment({
+        await this.props.onComment({
           content: this.state.comment,
           startIndex: this.state.startIndex,
           endIndex: this.state.endIndex,
@@ -132,6 +133,8 @@ class Lyrics extends PureComponent {
           artistId: this.props.artistId,
           hashtag
         })
+
+        toast.success("Comment Submitted")
       }
     })
   }
@@ -194,6 +197,7 @@ class Lyrics extends PureComponent {
           Lyrics
         </Header>
         {this.renderMain()}
+        <ToastContainer position="top-left" autoClose={2000} closeOnClick />
       </div>
     )
   }

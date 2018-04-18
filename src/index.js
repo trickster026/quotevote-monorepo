@@ -2,7 +2,6 @@ import React from "react"
 import ReactDOM from "react-dom"
 import App from "./components/App/App"
 import registerServiceWorker from "./registerServiceWorker"
-import "semantic-ui-css/semantic.min.css"
 import { BrowserRouter as Router } from "react-router-dom"
 
 import { ApolloProvider } from "react-apollo"
@@ -14,6 +13,8 @@ import { InMemoryCache } from "apollo-cache-inmemory"
 import { ApolloLink, concat } from "apollo-link"
 
 import store, { persistor } from "./reducers/store"
+import "react-toastify/dist/ReactToastify.css"
+import "semantic-ui-css/semantic.min.css"
 
 const baseUri =
   process.env.NODE_ENV === "production"
