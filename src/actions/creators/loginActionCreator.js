@@ -47,7 +47,7 @@ const getToken = async (username, password, dispatch) => {
   try {
     const baseUri =
       process.env.NODE_ENV === "production"
-        ? "http://34.239.105.165:5000/login"
+        ? "http://107.20.29.153:5000/login"
         : "http://localhost:5000/login"
 
     const response = await axios.post(
