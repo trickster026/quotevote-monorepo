@@ -34,13 +34,13 @@ class Lyrics extends PureComponent {
     downvotes: 0
   }
 
-  componentWillReceiveProps = nextProps => {
-    if (nextProps.lyrics && nextProps.lyrics.length > 0) {
+  componentWillReceiveProps = ({ lyrics, points }) => {
+    if (lyrics && lyrics.length > 0) {
       this.setState({ loading: false })
     }
 
-    if (nextProps.points) {
-      this.setState({ points: nextProps.points })
+    if (points) {
+      this.setState({ points })
     }
   }
 
@@ -64,25 +64,16 @@ class Lyrics extends PureComponent {
 
       // localStorage.setItem("hhsb.voted", true)
 
-      const {
-        score,
-        upvotes,
-        downvotes,
-        updateSong,
-        artistId,
-        onVoting,
-        userId,
-        songId
-      } = this.props
+      const { score, upvotes, downvotes, artistId, userId, songId } = this.props
       let totalUpvotes = isUpvote ? upvotes + 1 : upvotes
       let totalDownvotes = !isUpvote ? downvotes + 1 : downvotes
-      updateSong({
+
+      this.props.updateSong({
         currentSongScore: score + points,
         currentSongUpvotes: totalUpvotes,
         currentSongDownvotes: totalDownvotes
       })
-
-      onVoting({
+      this.props.onVoting({
         song_id: songId,
         user_id: userId,
         artist_id: artistId,
@@ -192,7 +183,7 @@ class Lyrics extends PureComponent {
 
   render = () => {
     return (
-      <div className="lyrics-selection">
+      <div>
         <Header className="header-module" inverted attached="top" as="h4">
           Lyrics
         </Header>
