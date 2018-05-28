@@ -49,7 +49,7 @@ class VotingBoard extends Component {
   renderContent = () => {
     if (!this.props.content) return null
     return (
-      <Container text style={{ position: "relative" }}>
+      <Container style={{ position: "relative" }}>
         <div data-selectable>
           <p className="lyrics-segment">{this.props.content}</p>
         </div>

@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify"
 
 import ActionPopup from "../../../components/VotingBoard/ActionPopup"
 import VotingBoard from "../../../components/VotingBoard/VotingBoard"
-import { string, number, func, array } from "prop-types"
+import PropTypes from "prop-types"
 
 class Lyrics extends PureComponent {
   state = {
@@ -15,14 +15,14 @@ class Lyrics extends PureComponent {
   }
 
   static propTypes = {
-    lyrics: string,
-    score: number,
-    upvotes: number,
-    downvotes: number,
-    onVoting: func,
-    songId: number,
-    artistId: number,
-    quotes: array
+    lyrics: PropTypes.string,
+    score: PropTypes.number,
+    upvotes: PropTypes.number,
+    downvotes: PropTypes.number,
+    onVoting: PropTypes.func,
+    songId: PropTypes.number,
+    artistId: PropTypes.number,
+    quotes: PropTypes.array
   }
 
   static defaultProps = {
@@ -92,13 +92,8 @@ class Lyrics extends PureComponent {
       hasVoted: false,
       startIndex,
       endIndex,
-      showPopover: true,
       highlightedWords: text
     }))
-  }
-
-  handleDeselect = () => {
-    this.setState({ showPopover: false })
   }
 
   handleShareQuote = (event, quote) => {
