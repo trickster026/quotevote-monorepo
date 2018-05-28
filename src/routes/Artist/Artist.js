@@ -5,7 +5,7 @@ import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import ErrorBoundary from "../../components/ErrorBoundary"
 import Albums from "./Albums"
 import MusicPlayer from "./MusicPlayer/musicPlayerContainer"
-import Lyrics from "./Lyrics/lyricsContainer"
+import Lyrics from "./Lyrics/Lyrics.container"
 import { string, number, arrayOf, shape } from "prop-types"
 
 class Artist extends PureComponent {

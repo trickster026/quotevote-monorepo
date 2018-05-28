@@ -41,12 +41,12 @@ class SelectionPopover extends Component {
 
   componentDidMount() {
     const target = document.querySelector("[data-selectable]")
-    target.addEventListener("mouseup", this.handleMouseUp)
+    target.addEventListener("pointerup", this.handleMouseUp)
   }
 
   componentWillUnmount() {
     const target = document.querySelector("[data-selectable]")
-    target.removeEventListener("mouseup", this.handleMouseUp)
+    target.removeEventListener("pointerup", this.handleMouseUp)
   }
 
   render() {

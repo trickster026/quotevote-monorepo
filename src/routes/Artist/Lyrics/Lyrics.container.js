@@ -94,7 +94,7 @@ const mapStateToProps = ({ login, artist }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateSong: song => {
+  onSongUpdate: song => {
     dispatch({ type: "UPDATE_CURRENT_SONG", payload: song })
   }
 })

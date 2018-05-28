@@ -1,18 +1,21 @@
 import React, { Component } from "react"
+import { Route, Switch } from "react-router-dom"
+
 import Header from "../Header/Header"
 import Artist from "../../routes/Artist/artistContainer"
 import User from "../../routes/User/UserContainer"
 import Login from "../../routes/Login/Login"
 import Home from "../../routes/Home/Home"
 import Scoreboard from "../../routes/Scoreboard/scoreboardContainer"
-import { Route, Switch } from "react-router-dom"
+
 import PrivateRoute from "../../routes/Login/PrivateRoute"
 import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
-import "./App.css"
 import RequestInvite from "../../routes/UserInvites/RequestInvite/RequestInvite"
 import AppSettings from "../../routes/Settings/AppSettings"
+
+import "./App.css"
 
 class App extends Component {
   render() {

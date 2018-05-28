@@ -67,7 +67,7 @@ class Lyrics extends PureComponent {
       let totalUpvotes = isUpvote ? upvotes + 1 : upvotes
       let totalDownvotes = !isUpvote ? downvotes + 1 : downvotes
 
-      this.props.updateSong({
+      this.props.onSongUpdate({
         currentSongScore: score + points,
         currentSongUpvotes: totalUpvotes,
         currentSongDownvotes: totalDownvotes
