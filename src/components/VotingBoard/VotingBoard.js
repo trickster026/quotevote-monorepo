@@ -5,6 +5,8 @@ import SelectionPopover from "./SelectionPopover"
 import Module from "../Layouts/Module"
 import PropTypes from "prop-types"
 
+import "./VotingBoard.css"
+
 class VotingBoard extends Component {
   state = { open: false, selection: {} }
 
@@ -49,7 +51,7 @@ class VotingBoard extends Component {
     return (
       <Container text style={{ position: "relative" }}>
         <div data-selectable>
-          <p>{this.props.content}</p>
+          <p className="lyrics-segment">{this.props.content}</p>
         </div>
         <SelectionPopover
           showPopover={this.state.open}

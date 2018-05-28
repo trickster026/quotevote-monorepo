@@ -10,7 +10,7 @@ import "semantic-ui-css/semantic.min.css"
 const content =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nisl iaculis, molestie elit nec, placerat sapien. Integer et felis luctus, dapibus arcu in, viverra massa. Aenean mattis non nisl a efficitur. Donec sed augue leo. Integer lacinia dui at purus luctus vehicula. Donec sed porttitor tellus. Proin vitae semper nisi, mattis sodales mi. Donec faucibus, mauris commodo volutpat egestas, nibh justo porttitor lacus, ac blandit sapien libero id tortor. Proin ac est a elit condimentum facilisis. Sed turpis quam, malesuada vel enim sollicitudin, euismod hendrerit orci. Ut nibh augue, convallis sed nisl non, finibus porta tellus. Nullam mi sapien, condimentum at odio sit amet, pulvinar dapibus diam."
 
-const WrappedComponent = props => (
+const WrappedVotingBoard = props => (
   <div style={{ margin: 50 }}>
     <VotingBoard {...props}>
       {({ text }) => (
@@ -26,8 +26,8 @@ const WrappedComponent = props => (
 )
 
 storiesOf("VotingBoard", module)
-  .add("default", () => <WrappedComponent />)
-  .add("with content", () => <WrappedComponent content={content} />)
+  .add("default (no props passed) ", () => <WrappedVotingBoard />)
+  .add("with content", () => <WrappedVotingBoard content={content} />)
   .add("with onChange handler", () => (
-    <WrappedComponent content={content} onSelect={action("highlighting")} />
+    <WrappedVotingBoard content={content} onSelect={action("highlighting")} />
   ))
