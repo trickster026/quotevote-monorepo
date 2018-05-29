@@ -45,14 +45,12 @@ class SelectionPopover extends Component {
 
   componentDidMount() {
     const target = document.querySelector("[data-selectable]")
-    target.addEventListener("touchend", this.handlePointerUp)
-    target.addEventListener("mouseup", this.handlePointerUp)
+    target.addEventListener("pointerup", this.handlePointerUp)
   }
 
   componentWillUnmount() {
     const target = document.querySelector("[data-selectable]")
-    target.removeEventListener("touchend", this.handlePointerUp)
-    target.removeEventListener("mouseup", this.handlePointerUp)
+    target.removeEventListener("pointerup", this.handlePointerUp)
   }
 
   render() {
@@ -81,46 +79,49 @@ class SelectionPopover extends Component {
 
   handlePointerUp = () => {
     const selection = window.getSelection()
-    const { anchorOffset, extentOffset } = selection
-
     if (selectionExists()) {
-      this.selectionOffsets[this.touchIndex] =
-        this.touchIndex === 0 ? anchorOffset : extentOffset
-      this.touchIndex++
+      this.props.onSelect(selection)
+      return this.computePopoverBox()
     }
-
-    if (isMobile) {
-      if (this.touchIndex >= 2) {
-        let baseOffset = this.selectionOffsets[0]
-        let extentOffset = this.selectionOffsets[1]
-
-        if (this.selectionOffsets[0] > this.selectionOffsets[1]) {
-          baseOffset = this.selectionOffsets[1]
-          extentOffset = this.selectionOffsets[0]
-        }
-
-        selection.setBaseAndExtent(
-          selection.anchorNode,
-          baseOffset,
-          selection.anchorNode,
-          extentOffset
-        )
-        this.touchIndex = 0
-
-        if (selectionExists()) {
-          this.props.onSelect(selection)
-          return this.computePopoverBox()
-        }
-        this.props.onDeselect()
-      }
-    } else {
-      if (selectionExists()) {
-        this.props.onSelect(selection)
-        return this.computePopoverBox()
-      }
-      this.props.onDeselect()
-    }
+    this.props.onDeselect()
   }
+
+  // handleSelectStart = () => {
+  //   const selection = window.getSelection()
+  //   const { anchorOffset, extentOffset } = selection
+
+  //   if (selectionExists()) {
+  //     this.selectionOffsets[this.touchIndex] =
+  //       this.touchIndex === 0 ? anchorOffset : extentOffset
+  //     this.touchIndex++
+  //   }
+
+  //   if (isMobile) {
+  //     if (this.touchIndex >= 2) {
+  //       let baseOffset = this.selectionOffsets[0]
+  //       let extentOffset = this.selectionOffsets[1]
+
+  //       if (this.selectionOffsets[0] > this.selectionOffsets[1]) {
+  //         baseOffset = this.selectionOffsets[1] - 1
+  //         extentOffset = this.selectionOffsets[0] + 1
+  //       }
+
+  //       selection.setBaseAndExtent(
+  //         selection.anchorNode,
+  //         baseOffset,
+  //         selection.anchorNode,
+  //         extentOffset
+  //       )
+  //       this.touchIndex = 0
+
+  //       if (selectionExists()) {
+  //         this.props.onSelect(selection)
+  //         return this.computePopoverBox()
+  //       }
+  //       this.props.onDeselect()
+  //     }
+  //   }
+  // }
 
   computePopoverBox = () => {
     const selection = window.getSelection()
