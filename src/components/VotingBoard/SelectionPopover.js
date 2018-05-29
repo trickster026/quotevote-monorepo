@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import onClickOutside from "react-onclickoutside"
-import { isMobile } from "react-device-detect"
 import PropTypes from "prop-types"
 
 function selectionExists() {
