@@ -20,10 +20,6 @@ class VotingBoard extends Component {
     title: "Voting Board"
   }
 
-  handleTouch = event => {
-    console.log("window", window.getSelection().toString())
-  }
-
   handleSelect = select => {
     const text = select.toString()
     const selection = {
@@ -55,9 +51,7 @@ class VotingBoard extends Component {
     return (
       <Container style={{ position: "relative" }}>
         <div data-selectable>
-          <p onTouchEnd={this.handleTouch} className="voting_board-content">
-            {this.props.content}
-          </p>
+          <p className="voting_board-content">{this.props.content}</p>
         </div>
         <SelectionPopover
           showPopover={this.state.open}
