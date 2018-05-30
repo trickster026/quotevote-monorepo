@@ -49,6 +49,12 @@ class SelectionPopover extends Component {
     target.addEventListener("selectstart", this.handleMobileSelection)
     target.addEventListener("pointerup", this.handleRemoveInterval)
     target.addEventListener("pointermove", this.selectionChange)
+
+    if (isMobile) {
+      document.oncontextmenu = function(event) {
+        return false
+      }
+    }
   }
 
   componentWillUnmount() {
