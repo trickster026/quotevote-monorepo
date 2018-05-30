@@ -1,13 +1,18 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
-import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { Container, Image, Menu, Search, Dropdown } from "semantic-ui-react"
-import hihopImage from "../../assets/hiphop.png"
-import { tokenValidator } from "../../actions/creators/loginActionCreator"
-import PropTypes from "prop-types"
+import axios from "axios"
+
+import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
+import hiphopScoreboardLogo from "../../assets/hiphop.png"
+import {
+  tokenValidator,
+  userLogin
+} from "../../actions/creators/loginActionCreator"
 import { APP_TOKEN } from "../../utils/constants"
+import PropTypes from "prop-types"
 
 class HeaderComponent extends PureComponent {
   state = { search: "" }
@@ -20,30 +25,6 @@ class HeaderComponent extends PureComponent {
 
   componentWillMount = () => {
     this.resetComponent()
-  }
-
-  resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: "" })
-
-  search = () => {
-    if (this.props.client) {
-      return async payload => {
-        return await this.props.client.query({
-          query: SEARCH,
-          context: { token: APP_TOKEN },
-          variables: { query: payload },
-          refetchQueries: [
-            {
-              query: GET_ARTIST_INFO,
-              variables: { artist_id: this.props.artistId }
-            },
-            {
-              query: GET_TOP_ARTISTS
-            }
-          ]
-        })
-      }
-    }
   }
 
   handleResultSelect = (e, { result }) => {
@@ -114,79 +95,134 @@ class HeaderComponent extends PureComponent {
     }, 500)
   }
 
+  resetComponent = () =>
+    this.setState({ isLoading: false, results: [], value: "" })
+
+  search = () => {
+    if (this.props.client) {
+      return async payload => {
+        return await this.props.client.query({
+          query: SEARCH,
+          context: { token: APP_TOKEN },
+          variables: { query: payload },
+          refetchQueries: [
+            {
+              query: GET_ARTIST_INFO,
+              variables: { artist_id: this.props.artistId }
+            },
+            {
+              query: GET_TOP_ARTISTS
+            }
+          ]
+        })
+      }
+    }
+  }
+
+  // TODO move this out of this component to maintain code reliability.
+  createGuestUser = async () => {
+    const url =
+      process.env.NODE_ENV === "production"
+        ? "http://107.20.29.153:5000/guest"
+        : "http://localhost:5000/guest"
+    const guest = await axios.post(url)
+    this.props.guestLogin(
+      guest.data.username,
+      guest.data.username,
+      this.props.history
+    )
+  }
+
+  renderUserAccount = () => {
+    const { login } = this.props
+    const userId =
+      login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
+    return (
+      <Menu.Item>
+        <Dropdown item text="ACCOUNT" pointing>
+          <Dropdown.Menu>
+            <Dropdown.Item as={Link} name="account" to={`/user/${userId}`}>
+              User Scoreboard
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item as={Link} name="settings" to={`/settings`}>
+              Settings
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item as={Link} name="sign-out" to="/logout">
+              Logout
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Item>
+    )
+  }
+
+  renderRightMenuItem = () => {
+    const { isLoading, value, results } = this.state
+    if (!tokenValidator()) return this.renderLoginMenuItem()
+    return (
+      <Menu.Menu position="right">
+        <Menu.Item>
+          <Search
+            category
+            loading={isLoading}
+            onResultSelect={this.handleResultSelect}
+            onSearchChange={this.handleSearchChange}
+            results={results}
+            value={value}
+          />
+        </Menu.Item>
+      </Menu.Menu>
+    )
+  }
+
+  renderLoginMenuItem = () => {
+    return (
+      <Menu.Item name="sign-in">
+        <Dropdown item text="LOGIN" pointing>
+          <Dropdown.Menu>
+            <Dropdown.Item as={Link} name="registered" to="/login">
+              Login as Register User
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item name="guest" onClick={this.createGuestUser}>
+              Login as Guest User
+            </Dropdown.Item>
+            <Dropdown.Divider />
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Item>
+    )
+  }
+
   render = () => {
     const pathName = this.props.location.pathname
 
-    if (pathName === "/invite") {
-      return ""
-    } else {
-      const { isLoading, value, results } = this.state
-      const { login } = this.props
-      const userId =
-        login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
-
-      return (
-        <Menu
-          attached="top"
-          color="grey"
-          size="huge"
-          inverted
-          stackable
-          borderless
-        >
-          <Container>
-            <Menu.Menu position="left">
-              <Menu.Item as={Link} name="home" to="/">
-                <Image src={hihopImage} />
-              </Menu.Item>
-              <Menu.Item as={Link} name="scoreboard" to="/scoreboard">
-                SCOREBOARD
-              </Menu.Item>
-              {!tokenValidator() ? (
-                <Menu.Item as={Link} name="sign-in" to="/login">
-                  LOGIN
-                </Menu.Item>
-              ) : (
-                <Menu.Item>
-                  <Dropdown item text="ACCOUNT" pointing>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        as={Link}
-                        name="account"
-                        to={`/user/${userId}`}
-                      >
-                        User Scoreboard
-                      </Dropdown.Item>
-                      <Dropdown.Divider />
-                      <Dropdown.Item as={Link} name="settings" to={`/settings`}>
-                        Settings
-                      </Dropdown.Item>
-                      <Dropdown.Divider />
-                      <Dropdown.Item as={Link} name="sign-out" to="/logout">
-                        Logout
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Menu.Item>
-              )}
-            </Menu.Menu>
-
-            <Menu.Menu position="right">
-              <Menu.Item>
-                <Search
-                  category
-                  loading={isLoading}
-                  onResultSelect={this.handleResultSelect}
-                  onSearchChange={this.handleSearchChange}
-                  results={results}
-                  value={value}
-                />
-              </Menu.Item>
-            </Menu.Menu>
-          </Container>
-        </Menu>
-      )
-    }
+    if (pathName === "/invite") return ""
+    return (
+      <Menu
+        attached="top"
+        color="grey"
+        size="huge"
+        inverted
+        stackable
+        borderless
+      >
+        <Container>
+          <Menu.Menu position="left">
+            <Menu.Item as={Link} name="home" to="/">
+              <Image src={hiphopScoreboardLogo} />
+            </Menu.Item>
+            <Menu.Item as={Link} name="scoreboard" to="/scoreboard">
+              SCOREBOARD
+            </Menu.Item>
+            {tokenValidator() && this.renderUserAccount()}
+          </Menu.Menu>
+          {this.renderRightMenuItem()}
+        </Container>
+      </Menu>
+    )
   }
 }
 
@@ -194,4 +230,12 @@ const mapStateToProps = state => {
   return state
 }
 
-export default withApollo(withRouter(connect(mapStateToProps)(HeaderComponent)))
+const mapDispatchToProps = dispatch => ({
+  guestLogin: (username, password, history) => {
+    dispatch(userLogin(username, password, history))
+  }
+})
+
+export default withApollo(
+  withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComponent))
+)

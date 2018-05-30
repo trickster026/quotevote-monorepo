@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Segment, Container, Header, Menu } from "semantic-ui-react"
+import { Container, Menu } from "semantic-ui-react"
 
 class Footer extends PureComponent {
   render = () => {
