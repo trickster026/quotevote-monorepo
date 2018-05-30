@@ -3,7 +3,7 @@ import { Input, Button, Popup, Label } from "semantic-ui-react"
 import PropTypes from "prop-types"
 
 class ActionPopup extends PureComponent {
-  state = { isVoting: true, isCommenting: false, comment: "", text: "" }
+  state = { isVoting: true, isCommenting: false, comment: "" }
 
   static propTypes = {
     text: PropTypes.string,
@@ -21,8 +21,7 @@ class ActionPopup extends PureComponent {
   componentDidMount = () => {
     this.setState({
       isCommenting: false,
-      isVoting: true,
-      text: this.props.text
+      isVoting: true
     })
   }
 
@@ -34,7 +33,7 @@ class ActionPopup extends PureComponent {
       this.setState({ isVoting: false })
       this.props.onVote(event, {
         type: name,
-        points: this.state.text.split(/\s+/g).length
+        points: this.props.text.split(/\s+/g).length
       })
     }
   }
@@ -55,12 +54,12 @@ class ActionPopup extends PureComponent {
   }
 
   handleShareQuote = event => {
-    this.props.onShareQuote(event, this.state.text)
+    this.props.onShareQuote(event, this.props.text)
   }
 
   renderScoreAndQuotes = () => (
     <Fragment>
-      <Button inverted>{`${this.state.text.split(/\s+/g).length}`}</Button>
+      <Button inverted>{`${this.props.text.split(/\s+/g).length}`}</Button>
       <Button
         name="comment"
         inverted

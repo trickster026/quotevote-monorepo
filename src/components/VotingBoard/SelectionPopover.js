@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import onClickOutside from "react-onclickoutside"
+import { isMobile } from "react-device-detect"
 import PropTypes from "prop-types"
 
 function selectionExists() {
@@ -34,6 +35,7 @@ class SelectionPopover extends Component {
 
     this.touchIndex = 0
     this.selectionOffsets = [{}, {}]
+    this.interval = null
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,12 +46,16 @@ class SelectionPopover extends Component {
 
   componentDidMount() {
     const target = document.querySelector("[data-selectable]")
-    target.addEventListener("pointerup", this.handlePointerUp)
+    target.addEventListener("selectstart", this.handleMobileSelection)
+    target.addEventListener("pointerup", this.handleRemoveInterval)
+    target.addEventListener("pointermove", this.selectionChange)
   }
 
   componentWillUnmount() {
     const target = document.querySelector("[data-selectable]")
-    target.removeEventListener("pointerup", this.handlePointerUp)
+    target.removeEventListener("selectstart", this.handleMobileSelection)
+    target.removeEventListener("pointerup", this.handleRemoveInterval)
+    target.removeEventListener("pointermove", this.selectionChange)
   }
 
   render() {
@@ -76,51 +82,26 @@ class SelectionPopover extends Component {
     )
   }
 
-  handlePointerUp = () => {
+  handleRemoveInterval = () => {
+    clearInterval(this.interval)
+    this.interval = null
+  }
+
+  handleMobileSelection = () => {
+    if (isMobile) {
+      this.interval = setInterval(this.selectionChange, 10)
+    }
+  }
+
+  selectionChange = () => {
     const selection = window.getSelection()
+
     if (selectionExists()) {
       this.props.onSelect(selection)
       return this.computePopoverBox()
     }
     this.props.onDeselect()
   }
-
-  // handleSelectStart = () => {
-  //   const selection = window.getSelection()
-  //   const { anchorOffset, extentOffset } = selection
-
-  //   if (selectionExists()) {
-  //     this.selectionOffsets[this.touchIndex] =
-  //       this.touchIndex === 0 ? anchorOffset : extentOffset
-  //     this.touchIndex++
-  //   }
-
-  //   if (isMobile) {
-  //     if (this.touchIndex >= 2) {
-  //       let baseOffset = this.selectionOffsets[0]
-  //       let extentOffset = this.selectionOffsets[1]
-
-  //       if (this.selectionOffsets[0] > this.selectionOffsets[1]) {
-  //         baseOffset = this.selectionOffsets[1] - 1
-  //         extentOffset = this.selectionOffsets[0] + 1
-  //       }
-
-  //       selection.setBaseAndExtent(
-  //         selection.anchorNode,
-  //         baseOffset,
-  //         selection.anchorNode,
-  //         extentOffset
-  //       )
-  //       this.touchIndex = 0
-
-  //       if (selectionExists()) {
-  //         this.props.onSelect(selection)
-  //         return this.computePopoverBox()
-  //       }
-  //       this.props.onDeselect()
-  //     }
-  //   }
-  // }
 
   computePopoverBox = () => {
     const selection = window.getSelection()
