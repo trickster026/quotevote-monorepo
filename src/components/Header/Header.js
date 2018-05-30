@@ -34,13 +34,7 @@ class HeaderComponent extends PureComponent {
     if (userId) {
       history.push(`/user/${userId}`)
     } else {
-      this.props.dispatch({
-        type: "UPDATE_CURRENT_SONG",
-        payload: {
-          currentArtist: artistId,
-          currentSongId: songId
-        }
-      })
+      this.props.updateCurrentSong(artistId, songId)
       history.push(`/artist/${artistId}`)
     }
   }
@@ -233,7 +227,15 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   guestLogin: (username, password, history) => {
     dispatch(userLogin(username, password, history))
-  }
+  },
+  updateCurrentSong: (artistId, songId) =>
+    dispatch({
+      type: "UPDATE_CURRENT_SONG",
+      payload: {
+        currentArtist: artistId,
+        currentSongId: songId
+      }
+    })
 })
 
 export default withApollo(
