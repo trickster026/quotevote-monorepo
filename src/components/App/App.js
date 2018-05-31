@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
+import PrivateRoute from "../PrivateRoute"
 
 import Header from "../Header/Header"
 import Artist from "../../routes/Artist/artistContainer"
@@ -8,10 +9,10 @@ import Login from "../../routes/Login/Login"
 import Home from "../../routes/Home/Home"
 import Scoreboard from "../../routes/Scoreboard/scoreboardContainer"
 
-import PrivateRoute from "../../routes/Login/PrivateRoute"
 import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
+import SubmitContent from "../../routes/SubmitContent/SubmitContent"
 import RequestInvite from "../../routes/UserInvites/RequestInvite/RequestInvite"
 import AppSettings from "../../routes/Settings/AppSettings"
 
@@ -30,6 +31,7 @@ class App extends Component {
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
           <Route path="/invite" component={RequestInvite} />
+          <PrivateRoute path="/submit-content" component={SubmitContent} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
           <PrivateRoute path="/settings" component={AppSettings} />

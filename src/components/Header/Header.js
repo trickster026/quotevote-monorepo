@@ -3,6 +3,7 @@ import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import { Container, Image, Menu, Search, Dropdown } from "semantic-ui-react"
+import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
@@ -118,13 +119,14 @@ class HeaderComponent extends PureComponent {
     const url =
       process.env.NODE_ENV === "production"
         ? "http://api.hiphopscoreboard.com/guest"
-        : "http://localhost:5000/guest"
+        : "http://192.168.1.2:5000/guest"
     const guest = await axios.post(url)
     this.props.guestLogin(
       guest.data.username,
       guest.data.username,
       this.props.history
     )
+    await toast.success("Successfully login as Guest!")
   }
 
   renderUserAccount = () => {
@@ -157,6 +159,9 @@ class HeaderComponent extends PureComponent {
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
       <Menu.Menu position="right">
+        <Menu.Item as={Link} name="user-content" to="/submit-content">
+          SUBMIT YOUR OWN TEXT
+        </Menu.Item>
         <Menu.Item>
           <Search
             category
@@ -177,7 +182,7 @@ class HeaderComponent extends PureComponent {
         <Dropdown item text="LOGIN" pointing>
           <Dropdown.Menu>
             <Dropdown.Item as={Link} name="registered" to="/login">
-              Login as Register User
+              Login as Registered User
             </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item name="guest" onClick={this.createGuestUser}>
@@ -214,6 +219,11 @@ class HeaderComponent extends PureComponent {
             {tokenValidator() && this.renderUserAccount()}
           </Menu.Menu>
           {this.renderRightMenuItem()}
+          <ToastContainer
+            position="bottom-left"
+            autoClose={2000}
+            closeOnClick
+          />
         </Container>
       </Menu>
     )
