@@ -17,7 +17,7 @@ import "semantic-ui-css/semantic.min.css"
 
 const baseUri =
   process.env.NODE_ENV === "production"
-    ? "http://107.20.29.153:5000/graphql"
+    ? "http://api.hiphopscoreboard.com/graphql"
     : "http://localhost:5000/graphql"
 
 const httpLink = new HttpLink({ uri: baseUri })

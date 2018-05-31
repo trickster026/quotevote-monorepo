@@ -47,10 +47,10 @@ const getToken = async (username, password, dispatch) => {
   try {
     const baseUri =
       process.env.NODE_ENV === "production"
-        ? "http://107.20.29.153:5000/login"
+        ? "http://api.hiphopscoreboard.com/login"
         : "http://localhost:5000/login"
 
-    const response = await axios.post(
+    return await axios.post(
       baseUri,
       {
         username: username,
@@ -62,7 +62,6 @@ const getToken = async (username, password, dispatch) => {
         }
       }
     )
-    return response
   } catch (err) {
     return { error: err }
   }

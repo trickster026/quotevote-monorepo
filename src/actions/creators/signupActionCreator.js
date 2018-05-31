@@ -44,7 +44,7 @@ const registerUser = async user => {
   try {
     const baseUri =
       process.env.NODE_ENV === "production"
-        ? "http://107.20.29.153:5000/register"
+        ? "http://api.hiphopscoreboard.com/register"
         : "http://localhost:5000/register"
 
     const response = await axios.post(baseUri, user, {

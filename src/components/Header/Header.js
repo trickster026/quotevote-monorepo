@@ -117,7 +117,7 @@ class HeaderComponent extends PureComponent {
   createGuestUser = async () => {
     const url =
       process.env.NODE_ENV === "production"
-        ? "http://107.20.29.153:5000/guest"
+        ? "http://api.hiphopscoreboard.com/guest"
         : "http://localhost:5000/guest"
     const guest = await axios.post(url)
     this.props.guestLogin(
