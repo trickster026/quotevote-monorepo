@@ -89,6 +89,9 @@ export const GET_USER_INFO = gql`
       _followingId
       vote_cast
       points
+      submissions {
+        title
+      }
     }
   }
 `

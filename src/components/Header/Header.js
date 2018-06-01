@@ -119,7 +119,7 @@ class HeaderComponent extends PureComponent {
     const url =
       process.env.NODE_ENV === "production"
         ? "http://api.hiphopscoreboard.com/guest"
-        : "http://192.168.1.2:5000/guest"
+        : "http://localhost:5000/guest"
     const guest = await axios.post(url)
     this.props.guestLogin(
       guest.data.username,

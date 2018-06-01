@@ -1,28 +1,30 @@
 import React, { PureComponent } from "react"
 import { Grid, Container, Segment, Header, Loader } from "semantic-ui-react"
+
+import SubmittedText from "./SubmittedText"
 import UserProfile from "./UserProfile"
 import TopArtists from "../../components/TopArtists/topArtistsContainer"
 import FantasyLabel from "./FantasyLabel"
 import UserWall from "./UserWall/UserWall"
 import VoteLogs from "./VoteLogs/voteLogsContainer"
-import { string, number, shape } from "prop-types"
 import Route404 from "../404"
+import PropTypes from "prop-types"
 
 class User extends PureComponent {
   static propTypes = {
-    user: shape({
-      name: string,
-      points: number,
-      vote_cast: number,
-      image: string,
-      followers: number,
-      following: number
+    user: PropTypes.shape({
+      name: PropTypes.string,
+      points: PropTypes.number,
+      vote_cast: PropTypes.number,
+      image: PropTypes.string,
+      followers: PropTypes.number,
+      following: PropTypes.number
     }),
-    fantasyLabels: shape({
-      user_id: string,
-      artist_id: number,
-      name: string,
-      score: number
+    fantasyLabels: PropTypes.shape({
+      user_id: PropTypes.string,
+      artist_id: PropTypes.number,
+      name: PropTypes.string,
+      score: PropTypes.number
     })
   }
 
@@ -64,12 +66,15 @@ class User extends PureComponent {
               </Grid.Column>
             </Grid.Row>
 
-            <Grid.Row>
-              <Grid.Column width={8}>
+            <Grid.Row columns="equal">
+              <Grid.Column>
                 <FantasyLabel fantasyLabels={userFantasyLabels} />
               </Grid.Column>
-              <Grid.Column width={8}>
+              <Grid.Column>
                 <UserWall quotes={user.quotes} />
+              </Grid.Column>
+              <Grid.Column>
+                <SubmittedText submissions={this.props.submissions} />
               </Grid.Column>
             </Grid.Row>
 

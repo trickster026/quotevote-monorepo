@@ -53,7 +53,8 @@ class UserContainer extends PureComponent {
       searchUser,
       userId,
       loading: false,
-      showHistoryLogs
+      showHistoryLogs,
+      submissions: nextProps.user && nextProps.user.submissions
     })
   }
 
@@ -94,6 +95,7 @@ class UserContainer extends PureComponent {
           userId={this.state.userId}
           loading={this.state.loading}
           showHistoryLogs={this.state.showHistoryLogs}
+          submissions={this.state.submissions}
         />
       </div>
     )

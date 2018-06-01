@@ -12,7 +12,8 @@ import Scoreboard from "../../routes/Scoreboard/scoreboardContainer"
 import Signup from "../../routes/Signup/Signup"
 import Terms from "../../routes/Terms/Terms"
 import Route404 from "../../routes/404.js"
-import SubmitContent from "../../routes/SubmitContent/SubmitContent"
+import SubmitContent from "../../routes/SubmitContent/SubmissionForm"
+import Shareables from "../../routes/Shareables/Shareables"
 import RequestInvite from "../../routes/UserInvites/RequestInvite/RequestInvite"
 import AppSettings from "../../routes/Settings/AppSettings"
 
@@ -31,6 +32,7 @@ class App extends Component {
           <Route path="/signup" component={Signup} />
           <Route path="/terms" component={Terms} />
           <Route path="/invite" component={RequestInvite} />
+          <Route path="/shareables/:code" component={Shareables} />
           <PrivateRoute path="/submit-content" component={SubmitContent} />
           <PrivateRoute path="/artist/:artistId" component={Artist} />
           <PrivateRoute path="/user/:userId" component={User} />
