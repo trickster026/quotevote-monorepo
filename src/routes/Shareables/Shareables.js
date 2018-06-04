@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from "react"
 import { Container, Segment, Grid } from "semantic-ui-react"
-import { Query } from "react-apollo"
+import { Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
 
 import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import ActionPopup from "../../components/VotingBoard/ActionPopup"
 
-const GET_TEXT = gql`
-  query text($code: String!, $authorId: String!) {
-    text(code: $code, author_id: $authorId) {
+const GET_SHAREABLES = gql`
+  query shareables($code: String!, $authorId: String!) {
+    text(code: $code) {
+      _id
       title
       text
       authorId
@@ -18,6 +19,37 @@ const GET_TEXT = gql`
     }
     user(user_id: $authorId) {
       name
+      quotes
+    }
+  }
+`
+
+const CREATE_VOTE = gql`
+  mutation createVote($vote: CustomVoteInput!) {
+    createCustomVote(vote: $vote) {
+      _id
+      authorId
+      userId
+      textId
+      isUpvote
+      startIndex
+      endIndex
+      points
+      created
+    }
+  }
+`
+
+const CREATE_COMMENT = gql`
+  mutation createComment($comment: CustomCommentInput!) {
+    createCustomComment(comment: $comment)
+  }
+`
+
+const ADD_QUOTE = gql`
+  mutation updateUserProfile($user: UserInput!) {
+    updateUserProfile(user: $user) {
+      _id
     }
   }
 `
@@ -30,15 +62,45 @@ class Shareables extends Component {
   }
 
   handleVote = (event, vote) => {
-    console.log("voted", vote)
+    this.props.client.mutate({
+      mutation: CREATE_VOTE,
+      variables: {
+        vote: {
+          textId: vote._id,
+          userId: this.props.userId,
+          authorId: vote.authorId,
+          startIndex: vote.startIndex,
+          endIndex: vote.endIndex,
+          isUpvote: vote.type === "upvote"
+        }
+      }
+    })
   }
 
   handleAddComment = (event, comment) => {
-    console.log("added comment", comment)
+    this.props.client.mutate({
+      mutation: CREATE_COMMENT,
+      variables: {
+        comment: {
+          userId: this.props.userId,
+          textId: comment._id,
+          authorId: comment.authorId,
+          content: comment.comment,
+          startIndex: comment.startIndex,
+          endIndex: comment.endIndex,
+          hashtag: comment.hashtag
+        }
+      }
+    })
   }
 
   handleShareQuote = (event, quote) => {
-    console.log("shared quote", quote)
+    this.props.client.mutate({
+      mutation: ADD_QUOTE,
+      variables: {
+        user: { _id: this.props.userId, quotes: [quote.quote, ...quote.prev] }
+      }
+    })
   }
 
   render = () => {
@@ -46,16 +108,17 @@ class Shareables extends Component {
       <Container>
         <Segment basic>
           <Query
-            query={GET_TEXT}
+            query={GET_SHAREABLES}
             variables={{
               code: this.props.match.params.code,
-              authorId: this.props.authorId
+              authorId: this.props.userId
             }}
           >
             {({ data: { text, user }, loading, error }) => {
               if (loading) return <div>Loading...</div>
-              if (error) return <div>{error}</div>
+              if (error) return <div>error</div>
 
+              const textProfile = { ...text }
               if (text) {
                 return (
                   <Fragment>
@@ -75,9 +138,27 @@ class Shareables extends Component {
                       {({ text }) => (
                         <ActionPopup
                           text={text}
-                          onVote={this.handleVote}
-                          onAddComment={this.handleAddComment}
-                          onShareQuote={this.handleShareQuote}
+                          onVote={(event, vote) =>
+                            this.handleVote(event, {
+                              ...vote,
+                              ...textProfile,
+                              ...this.state.selection
+                            })
+                          }
+                          onAddComment={(event, comment) =>
+                            this.handleAddComment(event, {
+                              comment,
+                              ...textProfile,
+                              ...this.state.selection
+                            })
+                          }
+                          onShareQuote={(event, quote) =>
+                            this.handleShareQuote(event, {
+                              quote,
+                              userId: this.props.userId,
+                              prev: user.quotes
+                            })
+                          }
                         />
                       )}
                     </VotingBoard>
@@ -92,6 +173,6 @@ class Shareables extends Component {
   }
 }
 
-const mapStateToProps = ({ login: { user: { _id } } }) => ({ authorId: _id })
+const mapStateToProps = ({ login: { user: { _id } } }) => ({ userId: _id })
 
-export default connect(mapStateToProps)(Shareables)
+export default withApollo(connect(mapStateToProps)(Shareables))
