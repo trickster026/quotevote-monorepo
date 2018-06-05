@@ -157,7 +157,7 @@ class SubmissionForm extends Component {
                     value={this.state.text}
                     onChange={this.handleInputChange}
                   />
-                  <Form.Button>Submit</Form.Button>
+                  <Form.Button color="teal">Submit</Form.Button>
                 </Form>
                 <ToastContainer
                   position="bottom-left"

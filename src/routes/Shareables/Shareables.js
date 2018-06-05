@@ -8,7 +8,7 @@ import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import ActionPopup from "../../components/VotingBoard/ActionPopup"
 
 const GET_SHAREABLES = gql`
-  query shareables($code: String!, $authorId: String!) {
+  query shareables($code: String!, $userId: String!) {
     text(code: $code) {
       _id
       title
@@ -17,10 +17,16 @@ const GET_SHAREABLES = gql`
       url
       created
     }
-    user(user_id: $authorId) {
+    user(user_id: $userId) {
       name
       quotes
     }
+  }
+`
+
+const GET_SCORES = gql`
+  query scores($textId: String) {
+    customScores(textId: $textId)
   }
 `
 
@@ -57,6 +63,8 @@ const ADD_QUOTE = gql`
 class Shareables extends Component {
   state = { selection: {} }
 
+  textId = ""
+
   handleSelect = selection => {
     this.setState({ selection })
   }
@@ -73,7 +81,13 @@ class Shareables extends Component {
           endIndex: vote.endIndex,
           isUpvote: vote.type === "upvote"
         }
-      }
+      },
+      refetchQueries: [
+        {
+          query: GET_SCORES,
+          variables: { textId: this.textId }
+        }
+      ]
     })
   }
 
@@ -111,7 +125,7 @@ class Shareables extends Component {
             query={GET_SHAREABLES}
             variables={{
               code: this.props.match.params.code,
-              authorId: this.props.userId
+              userId: this.props.userId
             }}
           >
             {({ data: { text, user }, loading, error }) => {
@@ -125,9 +139,31 @@ class Shareables extends Component {
                     <Grid columns={4}>
                       <Grid.Row>
                         <Grid.Column>Submitted by: {user.name}</Grid.Column>
-                        <Grid.Column>Total Points: 0</Grid.Column>
-                        <Grid.Column>Upvotes: 0</Grid.Column>
-                        <Grid.Column>Downvotes: 0</Grid.Column>
+                        <Query
+                          query={GET_SCORES}
+                          variables={{ textId: textProfile._id }}
+                        >
+                          {({ data: { customScores }, loading, error }) => {
+                            if (loading) return <div>Loading...</div>
+                            if (error) return <div>Error: {error}</div>
+                            if (customScores) {
+                              this.textId = textProfile._id
+                              return (
+                                <Fragment>
+                                  <Grid.Column>
+                                    Total Points: {customScores.total}
+                                  </Grid.Column>
+                                  <Grid.Column>
+                                    Upvotes: {customScores.upvotes}
+                                  </Grid.Column>
+                                  <Grid.Column>
+                                    Downvotes: {customScores.downvotes}
+                                  </Grid.Column>
+                                </Fragment>
+                              )
+                            }
+                          }}
+                        </Query>
                       </Grid.Row>
                     </Grid>
                     <VotingBoard
