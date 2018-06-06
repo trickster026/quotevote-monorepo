@@ -3,21 +3,28 @@ import { Input, Button, Popup, Label } from "semantic-ui-react"
 import PropTypes from "prop-types"
 
 class ActionPopup extends PureComponent {
-  state = { isVoting: true, isCommenting: false, comment: "" }
+  state = {
+    isVoting: true,
+    isCommenting: false,
+    comment: "",
+    orientation: this.props.orientation
+  }
 
   static propTypes = {
     text: PropTypes.string,
     orientation: PropTypes.string,
     onAddComment: PropTypes.func,
     onShareQuote: PropTypes.func,
-    onVote: PropTypes.func
+    onVote: PropTypes.func,
+    onOrientationChange: PropTypes.func
   }
 
   static defaultProps = {
     orientation: "horizontal",
     onAddComment: () => {},
     onShareQuote: () => {},
-    onVote: () => {}
+    onVote: () => {},
+    onOrientationChange: () => {}
   }
 
   componentDidMount = () => {
@@ -31,6 +38,14 @@ class ActionPopup extends PureComponent {
     const { name } = event.currentTarget
     if (name === "comment") {
       this.setState(prev => ({ isCommenting: !prev.isCommenting }))
+    } else if (name === "flip") {
+      const isHorizontal = this.state.orientation === "horizontal"
+      this.setState(
+        { orientation: isHorizontal ? "vertical" : "horizontal" },
+        () => {
+          this.props.onOrientationChange(event, this.state.orientation)
+        }
+      )
     } else {
       this.setState({ isVoting: false })
       this.props.onVote(event, {
@@ -105,6 +120,13 @@ class ActionPopup extends PureComponent {
         inverted
         icon="minus"
         name="downvote"
+        onClick={this.handleButtonClick}
+      />
+      <Button
+        color="grey"
+        inverted
+        icon="undo"
+        name="flip"
         onClick={this.handleButtonClick}
       />
     </div>

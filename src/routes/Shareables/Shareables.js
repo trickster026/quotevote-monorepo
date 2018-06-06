@@ -64,7 +64,7 @@ class Shareables extends Component {
   state = {
     selection: {},
     voteProps: {
-      topOffset: 150,
+      topOffset: 170,
       orientation: "vertical"
     }
   }
@@ -119,6 +119,16 @@ class Shareables extends Component {
       mutation: ADD_QUOTE,
       variables: {
         user: { _id: this.props.userId, quotes: [quote.quote, ...quote.prev] }
+      }
+    })
+  }
+
+  handleChangeOrientation = (event, orientation) => {
+    const isHorizontal = orientation === "horizontal"
+    this.setState({
+      voteProps: {
+        topOffset: isHorizontal ? 60 : 170,
+        orientation
       }
     })
   }
@@ -203,6 +213,7 @@ class Shareables extends Component {
                               prev: user.quotes
                             })
                           }
+                          onOrientationChange={this.handleChangeOrientation}
                         />
                       )}
                     </VotingBoard>

@@ -13,7 +13,7 @@ class Lyrics extends PureComponent {
     points: 0,
     isUpvote: true,
     voteProps: {
-      topOffset: 150,
+      topOffset: 170,
       orientation: "vertical"
     }
   }
@@ -128,6 +128,16 @@ class Lyrics extends PureComponent {
     })
   }
 
+  handleChangeOrientation = (event, orientation) => {
+    const isHorizontal = orientation === "horizontal"
+    this.setState({
+      voteProps: {
+        topOffset: isHorizontal ? 60 : 170,
+        orientation
+      }
+    })
+  }
+
   render = () => {
     return (
       <div>
@@ -144,6 +154,7 @@ class Lyrics extends PureComponent {
               onVote={this.handleVoting}
               onAddComment={this.handleAddComment}
               onShareQuote={this.handleShareQuote}
+              onOrientationChange={this.handleChangeOrientation}
             />
           )}
         </VotingBoard>
