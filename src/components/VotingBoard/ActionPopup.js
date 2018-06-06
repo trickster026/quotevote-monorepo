@@ -7,12 +7,14 @@ class ActionPopup extends PureComponent {
 
   static propTypes = {
     text: PropTypes.string,
+    orientation: PropTypes.string,
     onAddComment: PropTypes.func,
     onShareQuote: PropTypes.func,
     onVote: PropTypes.func
   }
 
   static defaultProps = {
+    orientation: "horizontal",
     onAddComment: () => {},
     onShareQuote: () => {},
     onVote: () => {}
@@ -78,7 +80,13 @@ class ActionPopup extends PureComponent {
   )
 
   renderButtons = () => (
-    <Fragment>
+    <div
+      style={{
+        display: "flex",
+        flexDirection:
+          this.props.orientation === "horizontal" ? "row" : "column"
+      }}
+    >
       <Button
         color="green"
         inverted
@@ -99,7 +107,7 @@ class ActionPopup extends PureComponent {
         name="downvote"
         onClick={this.handleButtonClick}
       />
-    </Fragment>
+    </div>
   )
 
   renderCommentBox = () => (

@@ -61,7 +61,13 @@ const ADD_QUOTE = gql`
 `
 
 class Shareables extends Component {
-  state = { selection: {} }
+  state = {
+    selection: {},
+    voteProps: {
+      topOffset: 150,
+      orientation: "vertical"
+    }
+  }
 
   textId = ""
 
@@ -168,11 +174,13 @@ class Shareables extends Component {
                     </Grid>
                     <VotingBoard
                       title={text.title}
+                      topOffset={this.state.voteProps.topOffset}
                       content={text.text}
                       onSelect={this.handleSelect}
                     >
                       {({ text }) => (
                         <ActionPopup
+                          orientation={this.state.voteProps.orientation}
                           text={text}
                           onVote={(event, vote) =>
                             this.handleVote(event, {

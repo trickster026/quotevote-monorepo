@@ -11,7 +11,11 @@ class Lyrics extends PureComponent {
     highlightedWords: "",
     hasVoted: false,
     points: 0,
-    isUpvote: true
+    isUpvote: true,
+    voteProps: {
+      topOffset: 150,
+      orientation: "vertical"
+    }
   }
 
   static propTypes = {
@@ -129,12 +133,14 @@ class Lyrics extends PureComponent {
       <div>
         <VotingBoard
           title="Lyrics"
+          topOffset={this.state.voteProps.topOffset}
           content={this.props.lyrics}
           onSelect={this.handleSelect}
         >
           {({ text }) => (
             <ActionPopup
               text={text}
+              orientation={this.state.voteProps.orientation}
               onVote={this.handleVoting}
               onAddComment={this.handleAddComment}
               onShareQuote={this.handleShareQuote}

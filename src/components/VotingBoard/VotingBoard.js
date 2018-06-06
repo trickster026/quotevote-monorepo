@@ -12,12 +12,14 @@ class VotingBoard extends Component {
 
   static propTypes = {
     title: PropTypes.string,
+    topOffset: PropTypes.number,
     content: PropTypes.string,
     children: PropTypes.func
   }
 
   static defaultProps = {
-    title: "Voting Board"
+    title: "Voting Board",
+    topOffset: 60
   }
 
   handleSelect = select => {
@@ -55,7 +57,7 @@ class VotingBoard extends Component {
         </div>
         <SelectionPopover
           showPopover={this.state.open}
-          topOffset={60}
+          topOffset={this.props.topOffset}
           onSelect={this.handleSelect}
           onDeselect={this.handleDeselect}
         >
