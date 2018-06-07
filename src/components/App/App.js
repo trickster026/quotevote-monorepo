@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
 import PrivateRoute from "../PrivateRoute"
+import BasicLayout from "../Layouts/BasicLayout"
 
 import Header from "../Header/Header"
 import Artist from "../../routes/Artist/artistContainer"
@@ -23,23 +24,25 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/scoreboard" component={Scoreboard} />
-          <Route path="/login" component={Login} />
-          <Route path="/logout" component={Login} />
-          <Route path="/signup" component={Signup} />
-          <Route path="/terms" component={Terms} />
-          <Route path="/invite" component={RequestInvite} />
-          <Route path="/shareables/:code" component={Shareables} />
-          <PrivateRoute path="/submit-content" component={SubmitContent} />
-          <PrivateRoute path="/artist/:artistId" component={Artist} />
-          <PrivateRoute path="/user/:userId" component={User} />
-          <PrivateRoute path="/settings" component={AppSettings} />
-          <Route path="/:username" component={User} />
-          <Route component={Route404} />
-        </Switch>
+        <BasicLayout>
+          <Header />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/scoreboard" component={Scoreboard} />
+            <Route path="/login" component={Login} />
+            <Route path="/logout" component={Login} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/terms" component={Terms} />
+            <Route path="/invite" component={RequestInvite} />
+            <Route path="/shareables/:code" component={Shareables} />
+            <PrivateRoute path="/submit-content" component={SubmitContent} />
+            <PrivateRoute path="/artist/:artistId" component={Artist} />
+            <PrivateRoute path="/user/:userId" component={User} />
+            <PrivateRoute path="/settings" component={AppSettings} />
+            <Route path="/:username" component={User} />
+            <Route component={Route404} />
+          </Switch>
+        </BasicLayout>
       </div>
     )
   }
