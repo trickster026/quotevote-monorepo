@@ -63,7 +63,7 @@ class Albums extends PureComponent {
 
     const { albums } = this.props
     return (
-      <Accordion as={Menu} vertical fluid>
+      <Accordion as={Menu} vertical fluid basic>
         {albums.map(album => (
           <Menu.Item key={album.album_id}>
             <Accordion.Title

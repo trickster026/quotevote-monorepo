@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react"
-import { Segment, Header, List, Image, Dimmer, Loader } from "semantic-ui-react"
+import { Segment, List, Image, Dimmer, Loader } from "semantic-ui-react"
+import Module from "../../../components/Layouts/Module"
 import PropTypes from "prop-types"
 
 class TrendingSongs extends PureComponent {
@@ -34,34 +35,29 @@ class TrendingSongs extends PureComponent {
       )
     }
     return (
-      <div>
-        <Header className="header-module" inverted attached="top" as="h4">
-          Trending Songs
-        </Header>
-        <Segment attached>
-          <List animated verticalAlign="middle">
-            {this.props.songs.map((song, index) => {
-              const { songId, artistId, title, artistName, thumbnail } = song
-              return (
-                <List.Item key={index}>
-                  <Image src={thumbnail} size="mini" />
-                  <List.Content>
-                    <List.Header
-                      as="a"
-                      onClick={e =>
-                        this.handleItemSelect({ songId, artistId }, e)
-                      }
-                    >
-                      {title}
-                    </List.Header>
-                    <List.Description>{artistName}</List.Description>
-                  </List.Content>
-                </List.Item>
-              )
-            })}
-          </List>
-        </Segment>
-      </div>
+      <Module title="Trending Songs">
+        <List animated verticalAlign="middle">
+          {this.props.songs.map((song, index) => {
+            const { songId, artistId, title, artistName, thumbnail } = song
+            return (
+              <List.Item key={index}>
+                <Image src={thumbnail} size="mini" />
+                <List.Content>
+                  <List.Header
+                    as="a"
+                    onClick={e =>
+                      this.handleItemSelect({ songId, artistId }, e)
+                    }
+                  >
+                    {title}
+                  </List.Header>
+                  <List.Description>{artistName}</List.Description>
+                </List.Content>
+              </List.Item>
+            )
+          })}
+        </List>
+      </Module>
     )
   }
 }

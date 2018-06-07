@@ -1,7 +1,10 @@
 import React, { PureComponent } from "react"
-import { Header, Segment, Table } from "semantic-ui-react"
-import PropTypes from "prop-types"
+import { Table } from "semantic-ui-react"
+
 import FlipCard from "../FlipCard/FlipCard"
+import Module from "../Layouts/Module"
+import PropTypes from "prop-types"
+
 import "./TopArtist.css"
 
 const PAD_LENGTH = 19
@@ -21,39 +24,34 @@ class TopArtists extends PureComponent {
   render = () => {
     const { artists } = this.props
     return (
-      <div>
-        <Header className="header-module" inverted attached="top" as="h4">
-          Top Artists
-        </Header>
-        <Segment attached>
-          <Table basic="very">
-            <Table.Body>
-              {artists &&
-                artists.map((artist, index) => {
-                  let artistName = ""
-                  if (artist.artistName.length > PAD_LENGTH) {
-                    artistName = artist.artistName.substring(0, PAD_LENGTH)
-                  } else {
-                    artistName = pad(" ", PAD_LENGTH, artist.artistName)
-                  }
-                  return (
-                    <Table.Row key={index}>
-                      <Table.Cell>{artistName}</Table.Cell>
-                      <Table.Cell>
-                        <FlipCard
-                          content={artist.totalScore.toString()}
-                          width={22}
-                          height={30}
-                          fontSize={16}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  )
-                })}
-            </Table.Body>
-          </Table>
-        </Segment>
-      </div>
+      <Module title="Top Artists">
+        <Table basic="very">
+          <Table.Body>
+            {artists &&
+              artists.map((artist, index) => {
+                let artistName = ""
+                if (artist.artistName.length > PAD_LENGTH) {
+                  artistName = artist.artistName.substring(0, PAD_LENGTH)
+                } else {
+                  artistName = pad(" ", PAD_LENGTH, artist.artistName)
+                }
+                return (
+                  <Table.Row key={index}>
+                    <Table.Cell>{artistName}</Table.Cell>
+                    <Table.Cell>
+                      <FlipCard
+                        content={artist.totalScore.toString()}
+                        width={22}
+                        height={30}
+                        fontSize={16}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              })}
+          </Table.Body>
+        </Table>
+      </Module>
     )
   }
 }
