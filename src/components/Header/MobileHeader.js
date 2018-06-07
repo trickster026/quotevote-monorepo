@@ -1,6 +1,8 @@
 import React, { Component } from "react"
-import { Menu, Icon } from "semantic-ui-react"
+import { Menu, Icon, Image } from "semantic-ui-react"
 import PropTypes from "prop-types"
+
+import logo from "../../assets/hiphop.png"
 
 class MobileHeader extends Component {
   static propTypes = {
@@ -24,15 +26,11 @@ class MobileHeader extends Component {
 
   render = () => {
     return (
-      <Menu
-        attached="top"
-        color="grey"
-        size="huge"
-        inverted
-        stackable
-        borderless
-      >
-        <Menu.Item onClick={this.handleOptionClick}>
+      <Menu attached="top" color="grey" size="huge" inverted borderless>
+        <Menu.Item>
+          <Image src={logo} height={30} />
+        </Menu.Item>
+        <Menu.Item position="right" onClick={this.handleOptionClick}>
           <Icon name="bars" />
         </Menu.Item>
       </Menu>

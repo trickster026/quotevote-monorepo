@@ -11,27 +11,28 @@ class Home extends PureComponent {
     return (
       <Segment as={Container} basic>
         <Grid doubling stackable>
-          <Grid.Row columns={2}>
-            <Grid.Column width={8}>
+          <Grid.Row>
+            <Grid.Column width={16}>
               <Welcome />
             </Grid.Column>
-            <Grid.Column>
-              <TopArtists />
-            </Grid.Column>
+            <Grid.Column />
           </Grid.Row>
 
           <Grid.Row columns={2}>
             <Grid.Column width={8}>
-              <TrendingSongs />
+              <TopArtists />
             </Grid.Column>
             <Grid.Column width={8}>
               <RecommendedSong />
             </Grid.Column>
           </Grid.Row>
 
-          <Grid.Row>
+          <Grid.Row columns={2}>
             <Grid.Column>
               <NewsFeed />
+            </Grid.Column>
+            <Grid.Column>
+              <TrendingSongs />
             </Grid.Column>
           </Grid.Row>
         </Grid>
