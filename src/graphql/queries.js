@@ -6,6 +6,12 @@ export const GET_SCORE = gql`
   }
 `
 
+export const GET_COMMENTS = gql`
+  query comments($songId: Int) {
+    comments(songId: $songId)
+  }
+`
+
 export const GET_UPVOTES_PER_SONG = gql`
   query upvotes($song_id: Int!) {
     upvotes(song_id: $song_id)

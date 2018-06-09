@@ -6,6 +6,7 @@ import ErrorBoundary from "../../components/ErrorBoundary"
 import Albums from "./Albums"
 import MusicPlayer from "./MusicPlayer/musicPlayerContainer"
 import Lyrics from "./Lyrics/Lyrics.container"
+import Comments from "./Comments"
 import { string, number, arrayOf, shape } from "prop-types"
 
 class Artist extends PureComponent {
@@ -32,6 +33,7 @@ class Artist extends PureComponent {
   }
 
   render = () => {
+    console.log("this.props", this.props)
     if (this.props.loading || !this.props.songId || !this.props.artistId) {
       return (
         <Segment basic style={{ top: "40vh" }}>
@@ -60,6 +62,7 @@ class Artist extends PureComponent {
                     albums={this.props.albums}
                     loading={this.props.albums.length <= 0}
                   />
+                  <Comments comments={this.props.comments} />
                 </Grid.Column>
                 <Grid.Column width={11}>
                   <MusicPlayer

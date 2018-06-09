@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { connect } from "react-redux"
 import { graphql, compose, withApollo } from "react-apollo"
-import { GET_TRACKS } from "../../graphql/queries"
+import { GET_TRACKS, GET_COMMENTS } from "../../graphql/queries"
 import { songScores } from "../../actions/creators/songActionCreator"
 import Artist from "../Artist/Artist"
 import PropTypes from "prop-types"
@@ -47,6 +47,7 @@ class artistContainer extends PureComponent {
         songId={this.props.songId}
         loading={this.props.loading}
         artistId={this.props.match.params.artistId * 1}
+        comments={this.props.comments}
       />
     )
   }
@@ -76,6 +77,14 @@ export default withApollo(
           albums: albums,
           songId: currentSongId,
           loading
+        }
+      }
+    }),
+    graphql(GET_COMMENTS, {
+      options: ({ songId }) => ({ variables: { songId } }),
+      props: ({ data: { comments } }) => {
+        if (comments) {
+          return { comments }
         }
       }
     })

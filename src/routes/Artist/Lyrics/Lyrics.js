@@ -1,8 +1,10 @@
 import React, { PureComponent, Fragment } from "react"
 import { ToastContainer, toast } from "react-toastify"
+import { Sidebar, Segment } from "semantic-ui-react"
 
 import ActionPopup from "../../../components/VotingBoard/ActionPopup"
 import VotingBoard from "../../../components/VotingBoard/VotingBoard"
+import CommentSidebar from "../../../components/CommentSidebar/CommentSidebar"
 import PropTypes from "prop-types"
 
 class Lyrics extends PureComponent {
