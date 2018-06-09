@@ -4,7 +4,6 @@ import moment from "moment"
 
 import Module from "../../components/Layouts/Module"
 import PropTypes from "prop-types"
-import { sortBy } from "async"
 
 const sortByCreatedDate = (a, b) => {
   const d1 = moment(a.created)
