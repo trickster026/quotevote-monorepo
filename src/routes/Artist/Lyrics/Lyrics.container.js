@@ -6,7 +6,8 @@ import {
   GET_SONG,
   GET_ARTIST_INFO,
   GET_TOP_ARTISTS,
-  GET_USER_INFO
+  GET_USER_INFO,
+  GET_COMMENTS
 } from "../../../graphql/queries"
 import {
   CREATE_VOTE,
@@ -50,7 +51,13 @@ class LyricsContainer extends PureComponent {
       return async payload => {
         return await this.props.client.mutate({
           mutation: CREATE_COMMENT,
-          variables: { comment: payload }
+          variables: { comment: payload },
+          refetchQueries: [
+            {
+              query: GET_COMMENTS,
+              variables: { songId: this.props.songId }
+            }
+          ]
         })
       }
     }

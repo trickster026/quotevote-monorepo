@@ -5,19 +5,11 @@ import moment from "moment"
 import Module from "../../components/Layouts/Module"
 import PropTypes from "prop-types"
 
-const removeChildren = node => {
-  let firstChild = node.firstChild
-  while (firstChild) {
-    node.removeChild(firstChild)
-    firstChild = node.firstChild
-  }
-}
-
 const sortByCreatedDate = (a, b) => {
   const d1 = moment(a.created)
   const d2 = moment(b.created)
-  if (d1.isBefore(d2)) return -1
-  if (d1.isAfter(d2)) return 1
+  if (d1.isBefore(d2)) return 1
+  if (d1.isAfter(d2)) return -1
   return 0
 }
 
