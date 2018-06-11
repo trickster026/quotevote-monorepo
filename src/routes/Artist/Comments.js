@@ -5,6 +5,14 @@ import moment from "moment"
 import Module from "../../components/Layouts/Module"
 import PropTypes from "prop-types"
 
+const removeChildren = node => {
+  let firstChild = node.firstChild
+  while (firstChild) {
+    node.removeChild(firstChild)
+    firstChild = node.firstChild
+  }
+}
+
 const sortByCreatedDate = (a, b) => {
   const d1 = moment(a.created)
   const d2 = moment(b.created)
@@ -16,6 +24,15 @@ const sortByCreatedDate = (a, b) => {
 class Comments extends Component {
   static propTypes = {
     comments: PropTypes.array
+  }
+
+  handleItemSelect = ({ comment }, event) => {
+    const selection = window.getSelection()
+    const paragraph = document.querySelector("p.voting_board-content")
+    const node = document.createTextNode(paragraph.innerText)
+    paragraph.appendChild(node)
+    selection.setBaseAndExtent(node, comment.startIndex, node, comment.endIndex)
+    paragraph.removeChild(paragraph.firstChild)
   }
 
   render = () => {
@@ -43,7 +60,7 @@ class Comments extends Component {
                   <List.Header
                     as="a"
                     onClick={e =>
-                      this.handleItemSelect({ songId, artistId }, e)
+                      this.handleItemSelect({ songId, artistId, comment }, e)
                     }
                   >
                     {content}

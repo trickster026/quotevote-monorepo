@@ -9,6 +9,14 @@ import Lyrics from "./Lyrics/Lyrics.container"
 import Comments from "./Comments"
 import { string, number, arrayOf, shape } from "prop-types"
 
+const getRanges = list => {
+  return list.map(item => ({
+    startIndex: item.startIndex,
+    endIndex: item.endIndex,
+    id: item._id
+  }))
+}
+
 class Artist extends PureComponent {
   static propTypes = {
     albums: arrayOf(
@@ -33,7 +41,6 @@ class Artist extends PureComponent {
   }
 
   render = () => {
-    console.log("this.props", this.props)
     if (this.props.loading || !this.props.songId || !this.props.artistId) {
       return (
         <Segment basic style={{ top: "40vh" }}>
@@ -73,6 +80,7 @@ class Artist extends PureComponent {
                   <Lyrics
                     songId={this.props.songId}
                     artistId={this.props.artistId}
+                    highlights={getRanges(this.props.comments)}
                   />
                 </Grid.Column>
               </Grid.Row>

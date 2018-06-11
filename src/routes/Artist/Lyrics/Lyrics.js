@@ -143,6 +143,7 @@ class Lyrics extends PureComponent {
       <Fragment>
         <VotingBoard
           title="Lyrics"
+          // highlights={this.props.highlights}
           topOffset={this.state.voteProps.topOffset}
           content={this.props.lyrics}
           onSelect={this.handleSelect}

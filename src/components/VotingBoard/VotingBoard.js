@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { Dimmer, Loader, Container } from "semantic-ui-react"
 
 import SelectionPopover from "./SelectionPopover"
@@ -12,6 +12,13 @@ class VotingBoard extends Component {
 
   static propTypes = {
     title: PropTypes.string,
+    highlights: PropTypes.arrayOf(
+      PropTypes.shape({
+        startIndex: PropTypes.number,
+        endIndex: PropTypes.number,
+        id: PropTypes.string
+      })
+    ),
     topOffset: PropTypes.number,
     content: PropTypes.string,
     children: PropTypes.func
@@ -42,6 +49,20 @@ class VotingBoard extends Component {
     this.setState({ open: false })
   }
 
+  renderHighlights = () => {
+    if (this.props.highlights) {
+      return this.props.content.split(/\n/g).map(line => (
+        <Fragment>
+          {line
+            .split(/\s+/g)
+            .map((word, index) => <span key={index + word}>{word + " "}</span>)}
+          <br />
+        </Fragment>
+      ))
+    }
+    return this.props.content
+  }
+
   renderLoader = () => (
     <Dimmer active>
       <Loader size="small">Loading Lyrics</Loader>
@@ -53,7 +74,7 @@ class VotingBoard extends Component {
     return (
       <Container style={{ position: "relative" }}>
         <div data-selectable>
-          <p className="voting_board-content">{this.props.content}</p>
+          <p className="voting_board-content">{this.renderHighlights()}</p>
         </div>
         <SelectionPopover
           showPopover={this.state.open}
