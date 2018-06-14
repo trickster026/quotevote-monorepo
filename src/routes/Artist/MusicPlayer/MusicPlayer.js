@@ -2,7 +2,7 @@ import React, { PureComponent } from "react"
 import { Segment, Grid, Label, Dimmer, Loader } from "semantic-ui-react"
 import SpotifyPlayer from "react-spotify-player"
 
-import FlipCard from "../../../components/FlipCard/FlipCard"
+import FlipCard from "../../../components/Flipboard/FlipCard"
 import Module from "../../../components/Layouts/Module"
 import PropTypes from "prop-types"
 

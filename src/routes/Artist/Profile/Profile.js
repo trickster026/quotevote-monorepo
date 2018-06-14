@@ -7,7 +7,7 @@ import {
   Item,
   Table
 } from "semantic-ui-react"
-import FlipCard from "../../../components/FlipCard/FlipCard"
+import FlipCard from "../../../components/Flipboard/FlipCard"
 import { string, number, array } from "prop-types"
 import defaultImage from "../../../assets/image.png"
 class Profile extends PureComponent {

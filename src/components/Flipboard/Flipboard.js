@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react"
+import React, { PureComponent, Fragment } from "react"
 import { Header, Segment, List, Loader, Dimmer } from "semantic-ui-react"
 import PropTypes from "prop-types"
-import FlipCard from "../FlipCard/FlipCard"
+import FlipCard from "./FlipCard"
 import "./Flipboard.css"
 
 const PAD_LENGTH = 19
@@ -69,12 +69,12 @@ class Flipboard extends PureComponent {
 
   render = () => {
     return (
-      <div>
+      <Fragment>
         <Header className="header-module" inverted attached="top" as="h4">
           {this.props.title}
         </Header>
         {this.renderSegment()}
-      </div>
+      </Fragment>
     )
   }
 }

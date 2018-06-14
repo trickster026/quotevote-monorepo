@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react"
 import { Table } from "semantic-ui-react"
 
-import FlipCard from "../FlipCard/FlipCard"
+import FlipCard from "../Flipboard/FlipCard"
 import Module from "../Layouts/Module"
 import PropTypes from "prop-types"
 

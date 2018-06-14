@@ -2,17 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import "./FlipCard.css"
 
-// function randomCharacters() {
-//   return (
-//     Math.random()
-//       .toString(36)
-//       .substring(2, 15) +
-//     Math.random()
-//       .toString(36)
-//       .substring(2, 15)
-//   )
-// }
-
 const animateFlip = (index, current, prev) => {
   return current[index] !== prev[index] ? "play" : "pause"
 }

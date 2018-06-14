@@ -7,7 +7,7 @@ import {
   Segment,
   Table
 } from "semantic-ui-react"
-import FlipCard from "../../components/FlipCard/FlipCard"
+import FlipCard from "../../components/Flipboard/FlipCard"
 import { number, shape, string } from "prop-types"
 
 class UserProfile extends PureComponent {
