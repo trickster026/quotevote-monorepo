@@ -77,11 +77,7 @@ class SubmissionForm extends Component {
   }
 
   renderModal = url => {
-    const domain =
-      process.env.NODE_ENV === "production"
-        ? "hiphopscoreboard.com"
-        : "localhost:3000"
-    const shareableLink = `http://${domain}/shareables/${url}`
+    const shareableLink = `${process.env.REACT_APP_DOMAIN}/shareables/${url}`
     return (
       <Modal
         size="tiny"

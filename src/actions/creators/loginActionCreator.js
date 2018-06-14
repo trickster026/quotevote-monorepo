@@ -45,13 +45,8 @@ export const userLogin = (username, password, history) => {
 
 const getToken = async (username, password, dispatch) => {
   try {
-    const baseUri =
-      process.env.NODE_ENV === "production"
-        ? "http://api.hiphopscoreboard.com/login"
-        : "http://localhost:5000/login"
-
     return await axios.post(
-      baseUri,
+      process.env.REACT_APP_SERVER + "/login",
       {
         username: username,
         password: password

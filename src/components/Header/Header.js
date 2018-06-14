@@ -116,11 +116,7 @@ class HeaderComponent extends PureComponent {
 
   // TODO move this out of this component to maintain code reliability.
   createGuestUser = async () => {
-    const url =
-      process.env.NODE_ENV === "production"
-        ? "http://api.hiphopscoreboard.com/guest"
-        : "http://localhost:5000/guest"
-    const guest = await axios.post(url)
+    const guest = await axios.post(process.env.REACT_APP_SERVER + "/guest")
     this.props.guestLogin(
       guest.data.username,
       guest.data.username,

@@ -37,15 +37,7 @@ class Comments extends Component {
       <Module title="Comments">
         <List animated verticalAlign="middle">
           {sortedComments.map((comment, index) => {
-            const {
-              content,
-              //   startIndex,
-              //   endIndex,
-              //   userId,
-              songId,
-              artistId,
-              created
-            } = comment
+            const { content, songId, artistId, created } = comment
             return (
               <List.Item key={index}>
                 <List.Content>

@@ -2,7 +2,7 @@ import * as types from "../actions/types"
 
 const defaultState = {}
 
-const loginReducer = (state = defaultState, action) => {
+export const loginReducer = (state = defaultState, action) => {
   let _state
   switch (action.type) {
     case types.USER_LOGIN_REQUEST:
@@ -21,5 +21,3 @@ const loginReducer = (state = defaultState, action) => {
       return state
   }
 }
-
-export default loginReducer

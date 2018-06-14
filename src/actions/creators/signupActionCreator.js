@@ -42,20 +42,19 @@ export const userSignup = (user, history) => {
 
 const registerUser = async user => {
   try {
-    const baseUri =
-      process.env.NODE_ENV === "production"
-        ? "http://api.hiphopscoreboard.com/register"
-        : "http://localhost:5000/register"
-
-    const response = await axios.post(baseUri, user, {
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers":
-          "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With",
-        "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS"
+    const response = await axios.post(
+      process.env.REACT_APP_SERVER + "/register",
+      user,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers":
+            "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With",
+          "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS"
+        }
       }
-    })
+    )
     return response
   } catch (err) {
     return { error: err }

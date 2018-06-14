@@ -143,15 +143,15 @@ class Lyrics extends PureComponent {
       <Fragment>
         <VotingBoard
           title="Lyrics"
-          // highlights={this.props.highlights}
-          topOffset={this.state.voteProps.topOffset}
+          highlights={this.props.highlights}
+          // topOffset={this.state.voteProps.topOffset}
           content={this.props.lyrics}
           onSelect={this.handleSelect}
         >
           {({ text }) => (
             <ActionPopup
               text={text}
-              orientation={this.state.voteProps.orientation}
+              // orientation={this.state.voteProps.orientation}
               onVote={this.handleVoting}
               onAddComment={this.handleAddComment}
               onShareQuote={this.handleShareQuote}

@@ -2,18 +2,9 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import { persistStore, persistReducer } from "redux-persist"
 import localForage from "localforage"
 import thunk from "redux-thunk"
+import * as reducers from "../reducers"
 
-import author from "./authorReducer"
-import artist from "./artistReducer"
-import login from "./loginReducer"
-import signup from "./signupReducer"
-
-const rootReducer = combineReducers({
-  artist,
-  author,
-  login,
-  signup
-})
+const rootReducer = combineReducers({ ...reducers })
 
 const persistConfig = {
   key: "root",

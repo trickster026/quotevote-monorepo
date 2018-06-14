@@ -1,4 +1,4 @@
-import { client } from "../../index"
+import client from "../../config/apollo"
 import {
   GET_DOWNVOTES_PER_SONG,
   GET_UPVOTES_PER_SONG,
