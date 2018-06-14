@@ -2,7 +2,7 @@ import * as types from "../actions/types"
 
 const defaultState = {}
 
-export const artistReducer = (state = defaultState, action) => {
+const artistReducer = (state = defaultState, action) => {
   let _state
   switch (action.type) {
     case types.UPDATE_CURRENT_SONG:
@@ -12,3 +12,5 @@ export const artistReducer = (state = defaultState, action) => {
       return state
   }
 }
+
+export default artistReducer

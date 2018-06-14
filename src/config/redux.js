@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import { persistStore, persistReducer } from "redux-persist"
 import localForage from "localforage"
 import thunk from "redux-thunk"
+
 import * as reducers from "../reducers"
 
 const rootReducer = combineReducers({ ...reducers })

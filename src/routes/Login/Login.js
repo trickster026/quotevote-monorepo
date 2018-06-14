@@ -62,6 +62,7 @@ export class Login extends PureComponent {
   }
 
   render = () => {
+    console.log("this.props.login", this.props)
     let loginFailed =
       "error" in this.props.login &&
       typeof this.props.login.error !== "undefined"

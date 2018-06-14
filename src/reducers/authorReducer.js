@@ -2,7 +2,7 @@ const UPDATE_AUTHOR_INFO = "UPDATE_AUTHOR_INFO"
 
 const defaultState = {}
 
-export const authorReducer = (state = defaultState, action) => {
+const authorReducer = (state = defaultState, action) => {
   let _state
   switch (action.type) {
     case UPDATE_AUTHOR_INFO:
@@ -12,3 +12,5 @@ export const authorReducer = (state = defaultState, action) => {
       return state
   }
 }
+
+export default authorReducer
