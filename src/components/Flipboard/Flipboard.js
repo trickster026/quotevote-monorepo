@@ -1,7 +1,9 @@
 import React, { PureComponent, Fragment } from "react"
 import { Header, Segment, List, Loader, Dimmer } from "semantic-ui-react"
-import PropTypes from "prop-types"
+
 import FlipCard from "./FlipCard"
+import PropTypes from "prop-types"
+
 import "./Flipboard.css"
 
 const PAD_LENGTH = 19
