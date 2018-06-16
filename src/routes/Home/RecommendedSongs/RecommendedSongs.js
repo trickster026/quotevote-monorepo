@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react"
 import { Segment, List, Image, Dimmer, Loader } from "semantic-ui-react"
+import { connect } from "react-redux"
+
 import Section from "../../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
@@ -21,7 +23,7 @@ class RecommendedSongs extends PureComponent {
   handleItemSelect = (data, event) => {
     const { history } = this.props
     this.props.select(data.artistId, data.songId)
-    history.push(`/artist/${data.artistId}`)
+    history.push(`${this.props.routing.url}/artist/${data.artistId}`)
   }
 
   render = () => {
@@ -62,4 +64,6 @@ class RecommendedSongs extends PureComponent {
   }
 }
 
-export default RecommendedSongs
+const mapStateToProps = ({ routing }) => ({ routing })
+
+export default connect(mapStateToProps)(RecommendedSongs)

@@ -21,31 +21,37 @@ import PrivateRoute from "../../components/PrivateRoute"
 class Subdomain extends Component {
   render = () => {
     const { domain } = this.props.match.params
-    const domainURL = "/" + domain + "/"
+    const domainURL = `/${domain}`
     return (
       <BasicLayout>
         <GlobalHeader />
         <Switch>
           <Route exact path={domainURL} component={Home} />
-          <Route path={domainURL + "home"} component={Home} />
-          <Route path={domainURL + "scoreboard"} component={Scoreboard} />
-          <Route path={domainURL + "login"} component={Login} />
-          <Route path={domainURL + "logout"} component={Login} />
-          <Route path={domainURL + "signup"} component={Signup} />
-          <Route path={domainURL + "terms"} component={Terms} />
-          <Route path={domainURL + "invite"} component={RequestInvite} />
-          <Route path={domainURL + "shareables/:code"} component={Shareables} />
+          <Route path={domainURL + "/home"} component={Home} />
+          <Route path={domainURL + "/scoreboard"} component={Scoreboard} />
+          <Route path={domainURL + "/login"} component={Login} />
+          <Route path={domainURL + "/logout"} component={Login} />
+          <Route path={domainURL + "/signup"} component={Signup} />
+          <Route path={domainURL + "/terms"} component={Terms} />
+          <Route path={domainURL + "/invite"} component={RequestInvite} />
+          <Route
+            path={domainURL + "/shareables/:code"}
+            component={Shareables}
+          />
           <PrivateRoute
-            path={domainURL + "submit-content"}
+            path={domainURL + "/submit-content"}
             component={SubmitContent}
           />
           <PrivateRoute
-            path={domainURL + "artist/:artistId"}
+            path={domainURL + "/artist/:artistId"}
             component={Artist}
           />
-          <PrivateRoute path={domainURL + "user/:userId"} component={User} />
-          <PrivateRoute path={domainURL + "settings"} component={AppSettings} />
-          <Route path={domainURL + ":username"} component={User} />
+          <PrivateRoute path={domainURL + "/user/:userId"} component={User} />
+          <PrivateRoute
+            path={domainURL + "/settings"}
+            component={AppSettings}
+          />
+          <Route path={domainURL + "/:username"} component={User} />
         </Switch>
       </BasicLayout>
     )

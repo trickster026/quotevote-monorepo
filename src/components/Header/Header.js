@@ -33,10 +33,10 @@ class HeaderComponent extends PureComponent {
     const { history } = this.props
 
     if (userId) {
-      history.push(`/user/${userId}`)
+      history.push(`${this.props.routing.url}/user/${userId}`)
     } else {
       this.props.updateCurrentSong(artistId, songId)
-      history.push(`/artist/${artistId}`)
+      history.push(`${this.props.routing.url}/artist/${artistId}`)
     }
   }
 
@@ -133,15 +133,27 @@ class HeaderComponent extends PureComponent {
       <Menu.Item>
         <Dropdown item text="ACCOUNT" pointing>
           <Dropdown.Menu>
-            <Dropdown.Item as={Link} name="account" to={`/user/${userId}`}>
+            <Dropdown.Item
+              as={Link}
+              name="account"
+              to={`${this.props.routing.url}/user/${userId}`}
+            >
               User Scoreboard
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item as={Link} name="settings" to={`/settings`}>
+            <Dropdown.Item
+              as={Link}
+              name="settings"
+              to={`${this.props.routing.url}/settings`}
+            >
               Settings
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item as={Link} name="sign-out" to="/logout">
+            <Dropdown.Item
+              as={Link}
+              name="sign-out"
+              to={this.props.routing.url + "/logout"}
+            >
               Logout
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -155,7 +167,11 @@ class HeaderComponent extends PureComponent {
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
       <Menu.Menu position="right">
-        <Menu.Item as={Link} name="user-content" to="/submit-content">
+        <Menu.Item
+          as={Link}
+          name="user-content"
+          to={this.props.routing.url + "/submit-content"}
+        >
           SUBMIT YOUR OWN TEXT
         </Menu.Item>
         <Menu.Item>
@@ -177,7 +193,11 @@ class HeaderComponent extends PureComponent {
       <Menu.Item name="sign-in">
         <Dropdown item text="LOGIN" pointing>
           <Dropdown.Menu>
-            <Dropdown.Item as={Link} name="registered" to="/login">
+            <Dropdown.Item
+              as={Link}
+              name="registered"
+              to={this.props.routing.url + "/login"}
+            >
               Login as Registered User
             </Dropdown.Item>
             <Dropdown.Divider />
@@ -194,7 +214,7 @@ class HeaderComponent extends PureComponent {
   render = () => {
     const pathName = this.props.location.pathname
 
-    if (pathName === "/invite") return ""
+    if (pathName === this.props.routing.url + "/invite") return ""
     return (
       <Menu
         attached="top"
@@ -206,10 +226,14 @@ class HeaderComponent extends PureComponent {
       >
         <Container>
           <Menu.Menu position="left">
-            <Menu.Item as={Link} name="home" to="/">
+            <Menu.Item as={Link} name="home" to={this.props.routing.url}>
               <Image src={hiphopScoreboardLogo} />
             </Menu.Item>
-            <Menu.Item as={Link} name="scoreboard" to="/scoreboard">
+            <Menu.Item
+              as={Link}
+              name="scoreboard"
+              to={this.props.routing.url + "/scoreboard"}
+            >
               SCOREBOARD
             </Menu.Item>
             {tokenValidator() && this.renderUserAccount()}
