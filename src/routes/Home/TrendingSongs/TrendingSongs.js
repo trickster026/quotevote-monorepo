@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { Segment, List, Image, Dimmer, Loader } from "semantic-ui-react"
-import Module from "../../../components/Layouts/Module"
+import Section from "../../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 class TrendingSongs extends PureComponent {
@@ -35,7 +35,7 @@ class TrendingSongs extends PureComponent {
       )
     }
     return (
-      <Module title="Trending Songs">
+      <Section title="Trending Songs">
         <List animated verticalAlign="middle">
           {this.props.songs.map((song, index) => {
             const { songId, artistId, title, artistName, thumbnail } = song
@@ -57,7 +57,7 @@ class TrendingSongs extends PureComponent {
             )
           })}
         </List>
-      </Module>
+      </Section>
     )
   }
 }

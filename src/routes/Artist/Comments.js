@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { List } from "semantic-ui-react"
 import moment from "moment"
 
-import Module from "../../components/Layouts/Module"
+import Section from "../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 const sortByCreatedDate = (a, b) => {
@@ -34,7 +34,7 @@ class Comments extends Component {
       return <div>Loading...</div>
     }
     return (
-      <Module title="Comments">
+      <Section title="Comments">
         <List animated verticalAlign="middle">
           {sortedComments.map((comment, index) => {
             const { content, songId, artistId, created } = comment
@@ -57,7 +57,7 @@ class Comments extends Component {
             )
           })}
         </List>
-      </Module>
+      </Section>
     )
   }
 }

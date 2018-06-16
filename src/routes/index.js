@@ -1,1 +1,16 @@
 export { default as Domain } from "./domain/Domain"
+export { default as Subdomain } from "./domain/Subdomain"
+export { default as Route404 } from "./404"
+export { default as Home } from "./home/Home"
+export { default as Scoreboard } from "./Scoreboard/scoreboardContainer"
+export { default as Login } from "./Login/Login"
+export { default as Signup } from "./Signup/Signup"
+export { default as Terms } from "./Terms/Terms"
+export {
+  default as RequestInvite
+} from "./UserInvites/RequestInvite/RequestInvite"
+export { default as Shareables } from "./Shareables/Shareables"
+export { default as SubmitContent } from "./SubmitContent/SubmissionForm"
+export { default as Artist } from "./Artist/artistContainer"
+export { default as User } from "./User/UserContainer"
+export { default as AppSettings } from "./Settings/AppSettings"

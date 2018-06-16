@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { List, Segment } from "semantic-ui-react"
 
-import Module from "../../components/Layouts/Module"
+import Section from "../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 class SubmittedText extends Component {
@@ -16,7 +16,7 @@ class SubmittedText extends Component {
   render = () => {
     const { submissions } = this.props
     return (
-      <Module title="Submitted Text">
+      <Section title="Submitted Text">
         <List ordered relaxed>
           {submissions ? (
             submissions.map(submission => (
@@ -30,7 +30,7 @@ class SubmittedText extends Component {
             <Segment basic>No submissions yet!</Segment>
           )}
         </List>
-      </Module>
+      </Section>
     )
   }
 }

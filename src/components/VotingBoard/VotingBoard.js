@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { Dimmer, Loader, Container } from "semantic-ui-react"
 
 import SelectionPopover from "./SelectionPopover"
-import Module from "../Layouts/Module"
+import Section from "../Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 import "./VotingBoard.css"
@@ -90,9 +90,9 @@ class VotingBoard extends Component {
 
   render = () => {
     return (
-      <Module title={this.props.title}>
+      <Section title={this.props.title}>
         {this.renderContent() || this.renderLoader()}
-      </Module>
+      </Section>
     )
   }
 }

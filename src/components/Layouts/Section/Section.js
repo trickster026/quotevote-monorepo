@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react"
 import { Segment, Header } from "semantic-ui-react"
-import "./Module.css"
+import "./Section.css"
 
-class Module extends Component {
+class Section extends Component {
   render = () => {
     return (
       <Fragment>
@@ -17,4 +17,4 @@ class Module extends Component {
   }
 }
 
-export default Module
+export default Section

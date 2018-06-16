@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { List, Image } from "semantic-ui-react"
-import Module from "../../../components/Layouts/Module"
+import Section from "../../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 class NewsFeed extends PureComponent {
@@ -21,7 +21,7 @@ class NewsFeed extends PureComponent {
 
   render = () => {
     return (
-      <Module title="Public News Feed">
+      <Section title="Public News Feed">
         <List animated verticalAlign="middle">
           {this.props.activities.map((activity, index) => {
             const { author, message, subject, thumbnail } = activity
@@ -39,7 +39,7 @@ class NewsFeed extends PureComponent {
             )
           })}
         </List>
-      </Module>
+      </Section>
     )
   }
 }

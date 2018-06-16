@@ -1,25 +1,53 @@
 import React, { Component } from "react"
-import { Card, Container, Segment, Image, Button } from "semantic-ui-react"
-import hiphopImage from "../../assets/hiphop.png"
+import { Link } from "react-router-dom"
+import {
+  Card,
+  Container,
+  Segment,
+  Image,
+  Button,
+  Header,
+  Icon
+} from "semantic-ui-react"
+
+import { domains } from "../../common/domains"
 
 class Domain extends Component {
   render = () => {
     return (
-      <Segment as={Container} basic>
-        <Card.Group itemsPerRow={1}>
-          <Card fluid color="black">
-            <Card.Content>
-              <Image floated="left" size="tiny" src={hiphopImage} />
-              <Card.Header>HIPHOP SCOREBOARD</Card.Header>
-              <Card.Meta>Vote for your favorite artist and songs!</Card.Meta>
-            </Card.Content>
-            <Card.Content extra>
-              <Button floated="right" primary>
-                Go to app
-              </Button>
-            </Card.Content>
-          </Card>
-        </Card.Group>
+      <Segment as={Container} basic padded="very">
+        <Segment inverted color="black">
+          <Segment basic textAlign="center">
+            <Header as="h2" icon inverted>
+              <Icon name="sitemap" />
+              Domain Manager
+              <Header.Subheader>
+                Choose the domain you are going
+              </Header.Subheader>
+            </Header>
+          </Segment>
+          <Card.Group itemsPerRow={1}>
+            {domains.map(domain => (
+              <Card key={domain.key} fluid>
+                <Card.Content>
+                  <Image floated="left" size="tiny" src={domain.image} />
+                  <Card.Header>{domain.title}</Card.Header>
+                  <Card.Meta>{domain.meta}</Card.Meta>
+                </Card.Content>
+                <Card.Content extra>
+                  <Button
+                    as={Link}
+                    floated="right"
+                    primary
+                    to={"/" + domain.key}
+                  >
+                    Go to app
+                  </Button>
+                </Card.Content>
+              </Card>
+            ))}
+          </Card.Group>
+        </Segment>
       </Segment>
     )
   }

@@ -3,7 +3,7 @@ import { Segment, Grid, Label, Dimmer, Loader } from "semantic-ui-react"
 import SpotifyPlayer from "react-spotify-player"
 
 import FlipCard from "../../../components/Flipboard/FlipCard"
-import Module from "../../../components/Layouts/Module"
+import Section from "../../../components/Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 class MusicPlayer extends PureComponent {
@@ -22,7 +22,7 @@ class MusicPlayer extends PureComponent {
 
   render = () => {
     return (
-      <Module title="Music Player">
+      <Section title="Music Player">
         <Grid>
           <Grid.Row textAlign="left">
             <Grid.Column verticalAlign="middle" width={16}>
@@ -76,7 +76,7 @@ class MusicPlayer extends PureComponent {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Module>
+      </Section>
     )
   }
 }

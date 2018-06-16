@@ -1,8 +1,8 @@
 import React from "react"
-import Module from "../../components/Layouts/Module"
+import Section from "../../components/Layouts/Section/Section"
 
 const Welcome = () => (
-  <Module title="Welcome to HHSB">
+  <Section title="Welcome to HHSB">
     <p>
       Here you can vote on hip hop lyrics, see which rappers are scoring the
       best, and share your favorite lines.
@@ -12,7 +12,7 @@ const Welcome = () => (
       to stream music from within the site.
     </p>
     <p>You will have to use an external music app.</p>
-  </Module>
+  </Section>
 )
 
 export default Welcome

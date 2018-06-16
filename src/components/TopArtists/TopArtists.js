@@ -2,7 +2,7 @@ import React, { PureComponent } from "react"
 import { Table } from "semantic-ui-react"
 
 import FlipCard from "../Flipboard/FlipCard"
-import Module from "../Layouts/Module"
+import Section from "../Layouts/Section/Section"
 import PropTypes from "prop-types"
 
 import "./TopArtist.css"
@@ -24,7 +24,7 @@ class TopArtists extends PureComponent {
   render = () => {
     const { artists } = this.props
     return (
-      <Module title="Top Artists">
+      <Section title="Top Artists">
         <Table basic="very">
           <Table.Body>
             {artists &&
@@ -51,7 +51,7 @@ class TopArtists extends PureComponent {
               })}
           </Table.Body>
         </Table>
-      </Module>
+      </Section>
     )
   }
 }
