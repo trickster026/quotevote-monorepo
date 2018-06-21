@@ -36,7 +36,7 @@ class HeaderComponent extends PureComponent {
       history.push(`${this.props.routing.url}/user/${userId}`)
     } else {
       this.props.updateCurrentSong(artistId, songId)
-      history.push(`${this.props.routing.url}/artist/${artistId}`)
+      history.push(`${this.props.routing.url}/creator/${artistId}`)
     }
   }
 

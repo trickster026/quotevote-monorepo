@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import {
   Card,
@@ -11,23 +10,9 @@ import {
   Icon
 } from "semantic-ui-react"
 
-import * as actions from "../../actions/routing.actions"
 import { domains } from "../../common/domains"
-import PropTypes from "prop-types"
 
 class Domain extends Component {
-  static propTypes = {
-    updateDomain: PropTypes.func
-  }
-
-  static defaultProps = {
-    setDomain: () => {}
-  }
-
-  handleClick = (event, domain) => {
-    this.props.updateDomain({ domain, url: "/" + domain })
-  }
-
   render = () => {
     return (
       <Segment as={Container} basic padded="very">
@@ -35,10 +20,8 @@ class Domain extends Component {
           <Segment basic textAlign="center">
             <Header as="h2" icon inverted>
               <Icon name="sitemap" />
-              Domain Manager
-              <Header.Subheader>
-                Choose the domain you are going
-              </Header.Subheader>
+              Landing Area
+              <Header.Subheader>Choose where you are going</Header.Subheader>
             </Header>
           </Segment>
           <Card.Group itemsPerRow={1}>
@@ -55,7 +38,6 @@ class Domain extends Component {
                     floated="right"
                     primary
                     to={"/" + domain.key}
-                    onClick={e => this.handleClick(e, domain.key)}
                   >
                     Go to app
                   </Button>
@@ -69,10 +51,4 @@ class Domain extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  updateDomain: domain => {
-    dispatch({ type: actions.UPDATE_DOMAIN, payload: domain })
-  }
-})
-
-export default connect(null, mapDispatchToProps)(Domain)
+export default Domain

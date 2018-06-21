@@ -9,8 +9,6 @@ import NewsFeed from "./NewsFeed/newsFeedContainer"
 
 class Home extends PureComponent {
   render = () => {
-    console.log("this.props", this.props)
-
     return (
       <Segment as={Container} basic>
         <Grid doubling stackable>

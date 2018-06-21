@@ -101,7 +101,6 @@ class SelectionPopover extends Component {
 
   selectionChange = () => {
     const selection = window.getSelection()
-    console.log("selection popover", selection)
     if (selectionExists()) {
       this.props.onSelect(selection)
       return this.computePopoverBox()

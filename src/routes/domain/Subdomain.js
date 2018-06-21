@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
+import { connect } from "react-redux"
 
 import { BasicLayout } from "../../components/Layouts"
 import { GlobalHeader } from "../../components/Header"
@@ -18,44 +19,60 @@ import {
 } from "../"
 import PrivateRoute from "../../components/PrivateRoute"
 
+import * as actions from "../../actions/routing.actions"
+import { domains } from "../../common/domains"
+import PropTypes from "prop-types"
+
 class Subdomain extends Component {
-  render = () => {
+  static propTypes = {
+    url: PropTypes.string,
+    updateDomain: PropTypes.func
+  }
+
+  componentDidMount = () => {
     const { domain } = this.props.match.params
-    const domainURL = `/${domain}`
+    this.props.updateDomain({ domain, url: "/" + domain })
+    const isValidDomain = domains.find(route => route.key === domain)
+    if (!isValidDomain) this.props.history.push("/error/404")
+  }
+
+  render = () => {
+    const { url } = this.props
     return (
       <BasicLayout>
         <GlobalHeader />
         <Switch>
-          <Route exact path={domainURL} component={Home} />
-          <Route path={domainURL + "/home"} component={Home} />
-          <Route path={domainURL + "/scoreboard"} component={Scoreboard} />
-          <Route path={domainURL + "/login"} component={Login} />
-          <Route path={domainURL + "/logout"} component={Login} />
-          <Route path={domainURL + "/signup"} component={Signup} />
-          <Route path={domainURL + "/terms"} component={Terms} />
-          <Route path={domainURL + "/invite"} component={RequestInvite} />
-          <Route
-            path={domainURL + "/shareables/:code"}
-            component={Shareables}
-          />
+          <Route exact path={url} component={Home} />
+          <Route path={url + "/home"} component={Home} />
+          <Route path={url + "/scoreboard"} component={Scoreboard} />
+          <Route path={url + "/login"} component={Login} />
+          <Route path={url + "/logout"} component={Login} />
+          <Route path={url + "/signup"} component={Signup} />
+          <Route path={url + "/terms"} component={Terms} />
+          <Route path={url + "/invite"} component={RequestInvite} />
+          <Route path={url + "/shareables/:code"} component={Shareables} />
           <PrivateRoute
-            path={domainURL + "/submit-content"}
+            path={url + "/submit-content"}
             component={SubmitContent}
           />
-          <PrivateRoute
-            path={domainURL + "/artist/:artistId"}
-            component={Artist}
-          />
-          <PrivateRoute path={domainURL + "/user/:userId"} component={User} />
-          <PrivateRoute
-            path={domainURL + "/settings"}
-            component={AppSettings}
-          />
-          <Route path={domainURL + "/:username"} component={User} />
+          <PrivateRoute path={url + "/creator/:artistId"} component={Artist} />
+          <PrivateRoute path={url + "/user/:userId"} component={User} />
+          <PrivateRoute path={url + "/settings"} component={AppSettings} />
+          <Route path={url + "/:username"} component={User} />
         </Switch>
       </BasicLayout>
     )
   }
 }
 
-export default Subdomain
+const mapStateToProps = ({ routing }) => ({
+  url: routing.url
+})
+
+const mapDispatchToProps = dispatch => ({
+  updateDomain: domain => {
+    dispatch({ type: actions.UPDATE_DOMAIN, payload: domain })
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Subdomain)
