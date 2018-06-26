@@ -6,6 +6,7 @@ import { BasicLayout } from "../../components/Layouts"
 import { GlobalHeader } from "../../components/Header"
 import {
   Home,
+  CreateNewScoreboard,
   Scoreboard,
   Login,
   Signup,
@@ -13,7 +14,7 @@ import {
   RequestInvite,
   Shareables,
   SubmitContent,
-  Artist,
+  Creator,
   User,
   AppSettings
 } from "../"
@@ -45,6 +46,10 @@ class Subdomain extends Component {
           <Route exact path={url} component={Home} />
           <Route path={url + "/home"} component={Home} />
           <Route path={url + "/scoreboard"} component={Scoreboard} />
+          <Route
+            path={url + "/create-scoreboard"}
+            component={CreateNewScoreboard}
+          />
           <Route path={url + "/login"} component={Login} />
           <Route path={url + "/logout"} component={Login} />
           <Route path={url + "/signup"} component={Signup} />
@@ -55,7 +60,10 @@ class Subdomain extends Component {
             path={url + "/submit-content"}
             component={SubmitContent}
           />
-          <PrivateRoute path={url + "/creator/:artistId"} component={Artist} />
+          <PrivateRoute
+            path={url + "/creator/:creatorId"}
+            component={Creator}
+          />
           <PrivateRoute path={url + "/user/:userId"} component={User} />
           <PrivateRoute path={url + "/settings"} component={AppSettings} />
           <Route path={url + "/:username"} component={User} />
