@@ -9,8 +9,22 @@ import {
   Header,
   Icon
 } from "semantic-ui-react"
+import { Query } from "react-apollo"
+import gql from "graphql-tag"
+import hiphop from "../../assets/hiphop.png"
 
-import { domains } from "../../common/domains"
+const getDomains = gql`
+  query {
+    domains(limit: 0) {
+      _id
+      title
+      description
+      url
+      key
+      created
+    }
+  }
+`
 
 class Domain extends Component {
   render = () => {
@@ -24,27 +38,38 @@ class Domain extends Component {
               <Header.Subheader>Choose where you are going</Header.Subheader>
             </Header>
           </Segment>
-          <Card.Group itemsPerRow={1}>
-            {domains.map(domain => (
-              <Card key={domain.key} fluid>
-                <Card.Content>
-                  <Image floated="left" size="tiny" src={domain.image} />
-                  <Card.Header>{domain.title}</Card.Header>
-                  <Card.Meta>{domain.meta}</Card.Meta>
-                </Card.Content>
-                <Card.Content extra>
-                  <Button
-                    as={Link}
-                    floated="right"
-                    primary
-                    to={"/" + domain.key}
-                  >
-                    Go to app
-                  </Button>
-                </Card.Content>
-              </Card>
-            ))}
-          </Card.Group>
+
+          <Query query={getDomains}>
+            {({ loading, error, data: { domains } }) => {
+              if (loading) return "Loading..."
+              if (error) return `Error: ${error.message}`
+
+              return (
+                <Card.Group itemsPerRow={1}>
+                  {domains.map(domain => (
+                    <Card key={domain.key} fluid>
+                      <Card.Content>
+                        <Image floated="left" size="tiny" src={hiphop} />
+                        <Card.Header>{domain.title}</Card.Header>
+                        <Card.Meta>{domain.description}</Card.Meta>
+                      </Card.Content>
+                      <Card.Content extra>
+                        <Button
+                          as={Link}
+                          floated="right"
+                          primary
+                          to={"/" + domain.key}
+                          fluid
+                        >
+                          {`Go to ${domain.key}`}
+                        </Button>
+                      </Card.Content>
+                    </Card>
+                  ))}
+                </Card.Group>
+              )
+            }}
+          </Query>
         </Segment>
       </Segment>
     )

@@ -2,12 +2,12 @@ import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Container, Image, Menu, Search, Dropdown } from "semantic-ui-react"
+import { Container, Menu, Search, Dropdown, Button } from "semantic-ui-react"
 import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
-import hiphopScoreboardLogo from "../../assets/hiphop.png"
+import DomainDropdown from "./DomainDropdown"
 import {
   tokenValidator,
   userLogin
@@ -166,13 +166,16 @@ class HeaderComponent extends PureComponent {
     const { isLoading, value, results } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
-      <Menu.Menu position="right">
-        <Menu.Item
-          as={Link}
-          name="user-content"
-          to={this.props.routing.url + "/submit-content"}
-        >
-          SUBMIT YOUR OWN TEXT
+      <Menu.Menu position="right" stackable>
+        <Menu.Item>
+          <Button
+            as={Link}
+            name="user-content"
+            to={this.props.routing.url + "/submit-content"}
+            color="teal"
+          >
+            Create
+          </Button>
         </Menu.Item>
         <Menu.Item>
           <Search
@@ -226,8 +229,8 @@ class HeaderComponent extends PureComponent {
       >
         <Container>
           <Menu.Menu position="left">
-            <Menu.Item as={Link} name="home" to={this.props.routing.url}>
-              <Image src={hiphopScoreboardLogo} />
+            <Menu.Item>
+              <DomainDropdown />
             </Menu.Item>
             <Menu.Item
               as={Link}

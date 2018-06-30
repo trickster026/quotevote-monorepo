@@ -1,11 +1,14 @@
 import React, { Component } from "react"
-import { Form, Segment, Container, Header, Message } from "semantic-ui-react"
+import {
+  Form,
+  Segment,
+  Container,
+  Header,
+  Message,
+  Label
+} from "semantic-ui-react"
 import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
-
-const getUrl = title => {
-  return title.replace(/\W/g, "").toLowerCase()
-}
 
 const mutation = gql`
   mutation createDomain($domain: DomainInput!) {
@@ -21,15 +24,14 @@ const mutation = gql`
 `
 
 class ScoreboardForm extends Component {
-  state = { input: { title: "", description: "" } }
+  state = { input: { title: "", description: "", key: "" } }
 
   handleInputChange = ({ target: { name, value } }) => {
     this.setState(prev => ({ input: { ...prev.input, [name]: value } }))
   }
 
   handleCreateClick = (createDomain, event) => {
-    const key = getUrl(this.state.input.title)
-    const domain = { ...this.state.input, key, url: "/" + key }
+    const domain = { ...this.state.input, url: "/" + this.state.input.key }
     createDomain({ variables: { domain } })
   }
 
@@ -60,12 +62,17 @@ class ScoreboardForm extends Component {
                     onChange={this.handleInputChange}
                   />
                   <Form.Input
-                    name="description"
+                    name="key"
                     label="Url"
                     width={4}
-                    disabled
-                    value={"/" + getUrl(this.state.input.title)}
-                  />
+                    value={this.state.input.key}
+                    onChange={this.handleInputChange}
+                  >
+                    <Label basic>
+                      <span style={{ fontSize: 18 }}>/</span>
+                    </Label>
+                    <input />
+                  </Form.Input>
                 </Form.Group>
                 <Form.TextArea
                   label="Description"
