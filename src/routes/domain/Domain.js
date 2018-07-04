@@ -11,6 +11,8 @@ import {
 } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
+
+import { APP_TOKEN } from "../../utils/constants"
 import hiphop from "../../assets/hiphop.png"
 
 const getDomains = gql`
@@ -39,7 +41,7 @@ class Domain extends Component {
             </Header>
           </Segment>
 
-          <Query query={getDomains}>
+          <Query query={getDomains} context={{ token: APP_TOKEN }}>
             {({ loading, error, data: { domains } }) => {
               if (loading) return "Loading..."
               if (error) return `Error: ${error.message}`
