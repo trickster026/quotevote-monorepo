@@ -12,6 +12,6 @@ export {
 } from "./UserInvites/RequestInvite/RequestInvite"
 export { default as Shareables } from "./Shareables/Shareables"
 export { default as SubmitContent } from "./SubmitContent/SubmissionForm"
-export { default as Creator } from "./creator/Creator"
 export { default as User } from "./User/UserContainer"
 export { default as AppSettings } from "./Settings/AppSettings"
+export { default as Content } from "./content/Content"

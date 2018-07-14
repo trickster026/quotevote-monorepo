@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react"
 import { Dimmer, Loader, Container } from "semantic-ui-react"
 
 import SelectionPopover from "./SelectionPopover"
-import Section from "../Layouts/Section/Section"
+import ContentPanel from "../ContentPanel/ContentPanel"
 import PropTypes from "prop-types"
 
 import "./VotingBoard.css"
@@ -19,8 +19,12 @@ class VotingBoard extends Component {
         id: PropTypes.string
       })
     ),
+    score: PropTypes.shape({
+      upvotes: PropTypes.number,
+      downvotes: PropTypes.number
+    }),
     topOffset: PropTypes.number,
-    content: PropTypes.string,
+    content: PropTypes.string.isRequired,
     children: PropTypes.func
   }
 
@@ -31,10 +35,27 @@ class VotingBoard extends Component {
 
   handleSelect = select => {
     const text = select.toString()
+    const wordsRegex = /(\w|\.)+/g
+    const selected = text.match(wordsRegex)
+
+    if (!selected) return
+
+    const contents = this.props.content.match(wordsRegex)
+    const startIndex = contents.findIndex(word => word === selected[0])
+    let endIndex = contents.findIndex(
+      word => word === selected[selected.length - 1]
+    )
+
+    if (endIndex < 0) {
+      endIndex = contents.findIndex(
+        word => word === selected[selected.length - 2]
+      )
+    }
+
     const selection = {
-      text,
-      startIndex: select.anchorOffset,
-      endIndex: select.anchorOffset + text.length
+      text: contents.slice(startIndex, endIndex + 1),
+      startIndex,
+      endIndex
     }
 
     if (text.length > 0 && this.props.onSelect) {
@@ -90,9 +111,9 @@ class VotingBoard extends Component {
 
   render = () => {
     return (
-      <Section title={this.props.title}>
+      <ContentPanel title={this.props.title} score={this.props.score}>
         {this.renderContent() || this.renderLoader()}
-      </Section>
+      </ContentPanel>
     )
   }
 }

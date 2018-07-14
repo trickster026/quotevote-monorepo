@@ -14,9 +14,9 @@ import {
   RequestInvite,
   Shareables,
   SubmitContent,
-  Creator,
   User,
-  AppSettings
+  AppSettings,
+  Content
 } from "../"
 import PrivateRoute from "../../components/PrivateRoute"
 
@@ -61,8 +61,8 @@ class Subdomain extends Component {
             component={SubmitContent}
           />
           <PrivateRoute
-            path={url + "/creator/:creatorId"}
-            component={Creator}
+            path={url + "/content/:contentId"}
+            component={Content}
           />
           <PrivateRoute path={url + "/user/:userId"} component={User} />
           <PrivateRoute path={url + "/settings"} component={AppSettings} />
