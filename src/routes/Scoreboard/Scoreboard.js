@@ -19,7 +19,7 @@ class Scoreboard extends PureComponent {
             </Grid.Column>
           </Grid.Row>
 
-          <Grid.Row columns={2}>
+          <Grid.Row columns={2} stretched>
             <Grid.Column>
               <TopContent />
             </Grid.Column>

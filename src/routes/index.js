@@ -4,7 +4,7 @@ export { default as CreateNewScoreboard } from "./domain/CreateNewScoreboard"
 export { default as Route404 } from "./404"
 export { default as Scoreboard } from "./Scoreboard/scoreboardContainer"
 export { default as Login } from "./Login/Login"
-export { default as Home } from "./home/Home"
+export { default as Home } from "./Home/Home"
 export { default as Signup } from "./Signup/Signup"
 export { default as Terms } from "./Terms/Terms"
 export {
