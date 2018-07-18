@@ -12,7 +12,7 @@ jobs:
     environment:
      - NODE_ENV: "production"
 
-    working_directory: /hhsb
+    working_directory: /tmp/hhsb_v1
 
     steps:
       - checkout
