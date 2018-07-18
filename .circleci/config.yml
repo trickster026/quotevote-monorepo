@@ -12,7 +12,7 @@ jobs:
     environment:
      - NODE_ENV: "production"
 
-    working_directory: /tmp/hhsb_v1
+    working_directory: /tmp/hhsb
 
     steps:
       - checkout
@@ -33,7 +33,7 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn run build
+      - run: npm run build
 
       - run:
           name: Set AWS region
