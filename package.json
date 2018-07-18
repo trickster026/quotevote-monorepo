@@ -1,6 +1,7 @@
 {
   "name": "hhsb",
   "version": "0.1.1",
+  "cache-version": "0.0.1",
   "private": true,
   "dependencies": {
     "apollo-client-preset": "^1.0.4",
