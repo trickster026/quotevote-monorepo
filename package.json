@@ -1,6 +1,6 @@
 {
   "name": "hhsb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "apollo-client-preset": "^1.0.4",
@@ -43,10 +43,7 @@
     "webpack": "^3.10.0"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
-      "prettier --no-semi --write",
-      "git add"
-    ]
+    "src/**/*.{js,jsx,json,css}": ["prettier --no-semi --write", "git add"]
   },
   "scripts": {
     "precommit": "lint-staged",
