@@ -1,10 +1,11 @@
 import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import { Dropdown, Image, Button } from "semantic-ui-react"
-import {connect} from 'react-redux'
+import { connect } from "react-redux"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
 import hiphop from "../../assets/hiphop.png"
+import { APP_TOKEN } from "../../utils/constants"
 
 const getDomains = gql`
   query {
@@ -22,7 +23,7 @@ class DomainDropdown extends Component {
 
   render = () => {
     return (
-      <Query query={getDomains}>
+      <Query query={getDomains} context={{ token: APP_TOKEN }}>
         {({ loading, error, data: { domains } }) => {
           if (loading) return "Loading..."
           if (error) return "Error"
@@ -36,7 +37,13 @@ class DomainDropdown extends Component {
             >
               <Dropdown.Menu>
                 <Dropdown.Header>
-                  <Button as={Link} to={this.props.url + "/create-scoreboard"} color='teal'>Create new scoreboard</Button>
+                  <Button
+                    as={Link}
+                    to={this.props.url + "/create-scoreboard"}
+                    color="teal"
+                  >
+                    Create new scoreboard
+                  </Button>
                 </Dropdown.Header>
                 <Dropdown.Divider />
                 {domains.map((domain, index) => (
@@ -45,7 +52,7 @@ class DomainDropdown extends Component {
                     as={Link}
                     name={domain.key}
                     to={"/" + domain.key}
-                    text={<span style={{fontSize: 12}} >{domain.title}</span>}
+                    text={<span style={{ fontSize: 12 }}>{domain.title}</span>}
                     image={{ src: hiphop, verticalAlign: "middle" }}
                     onClick={this.handleItemClick}
                   />
@@ -59,7 +66,7 @@ class DomainDropdown extends Component {
   }
 }
 
-const mapStateToProps = ({routing}) => ({
+const mapStateToProps = ({ routing }) => ({
   url: routing.url
 })
 

@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from "react"
 import { Input, Button, Popup, Label } from "semantic-ui-react"
 import PropTypes from "prop-types"
 
+import { CONTENT_REGEX } from "../../utils/parser"
 class ActionPopup extends PureComponent {
   state = {
     isVoting: true,
@@ -50,7 +51,7 @@ class ActionPopup extends PureComponent {
       this.setState({ isVoting: false })
       this.props.onVote(event, {
         type: name,
-        points: this.props.text.split(/\s+/g).length
+        points: this.props.text.match(CONTENT_REGEX).length
       })
     }
   }

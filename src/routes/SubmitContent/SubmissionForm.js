@@ -16,14 +16,9 @@ import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
 
 const SUBMIT_TEXT = gql`
-  mutation submitText($text: TextInput!) {
-    createText(text: $text) {
+  mutation submitContent($content: ContentInput!) {
+    addContent(content: $content) {
       _id
-      title
-      text
-      authorId
-      created
-      url
     }
   }
 `
@@ -39,10 +34,10 @@ class SubmissionForm extends Component {
     event.preventDefault()
     submitText({
       variables: {
-        text: {
+        content: {
           title: this.state.title,
           text: this.state.text,
-          authorId: this.props.authorId
+          creatorId: this.props.authorId
         }
       }
     })
@@ -76,8 +71,8 @@ class SubmissionForm extends Component {
     toast.info("Copied to clipboard!")
   }
 
-  renderModal = url => {
-    const shareableLink = `${process.env.REACT_APP_DOMAIN}/shareables/${url}`
+  renderModal = id => {
+    const shareableLink = `${process.env.REACT_APP_DOMAIN}/hiphop/content/${id}`
     return (
       <Modal
         size="tiny"
@@ -106,7 +101,7 @@ class SubmissionForm extends Component {
             as={Link}
             positive
             content="Go to text"
-            to={`/shareables/${url}`}
+            to={`/hiphop/content/${id}`}
           />
           <Button negative onClick={this.handleClose}>
             Close
@@ -124,8 +119,8 @@ class SubmissionForm extends Component {
         onError={this.handleError}
       >
         {(submitText, { data }) => {
-          let url = ""
-          if (data) url = data.createText.url
+          let id = ""
+          if (data) id = data.addContent._id
 
           return (
             <Container>
@@ -160,7 +155,7 @@ class SubmissionForm extends Component {
                   autoClose={2000}
                   closeOnClick
                 />
-                {this.renderModal(url)}
+                {this.renderModal(id)}
               </Segment>
             </Container>
           )

@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from "react"
 import { Dimmer, Loader, Container } from "semantic-ui-react"
+import PropTypes from "prop-types"
 
 import SelectionPopover from "./SelectionPopover"
 import ContentPanel from "../ContentPanel/ContentPanel"
-import PropTypes from "prop-types"
+import { parser } from "../../utils/parser"
 
 import "./VotingBoard.css"
 
@@ -35,28 +36,9 @@ class VotingBoard extends Component {
 
   handleSelect = select => {
     const text = select.toString()
-    const wordsRegex = /(\w|\.)+/g
-    const selected = text.match(wordsRegex)
 
-    if (!selected) return
-
-    const contents = this.props.content.match(wordsRegex)
-    const startIndex = contents.findIndex(word => word === selected[0])
-    let endIndex = contents.findIndex(
-      word => word === selected[selected.length - 1]
-    )
-
-    if (endIndex < 0) {
-      endIndex = contents.findIndex(
-        word => word === selected[selected.length - 2]
-      )
-    }
-
-    const selection = {
-      text: contents.slice(startIndex, endIndex + 1),
-      startIndex,
-      endIndex
-    }
+    if (!text) return
+    const selection = parser(this.props.content, text)
 
     if (text.length > 0 && this.props.onSelect) {
       this.setState({ open: true, selection })

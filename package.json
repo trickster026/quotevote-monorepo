@@ -39,7 +39,7 @@
     "redux-persist": "^5.7.0",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.77.1",
+    "semantic-ui-react": "^0.82.0",
     "webpack": "^3.10.0"
   },
   "lint-staged": {

@@ -1,26 +1,30 @@
 import React, { PureComponent } from "react"
-import { Container, Segment, Grid } from "semantic-ui-react"
-import Flipboard from "../../components/Flipboard/Flipboard"
+import { Container, Segment, Grid, Header } from "semantic-ui-react"
+
+import TopContent from "../../components/TopContent/TopContent"
+import TopAuthors from "../../components/TopAuthors/TopAuthors"
 
 class Scoreboard extends PureComponent {
   render = () => {
     return (
       <Segment as={Container} basic>
-        <Grid doubling stackable>
+        <Grid>
+          <Grid.Row columns={1}>
+            <Grid.Column>
+              <Segment>
+                <Header textAlign="center" as="h1" style={{ fontSize: 36 }}>
+                  Scoreboard Rankings
+                </Header>
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+
           <Grid.Row columns={2}>
-            <Grid.Column width={8}>
-              <Flipboard
-                title="Top Artists"
-                data={this.props.topArtists}
-                loading={this.props.loading}
-              />
+            <Grid.Column>
+              <TopContent />
             </Grid.Column>
             <Grid.Column>
-              <Flipboard
-                title="Top Users"
-                data={this.props.topUsers}
-                loading={this.props.loading}
-              />
+              <TopAuthors />
             </Grid.Column>
           </Grid.Row>
         </Grid>

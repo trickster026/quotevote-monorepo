@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { Segment, Container, Grid } from "semantic-ui-react"
-import { Query } from "react-apollo"
+import { Query, withApollo } from "react-apollo"
 import gql from "graphql-tag"
 
 import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
@@ -28,13 +28,47 @@ const getContent = gql`
   }
 `
 
+const addVote = gql`
+  mutation addVote($vote: VoteInput!) {
+    addVote(vote: $vote) {
+      contentId
+      type
+      points
+      startWordIndex
+      endWordIndex
+    }
+  }
+`
+
 class Content extends PureComponent {
   handleVoting = (event, data) => {
-    console.log("data", data)
+    const { select } = this.state
+    const { client, match } = this.props
+    const vote = {
+      ...data,
+      startWordIndex: select.startIndex,
+      endWordIndex: select.endIndex,
+      contentId: match.params.contentId,
+      creatorId: "5b2c956cebf67c36c0d8a147",
+      userId: "59b003750e3766041440171f"
+    }
+
+    client.mutate({
+      mutation: addVote,
+      variables: { vote }
+    })
+  }
+
+  handleAddComment = (event, comment) => {
+    console.log("comment", comment)
+  }
+
+  handleShareQuote = (event, quote) => {
+    console.log("quote", quote)
   }
 
   handleSelect = select => {
-    console.log("select", select)
+    this.setState({ select })
   }
 
   render = () => {
@@ -48,15 +82,18 @@ class Content extends PureComponent {
           {({ loading, error, data: { content } }) => {
             if (loading) return <div>Getting data...</div>
             if (error) return <div>{`Error: ${error}`}</div>
+
+            const { title, text, score } = content
+            const creator = content.creator || {}
             return (
               <Segment as={Container} basic>
                 <Grid doubling stackable>
                   <Grid.Row columns={1}>
                     <Grid.Column>
                       <CreatorPanel
-                        image={content.creator.profileImageUrl}
-                        creator={content.creator.name}
-                        score={content.score}
+                        image={creator.profileImageUrl}
+                        creator={creator.name}
+                        score={score}
                         enableFollow
                       />
                     </Grid.Column>
@@ -65,9 +102,9 @@ class Content extends PureComponent {
                   <Grid.Row columns={2}>
                     <Grid.Column>
                       <VotingBoard
-                        title={content.title}
+                        title={title}
                         // topOffset={this.state.voteProps.topOffset}
-                        content={content.text}
+                        content={text}
                         onSelect={this.handleSelect}
                       >
                         {({ text }) => (
@@ -75,9 +112,9 @@ class Content extends PureComponent {
                             text={text}
                             // orientation={this.state.voteProps.orientation}
                             onVote={this.handleVoting}
-                            // onAddComment={this.handleAddComment}
-                            // onShareQuote={this.handleShareQuote}
-                            // onOrientationChange={this.handleChangeOrientation}
+                            onAddComment={this.handleAddComment}
+                            onShareQuote={this.handleShareQuote}
+                            onOrientationChange={this.handleChangeOrientation}
                           />
                         )}
                       </VotingBoard>
@@ -96,4 +133,4 @@ class Content extends PureComponent {
   }
 }
 
-export default Content
+export default withApollo(Content)
