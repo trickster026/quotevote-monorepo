@@ -14,7 +14,7 @@ class CommentsPanel extends Component {
   renderComments = () => {
     const { comments } = this.props
     if (comments.length > 0) {
-      return <div>{comments.join(" | ")}</div>
+      return <div>{comments.map(comment => comment.text).join(" | ")}</div>
     }
     return <div>No comments available</div>
   }

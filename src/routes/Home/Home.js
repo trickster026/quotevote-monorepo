@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Grid, Segment, Container, Header } from "semantic-ui-react"
 
-import TopContent from "../../components/TopContent/TopContent"
+import TopContents from "../../components/TopContents/TopContents"
 import TopAuthors from "../../components/TopAuthors/TopAuthors"
 
 class Home extends Component {
@@ -39,7 +39,7 @@ class Home extends Component {
           </Grid.Row>
           <Grid.Row columns={2} stretched>
             <Grid.Column>
-              <TopContent />
+              <TopContents />
             </Grid.Column>
             <Grid.Column>
               <TopAuthors />

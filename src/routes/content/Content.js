@@ -18,11 +18,20 @@ const getContent = gql`
       creator {
         name
         profileImageUrl
+        score {
+          upvotes
+          downvotes
+          total
+        }
       }
       score {
         upvotes
         downvotes
         total
+      }
+      comments {
+        text
+        hashtags
       }
     }
   }
@@ -40,27 +49,65 @@ const addVote = gql`
   }
 `
 
+const addComment = gql`
+  mutation addComment($comment: CommentInput!) {
+    addComment(comment: $comment) {
+      _id
+    }
+  }
+`
+
 class Content extends PureComponent {
   handleVoting = (event, data) => {
     const { select } = this.state
     const { client, match } = this.props
+    const { contentId } = match.params
+
     const vote = {
       ...data,
       startWordIndex: select.startIndex,
       endWordIndex: select.endIndex,
-      contentId: match.params.contentId,
+      contentId,
       creatorId: "5b2c956cebf67c36c0d8a147",
       userId: "59b003750e3766041440171f"
     }
 
     client.mutate({
       mutation: addVote,
-      variables: { vote }
+      variables: { vote },
+      refetchQueries: [
+        {
+          query: getContent,
+          variables: { contentId }
+        }
+      ]
     })
   }
 
   handleAddComment = (event, comment) => {
-    console.log("comment", comment)
+    const { select } = this.state
+    const { client, match } = this.props
+    const { contentId } = match.params
+
+    const newComment = {
+      contentId,
+      creatorId: "5b2c956cebf67c36c0d8a147",
+      userId: "59b003750e3766041440171f",
+      text: comment,
+      startWordIndex: select.startIndex,
+      endWordIndex: select.endIndex
+    }
+
+    client.mutate({
+      mutation: addComment,
+      variables: { comment: newComment },
+      refetchQueries: [
+        {
+          query: getContent,
+          variables: { contentId }
+        }
+      ]
+    })
   }
 
   handleShareQuote = (event, quote) => {
@@ -83,7 +130,8 @@ class Content extends PureComponent {
             if (loading) return <div>Getting data...</div>
             if (error) return <div>{`Error: ${error}`}</div>
 
-            const { title, text, score } = content
+            const { title, text, score, comments } = content
+            console.log("comments", comments)
             const creator = content.creator || {}
             return (
               <Segment as={Container} basic>
@@ -93,7 +141,7 @@ class Content extends PureComponent {
                       <CreatorPanel
                         image={creator.profileImageUrl}
                         creator={creator.name}
-                        score={score}
+                        score={creator.score}
                         enableFollow
                       />
                     </Grid.Column>
@@ -105,6 +153,7 @@ class Content extends PureComponent {
                         title={title}
                         // topOffset={this.state.voteProps.topOffset}
                         content={text}
+                        score={score}
                         onSelect={this.handleSelect}
                       >
                         {({ text }) => (
@@ -120,7 +169,7 @@ class Content extends PureComponent {
                       </VotingBoard>
                     </Grid.Column>
                     <Grid.Column>
-                      <CommentsPanel />
+                      <CommentsPanel comments={comments} />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
