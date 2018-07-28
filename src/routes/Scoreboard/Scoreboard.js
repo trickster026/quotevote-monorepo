@@ -31,11 +31,13 @@ const query = gql`
 `
 
 class Scoreboard extends PureComponent {
+  state = { query: { offset: 0, limit: 5 } }
+
   render = () => {
     return (
       <Query
         query={query}
-        variables={{ offset: 0, limit: 10 }}
+        variables={{ ...this.state.query }}
         context={{ token: APP_TOKEN }}
       >
         {({ data, error, loading }) => {

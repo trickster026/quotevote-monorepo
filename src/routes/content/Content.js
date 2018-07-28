@@ -89,13 +89,17 @@ class Content extends PureComponent {
     const { client, match } = this.props
     const { contentId } = match.params
 
+    const HASHTAGS_REGEX = /#(\w|\d)+/g
+    const hashtags = comment.match(HASHTAGS_REGEX)
+
     const newComment = {
       contentId,
       creatorId: "5b2c956cebf67c36c0d8a147",
       userId: "59b003750e3766041440171f",
       text: comment,
       startWordIndex: select.startIndex,
-      endWordIndex: select.endIndex
+      endWordIndex: select.endIndex,
+      hashtags
     }
 
     client.mutate({

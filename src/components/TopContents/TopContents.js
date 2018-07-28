@@ -32,7 +32,7 @@ class TopContents extends Component {
           <Segment basic>
             <Item.Group>
               {this.props.contents.map((content, index) => (
-                <Item key={index} style={{ marginBottom: 30 }}>
+                <Item key={index} style={{ marginBottom: 15 }}>
                   <Item.Content>
                     <Item.Header as="h6">
                       <Label color="teal">{index + 1}</Label>
