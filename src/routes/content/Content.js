@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react"
 import { Segment, Container, Grid } from "semantic-ui-react"
 import { Query, withApollo } from "react-apollo"
+import { connect } from "react-redux"
 import gql from "graphql-tag"
 
 import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
@@ -18,13 +19,13 @@ const getContent = gql`
       creator {
         name
         profileImageUrl
-        score {
+        scoreDetails {
           upvotes
           downvotes
           total
         }
       }
-      score {
+      scoreDetails {
         upvotes
         downvotes
         total
@@ -57,6 +58,14 @@ const addComment = gql`
   }
 `
 
+const addQuote = gql`
+  mutation addQuote($quote: QuoteInput!) {
+    addQuote(quote: $quote) {
+      _id
+    }
+  }
+`
+
 class Content extends PureComponent {
   handleVoting = (event, data) => {
     const { select } = this.state
@@ -68,8 +77,9 @@ class Content extends PureComponent {
       startWordIndex: select.startIndex,
       endWordIndex: select.endIndex,
       contentId,
-      creatorId: "5b2c956cebf67c36c0d8a147",
-      userId: "59b003750e3766041440171f"
+      creatorId: this.props.creatorId,
+      userId: this.props.userId,
+      text: select.text
     }
 
     client.mutate({
@@ -86,7 +96,7 @@ class Content extends PureComponent {
 
   handleAddComment = (event, comment) => {
     const { select } = this.state
-    const { client, match } = this.props
+    const { client, match, creatorId, userId } = this.props
     const { contentId } = match.params
 
     const HASHTAGS_REGEX = /#(\w|\d)+/g
@@ -94,8 +104,8 @@ class Content extends PureComponent {
 
     const newComment = {
       contentId,
-      creatorId: "5b2c956cebf67c36c0d8a147",
-      userId: "59b003750e3766041440171f",
+      creatorId,
+      userId,
       text: comment,
       startWordIndex: select.startIndex,
       endWordIndex: select.endIndex,
@@ -115,7 +125,20 @@ class Content extends PureComponent {
   }
 
   handleShareQuote = (event, quote) => {
-    console.log("quote", quote)
+    const { client, userId, creatorId, match } = this.props
+    const { contentId } = match.params
+
+    const newQuote = {
+      contentId,
+      creatorId,
+      userId,
+      quote
+    }
+
+    client.mutate({
+      mutation: addQuote,
+      variables: { quote: newQuote }
+    })
   }
 
   handleSelect = select => {
@@ -130,13 +153,12 @@ class Content extends PureComponent {
     return (
       <Segment as={Container} basic>
         <Query query={getContent} variables={variables}>
-          {({ loading, error, data: { content } }) => {
+          {({ loading, error, data }) => {
             if (loading) return <div>Getting data...</div>
             if (error) return <div>{`Error: ${error}`}</div>
 
-            const { title, text, score, comments } = content
-            console.log("comments", comments)
-            const creator = content.creator || {}
+            const { title, text, scoreDetails, comments } = data.content
+            const creator = data.content.creator || {}
             return (
               <Segment as={Container} basic>
                 <Grid doubling stackable>
@@ -145,7 +167,7 @@ class Content extends PureComponent {
                       <CreatorPanel
                         image={creator.profileImageUrl}
                         creator={creator.name}
-                        score={creator.score}
+                        score={creator.scoreDetails}
                         enableFollow
                       />
                     </Grid.Column>
@@ -157,7 +179,7 @@ class Content extends PureComponent {
                         title={title}
                         // topOffset={this.state.voteProps.topOffset}
                         content={text}
-                        score={score}
+                        score={scoreDetails}
                         onSelect={this.handleSelect}
                       >
                         {({ text }) => (
@@ -186,4 +208,9 @@ class Content extends PureComponent {
   }
 }
 
-export default withApollo(Content)
+const mapStateToProps = ({ login: { user } }) => ({
+  creatorId: user.creatorId,
+  userId: user._id
+})
+
+export default withApollo(connect(mapStateToProps)(Content))

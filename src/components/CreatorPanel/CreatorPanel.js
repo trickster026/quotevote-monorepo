@@ -28,7 +28,7 @@ class CreatorPanel extends Component {
   renderInformation = () => {
     const { enableFollow, creator, score } = this.props
     if (enableFollow) {
-      const scoreValues = `Score ${score.upvotes + score.downvotes} (${
+      const scoreValues = `Score ${score.upvotes - score.downvotes} (${
         score.upvotes
       } / -${score.downvotes})`
       return (
@@ -49,7 +49,7 @@ class CreatorPanel extends Component {
       <Header style={{ fontSize: 26, marginTop: 0 }}>
         {creator}
         <Header.Subheader style={{ fontSize: 22 }}>
-          {`Score ${score.upvotes + score.downvotes} (${score.upvotes} / -${
+          {`Score ${score.upvotes - score.downvotes} (${score.upvotes} / -${
             score.downvotes
           })`}
         </Header.Subheader>

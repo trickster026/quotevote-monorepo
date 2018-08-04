@@ -32,6 +32,7 @@ class EditProfile extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("nextprops", nextProps)
     this.setState({
       imageUploadedSrc: nextProps.user.avatar,
       defaultValues: {

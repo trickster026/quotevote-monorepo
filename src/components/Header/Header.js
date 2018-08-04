@@ -2,18 +2,40 @@ import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Container, Menu, Search, Dropdown, Button } from "semantic-ui-react"
+import {
+  Container,
+  Menu,
+  Search,
+  Dropdown,
+  Button,
+  Image
+} from "semantic-ui-react"
 import { ToastContainer, toast } from "react-toastify"
 import axios from "axios"
 
-import { GET_ARTIST_INFO, GET_TOP_ARTISTS, SEARCH } from "../../graphql/queries"
-import DomainDropdown from "./DomainDropdown"
+import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
 import {
   tokenValidator,
   userLogin
 } from "../../actions/creators/loginActionCreator"
+import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
 import PropTypes from "prop-types"
+
+import headerImage from "../../assets/scoreBoard.png"
+
+const search = gql`
+  query search($text: String!) {
+    searchContent(text: $text) {
+      _id
+      title
+    }
+    searchCreator(text: $text) {
+      _id
+      name
+    }
+  }
+`
 
 class HeaderComponent extends PureComponent {
   state = { search: "" }
@@ -29,63 +51,43 @@ class HeaderComponent extends PureComponent {
   }
 
   handleResultSelect = (e, { result }) => {
-    const { artistId, songId, userId } = result
     const { history } = this.props
 
-    if (userId) {
-      history.push(`${this.props.routing.url}/user/${userId}`)
-    } else {
-      this.props.updateCurrentSong(artistId, songId)
-      history.push(`${this.props.routing.url}/creator/${artistId}`)
+    switch (result.__typename) {
+      case "User":
+        history.push(`${this.props.routing.url}/user/${result._id}`)
+        break
+      case "Content":
+        history.push(`${this.props.routing.url}/content/${result._id}`)
+        break
+      default:
+        break
     }
   }
 
   handleSearchChange = async (e, { value }) => {
     this.setState({ isLoading: true, value })
 
-    const { lyricistSearch } = (await this.search()(value)).data
-
-    const lyricistData =
-      lyricistSearch &&
-      lyricistSearch.response[0].category.results.map(result => ({
-        title: result.title,
-        image: result.image,
-        description: result.artistName,
-        artistId: result.artistId,
-        songId: result.songId,
-        userId: 0
-      }))
-
-    const usersData =
-      lyricistSearch &&
-      lyricistSearch.response[1].category.results.map(result => ({
-        title: result.name,
-        image: result.avatar,
-        description: "",
-        userId: result._id,
-        songId: 0,
-        artistId: 0
-      }))
-
-    let results = {
-      users: {
-        name: "Users",
-        results: usersData
-      },
-      lyricist: {
-        name: "Songs",
-        results: lyricistData
-      }
-    }
-
-    if (!usersData.length) delete results.users
-
+    const list = (await this.search()(value)).data
+    console.log("list", list)
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent()
 
       this.setState({
         isLoading: false,
-        results
+        results: {
+          contents: {
+            name: "contents",
+            results: list.searchContent
+          },
+          users: {
+            name: "users",
+            results: list.searchCreator.map(creator => ({
+              ...creator,
+              title: creator.name
+            }))
+          }
+        }
       })
     }, 500)
   }
@@ -97,9 +99,9 @@ class HeaderComponent extends PureComponent {
     if (this.props.client) {
       return async payload => {
         return await this.props.client.query({
-          query: SEARCH,
+          query: search,
           context: { token: APP_TOKEN },
-          variables: { query: payload },
+          variables: { text: payload },
           refetchQueries: [
             {
               query: GET_ARTIST_INFO,
@@ -136,24 +138,17 @@ class HeaderComponent extends PureComponent {
             <Dropdown.Item
               as={Link}
               name="account"
-              to={`${this.props.routing.url}/user/${userId}`}
+              to={`/user/${userId}`}
+              onClick={e => window.location.reload()}
             >
               User Scoreboard
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item
-              as={Link}
-              name="settings"
-              to={`${this.props.routing.url}/settings`}
-            >
+            <Dropdown.Item as={Link} name="settings" to={`/settings`}>
               Settings
             </Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item
-              as={Link}
-              name="sign-out"
-              to={this.props.routing.url + "/logout"}
-            >
+            <Dropdown.Item as={Link} name="sign-out" to={"/logout"}>
               Logout
             </Dropdown.Item>
           </Dropdown.Menu>
@@ -230,13 +225,9 @@ class HeaderComponent extends PureComponent {
         <Container>
           <Menu.Menu position="left">
             <Menu.Item>
-              <DomainDropdown />
+              <Image src={headerImage} size="small" as={Link} to="/" />
             </Menu.Item>
-            <Menu.Item
-              as={Link}
-              name="scoreboard"
-              to={this.props.routing.url + "/scoreboard"}
-            >
+            <Menu.Item as={Link} name="scoreboard" to={"/scoreboard"}>
               SCOREBOARD
             </Menu.Item>
             {tokenValidator() && this.renderUserAccount()}

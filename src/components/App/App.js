@@ -1,17 +1,48 @@
 import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
-import { Domain, Route404, Subdomain } from "../../routes"
+import { BasicLayout } from "../Layouts"
+import { GlobalHeader } from "../Header"
+import {
+  Home,
+  CreateNewScoreboard,
+  Scoreboard,
+  Login,
+  Signup,
+  Terms,
+  RequestInvite,
+  Shareables,
+  SubmitContent,
+  User,
+  AppSettings,
+  Content
+} from "../../routes"
+import PrivateRoute from "../PrivateRoute"
 
 import "./App.css"
 
 class App extends Component {
   render() {
     return (
-      <Switch>
-        <Route exact path="/" component={Domain} />
-        <Route path="/:domain" component={Subdomain} />
-        <Route component={Route404} />
-      </Switch>
+      <BasicLayout>
+        <GlobalHeader />
+        <Switch>
+          <Route exact path={"/"} component={Home} />
+          <Route path={"/home"} component={Home} />
+          <Route path={"/scoreboard"} component={Scoreboard} />
+          <Route path={"/create-scoreboard"} component={CreateNewScoreboard} />
+          <Route path={"/login"} component={Login} />
+          <Route path={"/logout"} component={Login} />
+          <Route path={"/signup"} component={Signup} />
+          <Route path={"/terms"} component={Terms} />
+          <Route path={"/invite"} component={RequestInvite} />
+          <Route path={"/shareables/:code"} component={Shareables} />
+          <PrivateRoute path={"/submit-content"} component={SubmitContent} />
+          <PrivateRoute path={"/content/:contentId"} component={Content} />
+          <PrivateRoute path={"/user/:userId"} component={User} />
+          <PrivateRoute path={"/settings"} component={AppSettings} />
+          <Route path={"/:username"} component={User} />
+        </Switch>
+      </BasicLayout>
     )
   }
 }

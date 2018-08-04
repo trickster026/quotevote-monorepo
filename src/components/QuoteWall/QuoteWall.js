@@ -2,63 +2,43 @@ import React, { Component } from "react"
 import { Segment, Header, Item, Image, Label } from "semantic-ui-react"
 import defaultImage from "../../assets/image.png"
 
-const quotesData = [
-  {
-    quote: "lorem ipsum",
-    image: defaultImage,
-    title: "text 1",
-    author: "John Doe"
-  },
-  {
-    quote: "lorem ipsum",
-    image: defaultImage,
-    title: "text 1",
-    author: "John Doe"
-  },
-  {
-    quote: "lorem ipsum",
-    image: defaultImage,
-    title: "text 1",
-    author: "John Doe"
-  },
-  {
-    quote: "lorem ipsum",
-    image: defaultImage,
-    title: "text 1",
-    author: "John Doe"
-  },
-  {
-    quote: "lorem ipsum",
-    image: defaultImage,
-    title: "text 1",
-    author: "John Doe"
-  }
-]
-
 class QuoteWall extends Component {
-  render = () => {
-    return (
-      <Segment>
-        <Header as="h1" style={{ fontSize: 24 }}>
-          Quote Wall
-        </Header>
+  renderQuotes = () => {
+    const { quotes } = this.props
+    if (quotes.length > 0)
+      return (
         <Item.Group>
-          {quotesData.map((item, index) => (
+          {quotes.slice(0, 5).map((quote, index) => (
             <Item key={index}>
-              <Image src={item.image || defaultImage} width={50} height={50} />
+              <Image
+                src={quote.creator.profileImageUrl || defaultImage}
+                width={50}
+                height={50}
+              />
               <Item.Content>
                 <Item.Header>
-                  <Label color="grey">{item.quote}</Label>
+                  <Label color="grey">{quote.quote}</Label>
                 </Item.Header>
                 <Item.Description>
-                  <Label color="teal">{`[${item.title}] by [${
-                    item.author
+                  <Label color="teal">{`[${quote.content.title}] by [${
+                    quote.creator.name
                   }]`}</Label>
                 </Item.Description>
               </Item.Content>
             </Item>
           ))}
         </Item.Group>
+      )
+    return <div>No quotes available</div>
+  }
+
+  render = () => {
+    return (
+      <Segment>
+        <Header as="h1" style={{ fontSize: 24 }}>
+          Quote Wall
+        </Header>
+        {this.renderQuotes()}
       </Segment>
     )
   }

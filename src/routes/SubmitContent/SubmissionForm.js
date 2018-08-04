@@ -72,7 +72,7 @@ class SubmissionForm extends Component {
   }
 
   renderModal = id => {
-    const shareableLink = `${process.env.REACT_APP_DOMAIN}/hiphop/content/${id}`
+    const shareableLink = `${process.env.REACT_APP_DOMAIN}/content/${id}`
     return (
       <Modal
         size="tiny"
@@ -101,7 +101,7 @@ class SubmissionForm extends Component {
             as={Link}
             positive
             content="Go to text"
-            to={`/hiphop/content/${id}`}
+            to={`/content/${id}`}
           />
           <Button negative onClick={this.handleClose}>
             Close
@@ -166,7 +166,7 @@ class SubmissionForm extends Component {
 }
 
 const mapStateToProps = ({ login: { user } }) => ({
-  authorId: user._id
+  authorId: user.creatorId
 })
 
 export default connect(mapStateToProps)(SubmissionForm)

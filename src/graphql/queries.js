@@ -90,7 +90,6 @@ export const GET_USER_INFO = gql`
       username
       email
       avatar
-      quotes
       _followersId
       _followingId
       vote_cast

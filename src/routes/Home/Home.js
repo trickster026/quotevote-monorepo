@@ -6,27 +6,14 @@ import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
 import TopContents from "../../components/TopContents/TopContents"
 import TopAuthors from "../../components/TopAuthors/TopAuthors"
-import QuoteStream from "../../components/QuoteStream/QuoteStream"
+import ActivitiesStream from "../../components/ActivitiesStream"
 
 const query = gql`
-  query getQuery($offset: Int!, $limit: Int!) {
-    topContents(offset: $offset, limit: $limit) {
-      title
-      creator {
-        name
-      }
-      score {
-        upvotes
-        downvotes
-      }
-    }
-    topCreators(offset: $offset, limit: $limit) {
-      profileImageUrl
-      name
-      score {
-        upvotes
-        downvotes
-      }
+  query getQuery($limit: Int!) {
+    activities(limit: $limit) {
+      _id
+      data
+      event
     }
   }
 `
@@ -43,12 +30,13 @@ class Home extends Component {
 
         <Query
           query={query}
-          variables={{ offset: 0, limit: 10 }}
+          variables={{ limit: 0 }}
           context={{ token: APP_TOKEN }}
         >
-          {({ loading, error, data: { topContents, topCreators } }) => {
+          {({ loading, error, data }) => {
             if (loading) return <div>Loading...</div>
             if (error) return <div>{error.message}</div>
+            const { topContents, topCreators, activities } = data
             return (
               <Grid>
                 <Grid.Row columns={2} stretched>
@@ -71,7 +59,7 @@ class Home extends Component {
                     </Segment>
                   </Grid.Column>
                   <Grid.Column>
-                    <QuoteStream />
+                    <ActivitiesStream activities={activities} />
                   </Grid.Column>
                 </Grid.Row>
                 <Grid.Row columns={2} stretched>
