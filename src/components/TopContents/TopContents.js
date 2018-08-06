@@ -17,8 +17,8 @@ const query = gql`
 class TopContents extends Component {
   state = { page: 1, limit: 5 }
 
-  handlePageChange = (event, { page }, total) => {
-    if (this.state.page + 1 < total) this.setState({ page })
+  handlePageChange = (event, { activePage }, total) => {
+    this.setState({ page: activePage })
   }
 
   render = () => {
@@ -30,7 +30,7 @@ class TopContents extends Component {
         context={{ token: APP_TOKEN }}
       >
         {({ error, loading, data }) => {
-          if (error)
+          if (error) {
             return (
               <Segment>
                 <Header as="h1" style={{ fontSize: 24 }}>
@@ -39,6 +39,7 @@ class TopContents extends Component {
                 <Segment basic>No available contents</Segment>
               </Segment>
             )
+          }
           if (loading) return <div>Loading...</div>
 
           const { paginate } = data
