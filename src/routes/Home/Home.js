@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Grid, Segment, Container, Header } from "semantic-ui-react"
+import withSizes from "react-sizes"
 
 import TopContents from "../../components/TopContents/TopContents"
 import TopAuthors from "../../components/TopAuthors/TopAuthors"
@@ -8,13 +9,12 @@ import ActivitiesStream from "../../components/ActivitiesStream"
 class Home extends Component {
   render = () => {
     return (
-      <Segment as={Container} basic>
+      <Segment as={this.props.isDesktop ? Container : null} basic>
         <Segment>
           <Header textAlign="center" as="h1" style={{ fontSize: 36 }}>
             Scoreboard Analytics Dashboard
           </Header>
         </Segment>
-        return (
         <Grid>
           <Grid.Row columns={2} stretched>
             <Grid.Column>
@@ -47,10 +47,13 @@ class Home extends Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        )
       </Segment>
     )
   }
 }
 
-export default Home
+const mapSizesToProps = ({ width }) => ({
+  isDesktop: width > 1600
+})
+
+export default withSizes(mapSizesToProps)(Home)

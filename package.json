@@ -32,10 +32,12 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.4",
+    "react-sizes": "^1.0.4",
     "react-spotify-player": "^1.0.4",
     "react-test-renderer": "^16.2.0",
     "react-timeago": "^3.4.3",
     "react-toastify": "^4.0.0-rc.4",
+    "react-window-resize-listener": "^1.1.0",
     "redux": "^3.7.2",
     "redux-persist": "^5.7.0",
     "redux-thunk": "^2.2.0",
@@ -44,7 +46,10 @@
     "webpack": "^3.10.0"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": ["prettier --no-semi --write", "git add"]
+    "src/**/*.{js,jsx,json,css}": [
+      "prettier --no-semi --write",
+      "git add"
+    ]
   },
   "scripts": {
     "precommit": "lint-staged",
