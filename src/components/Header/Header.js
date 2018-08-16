@@ -69,7 +69,6 @@ class HeaderComponent extends PureComponent {
     this.setState({ isLoading: true, value })
 
     const list = (await this.search()(value)).data
-    console.log("list", list)
     setTimeout(() => {
       if (this.state.value.length < 1) return this.resetComponent()
 

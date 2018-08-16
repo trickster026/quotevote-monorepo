@@ -18,7 +18,7 @@ class TopContents extends Component {
   state = { page: 1, limit: 5 }
 
   handlePageChange = (event, { activePage }, total) => {
-    this.setState({ page: activePage })
+    if (this.state.page + 1 < total) this.setState({ page: activePage })
   }
 
   render = () => {
