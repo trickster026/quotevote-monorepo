@@ -7,6 +7,7 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGOUT
 } from "../types"
+import { persistor } from "../../config/redux"
 
 export const userLogin = (username, password, history) => {
   return async (dispatch, getState) => {
@@ -37,6 +38,7 @@ export const userLogin = (username, password, history) => {
           error: { data: { message: "" } }
         }
       })
+      await persistor.flush()
 
       history.push("/")
     }
