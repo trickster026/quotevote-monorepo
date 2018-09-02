@@ -4,8 +4,12 @@
   "cache-version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@livechat/ui-kit": "^0.2.11",
     "apollo-client-preset": "^1.0.4",
+    "apollo-link": "^1.2.2",
     "apollo-link-context": "^1.0.8",
+    "apollo-link-ws": "^1.0.8",
+    "apollo-utilities": "^1.0.20",
     "axios": "^0.17.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
@@ -43,6 +47,7 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.82.0",
+    "subscriptions-transport-ws": "^0.9.14",
     "webpack": "^3.10.0"
   },
   "lint-staged": {
