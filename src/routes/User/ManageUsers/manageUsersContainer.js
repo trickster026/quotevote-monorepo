@@ -9,7 +9,7 @@ import ManageUsers from "../ManageUsers/ManageUsers"
 class ManageUsersContainer extends PureComponent {
   state = { users: [] }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     const _users = nextProps.users
     this.setState({ users: _users })
   }

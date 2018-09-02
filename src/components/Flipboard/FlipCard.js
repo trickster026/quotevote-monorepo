@@ -16,7 +16,7 @@ class FlipCard extends Component {
     prevContent: this.props.content
   }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     this.setState(prev => ({ prevContent: prev.content }))
     if (nextProps.content !== this.state.content) {
       setTimeout(() => {

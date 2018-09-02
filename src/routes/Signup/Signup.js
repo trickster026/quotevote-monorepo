@@ -17,7 +17,7 @@ import { userSignup } from "../../actions/creators/signupActionCreator"
 export class Signup extends PureComponent {
   state = { loading: false }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     if (nextProps.loading) {
       this.setState({ loading: nextProps.loading })
     }
@@ -150,5 +150,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withApollo(
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(Signup))
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(Signup)
+  )
 )

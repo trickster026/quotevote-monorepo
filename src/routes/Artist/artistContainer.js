@@ -15,7 +15,7 @@ class artistContainer extends PureComponent {
     loading: PropTypes.bool
   }
 
-  componentWillReceiveProps = async nextProps => {
+  UNSAFE_componentWillReceiveProps = async nextProps => {
     if (nextProps.score) {
       const artist = {
         name: nextProps.name,

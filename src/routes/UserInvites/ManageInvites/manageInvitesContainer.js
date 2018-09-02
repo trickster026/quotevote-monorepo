@@ -8,7 +8,7 @@ import ManageInvites from "../ManageInvites/ManageInvites"
 class ManageInvitesContainer extends PureComponent {
   state = { userInviteRequests: [] }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     const _userInviteRequests = nextProps.userInviteRequests
     this.setState({ userInviteRequests: _userInviteRequests })
   }

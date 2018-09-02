@@ -38,7 +38,7 @@ class SelectionPopover extends Component {
     this.interval = null
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.showPopover === true && nextProps.showPopover === false) {
       clearSelection()
     }
@@ -66,7 +66,9 @@ class SelectionPopover extends Component {
 
   render() {
     const { showPopover, children, style } = this.props // eslint-disable-line no-unused-vars
-    const { popoverBox: { top, left } } = this.state
+    const {
+      popoverBox: { top, left }
+    } = this.state
 
     const visibility = showPopover ? "visible" : "hidden"
     const display = showPopover ? "inline-block" : "none"

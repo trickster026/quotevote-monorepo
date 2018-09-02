@@ -46,7 +46,7 @@ class HeaderComponent extends PureComponent {
     history: PropTypes.object.isRequired
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.resetComponent()
   }
 
@@ -262,5 +262,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withApollo(
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComponent))
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(HeaderComponent)
+  )
 )

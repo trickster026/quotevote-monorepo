@@ -31,7 +31,7 @@ class EditProfile extends PureComponent {
     this.handleCancel = this.handleCancel.bind(this)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     console.log("nextprops", nextProps)
     this.setState({
       imageUploadedSrc: nextProps.user.avatar,

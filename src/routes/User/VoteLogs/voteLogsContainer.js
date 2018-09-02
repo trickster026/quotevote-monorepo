@@ -9,7 +9,7 @@ import { APP_TOKEN } from "../../../utils/constants"
 class voteLogsContainer extends PureComponent {
   state = { userInviteRequests: [] }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     const _userVoteLogs = nextProps.userVoteLogs
     const _searchUser = nextProps.searchUser
     const _userId = nextProps.userId
