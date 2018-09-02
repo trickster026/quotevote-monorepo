@@ -15,24 +15,24 @@ jobs:
 
     steps:
       - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
 
        #Download and cache dependencies
       - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-          - yarn-packages-{{ checksum "yarn.lock" }}
+          key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
-          name: Install Dependencies
-          command: yarn install
+          name: Install npm weee
+          command: npm install
 
       - save_cache:
-          name: Save Yarn Package Cache
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ~/.cache/yarn
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+            - node_modules
 
-      - run: yarn build
+      - run: npm run build
 
       - run:
           name: Set AWS region
