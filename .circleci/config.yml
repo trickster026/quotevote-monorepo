@@ -5,9 +5,8 @@
 version: 2
 jobs:
   build-job-and-deploy:
-    machine:
-      node:
-        version: 8.9.2
+    docker
+      - image: circleci/node
 
     environment:
      - NODE_ENV: "production"
@@ -17,23 +16,23 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-#      - restore_cache:
-#          keys:
-#          - v1-dependencies-{{ checksum "package.json" }}
-#           fallback to using the latest cache if no exact match is found
-#          - v1-dependencies-
+       #Download and cache dependencies
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+          - yarn-packages-{{ checksum "yarn.lock" }}
 
-      - run: npm install -g yarn
-
-      - run: yarn install
+      - run:
+          name: Install Dependencies
+          command: yarn install
 
       - save_cache:
+          name: Save Yarn Package Cache
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.cache/yarn
+          key: yarn-packages-{{ checksum "yarn.lock" }}
 
-      - run: npm run build
+      - run: yarn build
 
       - run:
           name: Set AWS region
