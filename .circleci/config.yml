@@ -7,7 +7,7 @@ jobs:
     environment:
      - NODE_ENV: "production"
 
-    working_directory: /tmp/hhsb
+    working_directory: ~/tmp/hhsb
 
     steps:
       - checkout
@@ -41,8 +41,8 @@ jobs:
       - run:
           name: Sync folder/files s3
           command: |
-            aws s3 sync build s3://web.hiphopscoreboard.com/ --delete
-            aws s3 sync build s3://www.hiphopscoreboard.com/ --delete
+            aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com/ --delete
+            aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com/ --delete
 
       - run:
           name: Trigger CDN invalidation for web.hiphopscoreboard.com and www.hiphopscoreboard.com
