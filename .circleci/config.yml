@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-job-and-deploy:
     docker:
-      - image: circleci/node
+      - image: circleci/node:latest-browsers
 
     environment:
      - NODE_ENV: "production"
@@ -37,11 +37,20 @@ jobs:
       - run: npm run build
 
       - run:
-          name: Configure AWS and Sync folder/files s3
+          name: Configure AWS
           command: |
+            export AWS_DEFAULT_REGION=us-east-1
             aws configure set region us-east-1
             aws configure set preview.cloudfront true
             aws configure set preview.create-invalidation true
+
+      - run:
+          name: Check AWS configuration
+          command: ~/.aws/config
+
+      - run:
+          name:  Sync folder/files s3
+          command: |
             aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com --delete
             aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com --delete
 
