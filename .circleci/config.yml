@@ -13,12 +13,9 @@ jobs:
       - checkout
 
       - run:
-          name: Install and configure AWS CLI
+          name: Install AWS CLI
           command: |
             sudo apt-get -y -qq install awscli
-            aws configure set region us-east-1
-            aws configure set preview.cloudfront true
-            aws configure set preview.create-invalidation true
 
       - run:
           name: Update npm
@@ -40,9 +37,11 @@ jobs:
       - run: npm run build
 
       - run:
-          name: Sync folder/files s3
+          name: Configure AWS and Sync folder/files s3
           command: |
-            pwd
+            aws configure set region us-east-1
+            aws configure set preview.cloudfront true
+            aws configure set preview.create-invalidation true
             aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com --delete
             aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com --delete
 
