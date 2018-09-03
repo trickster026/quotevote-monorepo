@@ -39,7 +39,7 @@ jobs:
       - run:
           name: Configure AWS
           command: |
-            export AWS_DEFAULT_REGION=us-east-1
+            aws configure set default.region us-east-1
             aws configure set region us-east-1
             aws configure set preview.cloudfront true
             aws configure set preview.create-invalidation true
