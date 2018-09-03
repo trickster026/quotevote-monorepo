@@ -46,11 +46,13 @@ jobs:
 
       - run:
           name: Check AWS configuration
-          command: ~/.aws/config
+          command: sudo ~/.aws/config
 
       - run:
           name:  Sync folder/files s3
           command: |
+            pwd
+            ls
             aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com --delete
             aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com --delete
 
