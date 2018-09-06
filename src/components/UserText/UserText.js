@@ -18,7 +18,12 @@ class UserText extends Component {
 
   handleSelectChange = (e, selection) => {
     this.setState({ selection })
-    this.props.history.push(`/content/${selection.value}`)
+    const selected = selection.options.find(
+      ops => ops.value === selection.value
+    )
+    this.props.history.push(
+      `/boards/${selected.domain}/content/${selection.value}`
+    )
   }
 
   render = () => {

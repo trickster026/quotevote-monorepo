@@ -160,7 +160,7 @@ class HeaderComponent extends PureComponent {
     const { isLoading, value, results } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
-      <Menu.Menu position="right" stackable>
+      <Menu.Menu position="right" stackable="true">
         <Menu.Item>
           <Button
             as={Link}

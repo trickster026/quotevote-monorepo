@@ -7,6 +7,7 @@ import {
   Message,
   Label
 } from "semantic-ui-react"
+import { connect } from "react-redux"
 import { Mutation } from "react-apollo"
 import gql from "graphql-tag"
 
@@ -31,12 +32,20 @@ class ScoreboardForm extends Component {
   }
 
   handleCreateClick = (createDomain, event) => {
-    const domain = { ...this.state.input, url: "/" + this.state.input.key }
+    const domain = {
+      ...this.state.input,
+      url: "/" + this.state.input.key,
+      userId: this.props.userId
+    }
     createDomain({ variables: { domain } })
   }
 
   handleError = message => {
     this.setState({ error: message })
+  }
+
+  handlePrivacyChange = (e, data) => {
+    this.setState(prev => ({ input: { ...prev.input, privacy: data.value } }))
   }
 
   render = () => {
@@ -53,18 +62,16 @@ class ScoreboardForm extends Component {
                 Successfully created your scoreboard
               </Message>
               <Form>
-                <Form.Group>
+                <Form.Group widths="equal">
                   <Form.Input
                     name="title"
                     label="Title"
-                    width={12}
                     value={this.state.input.title}
                     onChange={this.handleInputChange}
                   />
                   <Form.Input
                     name="key"
                     label="Url"
-                    width={4}
                     value={this.state.input.key}
                     onChange={this.handleInputChange}
                   >
@@ -73,6 +80,16 @@ class ScoreboardForm extends Component {
                     </Label>
                     <input />
                   </Form.Input>
+                  <Form.Dropdown
+                    label="Privacy"
+                    selection
+                    options={[
+                      { key: "private", text: "private", value: "private" },
+                      { key: "public", text: "public", value: "public" }
+                    ]}
+                    placeholder="Choose privacy"
+                    onChange={this.handlePrivacyChange}
+                  />
                 </Form.Group>
                 <Form.TextArea
                   label="Description"
@@ -96,4 +113,8 @@ class ScoreboardForm extends Component {
   }
 }
 
-export default ScoreboardForm
+const mapStateToProps = ({ login: { user } }) => ({
+  userId: user._id
+})
+
+export default connect(mapStateToProps)(ScoreboardForm)

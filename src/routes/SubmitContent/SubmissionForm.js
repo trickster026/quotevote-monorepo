@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { ToastContainer, toast } from "react-toastify"
-import { Mutation } from "react-apollo"
+import { Mutation, Query } from "react-apollo"
 import gql from "graphql-tag"
 
 const SUBMIT_TEXT = gql`
@@ -23,10 +23,24 @@ const SUBMIT_TEXT = gql`
   }
 `
 
+const DOMAIN_QUERY = gql`
+  query domains($limit: Int!) {
+    domains(limit: $limit) {
+      _id
+      adminIds
+      allowedUserIds
+      key
+      privacy
+      title
+    }
+  }
+`
+
 class SubmissionForm extends Component {
   state = {
     title: "",
     text: "",
+    domain: {},
     showShareableLink: false
   }
 
@@ -37,7 +51,8 @@ class SubmissionForm extends Component {
         content: {
           title: this.state.title,
           text: this.state.text,
-          creatorId: this.props.authorId
+          creatorId: this.props.authorId,
+          domainId: this.state.domain.id
         }
       }
     })
@@ -71,8 +86,12 @@ class SubmissionForm extends Component {
     toast.info("Copied to clipboard!")
   }
 
+  handleDropdownChange = (e, { options, value }) => {
+    this.setState({ domain: options.find(item => item.value === value) })
+  }
+
   renderModal = id => {
-    const shareableLink = `${process.env.REACT_APP_DOMAIN}/content/${id}`
+    const shareableLink = `/boards/${this.state.domain.key}/content/${id}`
     return (
       <Modal
         size="tiny"
@@ -101,7 +120,7 @@ class SubmissionForm extends Component {
             as={Link}
             positive
             content="Go to text"
-            to={`/content/${id}`}
+            to={`/boards/${this.state.domain.key}/content/${id}`}
           />
           <Button negative onClick={this.handleClose}>
             Close
@@ -132,14 +151,49 @@ class SubmissionForm extends Component {
                     this.handleSubmit(event, submitText)
                   }}
                 >
-                  <Form.Input
-                    name="title"
-                    fluid
-                    label="Title"
-                    value={this.state.title}
-                    autoComplete="off"
-                    onChange={this.handleInputChange}
-                  />
+                  <Form.Group widths="equal">
+                    <Form.Input
+                      name="title"
+                      label="Title"
+                      value={this.state.title}
+                      autoComplete="off"
+                      onChange={this.handleInputChange}
+                    />
+                    <Query query={DOMAIN_QUERY} variables={{ limit: 0 }}>
+                      {({ loading, error, data }) => {
+                        let options = []
+                        if (data.domains) {
+                          options = data.domains
+                            .filter(domain => {
+                              const isUserAllowed = domain.allowedUserIds.find(
+                                id => id === this.props.userId
+                              )
+                              return (
+                                domain.privacy === "public" ||
+                                (domain.privacy === "private" && isUserAllowed)
+                              )
+                            })
+                            .map(domain => ({
+                              key: domain.key,
+                              text: domain.title,
+                              value: domain.key,
+                              id: domain._id
+                            }))
+                        }
+
+                        return (
+                          <Form.Dropdown
+                            placeholder="Select a subscoreboard"
+                            selection
+                            name="subscoreboard"
+                            label="Subscoreboard"
+                            options={options}
+                            onChange={this.handleDropdownChange}
+                          />
+                        )
+                      }}
+                    </Query>
+                  </Form.Group>
                   <Form.TextArea
                     name="text"
                     rows={10}
@@ -166,7 +220,8 @@ class SubmissionForm extends Component {
 }
 
 const mapStateToProps = ({ login: { user } }) => ({
-  authorId: user.creatorId
+  authorId: user.creatorId,
+  userId: user._id
 })
 
 export default connect(mapStateToProps)(SubmissionForm)

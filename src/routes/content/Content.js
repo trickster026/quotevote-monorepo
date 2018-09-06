@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Segment, Container, Grid } from "semantic-ui-react"
+import { Segment, Container, Grid, Message, Button } from "semantic-ui-react"
 import { Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
@@ -10,7 +10,7 @@ import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import ActionPopup from "../../components/VotingBoard/ActionPopup"
 
 const getContent = gql`
-  query content($contentId: String) {
+  query content($contentId: String, $key: String) {
     content(contentId: $contentId) {
       _id
       title
@@ -34,6 +34,10 @@ const getContent = gql`
         text
         hashtags
       }
+    }
+    domain(key: $key) {
+      allowedUserIds
+      privacy
     }
   }
 `
@@ -146,9 +150,9 @@ class Content extends PureComponent {
   }
 
   render = () => {
-    const { contentId } = this.props.match.params
+    const { contentId, domain } = this.props.match.params
     if (!contentId) return <div>No content id passed!</div>
-    const variables = { contentId }
+    const variables = { contentId, key: domain }
 
     return (
       <Segment as={Container} basic>
@@ -157,8 +161,32 @@ class Content extends PureComponent {
             if (loading) return <div>Getting data...</div>
             if (error) return <div>{`Error: ${error}`}</div>
 
+            const { allowedUserIds, privacy } = data.domain
+
+            const showPage =
+              (allowedUserIds.find(id => id === this.props.userId) &&
+                privacy === "private") ||
+              privacy === "public"
+
+            if (!showPage)
+              return (
+                <Segment as={Container} basic>
+                  <Message negative>
+                    <Message.Header>
+                      You are not authorize to view this content!
+                    </Message.Header>
+                    <p>
+                      <Button color="teal" size="mini">
+                        Ask to be invited
+                      </Button>
+                    </p>
+                  </Message>
+                </Segment>
+              )
+
             const { title, text, scoreDetails, comments } = data.content
             const creator = data.content.creator || {}
+
             return (
               <Segment as={Container} basic>
                 <Grid doubling stackable>

@@ -14,7 +14,8 @@ import {
   SubmitContent,
   User,
   AppSettings,
-  Content
+  Content,
+  Boards
 } from "../../routes"
 import PrivateRoute from "../PrivateRoute"
 
@@ -36,11 +37,15 @@ class App extends Component {
           <Route path={"/terms"} component={Terms} />
           <Route path={"/invite"} component={RequestInvite} />
           <Route path={"/shareables/:code"} component={Shareables} />
+          <Route exact path={"/boards/:domain"} component={Boards} />
           <PrivateRoute path={"/submit-content"} component={SubmitContent} />
-          <PrivateRoute path={"/content/:contentId"} component={Content} />
+          <PrivateRoute
+            path={"/boards/:domain/content/:contentId"}
+            component={Content}
+          />
           <PrivateRoute path={"/user/:userId"} component={User} />
           <PrivateRoute path={"/settings"} component={AppSettings} />
-          <Route path={"/:username"} component={User} />
+          {/* <Route path={"/:username"} component={User} /> */}
         </Switch>
       </BasicLayout>
     )

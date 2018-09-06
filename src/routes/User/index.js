@@ -32,6 +32,9 @@ const query = gql`
     }
     contents(creatorId: $creatorId) {
       _id
+      domain {
+        key
+      }
       creator {
         name
       }
@@ -63,7 +66,8 @@ class User extends Component {
           const contentTitles = contents.map(content => ({
             text: content.title,
             key: content.title,
-            value: content._id
+            value: content._id,
+            domain: content.domain.key
           }))
 
           return (
