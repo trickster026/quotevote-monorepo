@@ -1,67 +1,65 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
   build-job-and-deploy:
-    machine:
-      node:
-        version: 8.9.2
+    docker:
+      - image: circleci/node:latest-browsers
 
     environment:
      - NODE_ENV: "production"
 
-    working_directory: /tmp/hhsb
+    working_directory: ~/tmp/hhsb
 
     steps:
       - checkout
 
-      # Download and cache dependencies
+      - run:
+          name: Install AWS CLI
+          command: |
+           sudo apt-get update && sudo apt-get install -y python-dev
+           curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+           unzip awscli-bundle.zip
+           sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+
       - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-           fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          name: Download and cache dependencies
+          key: dependency-cache-{{ checksum "package.json" }}
 
-      - run: npm install -g yarn
-
-      - run: yarn install
+      - run:
+          name: Install npm weee
+          command: npm install
 
       - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm run build
 
       - run:
-          name: Set AWS region
-          command: aws configure set region us-east-1
+          name: Configure AWS
+          command: |
+            aws configure set default.region us-east-2
+            aws configure set region us-east-2
+            aws configure set preview.cloudfront true
+            aws configure set preview.create-invalidation true
 
       - run:
-          name: Configure CDN true
-          command: aws configure set preview.cloudfront true
+          name:  Sync folder/files s3
+          command: |
+            pwd
+            ls -a ~
+            aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com --delete
+            aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com --delete
 
       - run:
-          name: Set invalidation
-          command: aws configure set preview.create-invalidation true
-
-      - run:
-          name: Sync folder/files s3
-          command: aws s3 sync build s3://web.hiphopscoreboard.com/ --delete
-
-      - run:
-          name: Sync folder/files s3
-          command: aws s3 sync build s3://www.hiphopscoreboard.com/ --delete
-
-      - run:
-          name: Trigger CDN invalidation for web.hiphopscoreboard.com
-          command: aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"E3RIU72B7OZJRL\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
-
-      - run:
-          name: Trigger CDN invalidation for www.hiphopscoreboard.com
-          command: aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"E1M8PK1KN3UF5G\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
+          name: Trigger CDN invalidation for web.hiphopscoreboard.com and www.hiphopscoreboard.com
+          command: |
+            aws cloudfront create-invalidation --invalidation-batch "{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}" --distribution-id E3RIU72B7OZJRL
+            aws cloudfront create-invalidation --invalidation-batch "{\"Paths\":{\"Quantity\":1,\"Items\":[\"/*\"]},\"CallerReference\":\"$(date +%s)\"}" --distribution-id E1M8PK1KN3UF5G
 
 workflows:
   version: 2

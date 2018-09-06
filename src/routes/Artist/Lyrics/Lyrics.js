@@ -36,7 +36,7 @@ class Lyrics extends PureComponent {
     downvotes: 0
   }
 
-  componentWillReceiveProps = ({ lyrics, points }) => {
+  UNSAFE_componentWillReceiveProps = ({ lyrics, points }) => {
     if (lyrics && lyrics.length > 0) {
       this.setState({ loading: false })
     }

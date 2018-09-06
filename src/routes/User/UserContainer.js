@@ -9,7 +9,7 @@ import { APP_TOKEN } from "../../utils/constants"
 class UserContainer extends PureComponent {
   state = { artist: {}, loading: true, showHistoryLogs: false }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     if (!nextProps.user) {
       const tempUser = {
         user_id: "",

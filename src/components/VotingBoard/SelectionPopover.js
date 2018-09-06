@@ -38,7 +38,7 @@ class SelectionPopover extends Component {
     this.interval = null
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.showPopover === true && nextProps.showPopover === false) {
       clearSelection()
     }

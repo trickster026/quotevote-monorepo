@@ -46,7 +46,7 @@ class HeaderComponent extends PureComponent {
     history: PropTypes.object.isRequired
   }
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.resetComponent()
   }
 

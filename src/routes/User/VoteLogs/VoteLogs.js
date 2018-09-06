@@ -15,7 +15,7 @@ class VoteLogs extends PureComponent {
     userVoteLogs: PropTypes.array
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const _userVoteLogs = nextProps.userVoteLogs
     this.setState({ userVoteLogs: _userVoteLogs })
   }

@@ -28,7 +28,7 @@ export class Login extends PureComponent {
     user: {}
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.location.pathname === "/logout") {
       this.props.logout(this.props.history)
     }

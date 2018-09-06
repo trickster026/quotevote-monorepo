@@ -8,6 +8,10 @@ import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
 import CommentsPanel from "../../components/CommentsPanel/CommentsPanel"
 import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import ActionPopup from "../../components/VotingBoard/ActionPopup"
+import Maximized from "../../components/Chat/Maximized"
+import Minimized from "../../components/Chat/Minimized"
+
+import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 
 const getContent = gql`
   query content($contentId: String, $key: String) {
@@ -66,6 +70,52 @@ const addQuote = gql`
   mutation addQuote($quote: QuoteInput!) {
     addQuote(quote: $quote) {
       _id
+    }
+  }
+`
+
+const MESSAGE_MUTATION = gql`
+  mutation createMessage($message: MessageInput!) {
+    createMessage(message: $message) {
+      _id
+      contentId
+      userId
+      userName
+      title
+      text
+      date
+    }
+  }
+`
+
+const CHAT_SUBSCRIPTION = gql`
+  subscription onMessageCrated($contentId: String!) {
+    messageCreated(contentId: $contentId) {
+      _id
+      contentId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
+
+const CHAT_QUERY = gql`
+  query chats($contentId: String!) {
+    messages(contentId: $contentId) {
+      _id
+      contentId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
     }
   }
 `
@@ -142,6 +192,23 @@ class Content extends PureComponent {
     client.mutate({
       mutation: addQuote,
       variables: { quote: newQuote }
+    })
+  }
+
+  sendMessage = data => {
+    const { client, match } = this.props
+    const { contentId } = match.params
+
+    const newMessage = {
+      contentId,
+      title: "", // TODO
+      text: data,
+      imageUrl: "" // TODO
+    }
+
+    client.mutate({
+      mutation: MESSAGE_MUTATION,
+      variables: { message: newMessage }
     })
   }
 
@@ -227,6 +294,40 @@ class Content extends PureComponent {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
+                <Query query={CHAT_QUERY} variables={variables}>
+                  {({ subscribeToMore, ...result }) => (
+                    <ThemeProvider>
+                      <FixedWrapper.Root maximizedOnInit>
+                        <FixedWrapper.Maximized>
+                          <Maximized
+                            {...this.props}
+                            {...result}
+                            ownId={this.props.userId}
+                            sendMessage={this.sendMessage}
+                            onMessageSend={this.sendMessage}
+                            subscribeToNewMessages={() =>
+                              subscribeToMore({
+                                document: CHAT_SUBSCRIPTION,
+                                variables: { contentId },
+                                updateQuery: (prev, { subscriptionData }) => {
+                                  if (!subscriptionData.data) return prev
+                                  const newMessage =
+                                    subscriptionData.data.messageCreated
+                                  return Object.assign({}, prev, {
+                                    messages: [...prev.messages, newMessage]
+                                  })
+                                }
+                              })
+                            }
+                          />
+                        </FixedWrapper.Maximized>
+                        <FixedWrapper.Minimized>
+                          <Minimized {...this.props} />
+                        </FixedWrapper.Minimized>
+                      </FixedWrapper.Root>
+                    </ThemeProvider>
+                  )}
+                </Query>
               </Segment>
             )
           }}
