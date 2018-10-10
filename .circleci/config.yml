@@ -25,15 +25,15 @@ jobs:
 #          key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
-          name: Yarn install
-          command: sudo yarn install
+          name: npm install
+          command: sudo npm install
 
 #      - save_cache:
 #          key: dependency-cache-{{ checksum "package.json" }}
 #          paths:
 #            - node_modules
 
-      - run: sudo yarn run build
+      - run: sudo npm run build
 
       - run:
           name: Configure AWS
