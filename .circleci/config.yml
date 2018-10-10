@@ -32,6 +32,10 @@ jobs:
           name: Install npm weee
           command: npm install
 
+      - run:
+          name: Install create-react-app
+          command: npm install -g create-react-app
+
 #      - save_cache:
 #          key: dependency-cache-{{ checksum "package.json" }}
 #          paths:
