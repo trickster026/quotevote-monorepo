@@ -33,7 +33,7 @@ jobs:
 #          paths:
 #            - node_modules
 
-      - run: sudo yarn run build
+      - run: sudo yarn run build --display-error-details=true
 
       - run:
           name: Configure AWS
