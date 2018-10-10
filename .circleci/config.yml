@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-           sudo apt-get update && sudo apt-get install -y python-dev && sudo apt-get install yarn
+           sudo apt-get update && sudo apt-get install -y python-dev
            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
            unzip awscli-bundle.zip
            sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
@@ -33,7 +33,7 @@ jobs:
 #          paths:
 #            - node_modules
 
-      - run: npm run build
+      - run: yarn run build
 
       - run:
           name: Configure AWS
