@@ -34,7 +34,7 @@ jobs:
 
       - run:
           name: Install create-react-app
-          command: npm install -g create-react-app
+          command: 'sudo npm install -g create-react-app'
 
 #      - save_cache:
 #          key: dependency-cache-{{ checksum "package.json" }}
