@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-job-and-deploy:
     docker:
-      - image: circleci/node:latest-browsers
+      - image: circleci/node
 
     environment:
      - NODE_ENV: "production"
@@ -15,26 +15,18 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-           sudo apt-get update && sudo apt-get install -y python-dev
+           sudo apt-get update && sudo apt-get install -y python-dev && sudo apt-get install yarn
            curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
            unzip awscli-bundle.zip
            sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-
-      - run:
-          name: Update npm
-          command: 'sudo npm install -g npm@latest'
 
 #      - restore_cache:
 #          name: Download and cache dependencies
 #          key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
-          name: Install npm weee
-          command: npm install
-
-      - run:
-          name: Install create-react-app
-          command: 'sudo npm install -g create-react-app'
+          name: Yarn install
+          command: yarn install
 
 #      - save_cache:
 #          key: dependency-cache-{{ checksum "package.json" }}
