@@ -7,7 +7,7 @@ jobs:
     environment:
      - NODE_ENV: "production"
 
-    working_directory: ~/tmp/hhsb
+    working_directory: ~/tmp
 
     steps:
       - checkout
@@ -33,7 +33,7 @@ jobs:
 #          paths:
 #            - node_modules
 
-      - run: sudo yarn run build --display-error-details=true
+      - run: sudo yarn run build
 
       - run:
           name: Configure AWS
@@ -48,8 +48,8 @@ jobs:
           command: |
             pwd
             ls -a ~
-            aws s3 sync ~/tmp/hhsb/build s3://web.hiphopscoreboard.com --delete
-            aws s3 sync ~/tmp/hhsb/build s3://www.hiphopscoreboard.com --delete
+            aws s3 sync ~/tmp/build s3://web.hiphopscoreboard.com --delete
+            aws s3 sync ~/tmp/build s3://www.hiphopscoreboard.com --delete
 
       - run:
           name: Trigger CDN invalidation for web.hiphopscoreboard.com and www.hiphopscoreboard.com
