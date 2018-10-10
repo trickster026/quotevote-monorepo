@@ -2,10 +2,7 @@ import React, { Component } from "react"
 import {
   Grid,
   Segment,
-  Header,
-  Container,
-  Message,
-  Button
+  Header
 } from "semantic-ui-react"
 import { connect } from "react-redux"
 import { Query } from "react-apollo"
