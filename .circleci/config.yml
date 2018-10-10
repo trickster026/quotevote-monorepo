@@ -24,18 +24,18 @@ jobs:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
 
-      - restore_cache:
-          name: Download and cache dependencies
-          key: dependency-cache-{{ checksum "package.json" }}
+#      - restore_cache:
+#          name: Download and cache dependencies
+#          key: dependency-cache-{{ checksum "package.json" }}
 
       - run:
           name: Install npm weee
           command: npm install
 
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+#      - save_cache:
+#          key: dependency-cache-{{ checksum "package.json" }}
+#          paths:
+#            - node_modules
 
       - run: npm run build
 
