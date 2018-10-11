@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { Button, Container, Grid, Message, Segment } from "semantic-ui-react"
+import { Segment, Container, Grid, Message, Button } from "semantic-ui-react"
 import { Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
@@ -8,6 +8,10 @@ import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
 import CommentsPanel from "../../components/CommentsPanel/CommentsPanel"
 import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import ActionPopup from "../../components/VotingBoard/ActionPopup"
+import Maximized from "../../components/Chat/Maximized"
+import Minimized from "../../components/Chat/Minimized"
+
+import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 
 const getContent = gql`
   query content($contentId: String, $key: String) {
@@ -84,37 +88,37 @@ const MESSAGE_MUTATION = gql`
   }
 `
 
-// const CHAT_SUBSCRIPTION = gql`
-//   subscription onMessageCrated($contentId: String!) {
-//     messageCreated(contentId: $contentId) {
-//       _id
-//       contentId
-//       userId
-//       userName
-//       userAvatar
-//       title
-//       text
-//       imageUrl
-//       date
-//     }
-//   }
-// `
-//
-// const CHAT_QUERY = gql`
-//   query chats($contentId: String!) {
-//     messages(contentId: $contentId) {
-//       _id
-//       contentId
-//       userId
-//       userName
-//       userAvatar
-//       title
-//       text
-//       imageUrl
-//       date
-//     }
-//   }
-// `
+const CHAT_SUBSCRIPTION = gql`
+  subscription onMessageCrated($contentId: String!) {
+    messageCreated(contentId: $contentId) {
+      _id
+      contentId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
+
+const CHAT_QUERY = gql`
+  query chats($contentId: String!) {
+    messages(contentId: $contentId) {
+      _id
+      contentId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
 
 class Content extends PureComponent {
   handleVoting = (event, data) => {
@@ -290,40 +294,40 @@ class Content extends PureComponent {
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
-                {/*<Query query={CHAT_QUERY} variables={variables}>*/}
-                {/*{({ subscribeToMore, ...result }) => (*/}
-                {/*<ThemeProvider>*/}
-                {/*<FixedWrapper.Root maximizedOnInit>*/}
-                {/*<FixedWrapper.Maximized>*/}
-                {/*<Maximized*/}
-                {/*{...this.props}*/}
-                {/*{...result}*/}
-                {/*ownId={this.props.userId}*/}
-                {/*sendMessage={this.sendMessage}*/}
-                {/*onMessageSend={this.sendMessage}*/}
-                {/*subscribeToNewMessages={() =>*/}
-                {/*subscribeToMore({*/}
-                {/*document: CHAT_SUBSCRIPTION,*/}
-                {/*variables: { contentId },*/}
-                {/*updateQuery: (prev, { subscriptionData }) => {*/}
-                {/*if (!subscriptionData.data) return prev*/}
-                {/*const newMessage =*/}
-                {/*subscriptionData.data.messageCreated*/}
-                {/*return Object.assign({}, prev, {*/}
-                {/*messages: [...prev.messages, newMessage]*/}
-                {/*})*/}
-                {/*}*/}
-                {/*})*/}
-                {/*}*/}
-                {/*/>*/}
-                {/*</FixedWrapper.Maximized>*/}
-                {/*<FixedWrapper.Minimized>*/}
-                {/*<Minimized {...this.props} />*/}
-                {/*</FixedWrapper.Minimized>*/}
-                {/*</FixedWrapper.Root>*/}
-                {/*</ThemeProvider>*/}
-                {/*)}*/}
-                {/*</Query>*/}
+                <Query query={CHAT_QUERY} variables={variables}>
+                  {({ subscribeToMore, ...result }) => (
+                    <ThemeProvider>
+                      <FixedWrapper.Root maximizedOnInit>
+                        <FixedWrapper.Maximized>
+                          <Maximized
+                            {...this.props}
+                            {...result}
+                            ownId={this.props.userId}
+                            sendMessage={this.sendMessage}
+                            onMessageSend={this.sendMessage}
+                            subscribeToNewMessages={() =>
+                              subscribeToMore({
+                                document: CHAT_SUBSCRIPTION,
+                                variables: { contentId },
+                                updateQuery: (prev, { subscriptionData }) => {
+                                  if (!subscriptionData.data) return prev
+                                  const newMessage =
+                                    subscriptionData.data.messageCreated
+                                  return Object.assign({}, prev, {
+                                    messages: [...prev.messages, newMessage]
+                                  })
+                                }
+                              })
+                            }
+                          />
+                        </FixedWrapper.Maximized>
+                        <FixedWrapper.Minimized>
+                          <Minimized {...this.props} />
+                        </FixedWrapper.Minimized>
+                      </FixedWrapper.Root>
+                    </ThemeProvider>
+                  )}
+                </Query>
               </Segment>
             )
           }}
