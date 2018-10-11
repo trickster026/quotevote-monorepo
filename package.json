@@ -4,7 +4,7 @@
   "cache-version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@livechat/ui-kit": "^0.2.11",
+    "@livechat/ui-kit": "^0.2.14",
     "apollo-client-preset": "^1.0.4",
     "apollo-link": "^1.2.2",
     "apollo-link-context": "^1.0.8",
@@ -87,10 +87,9 @@
       "last 2 edge versions"
     ],
     "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
     ]
   }
 }
