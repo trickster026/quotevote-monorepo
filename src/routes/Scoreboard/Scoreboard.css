@@ -1,0 +1,43 @@
+.scoreboard-rankings-section {
+  margin-top: 85px;
+}
+.scoreboard-rankings-section .scoreboard-rankings-header-column {
+  background: #212121;
+  border-top: 3px dashed gray;
+}
+.scoreboard-rankings-section .scoreboard-rankings-header {
+  color: white;
+  padding: 30px;
+  padding-top: 30px;
+}
+.scoreboard-rankings-section .scoreboard-rankings-icons {
+  position: relative;
+  margin-top: -55px;
+  padding: 15px;
+  z-index: 999;
+  margin-bottom: -15px;
+}
+.scoreboard-rankings-section .scoreboard-rankings-header h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 1.2;
+  color: inherit;
+}
+.scoreboard-rankings-section .top-content-column {
+  background-image: linear-gradient(0deg, #fff 0%, #f7f7f7 100%);
+}
+
+.scoreboard-rankings-section .top-authors-column {
+  background: #f0f0f0;
+}
+
+.scoreboard-rankings-section .ui.grid > .top-row {
+  padding-top: 0px;
+  background: #f0f0f0;
+}
+
+.scoreboard-rankings-section .ui.grid > .scoreboard-rankings-header-row {
+  padding-bottom: 0px;
+}

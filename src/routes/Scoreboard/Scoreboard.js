@@ -1,36 +1,46 @@
 import React, { PureComponent } from "react"
-import { Container, Segment, Grid, Header } from "semantic-ui-react"
+import { Container, Grid } from "semantic-ui-react"
 
 import TopContents from "../../components/TopContents/TopContents"
 import TopAuthors from "../../components/TopAuthors/TopAuthors"
+
+import "./Scoreboard.css"
 
 class Scoreboard extends PureComponent {
   state = { query: { offset: 0, limit: 5 } }
 
   render = () => {
     return (
-      <Segment as={Container} basic>
+      <Container as={Container} className="scoreboard-rankings-section">
         <Grid>
-          <Grid.Row columns={1}>
-            <Grid.Column>
-              <Segment>
-                <Header textAlign="center" as="h1" style={{ fontSize: 36 }}>
-                  Scoreboard Rankings
-                </Header>
-              </Segment>
+          <Grid.Row columns={1} className="scoreboard-rankings-header-row">
+            <Grid.Column
+              width={16}
+              className="scoreboard-rankings-header-column"
+            >
+              <div className="scoreboard-rankings-header">
+                <center>
+                  <h3>Scoreboard Rankings</h3>
+                </center>
+                <div className="scoreboard-rankings-icons">
+                  <i className="fas fa-sort-amount-down fa-2x" />
+                  &nbsp;&nbsp;
+                  <i className="fas fa-search fa-2x" />
+                </div>
+              </div>
             </Grid.Column>
           </Grid.Row>
 
-          <Grid.Row columns={2} stretched>
-            <Grid.Column>
+          <Grid.Row columns={2} stretched className="top-row">
+            <Grid.Column width={12} className="top-content-column">
               <TopContents />
             </Grid.Column>
-            <Grid.Column>
+            <Grid.Column width={4} className="top-authors-column">
               <TopAuthors />
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </Segment>
+      </Container>
     )
   }
 }
