@@ -1,5 +1,6 @@
 .app {
-  background-color: #f2f2f2 !important;
+  background-image: linear-gradient(75deg, #ffe2a4 0%, #ff8e82 100%);
+  font-family: "Raleway", sans-serif;
 }
 
 .header-module {

@@ -229,6 +229,9 @@ class HeaderComponent extends PureComponent {
             <Menu.Item as={Link} name="scoreboard" to={"/scoreboard"}>
               SCOREBOARD
             </Menu.Item>
+            <Menu.Item as={Link} name="top content" to={"/top-content"}>
+              TOP CONTENT
+            </Menu.Item>
             {tokenValidator() && this.renderUserAccount()}
           </Menu.Menu>
           {this.renderRightMenuItem()}
@@ -262,5 +265,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withApollo(
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComponent))
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(HeaderComponent)
+  )
 )

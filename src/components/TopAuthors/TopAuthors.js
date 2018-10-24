@@ -1,17 +1,12 @@
 import React, { Component } from "react"
-import {
-  Segment,
-  Header,
-  Item,
-  Label,
-  Image,
-  Pagination
-} from "semantic-ui-react"
+import { Segment, Header, Image, Grid, Pagination } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { APP_TOKEN } from "../../utils/constants"
 import gql from "graphql-tag"
 
 import defaultImage from "../../assets/user_default.png"
+
+import "./TopAuthors.css"
 
 const query = gql`
   query paginate($page: PaginationInput!) {
@@ -52,41 +47,44 @@ class TopAuthors extends Component {
           const { paginate } = data
 
           return (
-            <Segment>
-              <Header as="h1" style={{ fontSize: 24 }}>
-                Top Authors
-              </Header>
-              <Segment basic>
-                <Item.Group>
-                  {paginate.data.map((item, index) => (
-                    <Item key={index}>
+            <div className="top-authors-section">
+              <h5>Top Authors</h5>
+              <hr />
+              {paginate.data.map((item, index) => (
+                <Grid key={index}>
+                  <Grid.Row columns={2} stretched className="top-author-row">
+                    <Grid.Column width={12} className="name-column">
+                      <p>{item.name}</p>
+                      <small className="votes">
+                        <b>
+                          <span className="upvotes">
+                            <i className="fas fa-arrow-up" />
+                            {item.scoreDetails.upvotes}
+                          </span>
+                          <span className="downvotes">
+                            <i className="fas fa-arrow-down" />
+                            {item.scoreDetails.downvotes}
+                          </span>
+                        </b>
+                      </small>
+                    </Grid.Column>
+                    <Grid.Column width={4} className="image-column">
                       <Image
                         src={item.profileImageUrl || defaultImage}
                         width={50}
                         height={50}
                       />
-                      <Item.Content>
-                        <Item.Header>{` `}</Item.Header>
-                        <Item.Description>
-                          <Label color="teal">{item.name}</Label>
-                          <Label color="teal">{`${
-                            item.scoreDetails.upvotes
-                          } / -${item.scoreDetails.downvotes}`}</Label>
-                        </Item.Description>
-                      </Item.Content>
-                    </Item>
-                  ))}
-                </Item.Group>
-                <Pagination
-                  defaultActivePage={1}
-                  activePage={page}
-                  totalPages={paginate.total / limit}
-                  onPageChange={(e, data) =>
-                    this.handlePageChange(e, data, paginate.total / limit)
-                  }
-                />
-              </Segment>
-            </Segment>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row className="half-circle-row">
+                    <div className="half-circle">{index + 1}</div>
+                  </Grid.Row>
+                  <center>
+                    <hr />
+                  </center>
+                </Grid>
+              ))}
+            </div>
           )
         }}
       </Query>

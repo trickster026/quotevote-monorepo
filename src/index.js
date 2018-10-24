@@ -10,9 +10,6 @@ import { PersistGate } from "redux-persist/integration/react"
 import store, { persistor } from "./config/redux"
 import client from "./config/apollo"
 
-import "react-toastify/dist/ReactToastify.css"
-import "semantic-ui-css/semantic.min.css"
-
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
