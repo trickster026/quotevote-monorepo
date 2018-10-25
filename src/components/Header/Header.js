@@ -3,14 +3,14 @@ import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import {
-  Container,
-  Menu,
-  Search,
-  Dropdown,
   Button,
-  Image
+  Container,
+  Dropdown,
+  Image,
+  Menu,
+  Search
 } from "semantic-ui-react"
-import { ToastContainer, toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
@@ -21,6 +21,7 @@ import {
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
 import PropTypes from "prop-types"
+import "./Header.css"
 
 import headerImage from "../../assets/scoreBoard.png"
 
@@ -38,7 +39,7 @@ const search = gql`
 `
 
 class HeaderComponent extends PureComponent {
-  state = { search: "" }
+  state = { search: "Search" }
 
   static propTypes = {
     login: PropTypes.object.isRequired,
@@ -126,30 +127,55 @@ class HeaderComponent extends PureComponent {
     await toast.success("Successfully login as Guest!")
   }
 
+  renderProfileMenu = () => {
+    const { avatar } = this.props.login.user
+    return <Image avatar src={avatar} />
+  }
+
   renderUserAccount = () => {
     const { login } = this.props
     const userId =
       login && "user" in login ? login.user._id : "59b006a2dba5fb0027f48c76"
     return (
       <Menu.Item>
-        <Dropdown item text="ACCOUNT" pointing>
+        <Dropdown
+          trigger={this.renderProfileMenu()}
+          pointing="top right"
+          icon={null}
+        >
           <Dropdown.Menu>
             <Dropdown.Item
+              key="user"
+              icon="user"
               as={Link}
               name="account"
               to={`/user/${userId}`}
               onClick={e => window.location.reload()}
-            >
-              User Scoreboard
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item as={Link} name="settings" to={`/settings`}>
-              Settings
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item as={Link} name="sign-out" to={"/logout"}>
-              Logout
-            </Dropdown.Item>
+              text="Account"
+            />
+            <Dropdown.Item
+              key="add-content"
+              icon="add"
+              as={Link}
+              name="add-content"
+              to={this.props.routing.url + "/submit-content"}
+              text="Add Content"
+            />
+            <Dropdown.Item
+              as={Link}
+              name="settings"
+              to={`/settings`}
+              text="Settings"
+              icon="settings"
+            />
+            <Dropdown.Item
+              as={Link}
+              key="sign-out"
+              name="sign-out"
+              to={"/logout"}
+              text="Sign Out"
+              icon="sign out"
+            />
           </Dropdown.Menu>
         </Dropdown>
       </Menu.Item>
@@ -160,16 +186,25 @@ class HeaderComponent extends PureComponent {
     const { isLoading, value, results } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
-      <Menu.Menu position="right" stackable="true">
-        <Menu.Item>
-          <Button
-            as={Link}
-            name="user-content"
-            to={this.props.routing.url + "/submit-content"}
-            color="teal"
-          >
-            Create
-          </Button>
+      <Menu.Menu position="right" stackable="true" className="item">
+        <Menu.Item as={Link} name="home" to={"/home"} className="item-menu">
+          HOME
+        </Menu.Item>
+        <Menu.Item
+          as={Link}
+          name="top content"
+          to={"/top-content"}
+          className="item-menu"
+        >
+          TOP CONTENT
+        </Menu.Item>
+        <Menu.Item
+          as={Link}
+          name="trending content"
+          to={"/trending-content"}
+          className="item-menu"
+        >
+          TRENDING CONTENT
         </Menu.Item>
         <Menu.Item>
           <Search
@@ -181,6 +216,11 @@ class HeaderComponent extends PureComponent {
             value={value}
           />
         </Menu.Item>
+
+        <Menu.Item>
+          <Button circular color="orange" icon="bell" />
+        </Menu.Item>
+        {tokenValidator() && this.renderUserAccount()}
       </Menu.Menu>
     )
   }
@@ -215,32 +255,25 @@ class HeaderComponent extends PureComponent {
     return (
       <Menu
         attached="top"
-        color="grey"
+        color="black"
         size="huge"
         inverted
         stackable
         borderless
       >
-        <Container>
-          <Menu.Menu position="left">
-            <Menu.Item>
-              <Image src={headerImage} size="small" as={Link} to="/" />
-            </Menu.Item>
-            <Menu.Item as={Link} name="scoreboard" to={"/scoreboard"}>
-              SCOREBOARD
-            </Menu.Item>
-            <Menu.Item as={Link} name="top content" to={"/top-content"}>
-              TOP CONTENT
-            </Menu.Item>
-            {tokenValidator() && this.renderUserAccount()}
-          </Menu.Menu>
-          {this.renderRightMenuItem()}
-          <ToastContainer
-            position="bottom-left"
-            autoClose={2000}
-            closeOnClick
-          />
-        </Container>
+        <Menu.Menu position="left">
+          <Menu.Item>
+            <Image
+              floated="left"
+              src={headerImage}
+              size="medium"
+              as={Link}
+              to="/"
+            />
+          </Menu.Item>
+        </Menu.Menu>
+        {this.renderRightMenuItem()}
+        <ToastContainer position="bottom-left" autoClose={2000} closeOnClick />
       </Menu>
     )
   }

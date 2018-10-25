@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Segment, Header, Pagination, Grid } from "semantic-ui-react"
+import { Grid, Header, Pagination, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
@@ -91,7 +91,7 @@ class TopContents extends Component {
                             <Grid.Column>
                               <small>
                                 <i>
-                                  <a href="">{content.title}</a>
+                                  <a href="/scoreboard">{content.title}</a>
                                 </i>
                                 &nbsp; by{" "}
                                 {content.creator

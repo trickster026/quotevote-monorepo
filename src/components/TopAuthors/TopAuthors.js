@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Segment, Header, Image, Grid, Pagination } from "semantic-ui-react"
+import { Grid, Header, Image, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { APP_TOKEN } from "../../utils/constants"
 import gql from "graphql-tag"

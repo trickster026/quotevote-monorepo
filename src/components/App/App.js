@@ -34,6 +34,8 @@ class App extends Component {
           <Route exact path={"/"} component={Home} />
           <Route path={"/home"} component={Home} />
           <Route path={"/scoreboard"} component={Scoreboard} />
+          <Route path={"/top-content"} component={Scoreboard} />
+          <Route path={"/trending-content"} component={Scoreboard} />
           <Route path={"/create-scoreboard"} component={CreateNewScoreboard} />
           <Route path={"/login"} component={Login} />
           <Route path={"/logout"} component={Login} />

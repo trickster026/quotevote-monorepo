@@ -1,0 +1,10 @@
+.item-menu {
+  position: relative;
+  color: inherit;
+  padding: 15px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  line-height: 20px;
+}

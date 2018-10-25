@@ -45,7 +45,8 @@ class Subdomain extends Component {
         <Switch>
           <Route exact path={url} component={Home} />
           <Route path={url + "/home"} component={Home} />
-          <Route path={url + "/scoreboard"} component={Scoreboard} />
+          <Route path={url + "/top-content"} component={Scoreboard} />
+          <Route path={url + "/trending-content"} component={Scoreboard} />
           <Route
             path={url + "/create-scoreboard"}
             component={CreateNewScoreboard}
@@ -83,4 +84,7 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Subdomain)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Subdomain)
