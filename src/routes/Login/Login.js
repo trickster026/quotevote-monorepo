@@ -17,7 +17,7 @@ import {
 } from "../../actions/creators/loginActionCreator"
 
 export class Login extends PureComponent {
-  state = {}
+  state = { loading: false }
 
   static propTypes = {
     submit: func,
@@ -30,6 +30,7 @@ export class Login extends PureComponent {
 
   UNSAFE_componentWillMount() {
     if (this.props.location.pathname === "/logout") {
+      this.setState({ loading: false })
       this.props.logout(this.props.history)
     }
   }
@@ -46,6 +47,7 @@ export class Login extends PureComponent {
 
   handleFormSubmit = event => {
     if (event.key === "Enter") {
+      this.setState({ loading: true })
       this.handleSubmit(event)
     }
   }
@@ -58,6 +60,7 @@ export class Login extends PureComponent {
 
     loginFailed = loginFailed && errorMessage !== ""
 
+    const { loading } = this.state
     return (
       <Segment as={Container} basic>
         <Grid centered>
@@ -100,7 +103,8 @@ export class Login extends PureComponent {
                   fluid
                   size="large"
                   onClick={this.handleSubmit}
-                  loading={this.props.login.loading}
+                  disabled={loading}
+                  loading={loading}
                 >
                   Login
                 </Button>
@@ -129,4 +133,9 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default withApollo(connect(mapStateToProps, mapDispatchToProps)(Login))
+export default withApollo(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Login)
+)

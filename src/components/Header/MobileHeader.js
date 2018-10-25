@@ -26,7 +26,7 @@ class MobileHeader extends Component {
 
   render = () => {
     return (
-      <Menu attached="top" color="grey" size="huge" inverted borderless>
+      <Menu attached="top" color="black" size="huge" inverted borderless>
         <Menu.Item>
           <Image src={logo} height={30} />
         </Menu.Item>

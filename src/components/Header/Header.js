@@ -2,14 +2,7 @@ import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import {
-  Button,
-  Container,
-  Dropdown,
-  Image,
-  Menu,
-  Search
-} from "semantic-ui-react"
+import { Button, Dropdown, Image, Menu, Search } from "semantic-ui-react"
 import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
 
@@ -227,24 +220,29 @@ class HeaderComponent extends PureComponent {
 
   renderLoginMenuItem = () => {
     return (
-      <Menu.Item name="sign-in">
-        <Dropdown item text="LOGIN" pointing>
-          <Dropdown.Menu>
-            <Dropdown.Item
-              as={Link}
-              name="registered"
-              to={this.props.routing.url + "/login"}
-            >
-              Login as Registered User
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item name="guest" onClick={this.createGuestUser}>
-              Login as Guest User
-            </Dropdown.Item>
-            <Dropdown.Divider />
-          </Dropdown.Menu>
-        </Dropdown>
-      </Menu.Item>
+      <Menu.Menu position="right">
+        <Menu.Item name="sign-in">
+          <Dropdown item text="LOGIN" pointing="top right">
+            <Dropdown.Menu>
+              <Dropdown.Item
+                key="registered"
+                icon="user"
+                as={Link}
+                name="registered"
+                to={this.props.routing.url + "/login"}
+                text="Registered"
+              />
+              <Dropdown.Item
+                key="guest"
+                icon="user secret"
+                name="guest"
+                text="Guest"
+                onClick={this.createGuestUser}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+        </Menu.Item>
+      </Menu.Menu>
     )
   }
 
