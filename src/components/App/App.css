@@ -3,6 +3,11 @@
   font-family: "Raleway", sans-serif;
 }
 
+.app-contents {
+  margin-right: 50px;
+  margin-left: 50px;
+}
+
 .header-module {
   border-radius: 0% !important;
   background-color: #323c40 !important;

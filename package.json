@@ -48,7 +48,7 @@
     "redux-persist": "^5.7.0",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.82.3",
+    "semantic-ui-react": "^0.83.0",
     "subscriptions-transport-ws": "^0.9.14"
   },
   "lint-staged": {
@@ -80,7 +80,7 @@
     "@storybook/addon-notes": "^3.4.3",
     "@storybook/addon-viewport": "^3.4.6",
     "@storybook/addons": "^3.4.2",
-    "@storybook/react": "^3.4.2",
+    "@storybook/react": "^4.0.0-alpha.24",
     "apollo-storybook-react": "^0.1.2"
   },
   "browserslist": {

@@ -22,6 +22,7 @@ import PrivateRoute from "../PrivateRoute"
 import "react-toastify/dist/ReactToastify.css"
 import "semantic-ui-css/semantic.min.css"
 import "@fortawesome/fontawesome-free/css/all.css"
+import { Container } from "semantic-ui-react"
 
 import "./App.css"
 
@@ -30,29 +31,34 @@ class App extends Component {
     return (
       <BasicLayout>
         <GlobalHeader />
-        <Switch>
-          <Route exact path={"/"} component={Home} />
-          <Route path={"/home"} component={Home} />
-          <Route path={"/scoreboard"} component={Scoreboard} />
-          <Route path={"/top-content"} component={Scoreboard} />
-          <Route path={"/trending-content"} component={Scoreboard} />
-          <Route path={"/create-scoreboard"} component={CreateNewScoreboard} />
-          <Route path={"/login"} component={Login} />
-          <Route path={"/logout"} component={Login} />
-          <Route path={"/signup"} component={Signup} />
-          <Route path={"/terms"} component={Terms} />
-          <Route path={"/invite"} component={RequestInvite} />
-          <Route path={"/shareables/:code"} component={Shareables} />
-          <Route exact path={"/boards/:domain"} component={Boards} />
-          <PrivateRoute path={"/submit-content"} component={SubmitContent} />
-          <PrivateRoute
-            path={"/boards/:domain/content/:contentId"}
-            component={Content}
-          />
-          <PrivateRoute path={"/user/:userId"} component={User} />
-          <PrivateRoute path={"/settings"} component={AppSettings} />
-          {/* <Route path={"/:username"} component={User} /> */}
-        </Switch>
+        <Container>
+          <Switch>
+            <Route exact path={"/"} component={Home} />
+            <Route path={"/home"} component={Home} />
+            <Route path={"/scoreboard"} component={Scoreboard} />
+            <Route path={"/top-content"} component={Scoreboard} />
+            <Route path={"/trending-content"} component={Scoreboard} />
+            <Route
+              path={"/create-scoreboard"}
+              component={CreateNewScoreboard}
+            />
+            <Route path={"/login"} component={Login} />
+            <Route path={"/logout"} component={Login} />
+            <Route path={"/signup"} component={Signup} />
+            <Route path={"/terms"} component={Terms} />
+            <Route path={"/invite"} component={RequestInvite} />
+            <Route path={"/shareables/:code"} component={Shareables} />
+            <Route exact path={"/boards/:domain"} component={Boards} />
+            <PrivateRoute path={"/submit-content"} component={SubmitContent} />
+            <PrivateRoute
+              path={"/boards/:domain/content/:contentId"}
+              component={Content}
+            />
+            <PrivateRoute path={"/user/:userId"} component={User} />
+            <PrivateRoute path={"/settings"} component={AppSettings} />
+            {/* <Route path={"/:username"} component={User} /> */}
+          </Switch>
+        </Container>
       </BasicLayout>
     )
   }

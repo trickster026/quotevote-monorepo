@@ -2,7 +2,14 @@ import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
-import { Button, Dropdown, Image, Menu, Search } from "semantic-ui-react"
+import {
+  Button,
+  Dropdown,
+  Image,
+  Menu,
+  Search,
+  Container
+} from "semantic-ui-react"
 import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
 
@@ -144,7 +151,7 @@ class HeaderComponent extends PureComponent {
               name="account"
               to={`/user/${userId}`}
               onClick={e => window.location.reload()}
-              text="Account"
+              text="Profile"
             />
             <Dropdown.Item
               key="add-content"
@@ -259,19 +266,25 @@ class HeaderComponent extends PureComponent {
         stackable
         borderless
       >
-        <Menu.Menu position="left">
-          <Menu.Item>
-            <Image
-              floated="left"
-              src={headerImage}
-              size="medium"
-              as={Link}
-              to="/"
-            />
-          </Menu.Item>
-        </Menu.Menu>
-        {this.renderRightMenuItem()}
-        <ToastContainer position="bottom-left" autoClose={2000} closeOnClick />
+        <Container>
+          <Menu.Menu position="left">
+            <Menu.Item>
+              <Image
+                floated="left"
+                src={headerImage}
+                size="medium"
+                as={Link}
+                to="/"
+              />
+            </Menu.Item>
+          </Menu.Menu>
+          {this.renderRightMenuItem()}
+          <ToastContainer
+            position="bottom-left"
+            autoClose={2000}
+            closeOnClick
+          />
+        </Container>
       </Menu>
     )
   }

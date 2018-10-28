@@ -8,6 +8,9 @@ import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
 import UserText from "../../components/UserText/UserText"
 import VoteHistory from "../../components/VoteHistory/VoteHistory"
 import QuoteWall from "../../components/QuoteWall/QuoteWall"
+import ProfileHeader from "../../components/UserProfile/ProfileHeader"
+import UserPlaceHolder from "../../components/UserProfile/UserPlaceHolder/UserPlaceHolder"
+import "./User.css"
 
 const query = gql`
   query user($userId: String!, $creatorId: String!) {
@@ -59,7 +62,7 @@ class User extends Component {
         }}
       >
         {({ loading, error, data }) => {
-          if (loading) return <div>Loading...</div>
+          if (loading) return <UserPlaceHolder />
           if (error) return <div>Error: {error.message}</div>
 
           const { user, contents } = data
@@ -72,29 +75,30 @@ class User extends Component {
 
           return (
             <Segment as={Container} basic>
-              <Grid>
-                <Grid.Row columns={2}>
-                  <Grid.Column>
-                    <CreatorPanel
-                      creator={user.name}
-                      score={user.scoreDetails}
-                      image={user.avatar}
-                    />
-                  </Grid.Column>
-                  <Grid.Column>
-                    <UserText texts={contentTitles} />
-                  </Grid.Column>
-                </Grid.Row>
-
-                <Grid.Row columns={2}>
-                  <Grid.Column>
-                    <VoteHistory history={user.history} />
-                  </Grid.Column>
-                  <Grid.Column>
-                    <QuoteWall quotes={user.quotes} />
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              <div className="profile-content">
+                <ProfileHeader user={user} />
+                <Grid contained>
+                  <Grid.Row columns={2}>
+                    <Grid.Column floated="left" width={6}>
+                      <VoteHistory history={user.history} />
+                    </Grid.Column>
+                    <Grid.Column floated="right" width={10}>
+                      <Grid>
+                        <Grid.Row>
+                          <Grid.Column>
+                            <UserText texts={contentTitles} />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column>
+                            <QuoteWall quotes={user.quotes} />
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </div>
             </Segment>
           )
         }}
