@@ -6,7 +6,12 @@ const UserPlaceHolder = () => (
   <Segment
     as={Container}
     basic
-    style={{ backgroundColor: "white", margin: "25px" }}
+    style={{
+      backgroundColor: "white",
+      margin: "25px",
+      borderTopRightRadius: "25px",
+      borderTopLeftRadius: "25px"
+    }}
   >
     <Grid>
       <Grid.Row>

@@ -1,10 +1,8 @@
 import React, { Component } from "react"
-import { Segment, Grid, Container } from "semantic-ui-react"
+import { Container, Grid, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
-
-import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
 import UserText from "../../components/UserText/UserText"
 import VoteHistory from "../../components/VoteHistory/VoteHistory"
 import QuoteWall from "../../components/QuoteWall/QuoteWall"
@@ -80,7 +78,7 @@ class User extends Component {
                 <Grid contained>
                   <Grid.Row columns={2}>
                     <Grid.Column floated="left" width={6}>
-                      <VoteHistory history={user.history} />
+                      <VoteHistory history={user.history} loading={false} />
                     </Grid.Column>
                     <Grid.Column floated="right" width={10}>
                       <Grid>

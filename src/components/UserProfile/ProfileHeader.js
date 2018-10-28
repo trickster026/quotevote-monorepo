@@ -5,10 +5,14 @@ import "./ProfileHeader.css"
 
 function ProfileHeader(props) {
   const { user } = props
-  const scoreValues = `Score ${user.scoreDetails.upvotes -
-    user.scoreDetails.downvotes} (${user.scoreDetails.upvotes} / -${
-    user.scoreDetails.downvotes
-  })`
+  let scoreValues = "Score 8 (10 / -2)"
+  if (user) {
+    scoreValues = `Score ${user.scoreDetails.upvotes -
+      user.scoreDetails.downvotes} (${user.scoreDetails.upvotes} / -${
+      user.scoreDetails.downvotes
+    })`
+  }
+
   return (
     <div>
       <Grid columns={16} className="profile-header">
