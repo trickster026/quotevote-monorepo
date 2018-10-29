@@ -76,7 +76,7 @@ class User extends Component {
             <Segment as={Container} basic>
               <div className="profile-content">
                 <ProfileHeader user={user} />
-                <Grid contained>
+                <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column floated="left" width={6}>
                       <VoteHistory history={user.history} loading={false} />
@@ -86,7 +86,6 @@ class User extends Component {
                         <Grid.Row>
                           <Grid.Column>
                             <Followers />
-                            {/*<UserText texts={contentTitles} />*/}
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>

@@ -1,10 +1,10 @@
 import React, { Component } from "react"
-import { Divider, Header, Grid, Image } from "semantic-ui-react"
+import { Grid, Header, Image } from "semantic-ui-react"
 import faker from "faker"
 import "./Followers.css"
 import _ from "lodash"
 
-const columns = _.times(6, i => (
+const columns = _.times(12, i => (
   <Grid.Column key={i}>
     <div align="center">
       <Image src={faker.internet.avatar()} circular />
@@ -18,7 +18,6 @@ const columns = _.times(6, i => (
 class Followers extends Component {
   renderQuotes = () => {
     return <Grid columns={6}>{columns}</Grid>
-    return <div>No quotes available</div>
   }
 
   render = () => {

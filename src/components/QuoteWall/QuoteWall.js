@@ -54,6 +54,7 @@ class QuoteWall extends Component {
         </Header>
         <Divider />
         {this.renderQuotes()}
+        <Divider />
       </div>
     )
   }
