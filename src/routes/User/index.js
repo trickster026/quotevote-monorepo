@@ -9,6 +9,7 @@ import QuoteWall from "../../components/QuoteWall/QuoteWall"
 import ProfileHeader from "../../components/UserProfile/ProfileHeader"
 import UserPlaceHolder from "../../components/UserProfile/UserPlaceHolder/UserPlaceHolder"
 import "./User.css"
+import Followers from "../../components/Followers/Followers"
 
 const query = gql`
   query user($userId: String!, $creatorId: String!) {
@@ -84,12 +85,18 @@ class User extends Component {
                       <Grid>
                         <Grid.Row>
                           <Grid.Column>
-                            <UserText texts={contentTitles} />
+                            <Followers />
+                            {/*<UserText texts={contentTitles} />*/}
                           </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
                           <Grid.Column>
                             <QuoteWall quotes={user.quotes} />
+                          </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row>
+                          <Grid.Column>
+                            <UserText texts={contentTitles} />
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
