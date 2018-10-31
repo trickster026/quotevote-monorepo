@@ -14,7 +14,6 @@
     "axios": "^0.17.1",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint": "4.19.1",
     "faker": "^4.1.0",
     "graphql": "^0.11.7",
     "graphql-tag": "^2.5.0",
@@ -37,7 +36,7 @@
     "react-onclickoutside": "^6.7.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "2.0.0-next.a671462c",
+    "react-scripts": "^2.1.0",
     "react-sizes": "^1.0.4",
     "react-spotify-player": "^1.0.4",
     "react-test-renderer": "^16.2.0",
@@ -45,6 +44,7 @@
     "react-toastify": "^4.0.0-rc.4",
     "react-window-resize-listener": "^1.1.0",
     "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.5",
     "redux-persist": "^5.7.0",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.2.12",
@@ -85,14 +85,26 @@
   },
   "browserslist": {
     "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
+      "> .01%",
+      "not dead",
+      "last 3 Chrome versions",
+      "last 3 Firefox versions",
+      "last 3 Safari versions",
+      "last 2 Edge versions",
+      "last 1 version",
+      "Firefox ESR",
+      "not ie <= 11"
     ],
     "production": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
+      "> .01%",
+      "not dead",
+      "last 3 Chrome versions",
+      "last 3 Firefox versions",
+      "last 3 Safari versions",
+      "last 2 Edge versions",
+      "last 1 version",
+      "Firefox ESR",
+      "not ie <= 11"
     ]
   }
 }
