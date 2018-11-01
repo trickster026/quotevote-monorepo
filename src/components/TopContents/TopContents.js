@@ -97,12 +97,26 @@ class TopContents extends Component {
                                 {content.creator
                                   ? content.creator.name
                                   : "Unknown Author"}{" "}
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{" "}
-                                {moment(content.created).format("hh:mm:ss")}{" "}
-                                &nbsp;&nbsp;&nbsp;&nbsp;
                               </small>
                             </Grid.Column>
                           </Grid.Row>
+                        </div>
+                        <div className="top-content-stamps">
+                          <div className="top-content-date-stamp">
+                            <i className="fas fa-clock" />
+                            <small>
+                              &nbsp;&nbsp;
+                              {moment(content.created).format("hh:mm:ss")}
+                            </small>
+                          </div>
+                          <div className="top-content-icon-stamps">
+                            <i className="fa fa-heart" />
+                            &nbsp;
+                            <i className="fab fa-facebook" />
+                            &nbsp;
+                            <i className="fas fa-quote-right" />
+                            &nbsp;
+                          </div>
                         </div>
                       </div>
                     </Grid.Column>

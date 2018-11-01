@@ -44,6 +44,16 @@
   color: #414141;
 }
 
+.top-contents-section .top-content {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.24);
+  font-size: 0.85em;
+  border-radius: 10px;
+  margin: 15px;
+  margin-left: 10px !important;
+  margin-right: 0px !important;
+  margin-bottom: 50px;
+}
+
 .top-contents-section .top-content-text {
   color: #212121;
   padding: 35px;
@@ -111,4 +121,30 @@
   color: #009688;
   text-decoration: none;
   background-color: transparent;
+}
+
+.top-contents-section .top-content-stamps {
+  margin-left: 15px;
+  color: #e0e0e0;
+  margin-bottom: 25px;
+  margin-top: 10px;
+  font-size: 1.8em !important;
+}
+
+.top-contents-section .top-content-stamps .top-content-date-stamp {
+  float: left;
+  color: #e0e0e0;
+  display: flex;
+  align-items: center;
+}
+
+.top-contents-section .top-content-date-stamp .fa-clock {
+  font-size: 0.9em;
+}
+
+.top-contents-section .top-content-icon-stamps {
+  float: right;
+  margin-right: 7.5px;
+  color: #e0e0e0;
+  margin-bottom: 25px;
 }
