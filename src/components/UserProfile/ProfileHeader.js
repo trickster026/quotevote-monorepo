@@ -1,8 +1,13 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
-import { connect } from "react-redux"
-import { withRouter } from "react-router-dom"
-import { Grid, Image, Search, Button, Container } from "semantic-ui-react"
+import {
+  Grid,
+  Image,
+  Search,
+  Button,
+  Container,
+  Modal
+} from "semantic-ui-react"
 import faker from "faker"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
@@ -82,7 +87,7 @@ class ProfileHeader extends PureComponent {
   }
 
   render() {
-    const { user } = this.props
+    const { user, texts } = this.props
     const { value, results, isLoading, noResult } = this.state
     let scoreValues = "Score 8 (10 / -2)"
     if (user) {
@@ -158,8 +163,4 @@ class ProfileHeader extends PureComponent {
   }
 }
 
-const mapStateToProps = state => {
-  return state
-}
-
-export default withApollo(withRouter(connect(mapStateToProps)(ProfileHeader)))
+export default withApollo(ProfileHeader)
