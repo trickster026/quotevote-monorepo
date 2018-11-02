@@ -3,7 +3,6 @@ import { Container, Grid, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
-import UserText from "../../components/UserText/UserText"
 import VoteHistory from "../../components/VoteHistory/VoteHistory"
 import QuoteWall from "../../components/QuoteWall/QuoteWall"
 import ProfileHeader from "../../components/UserProfile/ProfileHeader"
@@ -75,7 +74,7 @@ class User extends Component {
           return (
             <Segment as={Container} basic>
               <div className="profile-content">
-                <ProfileHeader user={user} />
+                <ProfileHeader user={user} texts={contentTitles} />
                 <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column floated="left" width={6}>
@@ -91,11 +90,6 @@ class User extends Component {
                         <Grid.Row>
                           <Grid.Column>
                             <QuoteWall quotes={user.quotes} />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row>
-                          <Grid.Column>
-                            <UserText texts={contentTitles} />
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>

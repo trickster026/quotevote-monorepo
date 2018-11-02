@@ -7,6 +7,7 @@ import faker from "faker"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
 import "./ProfileHeader.css"
+import UserText from "../UserText/UserText"
 
 const search = gql`
   query search($text: String!) {
@@ -130,9 +131,20 @@ class ProfileHeader extends PureComponent {
         </Grid>
         <Container className="button-group" textAlign="center">
           <Button basic>INFO</Button>
-          <Button basic color="green">
-            POSTED CONTENT
-          </Button>
+          <Modal
+            trigger={
+              <Button basic color="green">
+                POSTED CONTENT
+              </Button>
+            }
+          >
+            <Modal.Header>Posted Contents</Modal.Header>
+            <Modal.Content image>
+              <Modal.Description>
+                <UserText texts={texts} />
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
           <Button basic color="teal">
             SEND MESSAGE
           </Button>
