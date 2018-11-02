@@ -6,8 +6,8 @@ import { Grid, Image, Search, Button, Container } from "semantic-ui-react"
 import faker from "faker"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
-import "./ProfileHeader.css"
 import UserText from "../UserText/UserText"
+import "./ProfileHeader.css"
 
 const search = gql`
   query search($text: String!) {
