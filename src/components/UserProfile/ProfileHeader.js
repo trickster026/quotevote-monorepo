@@ -20,7 +20,21 @@ const search = gql`
       _id
       name
       avatar
-      email
+      scoreDetails {
+        upvotes
+        downvotes
+      }
+      history
+      quotes {
+        quote
+        content {
+          title
+        }
+        creator {
+          name
+          profileImageUrl
+        }
+      }
     }
   }
 `
@@ -42,6 +56,9 @@ class ProfileHeader extends PureComponent {
       this.setState({ value: "Search Profile", isLoading: false })
     }
   }
+  handleResultSelect = (e, { result }) => {
+    this.props.searchResultSelect(result)
+  }
   handleSearchChange = async (e, { value }) => {
     this.setState({ isLoading: true, value })
     if (value.length === 0) {
@@ -61,9 +78,9 @@ class ProfileHeader extends PureComponent {
             users: {
               name: "Users",
               results: searchCreator.map(creator => ({
+                ...creator,
                 title: creator.name,
-                image: creator.avatar,
-                description: creator.email
+                image: creator.avatar
               }))
             }
           }
@@ -90,7 +107,7 @@ class ProfileHeader extends PureComponent {
     const { user, texts } = this.props
     const { value, results, isLoading, noResult } = this.state
     let scoreValues = "Score 8 (10 / -2)"
-    if (user) {
+    if (user.scoreDetails) {
       scoreValues = `Score ${user.scoreDetails.upvotes -
         user.scoreDetails.downvotes} (${user.scoreDetails.upvotes} / -${
         user.scoreDetails.downvotes
@@ -124,12 +141,13 @@ class ProfileHeader extends PureComponent {
               <Search
                 category
                 loading={isLoading}
-                onFocus={this.handleFocus}
-                onBlur={this.handleBlur}
-                onSearchChange={this.handleSearchChange}
                 value={value}
                 results={results}
                 showNoResults={noResult}
+                onFocus={this.handleFocus}
+                onBlur={this.handleBlur}
+                onSearchChange={this.handleSearchChange}
+                onResultSelect={this.handleResultSelect}
               />
             </Grid.Column>
           </Grid.Row>

@@ -52,6 +52,7 @@ class VoteHistory extends Component {
           </Item.Group>
         </div>
       )
+    return <div>No vote history available</div>
   }
 }
 

@@ -46,11 +46,19 @@ const query = gql`
 `
 
 class User extends Component {
+  state = {
+    searchedUser: false
+  }
   static defaultProps = {
     userId: "none"
   }
 
+  searchResultSelect = searchedUser => {
+    this.setState({ searchedUser })
+  }
+
   render = () => {
+    const { searchedUser } = this.state
     return (
       <Query
         query={query}
@@ -74,11 +82,20 @@ class User extends Component {
           return (
             <Segment as={Container} basic>
               <div className="profile-content">
-                <ProfileHeader user={user} texts={contentTitles} />
+                <ProfileHeader
+                  user={searchedUser ? searchedUser : user}
+                  texts={contentTitles}
+                  searchResultSelect={this.searchResultSelect}
+                />
                 <Grid>
                   <Grid.Row columns={2}>
                     <Grid.Column floated="left" width={6}>
-                      <VoteHistory history={user.history} loading={false} />
+                      <VoteHistory
+                        history={
+                          searchedUser ? searchedUser.history : user.history
+                        }
+                        loading={false}
+                      />
                     </Grid.Column>
                     <Grid.Column floated="right" width={10}>
                       <Grid>
@@ -89,7 +106,11 @@ class User extends Component {
                         </Grid.Row>
                         <Grid.Row>
                           <Grid.Column>
-                            <QuoteWall quotes={user.quotes} />
+                            <QuoteWall
+                              quotes={
+                                searchedUser ? searchedUser.quotes : user.quotes
+                              }
+                            />
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
