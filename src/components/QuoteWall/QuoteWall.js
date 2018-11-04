@@ -1,11 +1,11 @@
-import React, { Component } from "react"
-import { Icon, Header, Item, Image, Divider } from "semantic-ui-react"
-import defaultImage from "../../assets/image.png"
-import "./QuouteWall.css"
+import React, { Component } from "react";
+import { Icon, Header, Item, Image, Divider } from "semantic-ui-react";
+import defaultImage from "../../assets/image.png";
+import "./QuouteWall.css";
 
 class QuoteWall extends Component {
   renderQuotes = () => {
-    const { quotes } = this.props
+    const { quotes } = this.props;
     if (quotes.length > 0)
       return (
         <Item.Group divided>
@@ -28,10 +28,10 @@ class QuoteWall extends Component {
                       marginLeft: "10px"
                     }}
                   >
-                    <Icon name="heart" floated="right" />
-                    <Icon name="smile" floated="right" />
-                    <Icon name="plus" floated="right" />
-                    <Icon name="minus" floated="right" />
+                    <Icon name="heart" floated="right"/>
+                    <Icon name="smile" floated="right"/>
+                    <Icon name="plus" floated="right"/>
+                    <Icon name="minus" floated="right"/>
                     {`By ${quote.creator.name}`}
                   </span>
                 </Item.Extra>
@@ -39,9 +39,9 @@ class QuoteWall extends Component {
             </Item>
           ))}
         </Item.Group>
-      )
-    return <div>No quotes available</div>
-  }
+      );
+    return <div> No quotes available</div>;
+  };
 
   render = () => {
     return (
@@ -52,12 +52,12 @@ class QuoteWall extends Component {
         >
           Quote Wall
         </Header>
-        <Divider />
+        <Divider/>
         {this.renderQuotes()}
-        <Divider />
+        <Divider/>
       </div>
-    )
-  }
+    );
+  };
 }
 
-export default QuoteWall
+export default QuoteWall;

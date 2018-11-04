@@ -1,7 +1,15 @@
 .profile-content {
-  background-color: white;
-  padding: 15px 15px 30px;
-  margin-top: 25px;
-  border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
+    background-color: white;
+    padding: 15px 15px 30px;
+    margin-top: 25px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+}
+
+.row-visible {
+    visibility: visible;
+}
+
+.row-hidden {
+    visibility: hidden;
 }

@@ -150,7 +150,6 @@ class HeaderComponent extends PureComponent {
               as={Link}
               name="account"
               to={`/user/${userId}`}
-              onClick={e => window.location.reload()}
               text="Profile"
             />
             <Dropdown.Item
