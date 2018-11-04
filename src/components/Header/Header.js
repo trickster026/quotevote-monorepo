@@ -149,7 +149,7 @@ class HeaderComponent extends PureComponent {
 
   renderProfileMenu = () => {
     const { avatar } = this.props.login.user
-    return <Image avatar src={avatar} />
+    return <Image avatar src={avatar} size="mini" />
   }
 
   renderUserAccount = () => {
@@ -269,7 +269,15 @@ class HeaderComponent extends PureComponent {
 
     if (pathName === this.props.routing.url + "/invite") return ""
     return (
-      <Menu fixed="top" color="black" size="huge" inverted stackable borderless>
+      <Menu
+        fixed="top"
+        color="black"
+        size="small"
+        inverted
+        stackable
+        borderless
+        compact
+      >
         <Container>
           <Menu.Menu position="left">
             <Menu.Item>
