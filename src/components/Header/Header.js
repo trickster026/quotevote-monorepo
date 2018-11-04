@@ -217,14 +217,6 @@ class HeaderComponent extends PureComponent {
         >
           TOP CONTENT
         </Menu.Item>
-        <Menu.Item
-          as={Link}
-          name="trending content"
-          to={"/trending-content"}
-          className="item-menu"
-        >
-          TRENDING CONTENT
-        </Menu.Item>
         <Menu.Item>
           <Search
             category
@@ -277,14 +269,7 @@ class HeaderComponent extends PureComponent {
 
     if (pathName === this.props.routing.url + "/invite") return ""
     return (
-      <Menu
-        attached="top"
-        color="black"
-        size="huge"
-        inverted
-        stackable
-        borderless
-      >
+      <Menu fixed="top" color="black" size="huge" inverted stackable borderless>
         <Container>
           <Menu.Menu position="left">
             <Menu.Item>

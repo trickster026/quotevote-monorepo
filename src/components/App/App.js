@@ -31,13 +31,12 @@ class App extends Component {
     return (
       <BasicLayout>
         <GlobalHeader />
-        <Container>
+        <Container style={{ marginTop: "8em" }}>
           <Switch>
             <Route exact path={"/"} component={Home} />
             <Route path={"/home"} component={Home} />
             <Route path={"/scoreboard"} component={Scoreboard} />
             <Route path={"/top-content"} component={Scoreboard} />
-            <Route path={"/trending-content"} component={Scoreboard} />
             <Route
               path={"/create-scoreboard"}
               component={CreateNewScoreboard}

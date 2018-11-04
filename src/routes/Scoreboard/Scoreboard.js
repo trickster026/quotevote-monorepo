@@ -12,34 +12,41 @@ class Scoreboard extends PureComponent {
   render = () => {
     return (
       <Container as={Container} className="scoreboard-rankings-section">
-        <Grid>
-          <Grid.Row columns={1} className="scoreboard-rankings-header-row">
-            <Grid.Column
-              width={16}
-              className="scoreboard-rankings-header-column"
-            >
-              <div className="scoreboard-rankings-header">
-                <center>
-                  <h3>Scoreboard Rankings</h3>
-                </center>
-                <div className="scoreboard-rankings-icons">
-                  <i className="fas fa-sort-amount-down fa-2x" />
-                  &nbsp;&nbsp;
-                  <i className="fas fa-search fa-2x" />
+        <div
+          style={{
+            marginTop: "50px",
+            padding: "15px 15px 30px"
+          }}
+        >
+          <Grid>
+            <Grid.Row columns={1} className="scoreboard-rankings-header-row">
+              <Grid.Column
+                width={16}
+                className="scoreboard-rankings-header-column"
+              >
+                <div className="scoreboard-rankings-header">
+                  <center>
+                    <h3>Scoreboard Rankings</h3>
+                  </center>
+                  <div className="scoreboard-rankings-icons">
+                    <i className="fas fa-sort-amount-down fa-2x" />
+                    &nbsp;&nbsp;
+                    <i className="fas fa-search fa-2x" />
+                  </div>
                 </div>
-              </div>
-            </Grid.Column>
-          </Grid.Row>
+              </Grid.Column>
+            </Grid.Row>
 
-          <Grid.Row columns={2} stretched className="top-row">
-            <Grid.Column width={12} className="top-content-column">
-              <TopContents />
-            </Grid.Column>
-            <Grid.Column width={4} className="top-authors-column">
-              <TopAuthors />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+            <Grid.Row columns={2} stretched className="top-row">
+              <Grid.Column width={12} className="top-content-column">
+                <TopContents />
+              </Grid.Column>
+              <Grid.Column width={4} className="top-authors-column">
+                <TopAuthors />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </div>
       </Container>
     )
   }
