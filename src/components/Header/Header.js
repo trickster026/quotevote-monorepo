@@ -12,6 +12,7 @@ import {
 } from "semantic-ui-react"
 import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
+import $ from "jquery"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
 import {
@@ -23,7 +24,7 @@ import { APP_TOKEN } from "../../utils/constants"
 import PropTypes from "prop-types"
 import "./Header.css"
 
-import headerImage from "../../assets/scoreBoard.png"
+require("../../assets/jquery/jquery.splitflap")
 
 const search = gql`
   query search($text: String!) {
@@ -45,6 +46,25 @@ class HeaderComponent extends PureComponent {
     login: PropTypes.object.isRequired,
     client: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired
+  }
+
+  componentDidMount() {
+    $(document).ready(function() {
+      var ratio = 0.4
+      $(".logoflap").splitFlap({
+        image: require("../../assets/chars.png"),
+        charsMap: "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#",
+        charSubstitute: " ",
+        speed: 25,
+        speedVariation: 25,
+        text: "",
+        textInit: "",
+        autoplay: true,
+        charWidth: 50 * ratio,
+        charHeight: 100 * ratio,
+        imageSize: 2500 * ratio + "px " + 100 * ratio + "px"
+      })
+    })
   }
 
   UNSAFE_componentWillMount = () => {
@@ -268,13 +288,9 @@ class HeaderComponent extends PureComponent {
         <Container>
           <Menu.Menu position="left">
             <Menu.Item>
-              <Image
-                floated="left"
-                src={headerImage}
-                size="medium"
-                as={Link}
-                to="/"
-              />
+              <Image floated="left" size="medium" as={Link} to="/">
+                <div className="logoflap">SCOREBOARD</div>
+              </Image>
             </Menu.Item>
           </Menu.Menu>
           {this.renderRightMenuItem()}
