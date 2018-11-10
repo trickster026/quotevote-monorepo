@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
 import { BasicLayout } from "../Layouts"
 import { GlobalHeader } from "../Header"
+import Footer from "../Footer/Footer"
 import {
   Home,
   CreateNewScoreboard,
@@ -28,6 +29,9 @@ import "./App.css"
 
 class App extends Component {
   render() {
+    const url = window.location.href
+    const startChar = url.indexOf("/", 8)
+    const path = url.substr(startChar, url.length)
     return (
       <BasicLayout>
         <GlobalHeader />
@@ -58,6 +62,11 @@ class App extends Component {
             {/* <Route path={"/:username"} component={User} /> */}
           </Switch>
         </Container>
+        {console.log("paths", path)}
+        {path !== "/login" &&
+          path !== "/logout" &&
+          path !== "/submit-content" &&
+          path !== "/invite" && <Footer />}
       </BasicLayout>
     )
   }

@@ -49,13 +49,13 @@ class TopAuthors extends Component {
                 <hr />
                 <Grid>
                   <Grid.Row columns={2} stretched className="top-author-row">
-                    <Grid.Column width={12} className="name-column">
+                    <Grid.Column width={14} className="name-column">
                       <p>Author's Name</p>
                       <Placeholder>
                         <Placeholder.Line />
                       </Placeholder>
                     </Grid.Column>
-                    <Grid.Column width={4} className="image-column">
+                    <Grid.Column width={2} className="image-column">
                       <Placeholder>
                         <Placeholder.Image />
                       </Placeholder>
@@ -80,7 +80,7 @@ class TopAuthors extends Component {
               {paginate.data.map((item, index) => (
                 <Grid key={index}>
                   <Grid.Row columns={2} stretched className="top-author-row">
-                    <Grid.Column width={12} className="name-column">
+                    <Grid.Column width={14} className="name-column">
                       <p>{item.name}</p>
                       <small className="votes">
                         <b>
@@ -95,7 +95,7 @@ class TopAuthors extends Component {
                         </b>
                       </small>
                     </Grid.Column>
-                    <Grid.Column width={4} className="image-column">
+                    <Grid.Column width={2} className="image-column">
                       <Image
                         src={item.profileImageUrl || defaultImage}
                         width={50}
