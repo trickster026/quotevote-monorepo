@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
-import { Segment, Button, Image, Header, Label } from "semantic-ui-react"
-import FlexView from "react-flexview"
+import { Header, Icon, Image, Label, Placeholder } from "semantic-ui-react"
 import PropTypes from "prop-types"
+import "./CreatorPanel.css"
 
 class CreatorPanel extends Component {
   static propTypes = {
@@ -11,7 +11,8 @@ class CreatorPanel extends Component {
       downvotes: PropTypes.number
     }),
     image: PropTypes.string,
-    enableFollow: PropTypes.bool
+    enableFollow: PropTypes.bool,
+    loading: PropTypes.bool
   }
 
   static defaultProps = {
@@ -26,25 +27,69 @@ class CreatorPanel extends Component {
   }
 
   renderInformation = () => {
-    const { enableFollow, creator, score } = this.props
-    if (enableFollow) {
-      const scoreValues = `Score ${score.upvotes - score.downvotes} (${
-        score.upvotes
-      } / -${score.downvotes})`
+    const { enableFollow, creator, score, loading } = this.props
+    if (loading) {
       return (
         <Fragment>
-          <Header style={{ fontSize: 36, marginTop: 0, marginRight: 10 }}>
-            {creator}
-          </Header>
-          <Label size="large" color="teal" style={{ marginRight: 10 }}>
-            {scoreValues}
-          </Label>
-          <Button size="mini" basic color="teal">
-            Follow
-          </Button>
+          <div className="user-info">
+            <Placeholder>
+              <Placeholder.Header image />
+            </Placeholder>
+          </div>
         </Fragment>
       )
     }
+
+    if (enableFollow) {
+      const scoreValues = `# ${score.upvotes - score.downvotes}`
+      return (
+        <Fragment>
+          <div className="user-info">
+            <div
+              style={{
+                fontSize: 36,
+                marginTop: 20,
+                color: "white",
+                fontFamily: "Raleway, sans-serif",
+                textAlign: "right"
+              }}
+            >
+              {creator}
+            </div>
+            <div
+              style={{
+                fontFamily: "Raleway, sans-serif",
+                marginTop: 5,
+                textAlign: "right"
+              }}
+            >
+              <small>Hiphop Scoreboard</small>
+            </div>
+
+            <Label circular color="black">
+              {scoreValues}
+            </Label>
+            <div className="user-header-votes">
+              <span style={{ color: "darkgreen", margin: 5 }}>
+                +{score.upvotes}
+              </span>
+              <span style={{ color: "darkred", margin: 5 }}>
+                {" "}
+                -{score.downvotes}
+              </span>
+            </div>
+
+            <Icon
+              style={{ marginLeft: "10px" }}
+              color="white"
+              name="user plus"
+              size="small"
+            />
+          </div>
+        </Fragment>
+      )
+    }
+
     return (
       <Header style={{ fontSize: 26, marginTop: 0 }}>
         {creator}
@@ -58,19 +103,23 @@ class CreatorPanel extends Component {
   }
 
   render = () => {
-    const { image } = this.props
+    const { image, loading } = this.props
     return (
-      <Segment style={{ paddingTop: 0, paddingBottom: 0 }}>
-        <FlexView vAlignContent="center">
-          <Image
-            src={image}
-            width={100}
-            height={100}
-            style={{ marginRight: 10 }}
-          />
+      <React.Fragment>
+        <div className="user-content-header vertical-align">
+          <div className="image-div">
+            {loading ? (
+              <Placeholder>
+                <Placeholder.Image className="image-wrapper" />
+              </Placeholder>
+            ) : (
+              <Image src={image} className="image-wrapper" />
+            )}
+          </div>
           {this.renderInformation()}
-        </FlexView>
-      </Segment>
+        </div>
+        <div className="user-content-title">User Content</div>
+      </React.Fragment>
     )
   }
 }

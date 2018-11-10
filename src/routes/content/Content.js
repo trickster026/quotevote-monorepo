@@ -1,5 +1,12 @@
 import React, { PureComponent } from "react"
-import { Segment, Container, Grid, Message, Button } from "semantic-ui-react"
+import {
+  Button,
+  Container,
+  Grid,
+  Message,
+  Segment,
+  Divider
+} from "semantic-ui-react"
 import { Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
@@ -12,14 +19,18 @@ import Maximized from "../../components/Chat/Maximized"
 import Minimized from "../../components/Chat/Minimized"
 
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
+import "./Content.css"
+import Contents from "../../components/ContentPanel/Contents"
 
 const getContent = gql`
   query content($contentId: String, $key: String) {
     content(contentId: $contentId) {
+      creatorId
       _id
       title
       text
       thumbnail
+      created
       creator {
         name
         profileImageUrl
@@ -35,8 +46,11 @@ const getContent = gql`
         total
       }
       comments {
+        _id
+        userId
         text
         hashtags
+        created
       }
     }
     domain(key: $key) {
@@ -221,19 +235,30 @@ class Content extends PureComponent {
     if (!contentId) return <div>No content id passed!</div>
     const variables = { contentId, key: domain }
 
+    const tempData = {
+      title: "",
+      text: "",
+      scoreDetails: [],
+      comments: [],
+      created: ""
+    }
+
     return (
-      <Segment as={Container} basic>
+      <div className="jumbotron">
         <Query query={getContent} variables={variables}>
           {({ loading, error, data }) => {
-            if (loading) return <div>Getting data...</div>
             if (error) return <div>{`Error: ${error}`}</div>
 
-            const { allowedUserIds, privacy } = data.domain
-
-            const showPage =
-              (allowedUserIds.find(id => id === this.props.userId) &&
-                privacy === "private") ||
-              privacy === "public"
+            let showPage = true
+            if (!loading) {
+              const { allowedUserIds, privacy } = data.domain
+              const { creatorId } = data.content
+              showPage =
+                (allowedUserIds.find(id => id === this.props.userId) &&
+                  privacy === "private") ||
+                privacy === "public" ||
+                creatorId === this.props.creatorId
+            }
 
             if (!showPage)
               return (
@@ -251,11 +276,13 @@ class Content extends PureComponent {
                 </Segment>
               )
 
-            const { title, text, scoreDetails, comments } = data.content
-            const creator = data.content.creator || {}
+            const { title, text, scoreDetails, comments, created } = loading
+              ? tempData
+              : data.content
+            const creator = loading ? "" : data.content.creator || {}
 
             return (
-              <Segment as={Container} basic>
+              <React.Fragment>
                 <Grid doubling stackable>
                   <Grid.Row columns={1}>
                     <Grid.Column>
@@ -264,18 +291,36 @@ class Content extends PureComponent {
                         creator={creator.name}
                         score={creator.scoreDetails}
                         enableFollow
+                        loading={loading}
                       />
                     </Grid.Column>
                   </Grid.Row>
-
-                  <Grid.Row columns={2}>
+                  <Grid.Row>
                     <Grid.Column>
+                      <div className="sort-header">
+                        <i className="fas fa-sort-amount-down" />
+                        <h1>Recent Posts</h1>
+                      </div>
+                      <Divider />
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row columns={3}>
+                    <Grid.Column width={3}>
+                      <Contents
+                        creatorId={loading ? "" : data.content.creatorId}
+                        contentId={contentId}
+                        loading={loading}
+                      />
+                    </Grid.Column>
+                    <Grid.Column width={7}>
                       <VotingBoard
                         title={title}
                         // topOffset={this.state.voteProps.topOffset}
                         content={text}
                         score={scoreDetails}
+                        created={created}
                         onSelect={this.handleSelect}
+                        loading={loading}
                       >
                         {({ text }) => (
                           <ActionPopup
@@ -290,14 +335,14 @@ class Content extends PureComponent {
                       </VotingBoard>
                     </Grid.Column>
                     <Grid.Column>
-                      <CommentsPanel comments={comments} />
+                      <CommentsPanel comments={comments} loading={loading} />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
                 <Query query={CHAT_QUERY} variables={variables}>
                   {({ subscribeToMore, ...result }) => (
                     <ThemeProvider>
-                      <FixedWrapper.Root maximizedOnInit>
+                      <FixedWrapper.Root>
                         <FixedWrapper.Maximized>
                           <Maximized
                             {...this.props}
@@ -328,11 +373,11 @@ class Content extends PureComponent {
                     </ThemeProvider>
                   )}
                 </Query>
-              </Segment>
+              </React.Fragment>
             )
           }}
         </Query>
-      </Segment>
+      </div>
     )
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react"
-import { Dimmer, Loader, Container } from "semantic-ui-react"
+import { Container, Dimmer, Loader, Placeholder } from "semantic-ui-react"
 import PropTypes from "prop-types"
 
 import SelectionPopover from "./SelectionPopover"
@@ -13,6 +13,7 @@ class VotingBoard extends Component {
 
   static propTypes = {
     title: PropTypes.string,
+    created: PropTypes.string,
     highlights: PropTypes.arrayOf(
       PropTypes.shape({
         startIndex: PropTypes.number,
@@ -26,7 +27,8 @@ class VotingBoard extends Component {
     }),
     topOffset: PropTypes.number,
     content: PropTypes.string.isRequired,
-    children: PropTypes.func
+    children: PropTypes.func,
+    loading: PropTypes.bool
   }
 
   static defaultProps = {
@@ -56,9 +58,9 @@ class VotingBoard extends Component {
     if (this.props.highlights) {
       return this.props.content.split(/\n/g).map(line => (
         <Fragment>
-          {line
-            .split(/\s+/g)
-            .map((word, index) => <span key={index + word}>{word + " "}</span>)}
+          {line.split(/\s+/g).map((word, index) => (
+            <span key={index + word}>{word + " "}</span>
+          ))}
           <br />
         </Fragment>
       ))
@@ -92,8 +94,34 @@ class VotingBoard extends Component {
   }
 
   render = () => {
+    const { loading } = this.props
+    if (loading) {
+      return (
+        <div style={{ margin: 25 }}>
+          <Placeholder>
+            <Placeholder.Header>
+              <Placeholder.Line />
+            </Placeholder.Header>
+            <Placeholder.Paragraph>
+              <Placeholder.Line />
+              <Placeholder.Line />
+              <Placeholder.Line />
+              <Placeholder.Line />
+              <Placeholder.Line />
+            </Placeholder.Paragraph>
+            <Placeholder.Paragraph>
+              <Placeholder.Line />
+            </Placeholder.Paragraph>
+          </Placeholder>
+        </div>
+      )
+    }
     return (
-      <ContentPanel title={this.props.title} score={this.props.score}>
+      <ContentPanel
+        title={this.props.title}
+        score={this.props.score}
+        created={this.created}
+      >
         {this.renderContent() || this.renderLoader()}
       </ContentPanel>
     )

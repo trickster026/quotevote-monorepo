@@ -1,7 +1,8 @@
 import React, { Component } from "react"
-import { Header, Label, Segment } from "semantic-ui-react"
+import { Divider, Icon, Item } from "semantic-ui-react"
 import FlexView from "react-flexview"
 import PropTypes from "prop-types"
+import moment from "moment"
 
 class ContentPanel extends Component {
   static propTypes = {
@@ -9,7 +10,8 @@ class ContentPanel extends Component {
     score: PropTypes.shape({
       upvotes: PropTypes.number,
       downvotes: PropTypes.number
-    })
+    }),
+    created: PropTypes.string
   }
 
   static defaultProps = {
@@ -21,20 +23,43 @@ class ContentPanel extends Component {
   }
 
   render = () => {
-    const { title, score } = this.props
-    const total = `Score ${score.upvotes + score.downvotes} (${
-      score.upvotes
-    } / -${score.downvotes})`
+    const { title, score, created } = this.props
+    console.log(this.props)
     return (
-      <Segment>
+      <div style={{ margin: "20px" }}>
         <FlexView vAlignContent="center">
-          <Header style={{ fontSize: 24 }}>{title}</Header>
-          <Label size="mini" color="teal">
-            {total}
-          </Label>
+          <div style={{ fontFamily: "'Raleway', sans-serif" }}>
+            <b style={{ fontWeight: 600 }}>{title} </b>
+            <span
+              style={{
+                marginLeft: "200px",
+                marginRight: "5px",
+                float: "right"
+              }}
+            >
+              <Icon name="chevron up" color="green" size="large" />
+              <b> {score.upvotes}</b>
+              <Icon name="chevron down" color="red" size="large" />
+              <b> {score.downvotes}</b>
+            </span>
+          </div>
         </FlexView>
+        <Divider />
         {this.props.children}
-      </Segment>
+        <Divider />
+        <Item.Extra>
+          <span
+            style={{
+              color: "#d6d6d6",
+              float: "right",
+              marginLeft: "10px",
+              fontWeight: 200
+            }}
+          >
+            Posted {moment(created).format("MMM DD, YYYY")}
+          </span>
+        </Item.Extra>
+      </div>
     )
   }
 }
