@@ -92,6 +92,11 @@
   height: 60px;
   width: 60px;
 }
+.top-authors-section .ui.grid > .row > .image-column {
+  float: right;
+  height: 60px;
+  width: 60px;
+}
 .top-authors-section .downvotes {
   color: red;
 }

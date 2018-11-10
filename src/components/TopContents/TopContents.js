@@ -1,5 +1,11 @@
 import React, { Component } from "react"
-import { Grid, Header, Pagination, Segment } from "semantic-ui-react"
+import {
+  Grid,
+  Header,
+  Pagination,
+  Segment,
+  Placeholder
+} from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
@@ -42,7 +48,45 @@ class TopContents extends Component {
               </Segment>
             )
           }
-          if (loading) return <div>Loading...</div>
+          if (loading)
+            return (
+              <div className="top-contents-section">
+                <h5>Top Contents</h5>
+                <hr />
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={2}>
+                      <Placeholder className="top-content-number-column" />
+                    </Grid.Column>
+                    <Grid.Column width={14}>
+                      <div className="top-content">
+                        <div className="top-content-text">
+                          <br />
+                          <p>
+                            <Placeholder>
+                              <Placeholder.Line length="short" />
+                              <Placeholder.Line length="medium" />
+                              <Placeholder.Line length="long" />
+                              <Placeholder.Line length="very long" />
+                              <Placeholder.Line length="very long" />
+                              <Placeholder.Line length="very long" />
+                              <Placeholder.Line length="long" />
+                              <Placeholder.Line length="very long" />
+                              <Placeholder.Line length="long" />
+                            </Placeholder>
+                          </p>
+                        </div>
+                        <div className="top-content-text-info">
+                          <Placeholder>
+                            <Placeholder.Line length="full" />
+                          </Placeholder>
+                        </div>
+                      </div>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </div>
+            )
 
           const { paginate } = data
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Grid, Header, Image, Segment } from "semantic-ui-react"
+import { Grid, Header, Image, Segment, Placeholder } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { APP_TOKEN } from "../../utils/constants"
 import gql from "graphql-tag"
@@ -42,7 +42,34 @@ class TopAuthors extends Component {
                 <Segment basic>Creators not available</Segment>
               </Segment>
             )
-          if (loading) return <div>Loading...</div>
+          if (loading)
+            return (
+              <div className="top-authors-section">
+                <h5>Top Authors</h5>
+                <hr />
+                <Grid>
+                  <Grid.Row columns={2} stretched className="top-author-row">
+                    <Grid.Column width={12} className="name-column">
+                      <p>Author's Name</p>
+                      <Placeholder>
+                        <Placeholder.Line />
+                      </Placeholder>
+                    </Grid.Column>
+                    <Grid.Column width={4} className="image-column">
+                      <Placeholder>
+                        <Placeholder.Image />
+                      </Placeholder>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row className="half-circle-row">
+                    <div className="half-circle">-</div>
+                  </Grid.Row>
+                  <center>
+                    <hr />
+                  </center>
+                </Grid>
+              </div>
+            )
 
           const { paginate } = data
 

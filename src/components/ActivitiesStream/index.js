@@ -6,7 +6,8 @@ import {
   Item,
   Label,
   Button,
-  Icon
+  Icon,
+  Placeholder
 } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
@@ -42,7 +43,21 @@ class ActivitiesStream extends Component {
       >
         {({ error, loading, data: { activities } }) => {
           if (error) return <div>{error.message}</div>
-          if (loading) return <div>Loading...</div>
+          if (loading)
+            return (
+              <div>
+                <Placeholder fluid>
+                  <Placeholder.Header>
+                    <Placeholder.Line length="short" />
+                    <Placeholder.Line length="medium" />
+                    <Placeholder.Line length="short" />
+                    <Placeholder.Line length="medium" />
+                    <Placeholder.Line />
+                    <Placeholder.Line />
+                  </Placeholder.Header>
+                </Placeholder>
+              </div>
+            )
 
           return (
             <div>
