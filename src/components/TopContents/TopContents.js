@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
 import {
   Grid,
   Header,
@@ -31,13 +32,23 @@ class TopContents extends Component {
 
   render = () => {
     const { page, limit } = this.state
+    const searchTerm = this.props.searchTerm
+
     return (
       <Query
         query={query}
-        variables={{ page: { page, limit, type: "Content", sort: "DESC" } }}
+        variables={{
+          page: {
+            page,
+            limit,
+            type: "Content",
+            sort: "DESC",
+            searchTerm: searchTerm
+          }
+        }}
         context={{ token: APP_TOKEN }}
       >
-        {({ error, loading, data }) => {
+        {({ error, loading, data, refetch }) => {
           if (error) {
             return (
               <Segment>
@@ -89,7 +100,7 @@ class TopContents extends Component {
             )
 
           const { paginate } = data
-
+          console.log(paginate)
           return (
             <div className="top-contents-section">
               <h5>Top Contents</h5>
@@ -103,7 +114,7 @@ class TopContents extends Component {
                     >
                       <h1>
                         <sup>#</sup>
-                        {index + 1}
+                        {(page - 1) * 5 + index + 1}
                       </h1>
                     </Grid.Column>
                     <Grid.Column width={14}>
@@ -118,17 +129,7 @@ class TopContents extends Component {
                             </div>
                           </div>
                           <br />
-                          <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat. Duis aute irure dolor in
-                            reprehenderit in voluptate velit esse cillum dolore
-                            eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat non proident, sunt in culpa qui officia
-                            deserunt mollit anim id est laborum
-                          </p>
+                          <p>{content.text}</p>
                         </div>
                         <div className="top-content-text-info">
                           <Grid.Row>
@@ -186,4 +187,12 @@ class TopContents extends Component {
   }
 }
 
-export default TopContents
+const mapStateToProps = ({ filterContent }) => {
+  console.log("filterContent printing")
+  console.log(filterContent)
+  return {
+    searchTerm: filterContent.searchTerm
+  }
+}
+
+export default connect(mapStateToProps)(TopContents)
