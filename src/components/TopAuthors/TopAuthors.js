@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { connect } from "react-redux"
 import { Grid, Header, Image, Segment, Placeholder } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { APP_TOKEN } from "../../utils/constants"
@@ -26,10 +27,20 @@ class TopAuthors extends Component {
 
   render = () => {
     const { page, limit } = this.state
+    const searchTerm = this.props.searchTerm
+
     return (
       <Query
         query={query}
-        variables={{ page: { page, limit, sort: "DESC", type: "Creator" } }}
+        variables={{
+          page: {
+            page,
+            limit,
+            sort: "DESC",
+            type: "Creator",
+            searchTerm: searchTerm
+          }
+        }}
         context={{ token: APP_TOKEN }}
       >
         {({ loading, error, data }) => {
@@ -118,5 +129,12 @@ class TopAuthors extends Component {
     )
   }
 }
+const mapStateToProps = ({ filterContent }) => {
+  console.log("filterContent printing")
+  console.log(filterContent)
+  return {
+    searchTerm: filterContent.searchTerm
+  }
+}
 
-export default TopAuthors
+export default connect(mapStateToProps)(TopAuthors)
