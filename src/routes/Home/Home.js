@@ -2,8 +2,6 @@ import React, { Component } from "react"
 import { Grid, Segment, Container, Header } from "semantic-ui-react"
 import withSizes from "react-sizes"
 
-import TopContents from "../../components/TopContents/TopContents"
-import TopAuthors from "../../components/TopAuthors/TopAuthors"
 import ActivitiesStream from "../../components/ActivitiesStream"
 
 class Home extends Component {
@@ -16,7 +14,7 @@ class Home extends Component {
           </Header>
         </Segment>
         <Grid>
-          <Grid.Row columns={2} stretched>
+          <Grid.Row columns={1} stretched>
             <Grid.Column>
               <Segment>
                 <Header as="h1">Welcome</Header>
@@ -34,16 +32,10 @@ class Home extends Component {
                 lacinia, at iaculis ex rutrum.
               </Segment>
             </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1} stretched>
             <Grid.Column>
               <ActivitiesStream />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={2} stretched>
-            <Grid.Column>
-              <TopContents />
-            </Grid.Column>
-            <Grid.Column>
-              <TopAuthors />
             </Grid.Column>
           </Grid.Row>
         </Grid>
