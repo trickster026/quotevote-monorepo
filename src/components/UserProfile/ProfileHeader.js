@@ -1,78 +1,126 @@
-import React, { PureComponent } from "react";
-import { withApollo } from "react-apollo";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { Button, Container, Grid, Image, Modal, Search } from "semantic-ui-react";
-import faker from "faker";
-import gql from "graphql-tag";
-import { APP_TOKEN } from "../../utils/constants";
-import UserText from "../UserText/UserText";
-import "./ProfileHeader.css";
-import PropTypes from "prop-types";
-import classnames from "classnames";
+import React, { PureComponent } from "react"
+import { withApollo } from "react-apollo"
+import { withRouter } from "react-router-dom"
+import { connect } from "react-redux"
+import {
+  Button,
+  Container,
+  Grid,
+  Image,
+  Modal,
+  Search
+} from "semantic-ui-react"
+import faker from "faker"
+import gql from "graphql-tag"
+import { APP_TOKEN } from "../../utils/constants"
+import UserText from "../UserText/UserText"
+import "./ProfileHeader.css"
+import PropTypes from "prop-types"
+import classnames from "classnames"
 
 const search = gql`
   query search($text: String!) {
+    searchContent(text: $text) {
+      _id
+      title
+      creatorId
+      domain {
+        key
+      }
+    }
     searchCreator(text: $text) {
       _id
       name
       avatar
+      creator {
+        _id
+      }
     }
   }
-`;
+`
 
 class ProfileHeader extends PureComponent {
   state = {
     value: "Search Profile",
     results: [],
     noResult: false
-  };
+  }
 
   handleFocus = (e, { value }) => {
     if (value === "Search Profile") {
-      this.setState({ value: "" });
+      this.setState({ value: "" })
     }
-  };
+  }
   handleBlur = () => {
     if (this.state.value.length === 0) {
-      this.setState({ value: "Search Profile", isLoading: false });
+      this.setState({ value: "Search Profile", isLoading: false })
     }
-  };
+  }
   handleResultSelect = (e, { result }) => {
-    const path = `/user/${result._id}`;
-    this.props.history.push(path);
-  };
-  handleSearchChange = async (e, { value }) => {
-    this.setState({ isLoading: true, value });
-    if (value.length === 0) {
-      this.setState({ results: [], isLoading: false });
+    if (result.__typename === "User") {
+      const path = `/user/${result._id}`
+      this.props.history.push(path)
+    } else {
+      const path = `/boards/${result.domain.key}/content/${result._id}`
+      this.props.history.push(path)
     }
-    const list = (await this.search()(value)).data;
-    let searchCreator = [];
+  }
+  handleSearchChange = async (e, { value }) => {
+    this.setState({ isLoading: true, value })
+    if (value.length === 0) {
+      this.setState({ results: [], isLoading: false })
+    }
+    const list = (await this.search()(value)).data
+    let searchCreator = []
+    let creatorContent = []
+
     list.searchCreator.map(value => {
-      if (value.name !== "guest") searchCreator.push(value);
-      return 0;
-    });
-    if (searchCreator.length !== 0) {
+      if (value.name !== "guest") searchCreator.push(value)
+      return 0
+    })
+
+    if (this.props.user.creator && list.searchContent.length !== 0) {
+      list.searchContent.map(value => {
+        if (value.creatorId === this.props.user.creator._id)
+          creatorContent.push(value)
+        return 0
+      })
+    }
+
+    if (searchCreator.length === 0 && creatorContent.length === 0) {
+      this.setState({ noResult: true, isLoading: false, results: [] })
+    } else {
+      if (searchCreator.length === 0) {
+        searchCreator.push({ title: "No results found." })
+      } else {
+        searchCreator = searchCreator.map(creator => ({
+          ...creator,
+          title: creator.name,
+          image: creator.avatar
+        }))
+      }
+
+      if (creatorContent.length === 0) {
+        creatorContent.push({ title: "No results found." })
+      }
+
       setTimeout(() => {
         this.setState({
           isLoading: false,
           results: {
+            contents: {
+              name: "Contents",
+              results: creatorContent
+            },
             users: {
               name: "Users",
-              results: searchCreator.map(creator => ({
-                ...creator,
-                title: creator.name,
-                image: creator.avatar
-              }))
+              results: searchCreator
             }
           }
-        });
-      }, 100);
-    } else {
-      this.setState({ noResult: true, isLoading: false, results: [] });
+        })
+      }, 1000)
     }
-  };
+  }
 
   search = () => {
     if (this.props.client) {
@@ -81,24 +129,23 @@ class ProfileHeader extends PureComponent {
           query: search,
           context: { token: APP_TOKEN },
           variables: { text: payload }
-        });
-      };
+        })
+      }
     }
-  };
+  }
 
   render() {
-    const { user, texts } = this.props;
-    const { value, results, isLoading, noResult } = this.state;
-    let scoreValues = "Score 8 (10 / -2)";
-    const { scoreDetails } = user;
+    const { user, texts } = this.props
+    const { value, results, isLoading, noResult } = this.state
+    let scoreValues = "Score 8 (10 / -2)"
+    const { scoreDetails } = user
     if (scoreDetails) {
-      scoreValues = `Score ${scoreDetails.upvotes -
-      scoreDetails.downvotes} (${scoreDetails.upvotes} / -${
-        scoreDetails.downvotes
-        })`;
+      scoreValues = `Score ${scoreDetails.upvotes - scoreDetails.downvotes} (${
+        scoreDetails.upvotes
+      } / -${scoreDetails.downvotes})`
     }
 
-    const hideProfileMenuButtons = this.props.login.user._id === user._id;
+    const hideProfileMenuButtons = this.props.login.user._id === user._id
     return (
       <div>
         <Grid columns={16} className="profile-header">
@@ -138,8 +185,13 @@ class ProfileHeader extends PureComponent {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Container className={classnames("button-group", hideProfileMenuButtons ? "button-hide" : "button-visible")}
-                   textAlign="center">
+        <Container
+          className={classnames(
+            "button-group",
+            hideProfileMenuButtons ? "button-hide" : "button-visible"
+          )}
+          textAlign="center"
+        >
           <Button basic>INFO</Button>
           <Modal
             trigger={
@@ -151,7 +203,7 @@ class ProfileHeader extends PureComponent {
             <Modal.Header>Posted Contents</Modal.Header>
             <Modal.Content image>
               <Modal.Description>
-                <UserText texts={texts}/>
+                <UserText texts={texts} />
               </Modal.Description>
             </Modal.Content>
           </Modal>
@@ -164,17 +216,16 @@ class ProfileHeader extends PureComponent {
           <Button color="twitter">FOLLOW</Button>
         </Container>
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = state => {
-  return state;
-};
+  return state
+}
 
 ProfileHeader.propTypes = {
   user: PropTypes.object.isRequired
-};
+}
 
-export default withApollo(
-  withRouter(connect(mapStateToProps)(ProfileHeader)));
+export default withApollo(withRouter(connect(mapStateToProps)(ProfileHeader)))

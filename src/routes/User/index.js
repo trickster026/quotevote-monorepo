@@ -17,6 +17,9 @@ const query = gql`
       _id
       avatar
       name
+      creator {
+        _id
+      }
       _followingId
       scoreDetails {
         upvotes
@@ -58,8 +61,6 @@ class User extends Component {
 
   render = () => {
     const { userId } = this.props.match.params
-    const { creatorId } = this.props
-    console.log({ userId, creatorId })
     return (
       <Query
         query={query}
