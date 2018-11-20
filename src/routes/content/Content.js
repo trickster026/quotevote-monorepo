@@ -163,20 +163,30 @@ class Content extends PureComponent {
   }
 
   handleAddComment = (event, comment) => {
-    const { select } = this.state
+    let startIndex, endIndex
+
     const { client, match, creatorId, userId } = this.props
     const { contentId } = match.params
 
     const HASHTAGS_REGEX = /#(\w|\d)+/g
     const hashtags = comment.match(HASHTAGS_REGEX)
 
+    if (this.state) {
+      const { select } = this.state
+      startIndex = select.startIndex
+      endIndex = select.endIndex
+    } else {
+      startIndex = 0
+      endIndex = 0
+    }
+
     const newComment = {
       contentId,
       creatorId,
       userId,
       text: comment,
-      startWordIndex: select.startIndex,
-      endWordIndex: select.endIndex,
+      startWordIndex: startIndex,
+      endWordIndex: endIndex,
       hashtags
     }
 
@@ -335,7 +345,11 @@ class Content extends PureComponent {
                       </VotingBoard>
                     </Grid.Column>
                     <Grid.Column>
-                      <CommentsPanel comments={comments} loading={loading} />
+                      <CommentsPanel
+                        comments={comments}
+                        loading={loading}
+                        onAddComment={this.handleAddComment}
+                      />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

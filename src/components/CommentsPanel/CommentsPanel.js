@@ -32,6 +32,19 @@ class CommentsPanel extends Component {
     comments: []
   }
 
+  state = {
+    text: ""
+  }
+
+  handleAddComment = event => {
+    this.props.onAddComment(event, this.state.text)
+    this.setState({ text: "" })
+  }
+
+  handleTextAreaChange = (e, text) => {
+    this.setState({ text: text.value })
+  }
+
   renderLoading = () => {
     return (
       <div style={{ marginTop: 20 }}>
@@ -89,6 +102,7 @@ class CommentsPanel extends Component {
   }
 
   renderComments = () => {
+    const { text } = this.state
     const { comments, loading } = this.props
     return (
       <Comment.Group size="small">
@@ -102,11 +116,14 @@ class CommentsPanel extends Component {
                 display: "inline-block"
               }}
               placeholder="Comment.."
+              onChange={this.handleTextAreaChange}
+              value={text}
             />
             <Button
               circular
               icon="send"
               style={{ marginTop: "10px", marginLeft: "5px" }}
+              onClick={this.handleAddComment}
             />
           </div>
         </Form>
