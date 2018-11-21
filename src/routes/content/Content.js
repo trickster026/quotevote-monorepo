@@ -361,6 +361,7 @@ class Content extends PureComponent {
                           <Maximized
                             {...this.props}
                             {...result}
+                            title={title}
                             ownId={this.props.userId}
                             sendMessage={this.sendMessage}
                             onMessageSend={this.sendMessage}

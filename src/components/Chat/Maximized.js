@@ -26,11 +26,24 @@ class Maximized extends Component {
   }
 
   render = () => {
-    const { data, onMessageSend, ownId, minimize, sendMessage } = this.props
+    const {
+      data,
+      onMessageSend,
+      ownId,
+      minimize,
+      sendMessage,
+      title
+    } = this.props
 
     console.log("[Maximized.js]", this.props)
-    if (!data.messages) return ""
-    const { messages } = data
+    console.log({ data })
+    let messages = []
+    if (data && "messages" in data) {
+      messages = data.messages
+    } else if (data && "userMessages" in data) {
+      messages = data["userMessages"]
+    }
+
     return (
       <div
         style={{
@@ -45,7 +58,7 @@ class Maximized extends Component {
               <CloseIcon />
             </IconButton>
           ]}
-          title="Welcome to Scoreboard Chat"
+          title={title}
         />
         <div
           style={{

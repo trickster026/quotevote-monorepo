@@ -135,7 +135,7 @@ class ProfileHeader extends PureComponent {
   }
 
   render() {
-    const { user, texts } = this.props
+    const { user, texts, handleShowChat } = this.props
     const { value, results, isLoading, noResult } = this.state
     let scoreValues = "Score 8 (10 / -2)"
     const { scoreDetails } = user
@@ -207,7 +207,7 @@ class ProfileHeader extends PureComponent {
               </Modal.Description>
             </Modal.Content>
           </Modal>
-          <Button basic color="teal">
+          <Button basic color="teal" onClick={handleShowChat}>
             SEND MESSAGE
           </Button>
           <Button basic color="red">
@@ -225,7 +225,8 @@ const mapStateToProps = state => {
 }
 
 ProfileHeader.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  handleShowChat: PropTypes.func.isRequired
 }
 
 export default withApollo(withRouter(connect(mapStateToProps)(ProfileHeader)))
