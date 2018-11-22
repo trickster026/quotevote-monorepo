@@ -17,6 +17,7 @@ import UserText from "../UserText/UserText"
 import "./ProfileHeader.css"
 import PropTypes from "prop-types"
 import classnames from "classnames"
+import { QUERY_USER_PROFILE } from "../../routes/User"
 
 const search = gql`
   query search($text: String!) {
@@ -39,11 +40,53 @@ const search = gql`
   }
 `
 
+const FOLLOW_MUTATION = gql`
+  mutation followUser($user_id: String!, $action: String!) {
+    followUser(user_id: $user_id, action: $action) {
+      _id
+      name
+    }
+  }
+`
+
 class ProfileHeader extends PureComponent {
   state = {
     value: "Search Profile",
     results: [],
-    noResult: false
+    noResult: false,
+    toggle: false,
+    _followersId: []
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { _followersId } = nextProps.user
+    let followers = prevState._followersId
+    let toggle = prevState.toggle
+    if (_followersId !== prevState._followersId) {
+      const userId = nextProps.login.user._id
+      const result =
+        _followersId && _followersId.filter(user => user === userId)
+      followers = _followersId
+      toggle = result.length
+    }
+    return { toggle, _followersId: followers }
+  }
+
+  handleFollow = toggle => event => {
+    const { client } = this.props
+    const { userId } = this.props.match.params // current user profile page
+    this.setState({ toggle })
+
+    client.mutate({
+      mutation: FOLLOW_MUTATION,
+      variables: { user_id: userId, action: toggle ? "follow" : "un-follow" },
+      refetchQueries: [
+        {
+          query: QUERY_USER_PROFILE,
+          variables: { userId }
+        }
+      ]
+    })
   }
 
   handleFocus = (e, { value }) => {
@@ -136,7 +179,7 @@ class ProfileHeader extends PureComponent {
 
   render() {
     const { user, texts, handleShowChat } = this.props
-    const { value, results, isLoading, noResult } = this.state
+    const { value, results, isLoading, noResult, toggle } = this.state
     let scoreValues = "Score 8 (10 / -2)"
     const { scoreDetails } = user
     if (scoreDetails) {
@@ -146,6 +189,9 @@ class ProfileHeader extends PureComponent {
     }
 
     const hideProfileMenuButtons = this.props.login.user._id === user._id
+
+    const buttonLabel = toggle ? "FOLLOWED" : "FOLLOW"
+
     return (
       <div>
         <Grid columns={16} className="profile-header">
@@ -213,7 +259,9 @@ class ProfileHeader extends PureComponent {
           <Button basic color="red">
             REPORT
           </Button>
-          <Button color="twitter">FOLLOW</Button>
+          <Button color="twitter" onClick={this.handleFollow(!toggle)}>
+            {buttonLabel}
+          </Button>
         </Container>
       </div>
     )

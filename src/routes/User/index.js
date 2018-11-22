@@ -12,7 +12,7 @@ import Followers from "../../components/Followers/Followers"
 import UserText from "../../components/UserText/UserText"
 import UserChat from "../../components/Chat/UserChat"
 
-const query = gql`
+export const QUERY_USER_PROFILE = gql`
   query user($userId: String!) {
     user(user_id: $userId) {
       _id
@@ -22,6 +22,7 @@ const query = gql`
         _id
       }
       _followingId
+      _followersId
       scoreDetails {
         upvotes
         downvotes
@@ -79,7 +80,6 @@ class User extends Component {
   renderUserChat = name => {
     const { userId } = this.props.match.params // current user profile page
     const variable = { userId }
-    console.log("userRoomQuery", variable)
     return (
       <Query query={userRoomQuery} variables={variable}>
         {({ loading, error, data }) => {
@@ -96,7 +96,7 @@ class User extends Component {
     const { userId } = this.props.match.params
     return (
       <Query
-        query={query}
+        query={QUERY_USER_PROFILE}
         variables={{
           userId: userId
         }}
