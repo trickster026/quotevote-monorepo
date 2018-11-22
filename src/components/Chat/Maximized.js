@@ -17,6 +17,7 @@ import {
   TextInput,
   TitleBar
 } from "@livechat/ui-kit"
+import { Loader } from "semantic-ui-react"
 
 import moment from "moment"
 
@@ -25,15 +26,68 @@ class Maximized extends Component {
     this.props.subscribeToNewMessages()
   }
 
+  renderMessageList = messages => {
+    const { ownId, sendMessage } = this.props
+
+    return (
+      <React.Fragment>
+        {messages.map((message, index) => (
+          <MessageGroup
+            key={index}
+            onlyFirstWithMeta
+            avatar={message.userId === ownId ? "" : message.userAvatar}
+            isOwn={message.userId === ownId}
+          >
+            <Message
+              date={moment(message.date).format("MMM D, h:mm a")}
+              isOwn={message.userId === ownId}
+              key={message._id}
+              avatar={message.avatarUrl}
+            >
+              {message.title && <MessageTitle title={message.title} />}
+              {message.text && <MessageText>{message.text}</MessageText>}
+              {message.imageUrl && (
+                <MessageMedia>
+                  <img src={message.imageUrl} alt="" />
+                </MessageMedia>
+              )}
+              {message.buttons &&
+                message.buttons.length !== 0 && (
+                  <MessageButtons>
+                    {message.buttons.map((button, buttonIndex) => (
+                      <MessageButton
+                        key={buttonIndex}
+                        label={button.title}
+                        onClick={() => {
+                          sendMessage(button.postback)
+                        }}
+                      />
+                    ))}
+                  </MessageButtons>
+                )}
+            </Message>
+          </MessageGroup>
+        ))}
+      </React.Fragment>
+    )
+  }
+
+  renderLoading = () => {
+    return (
+      <div
+        style={{
+          position: "relative",
+          top: "35%",
+          transform: "translate(0,50%)"
+        }}
+      >
+        <Loader active inline="centered" content="Loading" />
+      </div>
+    )
+  }
+
   render = () => {
-    const {
-      data,
-      onMessageSend,
-      ownId,
-      minimize,
-      sendMessage,
-      title
-    } = this.props
+    const { data, onMessageSend, minimize, title, loading } = this.props
 
     console.log("[Maximized.js]", this.props)
     console.log({ data })
@@ -44,6 +98,7 @@ class Maximized extends Component {
       messages = data["userMessages"]
     }
 
+    console.log({ loading })
     return (
       <div
         style={{
@@ -68,43 +123,7 @@ class Maximized extends Component {
           }}
         >
           <MessageList active containScrollInSubtree>
-            {messages.map((message, index) => (
-              <MessageGroup
-                key={index}
-                onlyFirstWithMeta
-                avatar={message.userId === ownId ? "" : message.userAvatar}
-                isOwn={message.userId === ownId}
-              >
-                <Message
-                  date={moment(message.date).format("MMM D, h:mm a")}
-                  isOwn={message.userId === ownId}
-                  key={message._id}
-                  avatar={message.avatarUrl}
-                >
-                  {message.title && <MessageTitle title={message.title} />}
-                  {message.text && <MessageText>{message.text}</MessageText>}
-                  {message.imageUrl && (
-                    <MessageMedia>
-                      <img src={message.imageUrl} alt="" />
-                    </MessageMedia>
-                  )}
-                  {message.buttons &&
-                    message.buttons.length !== 0 && (
-                      <MessageButtons>
-                        {message.buttons.map((button, buttonIndex) => (
-                          <MessageButton
-                            key={buttonIndex}
-                            label={button.title}
-                            onClick={() => {
-                              sendMessage(button.postback)
-                            }}
-                          />
-                        ))}
-                      </MessageButtons>
-                    )}
-                </Message>
-              </MessageGroup>
-            ))}
+            {loading ? this.renderLoading() : this.renderMessageList(messages)}
           </MessageList>
         </div>
         <TextComposer onSend={onMessageSend}>

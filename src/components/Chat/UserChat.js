@@ -91,8 +91,10 @@ class UserChat extends PureComponent {
                         if (!subscriptionData.data) return prev
                         const newMessage =
                           subscriptionData.data.userMessageCreated
+                        console.log({ newMessage })
+                        console.log({ prev })
                         return Object.assign({}, prev, {
-                          messages: [...prev.messages, newMessage]
+                          userMessages: [...prev.userMessages, newMessage]
                         })
                       }
                     })
