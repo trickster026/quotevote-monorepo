@@ -53,7 +53,8 @@ const CHAT_QUERY = gql`
 
 class UserChat extends PureComponent {
   sendMessage = data => {
-    const { client, userId } = this.props
+    const { client } = this.props
+    const userId = this.props.match.params.userId
 
     const newMessage = {
       title: "", // TODO
