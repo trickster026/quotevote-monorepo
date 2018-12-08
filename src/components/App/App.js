@@ -63,10 +63,7 @@ class App extends Component {
           </Switch>
         </Container>
         {console.log("paths", path)}
-        {path !== "/login" &&
-          path !== "/logout" &&
-          path !== "/submit-content" &&
-          path !== "/invite" && <Footer />}
+        {path !== "/invite" && <Footer />}
       </BasicLayout>
     )
   }

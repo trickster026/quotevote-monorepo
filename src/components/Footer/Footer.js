@@ -9,7 +9,7 @@ class Footer extends PureComponent {
         borderless
         attached="bottom"
         size="small"
-        style={{ height: "75px" }}
+        style={{ minHeight: "75px", marginTop: "auto" }}
       >
         <Container>
           <Menu.Item>@ 2017 HipHop Scoreboard, All rights reserved.</Menu.Item>
