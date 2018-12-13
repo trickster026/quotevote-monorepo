@@ -15,11 +15,20 @@ const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_SERVER_WS + "/graphql",
   options: {
     reconnect: true,
-    connectionParams: {
-      authToken: localStorage.getItem("token")
-    }
+    connectionParams: async () => ({
+      authToken: await localStorage.getItem("token")
+    })
   }
 })
+
+const subscriptionMiddleware = {
+  applyMiddleware: async (options, next) => {
+    options.authToken = await localStorage.getItem("token")
+    next()
+  }
+}
+// add the middleware to the web socket link via the Subscription Transport client
+wsLink.subscriptionClient.use([subscriptionMiddleware])
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
