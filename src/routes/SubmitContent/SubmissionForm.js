@@ -7,7 +7,8 @@ import {
   Divider,
   Modal,
   Button,
-  Input
+  Input,
+  Popup
 } from "semantic-ui-react"
 import { Link } from "react-router-dom"
 import { connect } from "react-redux"
@@ -22,6 +23,14 @@ const SUBMIT_TEXT = gql`
     }
   }
 `
+
+/* const CREATE_DOMAIN = gql`
+  mutation submitDomain($domain: DomainInput!){
+    createDomain(domain: $domain) {
+      _id
+    }
+  }
+` */
 
 const DOMAIN_QUERY = gql`
   query domains($limit: Int!) {
@@ -41,7 +50,8 @@ class SubmissionForm extends Component {
     title: "",
     text: "",
     domain: {},
-    showShareableLink: false
+    showShareableLink: false,
+    createSubScoreboard: false
   }
 
   handleSubmit = (event, submitText) => {
@@ -90,6 +100,13 @@ class SubmissionForm extends Component {
     this.setState({ domain: options.find(item => item.value === value) })
   }
 
+  handleCreateSubScoreboard = () => {
+    this.setState({ createSubScoreboard: true })
+  }
+  handleCancelNewSubScoreboard = () => {
+    this.setState({ createSubScoreboard: false })
+  }
+
   renderModal = id => {
     const shareableLink = `/boards/${this.state.domain.key}/content/${id}`
     return (
@@ -131,6 +148,7 @@ class SubmissionForm extends Component {
   }
 
   render = () => {
+    const { createSubScoreboard } = this.state
     return (
       <Mutation
         mutation={SUBMIT_TEXT}
@@ -159,40 +177,88 @@ class SubmissionForm extends Component {
                       autoComplete="off"
                       onChange={this.handleInputChange}
                     />
-                    <Query query={DOMAIN_QUERY} variables={{ limit: 0 }}>
-                      {({ loading, error, data }) => {
-                        let options = []
-                        if (data.domains) {
-                          options = data.domains
-                            .filter(domain => {
-                              const isUserAllowed = domain.allowedUserIds.find(
-                                id => id === this.props.userId
-                              )
-                              return (
-                                domain.privacy === "public" ||
-                                (domain.privacy === "private" && isUserAllowed)
-                              )
-                            })
-                            .map(domain => ({
-                              key: domain.key,
-                              text: domain.title,
-                              value: domain.key,
-                              id: domain._id
-                            }))
-                        }
+                    {createSubScoreboard ? (
+                      <React.Fragment>
+                        <Form.Input
+                          label="New Subscoreboard"
+                          placeholder="Add new subscoreboard"
+                        />
+                        <Popup
+                          trigger={
+                            <Button
+                              as="a"
+                              color="red"
+                              icon="cancel"
+                              style={{ height: "40px", marginTop: "auto" }}
+                              onClick={this.handleCancelNewSubScoreboard}
+                            />
+                          }
+                          content="Cancel new scoreboard"
+                        />
+                        <Popup
+                          trigger={
+                            <Button
+                              as="a"
+                              color="teal"
+                              icon="check"
+                              style={{ height: "40px", marginTop: "auto" }}
+                              onClick={this.handleCancelNewSubScoreboard}
+                            />
+                          }
+                          content="Save new scoreboard"
+                        />
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <Query query={DOMAIN_QUERY} variables={{ limit: 0 }}>
+                          {({ loading, error, data }) => {
+                            let options = []
+                            if (data.domains) {
+                              options = data.domains
+                                .filter(domain => {
+                                  const isUserAllowed = domain.allowedUserIds.find(
+                                    id => id === this.props.userId
+                                  )
+                                  return (
+                                    domain.privacy === "public" ||
+                                    (domain.privacy === "private" &&
+                                      isUserAllowed)
+                                  )
+                                })
+                                .map(domain => ({
+                                  key: domain.key,
+                                  text: domain.title,
+                                  value: domain.key,
+                                  id: domain._id
+                                }))
+                            }
 
-                        return (
-                          <Form.Dropdown
-                            placeholder="Select a subscoreboard"
-                            selection
-                            name="subscoreboard"
-                            label="Subscoreboard"
-                            options={options}
-                            onChange={this.handleDropdownChange}
-                          />
-                        )
-                      }}
-                    </Query>
+                            return (
+                              <Form.Dropdown
+                                placeholder="Select a subscoreboard"
+                                selection
+                                name="subscoreboard"
+                                label="Subscoreboard"
+                                options={options}
+                                onChange={this.handleDropdownChange}
+                              />
+                            )
+                          }}
+                        </Query>
+                        <Popup
+                          trigger={
+                            <Button
+                              as="a"
+                              color="teal"
+                              icon="add"
+                              style={{ height: "40px", marginTop: "auto" }}
+                              onClick={this.handleCreateSubScoreboard}
+                            />
+                          }
+                          content="Add new subscoreboard"
+                        />
+                      </React.Fragment>
+                    )}
                   </Form.Group>
                   <Form.TextArea
                     name="text"
