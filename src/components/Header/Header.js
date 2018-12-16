@@ -31,6 +31,9 @@ const search = gql`
     searchContent(text: $text) {
       _id
       title
+      domain {
+        key
+      }
     }
     searchCreator(text: $text) {
       _id
@@ -40,7 +43,7 @@ const search = gql`
 `
 
 class HeaderComponent extends PureComponent {
-  state = { search: "Search" }
+  state = { search: "Search", noResult: false }
 
   static propTypes = {
     login: PropTypes.object.isRequired,
@@ -73,13 +76,12 @@ class HeaderComponent extends PureComponent {
 
   handleResultSelect = (e, { result }) => {
     const { history } = this.props
-
     switch (result.__typename) {
       case "User":
         history.push(`${this.props.routing.url}/user/${result._id}`)
         break
       case "Content":
-        history.push(`${this.props.routing.url}/content/${result._id}`)
+        history.push(`/boards/${result.domain.key}/content/${result._id}`)
         break
       default:
         break
@@ -88,28 +90,61 @@ class HeaderComponent extends PureComponent {
 
   handleSearchChange = async (e, { value }) => {
     this.setState({ isLoading: true, value })
-
     const list = (await this.search()(value)).data
-    setTimeout(() => {
+
+    if (this.state.value === value) {
       if (this.state.value.length < 1) return this.resetComponent()
 
-      this.setState({
-        isLoading: false,
-        results: {
-          contents: {
-            name: "contents",
-            results: list.searchContent
-          },
-          users: {
-            name: "users",
-            results: list.searchCreator.map(creator => ({
-              ...creator,
-              title: creator.name
-            }))
-          }
+      if (list.searchCreator.length === 0 && list.searchContent.length === 0) {
+        this.setState({ noResult: true, isLoading: false, results: [] })
+      } else {
+        if (list.searchContent.length === 0) {
+          this.setState({
+            isLoading: false,
+            results: {
+              users: {
+                name: "Users",
+                results: list.searchCreator
+                  .map(creator => ({
+                    ...creator,
+                    title: creator.name
+                  }))
+                  .slice(0, 5)
+              }
+            }
+          })
+        } else if (list.searchCreator.length === 0) {
+          this.setState({
+            isLoading: false,
+            results: {
+              contents: {
+                name: "Contents",
+                results: list.searchContent.slice(0, 5)
+              }
+            }
+          })
+        } else {
+          this.setState({
+            isLoading: false,
+            results: {
+              contents: {
+                name: "Contents",
+                results: list.searchContent.slice(0, 5)
+              },
+              users: {
+                name: "Users",
+                results: list.searchCreator
+                  .map(creator => ({
+                    ...creator,
+                    title: creator.name
+                  }))
+                  .slice(0, 5)
+              }
+            }
+          })
         }
-      })
-    }, 500)
+      }
+    }
   }
 
   resetComponent = () =>
@@ -202,7 +237,7 @@ class HeaderComponent extends PureComponent {
   }
 
   renderRightMenuItem = () => {
-    const { isLoading, value, results } = this.state
+    const { isLoading, value, results, noResult } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
     return (
       <Menu.Menu position="right" stackable="true" className="item">
@@ -225,6 +260,7 @@ class HeaderComponent extends PureComponent {
             onSearchChange={this.handleSearchChange}
             results={results}
             value={value}
+            showNoResults={noResult}
           />
         </Menu.Item>
 

@@ -113,55 +113,74 @@ class ProfileHeader extends PureComponent {
     if (value.length === 0) {
       this.setState({ results: [], isLoading: false })
     }
+
     const list = (await this.search()(value)).data
-    let searchCreator = []
-    let creatorContent = []
 
-    list.searchCreator.map(value => {
-      if (value.name !== "guest") searchCreator.push(value)
-      return 0
-    })
-
-    if (this.props.user.creator && list.searchContent.length !== 0) {
-      list.searchContent.map(value => {
-        if (value.creatorId === this.props.user.creator._id)
-          creatorContent.push(value)
-        return 0
+    if (this.state.value === value) {
+      let searchCreator = []
+      let creatorContent = []
+      list.searchCreator.forEach(value => {
+        searchCreator.push(value)
       })
-    }
 
-    if (searchCreator.length === 0 && creatorContent.length === 0) {
-      this.setState({ noResult: true, isLoading: false, results: [] })
-    } else {
-      if (searchCreator.length === 0) {
-        searchCreator.push({ title: "No results found." })
-      } else {
-        searchCreator = searchCreator.map(creator => ({
-          ...creator,
-          title: creator.name,
-          image: creator.avatar
-        }))
-      }
-
-      if (creatorContent.length === 0) {
-        creatorContent.push({ title: "No results found." })
-      }
-
-      setTimeout(() => {
-        this.setState({
-          isLoading: false,
-          results: {
-            contents: {
-              name: "Contents",
-              results: creatorContent
-            },
-            users: {
-              name: "Users",
-              results: searchCreator
-            }
-          }
+      if (this.props.user.creator && list.searchContent.length !== 0) {
+        list.searchContent.forEach(value => {
+          if (value.creatorId === this.props.user.creator._id)
+            creatorContent.push(value)
         })
-      }, 1000)
+      }
+
+      if (searchCreator.length === 0 && creatorContent.length === 0) {
+        this.setState({ noResult: true, isLoading: false, results: [] })
+      } else {
+        if (searchCreator.length === 0) {
+          this.setState({
+            isLoading: false,
+            results: {
+              contents: {
+                name: "Contents",
+                results: creatorContent.slice(0, 5)
+              }
+            }
+          })
+        } else if (creatorContent.length === 0) {
+          this.setState({
+            isLoading: false,
+            results: {
+              users: {
+                name: "Users",
+                results: searchCreator
+                  .map(creator => ({
+                    ...creator,
+                    title: creator.name,
+                    image: creator.avatar
+                  }))
+                  .slice(0, 5)
+              }
+            }
+          })
+        } else {
+          this.setState({
+            isLoading: false,
+            results: {
+              contents: {
+                name: "Contents",
+                results: creatorContent.slice(0, 5)
+              },
+              users: {
+                name: "Users",
+                results: searchCreator
+                  .map(creator => ({
+                    ...creator,
+                    title: creator.name,
+                    image: creator.avatar
+                  }))
+                  .slice(0, 5)
+              }
+            }
+          })
+        }
+      }
     }
   }
 
