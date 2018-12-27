@@ -24,13 +24,13 @@ const SUBMIT_TEXT = gql`
   }
 `
 
-/* const CREATE_DOMAIN = gql`
-  mutation submitDomain($domain: DomainInput!){
+const CREATE_DOMAIN = gql`
+  mutation submitDomain($domain: DomainInput!) {
     createDomain(domain: $domain) {
       _id
     }
   }
-` */
+`
 
 const DOMAIN_QUERY = gql`
   query domains($limit: Int!) {
@@ -41,6 +41,8 @@ const DOMAIN_QUERY = gql`
       key
       privacy
       title
+      url
+      description
     }
   }
 `
@@ -51,21 +53,37 @@ class SubmissionForm extends Component {
     text: "",
     domain: {},
     showShareableLink: false,
-    createSubScoreboard: false
+    createSubScoreboard: false,
+    domainTitle: ""
   }
 
   handleSubmit = (event, submitText) => {
     event.preventDefault()
-    submitText({
-      variables: {
-        content: {
-          title: this.state.title,
-          text: this.state.text,
-          creatorId: this.props.authorId,
-          domainId: this.state.domain.id
+    if (this.state.createSubScoreboard) {
+      submitText({
+        variables: {
+          domain: {
+            userId: this.props.userId,
+            title: this.state.domainTitle,
+            url: "/" + this.state.domainTitle.toLowerCase(),
+            key: this.state.domainTitle.toLowerCase(),
+            privacy: "private",
+            description: "Descripton for " + this.state.domainTitle + " domain"
+          }
         }
-      }
-    })
+      })
+    } else {
+      submitText({
+        variables: {
+          content: {
+            title: this.state.title,
+            text: this.state.text,
+            creatorId: this.props.authorId,
+            domainId: this.state.domain.id
+          }
+        }
+      })
+    }
   }
 
   handleInputChange = (event, { name, value }) => {
@@ -73,8 +91,13 @@ class SubmissionForm extends Component {
   }
 
   handleSuccess = event => {
-    toast.success("Submitted successfully!")
-    this.setState({ title: "", text: "", showShareableLink: true })
+    if (this.state.createSubScoreboard) {
+      toast.success("New domain created successfully!")
+      this.setState({ createSubScoreboard: false })
+    } else {
+      toast.success("Submitted successfully!")
+      this.setState({ title: "", text: "", showShareableLink: true })
+    }
   }
 
   handleError = event => {
@@ -103,8 +126,45 @@ class SubmissionForm extends Component {
   handleCreateSubScoreboard = () => {
     this.setState({ createSubScoreboard: true })
   }
+  handleNewSubBoardInputChange = (e, { value }) => {
+    e.preventDefault()
+    this.setState({ domainTitle: value })
+  }
   handleCancelNewSubScoreboard = () => {
     this.setState({ createSubScoreboard: false })
+  }
+  renderCreateNewScoreboard = () => {
+    return (
+      <React.Fragment>
+        <Form.Input
+          label="New Subscoreboard"
+          placeholder="Add new subscoreboard"
+          onChange={this.handleNewSubBoardInputChange}
+        />
+        <Popup
+          trigger={
+            <Button
+              as="a"
+              color="red"
+              icon="cancel"
+              style={{ height: "40px", marginTop: "auto" }}
+              onClick={this.handleCancelNewSubScoreboard}
+            />
+          }
+          content="Cancel new scoreboard"
+        />
+        <Popup
+          trigger={
+            <Button
+              color="teal"
+              icon="check"
+              style={{ height: "40px", marginTop: "auto" }}
+            />
+          }
+          content="Save new scoreboard"
+        />
+      </React.Fragment>
+    )
   }
 
   renderModal = id => {
@@ -151,14 +211,13 @@ class SubmissionForm extends Component {
     const { createSubScoreboard } = this.state
     return (
       <Mutation
-        mutation={SUBMIT_TEXT}
+        mutation={createSubScoreboard ? CREATE_DOMAIN : SUBMIT_TEXT}
         onCompleted={this.handleSuccess}
         onError={this.handleError}
       >
         {(submitText, { data }) => {
           let id = ""
-          if (data) id = data.addContent._id
-
+          if (data && data.addContent) id = data.addContent._id
           return (
             <Container>
               <Segment basic padded="very">
@@ -178,41 +237,17 @@ class SubmissionForm extends Component {
                       onChange={this.handleInputChange}
                     />
                     {createSubScoreboard ? (
-                      <React.Fragment>
-                        <Form.Input
-                          label="New Subscoreboard"
-                          placeholder="Add new subscoreboard"
-                        />
-                        <Popup
-                          trigger={
-                            <Button
-                              as="a"
-                              color="red"
-                              icon="cancel"
-                              style={{ height: "40px", marginTop: "auto" }}
-                              onClick={this.handleCancelNewSubScoreboard}
-                            />
-                          }
-                          content="Cancel new scoreboard"
-                        />
-                        <Popup
-                          trigger={
-                            <Button
-                              as="a"
-                              color="teal"
-                              icon="check"
-                              style={{ height: "40px", marginTop: "auto" }}
-                              onClick={this.handleCancelNewSubScoreboard}
-                            />
-                          }
-                          content="Save new scoreboard"
-                        />
-                      </React.Fragment>
+                      this.renderCreateNewScoreboard()
                     ) : (
                       <React.Fragment>
-                        <Query query={DOMAIN_QUERY} variables={{ limit: 0 }}>
+                        <Query
+                          query={DOMAIN_QUERY}
+                          variables={{ limit: 0 }}
+                          pollInterval={500}
+                        >
                           {({ loading, error, data }) => {
                             let options = []
+
                             if (data.domains) {
                               options = data.domains
                                 .filter(domain => {
