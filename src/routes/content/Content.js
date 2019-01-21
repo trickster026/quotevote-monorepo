@@ -14,9 +14,10 @@ import gql from "graphql-tag"
 import CreatorPanel from "../../components/CreatorPanel/CreatorPanel"
 import CommentsPanel from "../../components/CommentsPanel/CommentsPanel"
 import VotingBoard from "../../components/VotingBoard/VotingBoard"
-import ActionPopup from "../../components/VotingBoard/ActionPopup"
+//import ActionPopup from "../../components/VotingBoard/ActionPopup"
 import Maximized from "../../components/Chat/Maximized"
 import Minimized from "../../components/Chat/Minimized"
+import LightComponent from "../../components/VotingBoard/LightComponent"
 
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 import "./Content.css"
@@ -332,8 +333,16 @@ class Content extends PureComponent {
                         onSelect={this.handleSelect}
                         loading={loading}
                       >
+                        {/* <ActionPopup
+                            text={text}
+                            // orientation={this.state.voteProps.orientation}
+                            onVote={this.handleVoting}
+                            onAddComment={this.handleAddComment}
+                            onShareQuote={this.handleShareQuote}
+                            onOrientationChange={this.handleChangeOrientation}
+                          /> */}
                         {({ text }) => (
-                          <ActionPopup
+                          <LightComponent
                             text={text}
                             // orientation={this.state.voteProps.orientation}
                             onVote={this.handleVoting}
