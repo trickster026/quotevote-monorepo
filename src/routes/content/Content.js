@@ -17,7 +17,7 @@ import VotingBoard from "../../components/VotingBoard/VotingBoard"
 //import ActionPopup from "../../components/VotingBoard/ActionPopup"
 import Maximized from "../../components/Chat/Maximized"
 import Minimized from "../../components/Chat/Minimized"
-import LightComponent from "../../components/VotingBoard/LightComponent"
+import VotingPopup from "../../components/VotingBoard/VotingPopup"
 
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 import "./Content.css"
@@ -342,7 +342,7 @@ class Content extends PureComponent {
                             onOrientationChange={this.handleChangeOrientation}
                           /> */}
                         {({ text }) => (
-                          <LightComponent
+                          <VotingPopup
                             text={text}
                             // orientation={this.state.voteProps.orientation}
                             onVote={this.handleVoting}

@@ -1,10 +1,10 @@
 import React, { Component } from "react"
-import styles from "./LightComponent.module.css"
+import styles from "./VotingPopup.module.css"
 import FontAwesome from "react-fontawesome"
 import { Input, Button } from "semantic-ui-react"
 import { CONTENT_REGEX } from "../../../utils/parser"
 
-export default class LightComponent extends Component {
+export default class VotingPopup extends Component {
   state = {
     expand: false,
     greenValue: "",
@@ -65,6 +65,7 @@ export default class LightComponent extends Component {
   }
 
   render() {
+    console.log("test",{styles})
     const { expand, comment } = this.state
     console.log("rendered comment", comment)
     return (
