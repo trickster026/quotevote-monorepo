@@ -66,13 +66,16 @@ class SelectionPopover extends Component {
 
   render() {
     const { showPopover, children, style } = this.props // eslint-disable-line no-unused-vars
-    const { popoverBox: { top, left } } = this.state
+    const {
+      popoverBox: { top, left }
+    } = this.state
 
     const visibility = showPopover ? "visible" : "hidden"
     const display = showPopover ? "inline-block" : "none"
 
     return (
       <div
+        id="selectionPopover"
         ref="selectionPopover"
         style={{
           visibility,
@@ -80,6 +83,7 @@ class SelectionPopover extends Component {
           position: "absolute",
           top,
           left,
+          zIndex: "1",
           ...style
         }}
       >
@@ -120,7 +124,7 @@ class SelectionPopover extends Component {
       .getBoundingClientRect()
     this.setState({
       popoverBox: {
-        top: selectionBox.top - targetBox.top - this.props.topOffset,
+        top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
         left:
           selectionBox.width / 2 -
           popoverBox.width / 2 +

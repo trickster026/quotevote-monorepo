@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import styles from "./VotingPopup.module.css"
 import FontAwesome from "react-fontawesome"
-import { Input, Button } from "semantic-ui-react"
+import { Input, Button, Popup } from "semantic-ui-react"
 import { CONTENT_REGEX } from "../../../utils/parser"
 
 export default class VotingPopup extends Component {
@@ -15,18 +15,24 @@ export default class VotingPopup extends Component {
     commentSubmitted: false
   }
 
+  componentDidMount() {
+    const selectionPopover = document.querySelector("#popButtons")
+    selectionPopover.addEventListener("mousedown", e => {
+      e.preventDefault()
+    })
+  }
+
   // Handle the upvote or downvote
   handleVote = (type, event) => {
-    console.log("VOTE", this.props)
     this.props.onVote(event, {
       type,
       points: this.props.text.match(CONTENT_REGEX).length
     })
   }
 
-  // Handle the purple icon on click event
-  purpleClicked() {
-    this.setState({ redArrow: "Purple Clicked" })
+  // Handle sharing quote
+  handleShareQuote(event) {
+    this.props.onShareQuote(event, this.props.text)
   }
 
   // Gets the value of the users comment when they enter any value
@@ -36,7 +42,6 @@ export default class VotingPopup extends Component {
 
   // A method to save or do whatever with the users comment
   handleAddComment = event => {
-    console.log("comm", this.state)
     this.props.onAddComment(event, this.state.comment.value)
     /* setTimeout(() => {
 		  this.setState({ isCommenting: false })
@@ -45,7 +50,6 @@ export default class VotingPopup extends Component {
   }
 
   resetState() {
-    console.log("reset")
     this.setState({
       greenValue: "",
       yellowValue: "",
@@ -58,16 +62,13 @@ export default class VotingPopup extends Component {
   }
 
   // options are 'expand' and 'default'
-  toggleAnimationState(state) {
-    console.log({ state })
+  toggleAnimationState(event, state) {
     let expand = state === "expand" ? true : false
     this.setState({ expand })
   }
 
   render() {
-    console.log("test",{styles})
-    const { expand, comment } = this.state
-    console.log("rendered comment", comment)
+    const { expand } = this.state
     return (
       <div
         className={`${styles["light-container"]} ${
@@ -75,28 +76,35 @@ export default class VotingPopup extends Component {
         } `}
         /* onMouseLeave={ () => this.toggleAnimationState('default') } */
       >
-        <div className={styles["light-container-inner"]}>
+        <div id="popButtons" className={styles["light-container-inner"]}>
           <div
             className={`${styles["light-inner"]} ${styles["vertical-align"]} `}
           >
             {/* Green Button */}
-            <div
-              className={`${styles["light-circ"]}  ${styles["c1"]}`}
-              onClick={this.handleVote.bind(this, "upvote")}
-            >
-              <FontAwesome
-                className={` ${styles["overwrite-fas"]} ${styles["fas"]}`}
-                name="arrow-up"
-                size="2x"
-              />
-              <div className={styles["c1i"]} />
-            </div>
+            <Popup
+              trigger={
+                <div
+                  className={`${styles["light-circ"]}  ${styles["c1"]}`}
+                  onClick={this.handleVote.bind(this, "upvote")}
+                >
+                  <FontAwesome
+                    className={` ${styles["overwrite-fas"]} ${styles["fas"]}`}
+                    name="arrow-up"
+                    size="2x"
+                  />
+                  <div className={styles["c1i"]} />
+                </div>
+              }
+              on="click"
+              content="Upvote"
+              hideOnScroll
+            />
 
             {/* Yellow Button */}
             <div
               className={`${styles["light-circ"]} ${styles["c2"]}`}
-              onClick={() => {
-                this.toggleAnimationState("expand")
+              onClick={e => {
+                this.toggleAnimationState(e, "expand")
               }}
             >
               <FontAwesome
@@ -108,32 +116,46 @@ export default class VotingPopup extends Component {
             </div>
 
             {/* Red Button */}
-            <div
-              className={`${styles["light-circ"]} ${styles["c3"]}`}
-              onClick={this.handleVote.bind(this, "downvote")}
-            >
-              <FontAwesome
-                className={`${styles["overwrite-fas"]} ${styles["fas"]}`}
-                name="arrow-down"
-                size="2x"
-              />
-              <div className={styles["c3i"]} />
-            </div>
+            <Popup
+              trigger={
+                <div
+                  className={`${styles["light-circ"]} ${styles["c3"]}`}
+                  onClick={this.handleVote.bind(this, "downvote")}
+                >
+                  <FontAwesome
+                    className={`${styles["overwrite-fas"]} ${styles["fas"]}`}
+                    name="arrow-down"
+                    size="2x"
+                  />
+                  <div className={styles["c3i"]} />
+                </div>
+              }
+              on="click"
+              content="Downvote"
+              hideOnScroll
+            />
 
             {/* Purple Button */}
-            <div
-              className={`${styles["light-circ"]} ${styles["c4"]}  ${
-                expand ? styles["show-quotes-option"] : ""
-              } `}
-              onClick={this.purpleClicked}
-            >
-              <FontAwesome
-                className={`${styles["overwrite-fas"]} ${styles["fas"]}`}
-                name="quote-right"
-                size="2x"
-              />
-              <div className={styles["c4i"]} />
-            </div>
+            <Popup
+              trigger={
+                <div
+                  className={`${styles["light-circ"]} ${styles["c4"]}  ${
+                    expand ? styles["show-quotes-option"] : ""
+                  } `}
+                  onClick={this.handleShareQuote.bind(this)}
+                >
+                  <FontAwesome
+                    className={`${styles["overwrite-fas"]} ${styles["fas"]}`}
+                    name="quote-right"
+                    size="2x"
+                  />
+                  <div className={styles["c4i"]} />
+                </div>
+              }
+              on="click"
+              content="Shared on your wall"
+              hideOnScroll
+            />
           </div>
         </div>
 

@@ -21,9 +21,6 @@ body {
   transition: max-width 0.3s linear 0.2s, max-height 0.3s linear 0.2s,
     height 0.3s linear 0.2s;
   overflow: hidden;
-  position: relative;
-  bottom: 70px;
-  left: 10px;
 }
 .light-container-inner {
   display: flex;

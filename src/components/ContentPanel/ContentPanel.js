@@ -24,7 +24,6 @@ class ContentPanel extends Component {
 
   render = () => {
     const { title, score, created } = this.props
-    console.log(this.props)
     return (
       <div style={{ margin: "20px" }}>
         <FlexView vAlignContent="center">
