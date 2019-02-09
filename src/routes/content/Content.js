@@ -23,6 +23,47 @@ import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 import "./Content.css"
 import Contents from "../../components/ContentPanel/Contents"
 
+const QUERY_USER_PROFILE = gql`
+  query user($userId: String!) {
+    user(user_id: $userId) {
+      _id
+      avatar
+      name
+      creator {
+        _id
+      }
+      _followingId
+      _followersId
+      scoreDetails {
+        upvotes
+        downvotes
+      }
+      history
+      quotes {
+        quote
+        content {
+          title
+        }
+        creator {
+          name
+          profileImageUrl
+        }
+      }
+      contents {
+        _id
+        domain {
+          key
+        }
+        creator {
+          name
+        }
+        title
+        text
+      }
+    }
+  }
+`
+
 const getContent = gql`
   query content($contentId: String, $key: String) {
     content(contentId: $contentId) {
@@ -216,7 +257,13 @@ class Content extends PureComponent {
 
     client.mutate({
       mutation: addQuote,
-      variables: { quote: newQuote }
+      variables: { quote: newQuote },
+      refetchQueries: [
+        {
+          query: QUERY_USER_PROFILE,
+          variables: { userId }
+        }
+      ]
     })
   }
 

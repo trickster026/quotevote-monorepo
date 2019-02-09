@@ -100,7 +100,6 @@ class User extends Component {
         variables={{
           userId: userId
         }}
-        pollInterval={500}
       >
         {({ loading, error, data }) => {
           if (loading) return <UserPlaceHolder />
