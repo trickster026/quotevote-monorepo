@@ -14,16 +14,21 @@ const httpLink = new HttpLink({
 const wsLink = new WebSocketLink({
   uri: process.env.REACT_APP_SERVER_WS + "/graphql",
   options: {
+    lazy: true,
     reconnect: true,
-    connectionParams: async () => ({
-      authToken: await localStorage.getItem("token")
+    timeout: 30000,
+    connectionParams: () => ({
+      authToken: localStorage.getItem("token")
     })
   }
 })
 
 const subscriptionMiddleware = {
-  applyMiddleware: async (options, next) => {
-    options.authToken = await localStorage.getItem("token")
+  applyMiddleware: (options, next) => {
+    options.authToken = localStorage.getItem("token")
+    options.context = {
+      token: localStorage.getItem("token")
+    }
     next()
   }
 }
