@@ -4,14 +4,8 @@ import {
   CloseIcon,
   EmojiIcon,
   IconButton,
-  Message,
-  MessageButton,
-  MessageButtons,
   MessageGroup,
   MessageList,
-  MessageMedia,
-  MessageText,
-  MessageTitle,
   Row,
   SendButton,
   TextComposer,
@@ -21,8 +15,7 @@ import {
 import { Loader, Portal } from "semantic-ui-react"
 import { Picker } from "emoji-mart"
 import "emoji-mart/css/emoji-mart.css"
-
-import moment from "moment"
+import MessageBox from "./MessageBox"
 
 class Maximized extends Component {
   state = {
@@ -52,45 +45,17 @@ class Maximized extends Component {
   }
 
   renderMessageList = messages => {
-    const { ownId, sendMessage } = this.props
-
+    // const { ownId } = this.props;
     return (
       <React.Fragment>
         {messages.map((message, index) => (
           <MessageGroup
             key={index}
             onlyFirstWithMeta
-            avatar={message.userId === ownId ? "" : message.userAvatar}
-            isOwn={message.userId === ownId}
+            avatar={message.userAvatar}
+            isOwn={false}
           >
-            <Message
-              date={moment(message.date).format("MMM D, h:mm a")}
-              isOwn={message.userId === ownId}
-              key={message._id}
-              avatar={message.avatarUrl}
-            >
-              {message.title && <MessageTitle title={message.title} />}
-              {message.text && <MessageText>{message.text}</MessageText>}
-              {message.imageUrl && (
-                <MessageMedia>
-                  <img src={message.imageUrl} alt="" />
-                </MessageMedia>
-              )}
-              {message.buttons &&
-                message.buttons.length !== 0 && (
-                  <MessageButtons>
-                    {message.buttons.map((button, buttonIndex) => (
-                      <MessageButton
-                        key={buttonIndex}
-                        label={button.title}
-                        onClick={() => {
-                          sendMessage(button.postback)
-                        }}
-                      />
-                    ))}
-                  </MessageButtons>
-                )}
-            </Message>
+            <MessageBox message={message} />
           </MessageGroup>
         ))}
       </React.Fragment>
@@ -112,7 +77,6 @@ class Maximized extends Component {
   }
 
   handleEmojiPicker = emoji => {
-    console.log({ emoji })
     let sym = emoji.unified.split("-")
     let codesArray = []
     sym.forEach(el => codesArray.push("0x" + el))
@@ -135,7 +99,6 @@ class Maximized extends Component {
   handleClose = () => this.setState({ open: false })
 
   handleChange = e => {
-    console.log("handleChange", e.target.value)
     this.setState({ inputText: e.target.value })
   }
 
@@ -171,7 +134,6 @@ class Maximized extends Component {
       messages = data["userMessages"]
     }
 
-    console.log({ messages })
     return (
       <div
         style={{
