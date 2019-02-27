@@ -1,8 +1,6 @@
 import React, { Component } from "react"
-import ReactDOM from "react-dom"
 import {
   CloseIcon,
-  EmojiIcon,
   IconButton,
   MessageGroup,
   MessageList,
@@ -12,36 +10,14 @@ import {
   TextInput,
   TitleBar
 } from "@livechat/ui-kit"
-import { Loader, Portal } from "semantic-ui-react"
-import { Picker } from "emoji-mart"
+import { Loader } from "semantic-ui-react"
 import "emoji-mart/css/emoji-mart.css"
 import MessageBox from "./MessageBox"
+import MessageEmojiPortal from "./MessageEmojiPortal"
 
 class Maximized extends Component {
   state = {
-    open: false,
-    top: 0,
-    left: 0,
     inputText: ""
-  }
-
-  componentDidMount() {
-    this.props.subscribeToNewMessages()
-    this.setEmojiLocation()
-    window.addEventListener("resize", this.setEmojiLocation)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.setEmojiLocation)
-  }
-
-  setEmojiLocation = () => {
-    const domNode = ReactDOM.findDOMNode(this)
-    const domRect = domNode.getBoundingClientRect()
-    this.setState({
-      top: domRect.top - 40,
-      left: domRect.left + 50
-    })
   }
 
   renderMessageList = messages => {
@@ -55,7 +31,7 @@ class Maximized extends Component {
             avatar={message.userAvatar}
             isOwn={false}
           >
-            <MessageBox message={message} />
+            <MessageBox message={message} setInput={this.setInput} />
           </MessageGroup>
         ))}
       </React.Fragment>
@@ -76,46 +52,12 @@ class Maximized extends Component {
     )
   }
 
-  handleEmojiPicker = emoji => {
-    let sym = emoji.unified.split("-")
-    let codesArray = []
-    sym.forEach(el => codesArray.push("0x" + el))
-    let emojiPic = String.fromCodePoint(...codesArray)
-    this.setState(
-      {
-        inputText: this.state.inputText + emojiPic,
-        open: !this.state.open
-      },
-      () => {
-        const input = this.input
-        input.state.value = this.state.inputText
-        this.forceUpdate()
-      }
-    )
-  }
-
-  handleClick = () => this.setState({ open: !this.state.open })
-
-  handleClose = () => this.setState({ open: false })
-
-  handleChange = e => {
-    this.setState({ inputText: e.target.value })
-  }
-
-  renderEmojiPortal = () => {
-    const { open, left, top } = this.state
-
-    return (
-      <Portal onClose={this.handleClose} open={open}>
-        <div style={{ left, position: "fixed", top, zIndex: 1000 }}>
-          <Picker
-            onSelect={this.handleEmojiPicker}
-            title="Scoreboard™"
-            set="google"
-          />
-        </div>
-      </Portal>
-    )
+  setInput = inputText => {
+    this.setState({ inputText }, () => {
+      const input = this.input
+      input.state.value = inputText
+      this.forceUpdate()
+    })
   }
 
   handleSubmit = event => {
@@ -125,7 +67,7 @@ class Maximized extends Component {
   }
 
   render = () => {
-    const { data, minimize, title, loading } = this.props
+    const { data, minimize, title, loading, messageRoomId } = this.props
 
     let messages = []
     if (data && "messages" in data) {
@@ -172,12 +114,12 @@ class Maximized extends Component {
             <SendButton />
           </Row>
           <Row verticalAlign="center" justify="right">
-            <IconButton fit>
-              <EmojiIcon onClick={this.handleClick} />
-            </IconButton>
+            <MessageEmojiPortal
+              messageRoomId={messageRoomId}
+              setInput={this.setInput}
+            />
           </Row>
         </TextComposer>
-        <div>{this.renderEmojiPortal()}</div>
         <div
           style={{
             textAlign: "center",

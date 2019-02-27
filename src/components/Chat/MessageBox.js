@@ -8,29 +8,27 @@ import {
 } from "@livechat/ui-kit"
 import { Button } from "semantic-ui-react"
 import moment from "moment"
+import { connect } from "react-redux"
+import { chatReaction } from "../../actions/creators/chatCreator"
+import ReactionEmojiPortal from "./ReactionEmojiPortal"
 
 class MessageBox extends React.PureComponent {
-  state = {
-    showReactionIcon: false
-  }
-
   render = () => {
-    const { message } = this.props
     return (
-      <div
-        onMouseLeave={this.toggleReactionVisibility}
-        onMouseEnter={this.toggleReactionVisibility}
-      >
-        {this.renderMessage(message)}
+      <div onMouseEnter={this.toggleReactionVisibility}>
+        {this.renderMessage()}
         {this.renderReaction()}
       </div>
     )
   }
 
-  toggleReactionVisibility = () =>
-    this.setState({ showReactionIcon: !this.state.showReactionIcon })
+  toggleReactionVisibility = () => {
+    const { message } = this.props
+    this.props.toggleChatReaction(message._id)
+  }
 
-  renderMessage = message => {
+  renderMessage = () => {
+    const { message } = this.props
     return (
       <Message
         authorName={message.userName}
@@ -50,17 +48,26 @@ class MessageBox extends React.PureComponent {
     )
   }
 
+  renderReactButtons = () => {
+    return <React.Fragment />
+  }
+
   renderReaction = () => {
-    const { showReactionIcon } = this.state
-    if (showReactionIcon) {
+    const { messageId, message, setInput } = this.props
+    const showAll = messageId === message._id
+
+    if (showAll) {
       return (
         <div style={{ float: "left" }}>
-          <Button circular color="twitter" icon="thumbs up" />
-          <Button circular color="twitter" icon="thumbs down" />
-          <Button circular color="twitter" icon="smile" />
+          {this.renderReactButtons()}
+          <Button circular icon="thumbs up" />
+          <Button circular icon="thumbs down" />
+          <ReactionEmojiPortal messageId={message._id} setInput={setInput} />
         </div>
       )
     }
+
+    return <div style={{ float: "left" }}>{this.renderReactButtons()}</div>
   }
 }
 
@@ -68,4 +75,17 @@ MessageBox.propTypes = {
   message: PropTypes.object.isRequired
 }
 
-export default MessageBox
+const mapStateToProps = ({ chat }) => {
+  return chat
+}
+
+const mapDispatchToProps = dispatch => ({
+  toggleChatReaction: messageId => {
+    dispatch(chatReaction(messageId))
+  }
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessageBox)
