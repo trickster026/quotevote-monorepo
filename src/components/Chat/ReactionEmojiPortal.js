@@ -3,6 +3,20 @@ import ReactDOM from "react-dom"
 import { Button, Portal } from "semantic-ui-react"
 import { Picker } from "emoji-mart"
 import PropTypes from "prop-types"
+import gql from "graphql-tag"
+import { MESSAGE_REACTIONS_QUERY } from "./MessageBox"
+
+const USER_MESSAGE_REACTION_MUTATION = gql`
+  mutation createUserReaction($messageId: String!, $reaction: String!) {
+    createUserReaction(messageId: $messageId, reaction: $reaction) {
+      _id
+      userId
+      messageId
+      reaction
+      created
+    }
+  }
+`
 
 class ReactionEmojiPortal extends Component {
   state = {
@@ -47,7 +61,17 @@ class ReactionEmojiPortal extends Component {
         open: !this.state.open
       },
       () => {
-        console.log(this.state.inputText)
+        const { messageId } = this.props
+        this.props.client.mutate({
+          mutation: USER_MESSAGE_REACTION_MUTATION,
+          variables: { messageId, reaction: this.state.inputText },
+          refetchQueries: [
+            {
+              query: MESSAGE_REACTIONS_QUERY,
+              variables: { messageId }
+            }
+          ]
+        })
       }
     )
   }
@@ -61,7 +85,7 @@ class ReactionEmojiPortal extends Component {
         <Button
           ref={c => (this[refId] = c)}
           circular
-          icon="smile"
+          icon="smile outline"
           onClick={this.handleClick}
         />
         <Portal onClose={this.handleClose} open={open}>
@@ -80,7 +104,7 @@ class ReactionEmojiPortal extends Component {
 
 ReactionEmojiPortal.propTypes = {
   messageId: PropTypes.string.isRequired,
-  setInput: PropTypes.func.isRequired
+  client: PropTypes.object.isRequired
 }
 
 export default ReactionEmojiPortal

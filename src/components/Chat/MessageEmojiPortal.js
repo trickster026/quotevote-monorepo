@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
-import { Button, Portal } from "semantic-ui-react"
+import { Portal } from "semantic-ui-react"
 import { Picker } from "emoji-mart"
 import PropTypes from "prop-types"
-import { EmojiIcon, IconButton, Row } from "@livechat/ui-kit"
+import { EmojiIcon, IconButton } from "@livechat/ui-kit"
 
 class MessageEmojiPortal extends Component {
   state = {

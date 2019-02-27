@@ -11,13 +11,39 @@ import moment from "moment"
 import { connect } from "react-redux"
 import { chatReaction } from "../../actions/creators/chatCreator"
 import ReactionEmojiPortal from "./ReactionEmojiPortal"
+import gql from "graphql-tag"
+import { Query } from "react-apollo"
+import EmojiIcon from "./EmojiIcon"
+
+export const MESSAGE_REACTIONS_QUERY = gql`
+  query userMessageReactions($messageId: String!) {
+    userMessageReactions(messageId: $messageId) {
+      _id
+      userId
+      messageId
+      reaction
+      created
+    }
+  }
+`
 
 class MessageBox extends React.PureComponent {
   render = () => {
+    const { message } = this.props
+    const variables = { messageId: message._id }
     return (
       <div onMouseEnter={this.toggleReactionVisibility}>
-        {this.renderMessage()}
-        {this.renderReaction()}
+        <Query query={MESSAGE_REACTIONS_QUERY} variables={variables}>
+          {({ loading, error, client, data }) => {
+            if (loading || error) return null
+            return (
+              <React.Fragment>
+                {this.renderMessage()}
+                {this.renderReaction(client, data)}
+              </React.Fragment>
+            )
+          }}
+        </Query>
       </div>
     )
   }
@@ -48,26 +74,38 @@ class MessageBox extends React.PureComponent {
     )
   }
 
-  renderReactButtons = () => {
-    return <React.Fragment />
+  renderReactButtons = (client, data) => {
+    return (
+      <React.Fragment>
+        {data.userMessageReactions.map(userMessageReaction => (
+          <Button
+            size="mini"
+            circular
+            color="blue"
+            key={userMessageReaction._id}
+          >
+            <EmojiIcon symbol={userMessageReaction.reaction} />
+          </Button>
+        ))}
+      </React.Fragment>
+    )
   }
 
-  renderReaction = () => {
-    const { messageId, message, setInput } = this.props
+  renderReaction = (client, data) => {
+    const { messageId, message } = this.props
     const showAll = messageId === message._id
-
-    if (showAll) {
-      return (
-        <div style={{ float: "left" }}>
-          {this.renderReactButtons()}
-          <Button circular icon="thumbs up" />
-          <Button circular icon="thumbs down" />
-          <ReactionEmojiPortal messageId={message._id} setInput={setInput} />
-        </div>
-      )
-    }
-
-    return <div style={{ float: "left" }}>{this.renderReactButtons()}</div>
+    return (
+      <div style={{ float: "left" }}>
+        {this.renderReactButtons(client, data)}
+        {showAll ? <Button circular icon="thumbs up" /> : ""}
+        {showAll ? <Button circular icon="thumbs down" /> : ""}
+        {showAll ? (
+          <ReactionEmojiPortal messageId={messageId} client={client} />
+        ) : (
+          ""
+        )}
+      </div>
+    )
   }
 }
 
