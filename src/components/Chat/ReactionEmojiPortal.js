@@ -3,20 +3,10 @@ import ReactDOM from "react-dom"
 import { Button, Portal } from "semantic-ui-react"
 import { Picker } from "emoji-mart"
 import PropTypes from "prop-types"
-import gql from "graphql-tag"
-import { MESSAGE_REACTIONS_QUERY } from "./MessageBox"
-
-const USER_MESSAGE_REACTION_MUTATION = gql`
-  mutation createUserReaction($messageId: String!, $reaction: String!) {
-    createUserReaction(messageId: $messageId, reaction: $reaction) {
-      _id
-      userId
-      messageId
-      reaction
-      created
-    }
-  }
-`
+import {
+  MESSAGE_REACTIONS_QUERY,
+  CREATE_USER_MESSAGE_REACTION_MUTATION
+} from "./ChatGraphQL"
 
 class ReactionEmojiPortal extends Component {
   state = {
@@ -63,7 +53,7 @@ class ReactionEmojiPortal extends Component {
       () => {
         const { messageId } = this.props
         this.props.client.mutate({
-          mutation: USER_MESSAGE_REACTION_MUTATION,
+          mutation: CREATE_USER_MESSAGE_REACTION_MUTATION,
           variables: { messageId, reaction: this.state.inputText },
           refetchQueries: [
             {
@@ -86,6 +76,7 @@ class ReactionEmojiPortal extends Component {
           ref={c => (this[refId] = c)}
           circular
           icon="smile outline"
+          color="grey"
           onClick={this.handleClick}
         />
         <Portal onClose={this.handleClose} open={open}>

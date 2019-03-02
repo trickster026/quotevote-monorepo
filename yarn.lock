@@ -825,9 +825,9 @@
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@livechat/data-utils/-/data-utils-0.2.4.tgz#7298908d6d47351095927a7e386506977859bc49"
 
-"@livechat/ui-kit@^0.2.14":
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/@livechat/ui-kit/-/ui-kit-0.2.14.tgz#798029434cecdd1403f509adade760531f55267c"
+"@livechat/ui-kit@^0.2.15":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@livechat/ui-kit/-/ui-kit-0.2.15.tgz#7cf878c8ee5d658a39e617999d9aea6d1ad06c1c"
   dependencies:
     "@livechat/data-utils" "^0.2.4"
     "@popmotion/easing" "^1.0.1"
@@ -3856,6 +3856,20 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+emoji-datasource@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/emoji-datasource/-/emoji-datasource-4.0.0.tgz#3fc9c0c2f4fb321d9291138819f6d100603d3e2f"
+
+emoji-js@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/emoji-js/-/emoji-js-3.4.1.tgz#422cdf184fd818a910289861ead4782db3e8dc8d"
+  dependencies:
+    emoji-datasource "4.0.0"
+
+emoji-mart@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-2.9.1.tgz#7796bb8a3eed2238763faaa5236f6b817aff565e"
+
 emoji-regex@^6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.5.1.tgz#9baea929b155565c11ea41c6626eaa65cef992c2"
@@ -6266,7 +6280,7 @@ joi@^11.1.1:
     isemail "3.x.x"
     topo "2.x.x"
 
-jquery@x.*:
+jquery@^3.3.1, jquery@x.*:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
@@ -8851,6 +8865,12 @@ react-flexview@^4.0.1:
     lodash.some "^4.6.0"
     prop-types "^15.5.6"
 
+react-fontawesome@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/react-fontawesome/-/react-fontawesome-1.6.1.tgz#eddce17e7dc731aa09fd4a186688a61793a16c5c"
+  dependencies:
+    prop-types "^15.5.6"
+
 react-fuzzy@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/react-fuzzy/-/react-fuzzy-0.5.2.tgz#fc13bf6f0b785e5fefe908724efebec4935eaefe"
@@ -9065,6 +9085,13 @@ react-toastify@^4.0.0-rc.4:
 react-toggled@^1.2.2:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-toggled/-/react-toggled-1.2.7.tgz#be1b72058358dd1ffe11811e4427e5c9cf140c10"
+
+react-tooltip@^3.9.2:
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.9.2.tgz#df74e6f5fd454bb15132d5d2d506895cf505cb5e"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
 
 react-transition-group@^2.0.0, react-transition-group@^2.2.1, react-transition-group@^2.4.0:
   version "2.5.0"

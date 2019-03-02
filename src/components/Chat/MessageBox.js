@@ -11,29 +11,62 @@ import moment from "moment"
 import { connect } from "react-redux"
 import { chatReaction } from "../../actions/creators/chatCreator"
 import ReactionEmojiPortal from "./ReactionEmojiPortal"
-import gql from "graphql-tag"
-import { Query } from "react-apollo"
+import { Query, Subscription } from "react-apollo"
 import EmojiIcon from "./EmojiIcon"
-
-export const MESSAGE_REACTIONS_QUERY = gql`
-  query userMessageReactions($messageId: String!) {
-    userMessageReactions(messageId: $messageId) {
-      _id
-      userId
-      messageId
-      reaction
-      created
-    }
-  }
-`
+import ReactTooltip from "react-tooltip"
+import {
+  CREATE_USER_MESSAGE_REACTION_MUTATION,
+  DELETE_USER_MESSAGE_REACTION_MUTATION,
+  MESSAGE_REACTIONS_QUERY,
+  MESSAGE_REACTIONS_USER_TOOLTIP_QUERY,
+  USER_REACTION_SUBSCRIPTION
+} from "./ChatGraphQL"
 
 class MessageBox extends React.PureComponent {
+  state = {
+    thumbsUp: false,
+    thumbsUpId: "",
+    thumbsDown: false,
+    thumbsDownId: ""
+  }
+
   render = () => {
     const { message } = this.props
     const variables = { messageId: message._id }
     return (
       <div onMouseEnter={this.toggleReactionVisibility}>
-        <Query query={MESSAGE_REACTIONS_QUERY} variables={variables}>
+        <Query
+          query={MESSAGE_REACTIONS_QUERY}
+          variables={variables}
+          onCompleted={data => {
+            const { userMessageReactions } = data
+            const hasThumbsUp = userMessageReactions.filter(
+              userMessageReaction => userMessageReaction.reaction === "👍"
+            )
+            const hasThumbsDown = userMessageReactions.filter(
+              userMessageReaction => userMessageReaction.reaction === "👎"
+            )
+
+            const thumbsUp = hasThumbsUp && hasThumbsUp.length
+            let thumbsUpId = ""
+            if (thumbsUp) {
+              thumbsUpId = hasThumbsUp[0]._id
+            }
+
+            const thumbsDown = hasThumbsUp && hasThumbsDown.length
+            let thumbsDownId = ""
+            if (thumbsDown) {
+              thumbsDownId = hasThumbsDown[0]._id
+            }
+
+            this.setState({
+              thumbsUp,
+              thumbsUpId,
+              thumbsDown,
+              thumbsDownId
+            })
+          }}
+        >
           {({ loading, error, client, data }) => {
             if (loading || error) return null
             return (
@@ -74,16 +107,101 @@ class MessageBox extends React.PureComponent {
     )
   }
 
+  handleDeleteUserReaction = async (reactionId, client) => {
+    const { messageId } = this.props
+    client.mutate({
+      mutation: DELETE_USER_MESSAGE_REACTION_MUTATION,
+      variables: { reactionId },
+      refetchQueries: [
+        {
+          query: MESSAGE_REACTIONS_QUERY,
+          variables: { messageId }
+        }
+      ]
+    })
+  }
+
+  handleThumbsUpDown = async (client, key, symbol) => {
+    const { messageId } = this.props
+    if (!this.state[key]) {
+      client.mutate({
+        mutation: CREATE_USER_MESSAGE_REACTION_MUTATION,
+        variables: { messageId, reaction: symbol },
+        refetchQueries: [
+          {
+            query: MESSAGE_REACTIONS_QUERY,
+            variables: { messageId }
+          }
+        ]
+      })
+    } else {
+      await this.handleDeleteUserReaction(this.state[`${key}Id`], client)
+    }
+  }
+
+  renderReactUserTooltip = (messageId, reactionId) => {
+    if (!reactionId || reactionId === "") {
+      return null
+    }
+
+    return (
+      <Query
+        query={MESSAGE_REACTIONS_USER_TOOLTIP_QUERY}
+        variables={{ messageId, reactionId }}
+      >
+        {({ loading, error, data }) => {
+          if (loading || error) return null
+          return (
+            <React.Fragment>
+              <ReactTooltip id={reactionId}>
+                {data.userMessageReactionToolTip.map(userMessageReaction => (
+                  <span>{`${userMessageReaction.user.name} reacted`}</span>
+                ))}
+              </ReactTooltip>
+            </React.Fragment>
+          )
+        }}
+      </Query>
+    )
+  }
+
   renderReactButtons = (client, data) => {
+    const { userMessageReactions } = data
+    const newUserMessageReactions = userMessageReactions.filter(
+      userMessageReaction =>
+        userMessageReaction.reaction !== "👍" &&
+        userMessageReaction.reaction !== "👎"
+    )
+
+    const { message } = this.props
     return (
       <React.Fragment>
-        {data.userMessageReactions.map(userMessageReaction => (
+        <Subscription
+          subscription={USER_REACTION_SUBSCRIPTION}
+          variables={{ messageId: message._id }}
+          onSubscriptionData={({ client, subscriptionData }) => {
+            console.log("User reaction update", subscriptionData)
+            const variables = { messageId: message._id }
+            client.query({
+              query: MESSAGE_REACTIONS_QUERY,
+              variables,
+              fetchPolicy: "network-only"
+            })
+          }}
+        />
+        {newUserMessageReactions.map(userMessageReaction => (
           <Button
             size="mini"
             circular
             color="blue"
             key={userMessageReaction._id}
+            data-tip=""
+            data-for={userMessageReaction._id}
+            onClick={e =>
+              this.handleDeleteUserReaction(userMessageReaction._id, client)
+            }
           >
+            {this.renderReactUserTooltip(message._id, userMessageReaction._id)}
             <EmojiIcon symbol={userMessageReaction.reaction} />
           </Button>
         ))}
@@ -93,12 +211,37 @@ class MessageBox extends React.PureComponent {
 
   renderReaction = (client, data) => {
     const { messageId, message } = this.props
+    const { thumbsUp, thumbsDown, thumbsUpId, thumbsDownId } = this.state
     const showAll = messageId === message._id
     return (
       <div style={{ float: "left" }}>
         {this.renderReactButtons(client, data)}
-        {showAll ? <Button circular icon="thumbs up" /> : ""}
-        {showAll ? <Button circular icon="thumbs down" /> : ""}
+        {this.renderReactUserTooltip(message._id, thumbsUpId)}
+        {this.renderReactUserTooltip(message._id, thumbsDownId)}
+        {showAll || thumbsUp ? (
+          <Button
+            circular
+            icon="thumbs up"
+            color={thumbsUp ? "blue" : "grey"}
+            onClick={() => this.handleThumbsUpDown(client, "thumbsUp", "👍")}
+            data-tip=""
+            data-for={thumbsUpId}
+          />
+        ) : (
+          ""
+        )}
+        {showAll || thumbsDown ? (
+          <Button
+            circular
+            icon="thumbs down"
+            onClick={() => this.handleThumbsUpDown(client, "thumbsDown", "👎")}
+            color={thumbsDown ? "blue" : "grey"}
+            data-tip=""
+            data-for={thumbsDownId}
+          />
+        ) : (
+          ""
+        )}
         {showAll ? (
           <ReactionEmojiPortal messageId={messageId} client={client} />
         ) : (

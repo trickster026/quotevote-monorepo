@@ -31,7 +31,12 @@ class Maximized extends Component {
             avatar={message.userAvatar}
             isOwn={false}
           >
-            <MessageBox message={message} setInput={this.setInput} />
+            <MessageBox
+              id={message._id}
+              key={message._id}
+              message={message}
+              setInput={this.setInput}
+            />
           </MessageGroup>
         ))}
       </React.Fragment>
