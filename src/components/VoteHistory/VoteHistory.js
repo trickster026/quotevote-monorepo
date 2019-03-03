@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import { Header, Icon, Item, Divider } from "semantic-ui-react"
+import React, { Component, Fragment } from "react"
+import { /* Header, */ Icon, Item, Divider } from "semantic-ui-react"
 import moment from "moment"
 import PropTypes from "prop-types"
 import "./VoteHistory.css"
@@ -17,13 +17,14 @@ class VoteHistory extends Component {
   render = () => {
     const { history } = this.props
     return (
-      <div className="root">
+      <Fragment>
+        {/* <div className="root">
         <Header
           as="h1"
           style={{ fontSize: 14, paddingTop: 20, paddingLeft: 10 }}
         >
           Vote History
-        </Header>
+        </Header> */}
         {this.props.history.length === 0 ? (
           <div style={{ paddingBottom: 20 }}>
             <Divider />
@@ -32,7 +33,10 @@ class VoteHistory extends Component {
             </span>
           </div>
         ) : (
-          <Item.Group divided>
+          <Item.Group
+            divided
+            style={{ overflow: "hidden auto", maxHeight: "120vh" }}
+          >
             {history.reverse().map((vh, index) => (
               <Item
                 key={index}
@@ -59,7 +63,8 @@ class VoteHistory extends Component {
             ))}
           </Item.Group>
         )}
-      </div>
+        {/* </div> */}
+      </Fragment>
     )
   }
 }

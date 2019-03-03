@@ -1,9 +1,17 @@
 import React, { Component } from "react"
-import { Container, Grid, Segment, Header, Divider } from "semantic-ui-react"
+import {
+  Container,
+  Grid,
+  Segment,
+  Header,
+  Divider,
+  Tab
+} from "semantic-ui-react"
 import { Query } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
 import VoteHistory from "../../components/VoteHistory/VoteHistory"
+import CommentHistory from "../../components/CommentHistory/CommentHistory"
 import QuoteWall from "../../components/QuoteWall/QuoteWall"
 import ProfileHeader from "../../components/UserProfile/ProfileHeader"
 import UserPlaceHolder from "../../components/UserProfile/UserPlaceHolder/UserPlaceHolder"
@@ -115,7 +123,24 @@ class User extends Component {
           }))
 
           const hideUserPostedContents = this.props.userId !== user._id
-
+          const panes = [
+            {
+              menuItem: "Vote History",
+              render: () => (
+                <Tab.Pane attached={false} style={{ padding: 0 }}>
+                  <VoteHistory history={user.history} loading={false} />
+                </Tab.Pane>
+              )
+            },
+            {
+              menuItem: "Comment History",
+              render: () => (
+                <Tab.Pane attached={false} style={{ padding: 0 }}>
+                  <CommentHistory userId={userId} />
+                </Tab.Pane>
+              )
+            }
+          ]
           return (
             <React.Fragment>
               <Segment as={Container} basic>
@@ -128,7 +153,12 @@ class User extends Component {
                   <Grid>
                     <Grid.Row columns={2}>
                       <Grid.Column floated="left" width={6}>
-                        <VoteHistory history={user.history} loading={false} />
+                        <Tab
+                          menu={{ secondary: true, pointing: true }}
+                          panes={panes}
+                        />
+                        {/* <VoteHistory history={user.history} loading={false} /> */}
+                        <hr />
                       </Grid.Column>
                       <Grid.Column floated="right" width={10}>
                         <Grid>
