@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import { withApollo } from "react-apollo"
-import { Dimmer, Loader, Button } from "semantic-ui-react"
+import { Dimmer, Loader, Button, Message } from "semantic-ui-react"
 import { USER_REQUEST_INVITE } from "../../../graphql/mutations"
 import nl2br from "react-newline-to-break"
 import "./RequestInvite.css"
@@ -8,7 +8,7 @@ import bgImage from "../../../assets/invite_background.png"
 import { APP_TOKEN } from "../../../utils/constants"
 
 class InviteRequest extends PureComponent {
-  state = { isLoading: false, requestInvite: false }
+  state = { isLoading: false, requestInvite: false, error: false, message: "" }
 
   handleInputs = event => {
     this.setState({ [event.target.name]: event.target.value })
@@ -20,26 +20,43 @@ class InviteRequest extends PureComponent {
   }
 
   handleSendInvite = async event => {
-    this.setState({ isLoading: true })
-    const { email } = this.state
+    this.setState({ isLoading: true, error: false, message: "" })
+    const { email, message } = this.state
     if (email) {
-      const result = await this.props.client.mutate({
-        mutation: USER_REQUEST_INVITE,
-        variables: { email },
-        context: { token: APP_TOKEN }
-      })
-
-      if (result && result.data.sendUserInvite.code === "SUCCESS") {
-        this.setState({ requestInvite: true })
+      const resendFlag = message === "RESEND"
+      console.log("resendFlag", resendFlag)
+      try {
+        const result = await this.props.client.mutate({
+          mutation: USER_REQUEST_INVITE,
+          variables: { email, resendFlag },
+          context: { token: APP_TOKEN }
+        })
+        console.log("result returned from handleSendInvite", result)
+        if (result && result.data.sendUserInvite.code === "SUCCESS") {
+          this.setState({ requestInvite: true, error: false, message: "" })
+        }
+        if (result && result.data.sendUserInvite.code === "RESEND") {
+          this.setState({
+            requestInvite: true,
+            error: false,
+            message: "RESEND"
+          })
+        }
+      } catch (e) {
+        console.log("invite failed, err:", e)
+        this.setState({
+          error: true,
+          message: e.message
+        })
       }
+      this.setState({ isLoading: false })
+      event.persist()
     }
-    this.setState({ isLoading: false })
-    event.persist()
   }
 
   render() {
-    console.log(this.state)
-
+    console.log("Request Invite state", this.state)
+    const { requestInvite, message } = this.state
     if (this.state.isLoading) {
       return (
         <div>
@@ -51,7 +68,7 @@ class InviteRequest extends PureComponent {
       )
     }
 
-    if (this.state.requestInvite) {
+    if (requestInvite) {
       return (
         <div>
           <img src={bgImage} alt="Hiphop Background" className="bgImage" />
@@ -67,24 +84,46 @@ class InviteRequest extends PureComponent {
                 <h1 className="LR-site-title">Hip Hop Score Board</h1>
                 <div className="LR-box-inner">
                   <div className="LR-sign-up">
-                    <div className="LR-site-tagline rokkitt LR-clearfix">
-                      <p>Request sent.</p>
-                      <div className="LR-clearfix" />
-                    </div>
-                    <div className="LR-site-description rokkitt">
-                      <p>
-                        Thank you very much for your request. We will sent you a
-                        confirmation email that you're accepted to use our app.
-                      </p>
-                    </div>
-
-                    <div className="LR-sign-up-container">
-                      <div className="LR-sign-up-container-inner LR-clearfix">
-                        <Button positive onClick={this.handleGoMain}>
-                          Go to App
-                        </Button>
+                    {message === "RESEND" ? (
+                      <div className="LR-sign-up-container">
+                        <div className="LR-site-tagline rokkitt LR-clearfix">
+                          <p>Request sent.</p>
+                          <div className="LR-clearfix" />
+                        </div>
+                        <div className="LR-site-description rokkitt">
+                          <p>
+                            It appears a pending invitation has been sent to
+                            this address. Please check your inbox (and possibly
+                            spam folder) or select resend if you like a new
+                            link.
+                          </p>
+                        </div>
+                        <div className="LR-sign-up-container-inner LR-clearfix">
+                          <Button positive onClick={this.handleSendInvite}>
+                            Resend
+                          </Button>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="LR-sign-up-container">
+                        <div className="LR-site-tagline rokkitt LR-clearfix">
+                          <p>Request sent.</p>
+                          <div className="LR-clearfix" />
+                        </div>
+                        <div className="LR-site-description rokkitt">
+                          <p>
+                            Thank you very much for your request. We will sent
+                            you a confirmation email that you're accepted to use
+                            our app.
+                          </p>
+                        </div>
+                        <div className="LR-sign-up-container-inner LR-clearfix">
+                          <Button positive onClick={this.handleGoMain}>
+                            Go to App
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -124,6 +163,12 @@ class InviteRequest extends PureComponent {
                     <span className="LR-sign-up-label rokkitt">
                       Request an invitation:
                     </span>
+                    <Message negative hidden={!this.state.error}>
+                      {nl2br(
+                        "Uh-oh there was a problem sending the invitation!\n"
+                      )}
+                      {this.state.message}
+                    </Message>
                     <div className="LR-sign-up-container-inner LR-clearfix">
                       <input
                         type="email"

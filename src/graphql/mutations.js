@@ -78,8 +78,14 @@ export const UNFOLLOW_USERS = gql`
 `
 
 export const USER_REQUEST_INVITE = gql`
-  mutation sendUserInvite($email: String!) {
-    sendUserInvite(mail_to: $email)
+  mutation sendUserInvite($email: String!, $resendFlag: Boolean!) {
+    sendUserInvite(mail_to: $email, resendFlag: $resendFlag)
+  }
+`
+
+export const USER_RESEND_INVITE = gql`
+  mutation resendUserInvite($email: String!) {
+    resendUserInvite(mail_to: $email)
   }
 `
 
