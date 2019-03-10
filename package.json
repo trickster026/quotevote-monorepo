@@ -27,6 +27,7 @@
     "localforage": "^1.5.6",
     "lodash": "^4.17.4",
     "moment": "^2.21.0",
+    "newspaperjs": "^1.0.6",
     "prettier": "^1.9.2",
     "prop-types": "^15.6.0",
     "react": "^16.4.0",

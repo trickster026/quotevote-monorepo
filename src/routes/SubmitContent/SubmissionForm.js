@@ -15,6 +15,7 @@ import { connect } from "react-redux"
 import { ToastContainer, toast } from "react-toastify"
 import { Mutation, Query } from "react-apollo"
 import gql from "graphql-tag"
+import { Article } from "newspaperjs"
 
 const SUBMIT_TEXT = gql`
   mutation submitContent($content: ContentInput!) {
@@ -87,6 +88,14 @@ class SubmissionForm extends Component {
   }
 
   handleInputChange = (event, { name, value }) => {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/"
+    Article(proxyurl + value)
+      .then(result => {
+        this.setState({ [name]: result.text, title: result.title })
+      })
+      .catch(reason => {
+        console.log("ERROR:", reason)
+      })
     this.setState({ [name]: value })
   }
 
@@ -101,7 +110,9 @@ class SubmissionForm extends Component {
   }
 
   handleError = event => {
-    toast.error("Your submission failed!")
+    toast.error(
+      "Content submission failed: Please provide input for required fields."
+    )
   }
 
   handleClose = () => {
@@ -140,6 +151,7 @@ class SubmissionForm extends Component {
           label="New Subscoreboard"
           placeholder="Add new subscoreboard"
           onChange={this.handleNewSubBoardInputChange}
+          required
         />
         <Popup
           trigger={
@@ -235,6 +247,7 @@ class SubmissionForm extends Component {
                       value={this.state.title}
                       autoComplete="off"
                       onChange={this.handleInputChange}
+                      required
                     />
                     {createSubScoreboard ? (
                       this.renderCreateNewScoreboard()
@@ -276,6 +289,7 @@ class SubmissionForm extends Component {
                                 label="Subscoreboard"
                                 options={options}
                                 onChange={this.handleDropdownChange}
+                                required
                               />
                             )
                           }}
@@ -299,15 +313,16 @@ class SubmissionForm extends Component {
                     name="text"
                     rows={10}
                     label="Text"
-                    placeholder="Write your article text here..."
+                    placeholder="Write your article text here or paste a URL"
                     value={this.state.text}
                     onChange={this.handleInputChange}
+                    required
                   />
                   <Form.Button color="teal">Submit</Form.Button>
                 </Form>
                 <ToastContainer
                   position="bottom-left"
-                  autoClose={2000}
+                  autoClose={5000}
                   closeOnClick
                 />
                 {this.renderModal(id)}
