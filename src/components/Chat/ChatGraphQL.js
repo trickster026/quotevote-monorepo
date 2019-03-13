@@ -62,3 +62,17 @@ export const USER_REACTION_SUBSCRIPTION = gql`
     }
   }
 `
+
+export const USER_BUDDY_LIST = gql`
+  query followedUsers {
+    userBuddyList
+  }
+`
+
+export const USER_QUERY = gql`
+  query userDetails($userId: String!) {
+    user(user_id: $userId) {
+      avatar
+    }
+  }
+`

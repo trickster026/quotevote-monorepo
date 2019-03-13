@@ -13,7 +13,10 @@ export const userLogin = (username, password, history) => {
   return async (dispatch, getState) => {
     const result = await getToken(username, password, dispatch)
 
-    dispatch({ type: USER_LOGIN_REQUEST, payload: { loading: true } })
+    dispatch({
+      type: USER_LOGIN_REQUEST,
+      payload: { loading: true, isLoggedIn: false }
+    })
 
     if ("error" in result) {
       const serverConnectionRefuseError = {
@@ -25,6 +28,7 @@ export const userLogin = (username, password, history) => {
           : serverConnectionRefuseError
       dispatch({
         type: USER_LOGIN_FAILURE,
+        isLoggedIn: false,
         payload: { error: errorMessage, loading: false }
       })
     } else {
@@ -34,6 +38,7 @@ export const userLogin = (username, password, history) => {
         type: USER_LOGIN_SUCCESS,
         payload: {
           user,
+          isLoggedIn: true,
           loading: false,
           error: { data: { message: "" } }
         }
