@@ -17,7 +17,8 @@ import $ from "jquery"
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
 import {
   tokenValidator,
-  userLogin
+  userLogin,
+  userLogout
 } from "../../actions/creators/loginActionCreator"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
@@ -68,6 +69,10 @@ class HeaderComponent extends PureComponent {
         imageSize: 2500 * ratio + "px " + 100 * ratio + "px"
       })
     })
+
+    if (!tokenValidator()) {
+      this.props.logout(null)
+    }
   }
 
   UNSAFE_componentWillMount = () => {
@@ -229,6 +234,7 @@ class HeaderComponent extends PureComponent {
               to={"/logout"}
               text="Sign Out"
               icon="sign out"
+              onClick={() => {}}
             />
           </Dropdown.Menu>
         </Dropdown>
@@ -341,6 +347,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   guestLogin: (username, password, history) => {
     dispatch(userLogin(username, password, history))
+  },
+  logout: history => {
+    dispatch(userLogout(history))
   },
   updateCurrentSong: (artistId, songId) =>
     dispatch({

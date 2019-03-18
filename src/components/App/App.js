@@ -64,7 +64,6 @@ class App extends Component {
           </Switch>
         </Container>
         <GlobalChat />
-        {console.log("paths", path)}
         {path !== "/invite" && <Footer />}
       </BasicLayout>
     )

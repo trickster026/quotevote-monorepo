@@ -91,13 +91,16 @@ export function clearToken() {
 }
 
 export const userLogout = history => {
-  return async (dispatch, getState) => {
+  return async dispatch => {
+    console.log("userLogout", history)
     clearToken()
-
     dispatch({
       type: USER_LOGOUT,
-      payload: {}
+      payload: { loading: false, isLoggedIn: false }
     })
-    history.push("/logout")
+
+    if (history) {
+      history.push("/logout")
+    }
   }
 }

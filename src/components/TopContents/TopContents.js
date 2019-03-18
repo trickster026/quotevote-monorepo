@@ -188,8 +188,6 @@ class TopContents extends Component {
 }
 
 const mapStateToProps = ({ filterContent }) => {
-  console.log("filterContent printing")
-  console.log(filterContent)
   return {
     searchTerm: filterContent.searchTerm
   }

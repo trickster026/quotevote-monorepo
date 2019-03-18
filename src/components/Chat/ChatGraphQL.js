@@ -76,3 +76,47 @@ export const USER_QUERY = gql`
     }
   }
 `
+
+export const CHAT_QUERY = gql`
+  query userMessages($messageRoomId: String!) {
+    userMessages(messageRoomId: $messageRoomId) {
+      _id
+      messageRoomId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
+
+export const MESSAGE_MUTATION = gql`
+  mutation onCreateUserMessage($message: UserMessageInput!, $userId: String!) {
+    createUserMessage(message: $message, userId: $userId) {
+      _id
+      messageRoomId
+      userName
+      text
+      date
+    }
+  }
+`
+
+export const CHAT_SUBSCRIPTION = gql`
+  subscription onUserMessageCreated($messageRoomId: String!) {
+    userMessageCreated(messageRoomId: $messageRoomId) {
+      _id
+      messageRoomId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`

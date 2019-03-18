@@ -4,7 +4,7 @@
   "cache-version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@livechat/ui-kit": "^0.2.15",
+    "@livechat/ui-kit": "^0.3.0-6",
     "apollo-boost": "^0.1.17",
     "apollo-client-preset": "^1.0.4",
     "apollo-link": "^1.2.2",

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import { withApollo } from "react-apollo"
+import { ApolloConsumer, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import GlobalMaximized from "../../components/Chat/GlobalMaximized"
 import Minimized from "../../components/Chat/Minimized"
@@ -10,16 +10,20 @@ class GlobalChat extends PureComponent {
     const { isLoggedIn } = this.props
     if (isLoggedIn) {
       return (
-        <ThemeProvider>
-          <FixedWrapper.Root maximizedOnInit>
-            <FixedWrapper.Maximized active={true}>
-              <GlobalMaximized {...this.props} />
-            </FixedWrapper.Maximized>
-            <FixedWrapper.Minimized active={false}>
-              <Minimized {...this.props} />
-            </FixedWrapper.Minimized>
-          </FixedWrapper.Root>
-        </ThemeProvider>
+        <ApolloConsumer>
+          {client => (
+            <ThemeProvider>
+              <FixedWrapper.Root maximizedOnInit>
+                <FixedWrapper.Maximized active={true}>
+                  <GlobalMaximized {...this.props} client={client} />
+                </FixedWrapper.Maximized>
+                <FixedWrapper.Minimized active={false}>
+                  <Minimized {...this.props} />
+                </FixedWrapper.Minimized>
+              </FixedWrapper.Root>
+            </ThemeProvider>
+          )}
+        </ApolloConsumer>
       )
     }
     return null
