@@ -55,7 +55,8 @@ class SubmissionForm extends Component {
     domain: {},
     showShareableLink: false,
     createSubScoreboard: false,
-    domainTitle: ""
+    domainTitle: "",
+    privacy: "private"
   }
 
   handleSubmit = (event, submitText) => {
@@ -68,7 +69,7 @@ class SubmissionForm extends Component {
             title: this.state.domainTitle,
             url: "/" + this.state.domainTitle.toLowerCase(),
             key: this.state.domainTitle.toLowerCase(),
-            privacy: "private",
+            privacy: this.state.privacy,
             description: "Descripton for " + this.state.domainTitle + " domain"
           }
         }
@@ -134,9 +135,15 @@ class SubmissionForm extends Component {
     this.setState({ domain: options.find(item => item.value === value) })
   }
 
+  handlePrivacyChange = (e, data) => {
+    console.log("handlePrivacyChange", data.value)
+    this.setState({ privacy: data.value })
+  }
+
   handleCreateSubScoreboard = () => {
     this.setState({ createSubScoreboard: true })
   }
+
   handleNewSubBoardInputChange = (e, { value }) => {
     e.preventDefault()
     this.setState({ domainTitle: value })
@@ -152,6 +159,16 @@ class SubmissionForm extends Component {
           placeholder="Add new subscoreboard"
           onChange={this.handleNewSubBoardInputChange}
           required
+        />
+        <Form.Dropdown
+          label="Privacy"
+          selection
+          options={[
+            { key: "private", text: "private", value: "private" },
+            { key: "public", text: "public", value: "public" }
+          ]}
+          placeholder="Choose privacy"
+          onChange={this.handlePrivacyChange}
         />
         <Popup
           trigger={
