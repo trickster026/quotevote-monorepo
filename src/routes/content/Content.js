@@ -2,10 +2,10 @@ import React, { PureComponent } from "react"
 import {
   Button,
   Container,
+  Divider,
   Grid,
   Message,
-  Segment,
-  Divider
+  Segment
 } from "semantic-ui-react"
 import { Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
@@ -65,7 +65,7 @@ const QUERY_USER_PROFILE = gql`
 `
 
 const getContent = gql`
-  query content($contentId: String, $key: String) {
+  query content($contentId: String!, $key: String!) {
     content(contentId: $contentId) {
       creatorId
       _id
@@ -98,6 +98,11 @@ const getContent = gql`
     domain(key: $key) {
       allowedUserIds
       privacy
+    }
+    userContentChatRoom(contentId: $contentId) {
+      _id
+      users
+      messageType
     }
   }
 `
@@ -338,6 +343,7 @@ class Content extends PureComponent {
               ? tempData
               : data.content
             const creator = loading ? "" : data.content.creator || {}
+            const { userContentChatRoom } = data
 
             return (
               <React.Fragment>
@@ -378,6 +384,8 @@ class Content extends PureComponent {
                         score={scoreDetails}
                         created={created}
                         onSelect={this.handleSelect}
+                        userContentChatRoom={userContentChatRoom}
+                        contentId={contentId}
                         loading={loading}
                       >
                         {/* <ActionPopup

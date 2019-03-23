@@ -28,7 +28,9 @@ class VotingBoard extends Component {
     topOffset: PropTypes.number,
     content: PropTypes.string.isRequired,
     children: PropTypes.func,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    userContentChatRoom: PropTypes.object,
+    contentId: PropTypes.string
   }
 
   static defaultProps = {
@@ -121,6 +123,8 @@ class VotingBoard extends Component {
         title={this.props.title}
         score={this.props.score}
         created={this.created}
+        userContentChatRoom={this.props.userContentChatRoom}
+        contentId={this.props.contentId}
       >
         {this.renderContent() || this.renderLoader()}
       </ContentPanel>
