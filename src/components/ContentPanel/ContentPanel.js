@@ -7,6 +7,7 @@ import ReactTooltip from "react-tooltip"
 import { ApolloConsumer } from "react-apollo"
 import gql from "graphql-tag"
 import { getContent } from "../../routes/content/Content"
+import { USER_BUDDY_LIST } from "../Chat/ChatGraphQL"
 
 const BOOKMARK_CONTENT = gql`
   mutation createContentChatRoom($contentId: String!) {
@@ -68,7 +69,10 @@ class ContentPanel extends Component {
     client.mutate({
       mutation: !_bookmark ? BOOKMARK_CONTENT : REMOVE_BOOKMARK_CONTENT,
       variables: { contentId },
-      refetchQueries: [{ query: getContent, variables: { contentId, key } }]
+      refetchQueries: [
+        { query: getContent, variables: { contentId, key } },
+        { query: USER_BUDDY_LIST }
+      ]
     })
   }
 
