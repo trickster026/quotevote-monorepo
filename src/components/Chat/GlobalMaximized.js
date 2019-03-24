@@ -20,8 +20,11 @@ import { USER_BUDDY_LIST } from "./ChatGraphQL"
 import PropTypes from "prop-types"
 import GlobalUserChat from "./GlobalUserChat"
 import ChatLoading from "./ChatLoading"
+import GlobalContentChat from "./GlobalContentChat"
 
 const defaultTitle = "Buddy List"
+
+const chatView = ["default", "user", "content"]
 
 class GlobalMaximized extends PureComponent {
   state = {
@@ -29,59 +32,43 @@ class GlobalMaximized extends PureComponent {
     user: null,
     title: defaultTitle,
     selectedMessageRoomId: null,
-    inputText: ""
+    inputText: "",
+    chatView: chatView[0],
+    contentChatRoom: null
   }
 
-  handleVisibility = () => this.setState({ visible: !this.state.visible })
+  handleVisibility = index =>
+    this.setState({ visible: !this.state.visible, chatView: chatView[index] })
 
   handleBuddySelection = user => {
     const { lastMessage } = user
     const { messageRoomId } = lastMessage
-    this.setState({
-      user,
-      title: user.name,
-      selectedMessageRoomId: messageRoomId
-    })
-    this.handleVisibility()
-  }
-
-  renderChatListItem = user => {
-    const { buddyId, name, avatar, lastMessage } = user
-    const { text } = lastMessage
-    return (
-      <ChatListItem
-        key={`chatList${buddyId}`}
-        onClick={() => this.handleBuddySelection(user)}
-      >
-        <Avatar key={`avatar${buddyId}`} imgUrl={avatar} />
-        <Column key={`column${buddyId}`}>
-          <Row justify key={`row${buddyId}`}>
-            <Title ellipsis key={`title${buddyId}`}>{`${name}`}</Title>
-          </Row>
-          <Subtitle ellipsis key={`subtitle${buddyId}`}>
-            {text}
-          </Subtitle>
-        </Column>
-      </ChatListItem>
+    this.setState(
+      {
+        user,
+        title: user.name,
+        selectedMessageRoomId: messageRoomId
+      },
+      () => this.handleVisibility(1)
     )
   }
 
-  renderBuddyList = () => {
-    return (
-      <Query query={USER_BUDDY_LIST} fetchPolicy="cache">
-        {({ loading, error, data }) => {
-          if (error) return "Error loading buddy list"
-          if (loading) return <ChatLoading />
-          const { userBuddyList } = data
-          return userBuddyList.map(user => this.renderChatListItem(user))
-        }}
-      </Query>
+  handleContentSelection = contentChatRoom => {
+    const { lastMessage } = contentChatRoom
+    const { title } = lastMessage
+    console.log(contentChatRoom)
+    this.setState(
+      {
+        title,
+        contentChatRoom
+      },
+      () => this.handleVisibility(2)
     )
   }
 
   handleBackButton = () => {
     this.setState({ user: null, title: defaultTitle })
-    this.handleVisibility()
+    this.handleVisibility(0)
   }
 
   renderBackButton = () => (
@@ -110,15 +97,87 @@ class GlobalMaximized extends PureComponent {
       <MessageList active containScrollInSubtree>
         <ChatList style={{ maxWidth: "100%" }}>
           {this.renderBuddyList()}
-          <Header as="h4">CONTENT CONVERSATION</Header>
         </ChatList>
       </MessageList>
     </div>
   )
 
+  renderBuddyList = () => {
+    return (
+      <Query query={USER_BUDDY_LIST}>
+        {({ loading, error, data }) => {
+          if (error) return "Error loading buddy list"
+          if (loading) return <ChatLoading />
+          const { userBuddyList, getBookmarkedContents } = data
+          return (
+            <React.Fragment>
+              {userBuddyList.map(user => this.renderChatListItem(user))}
+              <Header as="h4">CONTENT CONVERSATION</Header>
+              {getBookmarkedContents.map(content =>
+                this.renderContentListItem(content)
+              )}
+            </React.Fragment>
+          )
+        }}
+      </Query>
+    )
+  }
+
+  renderChatListItem = user => {
+    const { buddyId, name, avatar, lastMessage } = user
+    const { text } = lastMessage
+    return (
+      <ChatListItem
+        key={`chatList${buddyId}`}
+        onClick={() => this.handleBuddySelection(user)}
+      >
+        <Avatar key={`avatar${buddyId}`} imgUrl={avatar} />
+        <Column key={`column${buddyId}`}>
+          <Row justify key={`row${buddyId}`}>
+            <Title ellipsis key={`title${buddyId}`}>{`${name}`}</Title>
+          </Row>
+          <Subtitle ellipsis key={`subtitle${buddyId}`}>
+            {text}
+          </Subtitle>
+        </Column>
+      </ChatListItem>
+    )
+  }
+
+  renderContentListItem = contentChatRoom => {
+    const { _id, lastMessage } = contentChatRoom
+    const { avatar, text, title } = lastMessage
+    return (
+      <React.Fragment>
+        <ChatListItem
+          key={`chatContentList${_id}`}
+          onClick={() => this.handleContentSelection(contentChatRoom)}
+        >
+          <Avatar key={`avatarContent${_id}`} imgUrl={avatar} />
+          <Column key={`columnContent${_id}`}>
+            <Row justify key={`rowContent${_id}`}>
+              <Title ellipsis key={`titleContent${_id}`}>{`${title}`}</Title>
+            </Row>
+            <Subtitle ellipsis key={`subtitleContent${_id}`}>
+              {text}
+            </Subtitle>
+          </Column>
+        </ChatListItem>
+      </React.Fragment>
+    )
+  }
+
   render = () => {
     const { minimize, client } = this.props
-    const { visible, selectedMessageRoomId, user } = this.state
+    const {
+      visible,
+      selectedMessageRoomId,
+      user,
+      chatView,
+      contentChatRoom
+    } = this.state
+    const userChatView = chatView === "user"
+    const contentChatView = chatView === "content"
     return (
       <div
         style={{
@@ -138,13 +197,25 @@ class GlobalMaximized extends PureComponent {
         {!visible && this.renderBackButton()}
         {visible && this.renderChatList()}
 
-        {!visible && (
-          <GlobalUserChat
-            selectedMessageRoomId={selectedMessageRoomId}
-            user={user}
-            client={client}
-          />
-        )}
+        {!visible &&
+          userChatView &&
+          user && (
+            <GlobalUserChat
+              selectedMessageRoomId={selectedMessageRoomId}
+              user={user}
+              client={client}
+            />
+          )}
+
+        {!visible &&
+          contentChatView &&
+          contentChatRoom && (
+            <GlobalContentChat
+              contentChatRoom={contentChatRoom}
+              user={user}
+              client={client}
+            />
+          )}
 
         <div
           style={{

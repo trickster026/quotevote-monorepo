@@ -119,13 +119,7 @@ class VotingBoard extends Component {
       )
     }
     return (
-      <ContentPanel
-        title={this.props.title}
-        score={this.props.score}
-        created={this.created}
-        userContentChatRoom={this.props.userContentChatRoom}
-        contentId={this.props.contentId}
-      >
+      <ContentPanel created={this.created} {...this.props}>
         {this.renderContent() || this.renderLoader()}
       </ContentPanel>
     )

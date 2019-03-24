@@ -6,9 +6,10 @@ import moment from "moment"
 import ReactTooltip from "react-tooltip"
 import { ApolloConsumer } from "react-apollo"
 import gql from "graphql-tag"
+import { getContent } from "../../routes/content/Content"
 
 const BOOKMARK_CONTENT = gql`
-  mutation updateUserAdminRight($contentId: String) {
+  mutation createContentChatRoom($contentId: String!) {
     createContentChatRoom(contentId: $contentId) {
       _id
       users
@@ -17,7 +18,7 @@ const BOOKMARK_CONTENT = gql`
   }
 `
 const REMOVE_BOOKMARK_CONTENT = gql`
-  mutation updateUserAdminRight($contentId: String) {
+  mutation removeContentChatRoom($contentId: String!) {
     removeContentChatRoom(contentId: $contentId) {
       _id
       users
@@ -41,7 +42,9 @@ class ContentPanel extends Component {
     }),
     bookmark: PropTypes.bool,
     created: PropTypes.string,
-    contentId: PropTypes.string
+    contentId: PropTypes.string,
+    userContentChatRoom: PropTypes.object,
+    key: PropTypes.string
   }
 
   static defaultProps = {
@@ -51,23 +54,36 @@ class ContentPanel extends Component {
       downvotes: 0
     },
     bookmark: false,
-    contentId: ""
+    contentId: "",
+    key: "",
+    userContentChatRoom: {
+      _id: "0"
+    }
   }
 
   handleClick = client => {
     const _bookmark = this.state.bookmark
     this.setState({ bookmark: !_bookmark })
-
-    const { contentId } = this.props
+    const { contentId, key } = this.props
     client.mutate({
       mutation: !_bookmark ? BOOKMARK_CONTENT : REMOVE_BOOKMARK_CONTENT,
-      variables: { contentId }
+      variables: { contentId },
+      refetchQueries: [{ query: getContent, variables: { contentId, key } }]
     })
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.contentId !== prevProps.contentId) {
+      const { userContentChatRoom } = this.props
+      const isBookMarked =
+        userContentChatRoom && userContentChatRoom._id !== "0"
+      this.setState({ bookmark: isBookMarked })
+    }
+  }
+
   render = () => {
-    const { bookmark } = this.state
     const { title, score, created } = this.props
+    const { bookmark } = this.state
     return (
       <ApolloConsumer>
         {client => (

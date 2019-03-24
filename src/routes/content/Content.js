@@ -64,7 +64,7 @@ const QUERY_USER_PROFILE = gql`
   }
 `
 
-const getContent = gql`
+export const getContent = gql`
   query content($contentId: String!, $key: String!) {
     content(contentId: $contentId) {
       creatorId
@@ -135,7 +135,7 @@ const addQuote = gql`
   }
 `
 
-const MESSAGE_MUTATION = gql`
+export const MESSAGE_MUTATION = gql`
   mutation createMessage($message: MessageInput!) {
     createMessage(message: $message) {
       _id
@@ -149,7 +149,7 @@ const MESSAGE_MUTATION = gql`
   }
 `
 
-const CHAT_SUBSCRIPTION = gql`
+export const CHAT_SUBSCRIPTION = gql`
   subscription onMessageCrated($contentId: String!) {
     messageCreated(contentId: $contentId) {
       _id
@@ -386,6 +386,7 @@ class Content extends PureComponent {
                         onSelect={this.handleSelect}
                         userContentChatRoom={userContentChatRoom}
                         contentId={contentId}
+                        key={domain}
                         loading={loading}
                       >
                         {/* <ActionPopup

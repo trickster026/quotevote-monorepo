@@ -66,6 +66,12 @@ export const USER_REACTION_SUBSCRIPTION = gql`
 export const USER_BUDDY_LIST = gql`
   query followedUsers {
     userBuddyList
+    getBookmarkedContents {
+      _id
+      users
+      contentId
+      lastMessage
+    }
   }
 `
 
@@ -93,6 +99,22 @@ export const CHAT_QUERY = gql`
   }
 `
 
+export const CONTENT_CHAT_QUERY = gql`
+  query chats($contentId: String!) {
+    messages(contentId: $contentId) {
+      _id
+      contentId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
+
 export const MESSAGE_MUTATION = gql`
   mutation onCreateUserMessage($message: UserMessageInput!, $userId: String!) {
     createUserMessage(message: $message, userId: $userId) {
@@ -105,11 +127,41 @@ export const MESSAGE_MUTATION = gql`
   }
 `
 
+export const CONTENT_MESSAGE_MUTATION = gql`
+  mutation createMessage($message: MessageInput!) {
+    createMessage(message: $message) {
+      _id
+      contentId
+      userId
+      userName
+      title
+      text
+      date
+    }
+  }
+`
+
 export const CHAT_SUBSCRIPTION = gql`
   subscription onUserMessageCreated($messageRoomId: String!) {
     userMessageCreated(messageRoomId: $messageRoomId) {
       _id
       messageRoomId
+      userId
+      userName
+      userAvatar
+      title
+      text
+      imageUrl
+      date
+    }
+  }
+`
+
+export const CONTENT_CHAT_SUBSCRIPTION = gql`
+  subscription onMessageCrated($contentId: String!) {
+    messageCreated(contentId: $contentId) {
+      _id
+      contentId
       userId
       userName
       userAvatar
