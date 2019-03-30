@@ -7,17 +7,28 @@ import TopAuthors from "../../components/TopAuthors/TopAuthors"
 
 import "./Scoreboard.css"
 
+const defaultPageFilter = {
+  searchTerm: "",
+  searchBy: "",
+  dateRange: null
+}
+
 class Scoreboard extends Component {
-  state = { query: { offset: 0, limit: 5 } }
+  state = { pageFilter: defaultPageFilter }
+
+  handleFilterChange = pageFilter => {
+    console.log("Filter change", pageFilter)
+    this.setState({ pageFilter })
+  }
 
   render = () => {
     return (
       <Container as={Container} className="scoreboard-rankings-section">
         <Grid>
-          <ScoreboardHeader />
+          <ScoreboardHeader handleFilterChange={this.handleFilterChange} />
           <Grid.Row columns={2} stretched className="top-row">
             <Grid.Column width={12} className="top-content-column">
-              <TopContents />
+              <TopContents pageFilter={this.state.pageFilter} />
             </Grid.Column>
             <Grid.Column width={4} className="top-authors-column">
               <TopAuthors />

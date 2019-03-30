@@ -3,12 +3,14 @@ import { connect } from "react-redux"
 import { Dropdown, Grid } from "semantic-ui-react"
 import { SEARCH_CONTENT } from "../../actions/types"
 import { DateRangePicker } from "react-dates"
+import moment from "moment"
 
 import "./ScoreboardHeader.css"
+import PropTypes from "prop-types"
 
 const trigger = (
   <span>
-    <i className="fas fa-sort-amount-down fa-2x" />
+    <i className="fas fa-sort-amount-up fa-2x" />
   </span>
 )
 
@@ -17,12 +19,6 @@ const tagOptions = [
     key: "TopContent",
     text: "Top Content",
     value: "Top Content"
-  },
-
-  {
-    key: "SearchKey",
-    text: "Search Key",
-    value: "Search Key"
   },
   {
     key: "DateRange",
@@ -37,8 +33,8 @@ class ScoreboardHeader extends Component {
     this.state = {
       searchTerm: "",
       selectedOption: tagOptions[0],
-      startDate: null,
-      endDate: null,
+      startDate: moment(),
+      endDate: moment(),
       focusedInput: null
     }
   }
@@ -48,11 +44,24 @@ class ScoreboardHeader extends Component {
   }
 
   clickSearch = () => {
-    this.props.filterContent(this.state.searchTerm)
+    // this.props.filterContent(this.state.searchTerm);
+    const { startDate, endDate, selectedOption } = this.state
+    const { value } = selectedOption
+    const isDateRange = value === "Date Range"
+    const searchTerm = isDateRange ? "" : this.state.searchTerm
+    const searchBy = isDateRange ? "date_range" : ""
+
+    const dateRange = isDateRange
+      ? {
+          from: startDate.format("YYYY-MM-DD").toString(),
+          to: endDate.format("YYYY-MM-DD").toString()
+        }
+      : {}
+    const pageFilter = { searchTerm, searchBy, dateRange }
+    this.props.handleFilterChange(pageFilter)
   }
 
   handleOption = (e, data) => {
-    console.log("Selected: ", { data })
     this.setState({ selectedOption: data })
   }
 
@@ -72,8 +81,6 @@ class ScoreboardHeader extends Component {
       startDate,
       endDate
     })
-
-    console.log({ startDate, endDate })
   }
 
   render = () => {
@@ -140,6 +147,10 @@ const mapDispatchToProps = dispatch => ({
     })
   }
 })
+
+ScoreboardHeader.propTypes = {
+  handleFilterChange: PropTypes.func.isRequired
+}
 
 export default connect(
   null,

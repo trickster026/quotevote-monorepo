@@ -7,7 +7,7 @@ import {
   Message,
   Segment
 } from "semantic-ui-react"
-import { Query, Mutation, withApollo } from "react-apollo"
+import { Mutation, Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
 
@@ -343,7 +343,7 @@ class Content extends PureComponent {
             if (loading) return <div>Loading</div>
 
             if (!loading) {
-              const { allowedUserIds, privacy, _id } = data.domain
+              const { allowedUserIds, privacy } = data.domain
               const { creatorId } = data.content
               showPage =
                 (allowedUserIds.find(id => id === this.props.userId) &&
