@@ -296,12 +296,10 @@ class HeaderComponent extends PureComponent {
     )
   }
 
-  renderRightMenuItem = (data, client) => {
+  renderRightMenuItem = () => {
     const { isLoading, value, results, noResult } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
-    const { notifications } = data
-    const newNotifications = notifications.filter(item => item.status === "new")
-    const notifCount = newNotifications.length
+    const userId = this.props.login.user._id
     return (
       <Menu.Menu position="right" stackable="true" className="item">
         <Menu.Item as={Link} name="home" to={"/home"} className="item-menu">
@@ -326,60 +324,74 @@ class HeaderComponent extends PureComponent {
             showNoResults={noResult}
           />
         </Menu.Item>
-
-        <Menu.Item>
-          {/* <Button circular color="orange" icon="bell" /> */}
-          <Dropdown
-            trigger={this.renderNotif(notifCount, client)}
-            pointing="top right"
-            icon={null}
-          >
-            <Dropdown.Menu>
-              {isEmpty(notifications) ? (
-                <Dropdown.Item
-                  key={"notif-0"}
-                  text="No notifications"
-                  icon="bell"
-                />
-              ) : (
-                notifications.map((item, index) => {
-                  let icon, url
-                  switch (item.notifType) {
-                    case "comment":
-                      icon = "write square"
-                      break
-                    case "message":
-                      icon = "message"
-                      break
-                    case "post":
-                      icon = "edit"
-                      break
-                    case "follow":
-                      icon = "users"
-                      url = `/user/${item.followerUserId}`
-                      break
-                    default:
-                      icon = "bell"
-                      break
-                  }
-                  return (
-                    <Dropdown.Item
-                      key={`notif${index}`}
-                      active={item.status !== "visited"}
-                      as={Link}
-                      name="notification"
-                      to={url}
-                      text={`${item.label}`}
-                      description={`${moment(item.created).fromNow()}`}
-                      icon={icon}
-                      onClick={() => this.handleVisitNotif(client, item._id)}
-                    />
-                  )
-                })
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Menu.Item>
+        <Query query={GET_USER_NOTIFICATIONS} variables={{ userId }}>
+          {({ loading, error, data, client }) => {
+            if (loading) return "Loading data ..."
+            if (error) return <div>{`Error: ${error}`}</div>
+            const { notifications } = data
+            const newNotifications = notifications.filter(
+              item => item.status === "new"
+            )
+            const notifCount = newNotifications.length
+            return (
+              <Menu.Item>
+                {/* <Button circular color="orange" icon="bell" /> */}
+                <Dropdown
+                  trigger={this.renderNotif(notifCount, client)}
+                  pointing="top right"
+                  icon={null}
+                >
+                  <Dropdown.Menu>
+                    {isEmpty(notifications) ? (
+                      <Dropdown.Item
+                        key={"notif-0"}
+                        text="No notifications"
+                        icon="bell"
+                      />
+                    ) : (
+                      notifications.map((item, index) => {
+                        let icon, url
+                        switch (item.notifType) {
+                          case "comment":
+                            icon = "write square"
+                            break
+                          case "message":
+                            icon = "message"
+                            break
+                          case "post":
+                            icon = "edit"
+                            break
+                          case "follow":
+                            icon = "users"
+                            url = `/user/${item.followerUserId}`
+                            break
+                          default:
+                            icon = "bell"
+                            break
+                        }
+                        return (
+                          <Dropdown.Item
+                            key={`notif${index}`}
+                            active={item.status !== "visited"}
+                            as={Link}
+                            name="notification"
+                            to={url}
+                            text={`${item.label}`}
+                            description={`${moment(item.created).fromNow()}`}
+                            icon={icon}
+                            onClick={() =>
+                              this.handleVisitNotif(client, item._id)
+                            }
+                          />
+                        )
+                      })
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Menu.Item>
+            )
+          }}
+        </Query>
         {tokenValidator() && this.renderUserAccount()}
       </Menu.Menu>
     )
@@ -415,43 +427,33 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     const pathName = this.props.location.pathname
-
     if (pathName === this.props.routing.url + "/invite") return ""
-    const userId = this.props.login.user._id
     return (
-      <Query query={GET_USER_NOTIFICATIONS} variables={{ userId }}>
-        {({ loading, error, data, client }) => {
-          if (loading) return "Loading data ..."
-          if (error) return <div>{`Error: ${error}`}</div>
-          return (
-            <Menu
-              fixed="top"
-              color="black"
-              size="small"
-              inverted
-              stackable
-              borderless
-              compact
-            >
-              <Container>
-                <Menu.Menu position="left">
-                  <Menu.Item>
-                    <Image floated="left" size="medium" as={Link} to="/">
-                      <div className="logoflap">SCOREBOARD</div>
-                    </Image>
-                  </Menu.Item>
-                </Menu.Menu>
-                {this.renderRightMenuItem(data, client)}
-                <ToastContainer
-                  position="bottom-left"
-                  autoClose={2000}
-                  closeOnClick
-                />
-              </Container>
-            </Menu>
-          )
-        }}
-      </Query>
+      <Menu
+        fixed="top"
+        color="black"
+        size="small"
+        inverted
+        stackable
+        borderless
+        compact
+      >
+        <Container>
+          <Menu.Menu position="left">
+            <Menu.Item>
+              <Image floated="left" size="medium" as={Link} to="/">
+                <div className="logoflap">SCOREBOARD</div>
+              </Image>
+            </Menu.Item>
+          </Menu.Menu>
+          {this.renderRightMenuItem()}
+          <ToastContainer
+            position="bottom-left"
+            autoClose={2000}
+            closeOnClick
+          />
+        </Container>
+      </Menu>
     )
   }
 }
