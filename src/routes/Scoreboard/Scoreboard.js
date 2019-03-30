@@ -17,7 +17,6 @@ class Scoreboard extends Component {
   state = { pageFilter: defaultPageFilter }
 
   handleFilterChange = pageFilter => {
-    console.log("Filter change", pageFilter)
     this.setState({ pageFilter })
   }
 

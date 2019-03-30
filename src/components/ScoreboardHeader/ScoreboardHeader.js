@@ -1,41 +1,24 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Dropdown, Grid } from "semantic-ui-react"
+import { Grid, Icon, Input } from "semantic-ui-react"
 import { SEARCH_CONTENT } from "../../actions/types"
 import { DateRangePicker } from "react-dates"
 import moment from "moment"
 
 import "./ScoreboardHeader.css"
 import PropTypes from "prop-types"
-
-const trigger = (
-  <span>
-    <i className="fas fa-sort-amount-up fa-2x" />
-  </span>
-)
-
-const tagOptions = [
-  {
-    key: "TopContent",
-    text: "Top Content",
-    value: "Top Content"
-  },
-  {
-    key: "DateRange",
-    text: "Date Range",
-    value: "Date Range"
-  }
-]
+import ReactTooltip from "react-tooltip"
 
 class ScoreboardHeader extends Component {
   constructor(props) {
     super(props)
     this.state = {
       searchTerm: "",
-      selectedOption: tagOptions[0],
       startDate: moment(),
       endDate: moment(),
-      focusedInput: null
+      focusedInput: null,
+      showCalendar: false,
+      sortByAsc: false
     }
   }
 
@@ -43,38 +26,32 @@ class ScoreboardHeader extends Component {
     this.setState({ searchTerm: e.target.value })
   }
 
+  toggleCalendarVisibility = () => {
+    this.setState({ showCalendar: !this.state.showCalendar })
+  }
+
+  toggleSorting = () => {
+    this.setState({ sortByAsc: !this.state.sortByAsc }, () =>
+      this.clickSearch()
+    )
+  }
+
   clickSearch = () => {
     // this.props.filterContent(this.state.searchTerm);
-    const { startDate, endDate, selectedOption } = this.state
-    const { value } = selectedOption
-    const isDateRange = value === "Date Range"
-    const searchTerm = isDateRange ? "" : this.state.searchTerm
-    const searchBy = isDateRange ? "date_range" : ""
+    const { startDate, endDate, showCalendar, sortByAsc } = this.state
+    const searchTerm = showCalendar ? "" : this.state.searchTerm
+    const searchBy = showCalendar ? "date_range" : ""
 
-    const dateRange = isDateRange
+    const dateRange = showCalendar
       ? {
           from: startDate.format("YYYY-MM-DD").toString(),
           to: endDate.format("YYYY-MM-DD").toString()
         }
       : {}
-    const pageFilter = { searchTerm, searchBy, dateRange }
+    const sort = sortByAsc ? "ASC" : "DESC"
+    const pageFilter = { searchTerm, searchBy, dateRange, sort }
     this.props.handleFilterChange(pageFilter)
   }
-
-  handleOption = (e, data) => {
-    this.setState({ selectedOption: data })
-  }
-
-  renderInput = (
-    <div className="ui icon input">
-      <input
-        placeholder="Search..."
-        type="text"
-        onChange={this.handleInputChange}
-        style={{ height: "46px", width: "285px" }}
-      />
-    </div>
-  )
 
   handleDateRangeChange = ({ startDate, endDate }) => {
     this.setState({
@@ -84,7 +61,16 @@ class ScoreboardHeader extends Component {
   }
 
   render = () => {
-    const { selectedOption, startDate, endDate, focusedInput } = this.state
+    const {
+      startDate,
+      endDate,
+      focusedInput,
+      showCalendar,
+      sortByAsc
+    } = this.state
+    const display = showCalendar ? "block" : "none"
+    const sortIcon = sortByAsc ? "sort amount up" : "sort amount down"
+    const sortingTip = !sortByAsc ? "ascending" : "descending"
     return (
       <Grid.Row columns={1} className="scoreboard-rankings-header-row">
         <Grid.Column width={16} className="scoreboard-rankings-header-column">
@@ -93,42 +79,70 @@ class ScoreboardHeader extends Component {
               <h3>Scoreboard Rankings</h3>
             </center>
             <div className="scoreboard-rankings-icons">
-              <Dropdown
-                trigger={trigger}
-                icon={null}
-                style={{ marginRight: "5px" }}
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Header icon="tags" content="Filter By" />
-                  <Dropdown.Menu scrolling>
-                    {tagOptions.map(option => (
-                      <Dropdown.Item
-                        key={option.value}
-                        {...option}
-                        onClick={this.handleOption}
-                      />
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown.Menu>
-              </Dropdown>
-              {selectedOption.value !== "Date Range" ? (
-                this.renderInput
-              ) : (
-                <DateRangePicker
-                  isOutsideRange={() => false}
-                  startDate={startDate} // momentPropTypes.momentObj or null,
-                  startDateId="startDateRange" // PropTypes.string.isRequired,
-                  endDate={endDate} // momentPropTypes.momentObj or null,
-                  endDateId="endDateRange" // PropTypes.string.isRequired,
-                  onDatesChange={this.handleDateRangeChange} // PropTypes.func.isRequired,
-                  focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                  onFocusChange={focusedInput =>
-                    this.setState({ focusedInput })
-                  } // PropTypes.func.isRequired,
-                />
-              )}
-              &nbsp;&nbsp;
-              <i className="fas fa-search fa-2x" onClick={this.clickSearch} />
+              <Grid>
+                <Grid.Row>
+                  <div style={{ marginTop: 10 }}>
+                    <Icon
+                      data-for="sortby"
+                      data-tip={`Sort rankings by ${sortingTip}`}
+                      link
+                      name={sortIcon}
+                      size="big"
+                      onClick={() => this.toggleSorting()}
+                    />
+                    <ReactTooltip id="sortby" />
+                  </div>
+                  <div className="ui icon input">
+                    <Input
+                      icon={
+                        <Icon
+                          name="search"
+                          inverted
+                          circular
+                          link
+                          onClick={() => this.clickSearch()}
+                        />
+                      }
+                      placeholder="Search..."
+                      onChange={this.handleInputChange}
+                      style={{
+                        height: "46px",
+                        width: "285px",
+                        marginRight: "5px"
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <Icon
+                      data-for="calendarOption"
+                      data-tip={`Filter by date range`}
+                      color={showCalendar ? "green" : null}
+                      link
+                      name="calendar"
+                      size="big"
+                      onClick={() => this.toggleCalendarVisibility()}
+                    />
+
+                    <ReactTooltip id="calendarOption" />
+                  </div>
+                </Grid.Row>
+                <Grid.Row style={{ display }}>
+                  <div style={{ marginLeft: 38 }}>
+                    <DateRangePicker
+                      isOutsideRange={() => false}
+                      startDate={startDate} // momentPropTypes.momentObj or null,
+                      startDateId="startDateRange" // PropTypes.string.isRequired,
+                      endDate={endDate} // momentPropTypes.momentObj or null,
+                      endDateId="endDateRange" // PropTypes.string.isRequired,
+                      onDatesChange={this.handleDateRangeChange} // PropTypes.func.isRequired,
+                      focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                      onFocusChange={focusedInput =>
+                        this.setState({ focusedInput })
+                      } // PropTypes.func.isRequired
+                    />
+                  </div>
+                </Grid.Row>
+              </Grid>
             </div>
           </div>
         </Grid.Column>

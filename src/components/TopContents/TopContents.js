@@ -2,11 +2,13 @@ import React, { Component } from "react"
 import { Grid, Pagination, Placeholder, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
-import { APP_TOKEN } from "../../utils/constants"
 import moment from "moment"
+import ReadMoreReact from "read-more-react"
+import { APP_TOKEN } from "../../utils/constants"
 
 import "./TopContents.css"
 import PropTypes from "prop-types"
+import ContentModal from "./ContentModal"
 
 const query = gql`
   query paginate($page: PaginationInput!) {
@@ -35,7 +37,6 @@ class TopContents extends Component {
   render = () => {
     const { page, limit } = this.state
     const { pageFilter } = this.props
-
     return (
       <Query
         query={query}
@@ -44,7 +45,6 @@ class TopContents extends Component {
             page,
             limit,
             type: "Content",
-            sort: "ASC",
             ...pageFilter
           }
         }}
@@ -125,15 +125,19 @@ class TopContents extends Component {
                             </div>
                           </div>
                           <br />
-                          <p>{content.text}</p>
+                          <ReadMoreReact
+                            text={content.text}
+                            min={300}
+                            ideal={300}
+                            max={500}
+                            readMoreText={"[read more]"}
+                          />
                         </div>
                         <div className="top-content-text-info">
                           <Grid.Row>
                             <Grid.Column>
                               <small>
-                                <i>
-                                  <a href="/scoreboard">{content.title}</a>
-                                </i>
+                                <ContentModal content={content} />
                                 &nbsp; by{" "}
                                 {content.creator
                                   ? content.creator.name
