@@ -8,3 +8,13 @@
   border-radius: 3px;
   line-height: 20px;
 }
+
+/* .notif-button {
+  position: absolute;
+  z-index: -1;
+} */
+
+#notif-counter {
+  left: 40px;
+  top: -10px;
+}
