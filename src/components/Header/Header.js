@@ -178,13 +178,17 @@ class HeaderComponent extends PureComponent {
     }
   }
 
-  handleVisitNotif = (client, id) => {
+  handleVisitNotif = (client, id, status) => {
     const userId = this.props.login.user._id
-    client.mutate({
-      mutation: UDATE_NOTIFICATION_STATUS,
-      variables: { userId: id, status: "visited" },
-      refetchQueries: [{ query: GET_USER_NOTIFICATIONS, variables: { userId } }]
-    })
+    if (status !== "visited") {
+      client.mutate({
+        mutation: UDATE_NOTIFICATION_STATUS,
+        variables: { userId: id, status: "visited" },
+        refetchQueries: [
+          { query: GET_USER_NOTIFICATIONS, variables: { userId } }
+        ]
+      })
+    }
   }
 
   resetComponent = () =>
@@ -296,6 +300,22 @@ class HeaderComponent extends PureComponent {
     )
   }
 
+  renderDefaultNotif = () => {
+    return (
+      <Menu.Item>
+        <Dropdown trigger={this.renderNotif()} pointing="top right" icon={null}>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              key={"notif-0"}
+              text="No notifications"
+              icon="bell"
+            />
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Item>
+    )
+  }
+
   renderRightMenuItem = () => {
     const { isLoading, value, results, noResult } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
@@ -326,8 +346,8 @@ class HeaderComponent extends PureComponent {
         </Menu.Item>
         <Query query={GET_USER_NOTIFICATIONS} variables={{ userId }}>
           {({ loading, error, data, client }) => {
-            if (loading) return "Loading data ..."
-            if (error) return <div>{`Error: ${error}`}</div>
+            if (loading) return this.renderDefaultNotif()
+            if (error) return this.renderDefaultNotif()
             const { notifications } = data
             const newNotifications = notifications.filter(
               item => item.status === "new"
@@ -349,38 +369,51 @@ class HeaderComponent extends PureComponent {
                         icon="bell"
                       />
                     ) : (
-                      notifications.map((item, index) => {
+                      notifications.reverse().map((item, index) => {
                         let icon, url
+                        const {
+                          _id,
+                          contentDomain,
+                          contentId,
+                          followerUserId,
+                          label,
+                          status,
+                          created
+                        } = item
                         switch (item.notifType) {
                           case "comment":
-                            icon = "write square"
+                            icon = "edit"
+                            url = `/boards${contentDomain}/content/${contentId}`
                             break
                           case "message":
                             icon = "message"
+                            url = "/"
                             break
                           case "post":
                             icon = "edit"
+                            url = "/"
                             break
                           case "follow":
                             icon = "users"
-                            url = `/user/${item.followerUserId}`
+                            url = `/user/${followerUserId}`
                             break
                           default:
                             icon = "bell"
+                            url = "/"
                             break
                         }
                         return (
                           <Dropdown.Item
                             key={`notif${index}`}
-                            active={item.status !== "visited"}
+                            active={status !== "visited"}
                             as={Link}
                             name="notification"
                             to={url}
-                            text={`${item.label}`}
-                            description={`${moment(item.created).fromNow()}`}
+                            text={`${label}`}
+                            description={`${moment(created).fromNow()}`}
                             icon={icon}
                             onClick={() =>
-                              this.handleVisitNotif(client, item._id)
+                              this.handleVisitNotif(client, _id, status)
                             }
                           />
                         )
