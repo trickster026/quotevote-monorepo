@@ -382,7 +382,7 @@ class HeaderComponent extends PureComponent {
                         } = item
                         switch (item.notifType) {
                           case "comment":
-                            icon = "edit"
+                            icon = "comment alternate"
                             url = `/boards${contentDomain}/content/${contentId}`
                             break
                           case "message":
@@ -391,7 +391,7 @@ class HeaderComponent extends PureComponent {
                             break
                           case "post":
                             icon = "edit"
-                            url = "/"
+                            url = `/boards${contentDomain}/content/${contentId}`
                             break
                           case "follow":
                             icon = "users"
