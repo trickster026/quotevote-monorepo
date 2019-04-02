@@ -378,7 +378,8 @@ class HeaderComponent extends PureComponent {
                           followerUserId,
                           label,
                           status,
-                          created
+                          created,
+                          senderUserId
                         } = item
                         switch (item.notifType) {
                           case "comment":
@@ -386,8 +387,8 @@ class HeaderComponent extends PureComponent {
                             url = `/boards${contentDomain}/content/${contentId}`
                             break
                           case "message":
-                            icon = "message"
-                            url = "/"
+                            icon = "discussions"
+                            url = `/user/${senderUserId}`
                             break
                           case "post":
                             icon = "edit"
