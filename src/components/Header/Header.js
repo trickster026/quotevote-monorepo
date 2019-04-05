@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from "react"
-import { withApollo, Query } from "react-apollo"
+import { withApollo, Query, Subscription } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import {
@@ -14,7 +14,7 @@ import {
 import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
 import $ from "jquery"
-import { isEmpty } from "lodash"
+import { isEmpty, sortBy, find } from "lodash"
 import moment from "moment"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
@@ -53,6 +53,12 @@ const GET_USER_NOTIFICATIONS = gql`
 const UDATE_NOTIFICATION_STATUS = gql`
   mutation updateNotificationStatus($userId: String!, $status: String!) {
     updateNotificationStatus(userId: $userId, status: $status)
+  }
+`
+
+const SUBSCRIBER_NOTIFICATIONS = gql`
+  subscription notificationCreated($userId: String!) {
+    notificationCreated(userId: $userId)
   }
 `
 
@@ -170,10 +176,7 @@ class HeaderComponent extends PureComponent {
       const userId = this.props.login.user._id
       client.mutate({
         mutation: UDATE_NOTIFICATION_STATUS,
-        variables: { userId, status: "seen" },
-        refetchQueries: [
-          { query: GET_USER_NOTIFICATIONS, variables: { userId } }
-        ]
+        variables: { userId, status: "seen" }
       })
     }
   }
@@ -344,85 +347,113 @@ class HeaderComponent extends PureComponent {
             showNoResults={noResult}
           />
         </Menu.Item>
-        <Query query={GET_USER_NOTIFICATIONS} variables={{ userId }}>
-          {({ loading, error, data, client }) => {
-            if (loading) return this.renderDefaultNotif()
-            if (error) return this.renderDefaultNotif()
-            const { notifications } = data
-            const newNotifications = notifications.filter(
-              item => item.status === "new"
-            )
-            const notifCount = newNotifications.length
+        <Query
+          query={GET_USER_NOTIFICATIONS}
+          variables={{ userId }}
+          fetchPolicy={"cache-and-network"}
+        >
+          {({ loading, error, data: { notifications }, client }) => {
             return (
-              <Menu.Item>
-                {/* <Button circular color="orange" icon="bell" /> */}
-                <Dropdown
-                  trigger={this.renderNotif(notifCount, client)}
-                  pointing="top right"
-                  icon={null}
-                >
-                  <Dropdown.Menu>
-                    {isEmpty(notifications) ? (
-                      <Dropdown.Item
-                        key={"notif-0"}
-                        text="No notifications"
-                        icon="bell"
-                      />
-                    ) : (
-                      notifications.reverse().map((item, index) => {
-                        let icon, url
-                        const {
-                          _id,
-                          contentDomain,
-                          contentId,
-                          followerUserId,
-                          label,
-                          status,
-                          created,
-                          senderUserId
-                        } = item
-                        switch (item.notifType) {
-                          case "comment":
-                            icon = "comment alternate"
-                            url = `/boards${contentDomain}/content/${contentId}`
-                            break
-                          case "message":
-                            icon = "discussions"
-                            url = `/user/${senderUserId}`
-                            break
-                          case "post":
-                            icon = "edit"
-                            url = `/boards${contentDomain}/content/${contentId}`
-                            break
-                          case "follow":
-                            icon = "users"
-                            url = `/user/${followerUserId}`
-                            break
-                          default:
-                            icon = "bell"
-                            url = "/"
-                            break
-                        }
-                        return (
-                          <Dropdown.Item
-                            key={`notif${index}`}
-                            active={status !== "visited"}
-                            as={Link}
-                            name="notification"
-                            to={url}
-                            text={`${label}`}
-                            description={`${moment(created).fromNow()}`}
-                            icon={icon}
-                            onClick={() =>
-                              this.handleVisitNotif(client, _id, status)
-                            }
-                          />
-                        )
-                      })
-                    )}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Menu.Item>
+              <Subscription
+                subscription={SUBSCRIBER_NOTIFICATIONS}
+                variables={{ userId }}
+                onSubscriptionData={({ client, subscriptionData }) => {
+                  console.log("Notifications", subscriptionData)
+                }}
+              >
+                {({ loading2, error2, data }) => {
+                  const isLoading = loading || loading2
+                  const isError = error || error2
+                  if (isLoading) return this.renderDefaultNotif()
+                  if (isError) return this.renderDefaultNotif()
+                  let notificationsList
+                  if (
+                    data &&
+                    find(data.notificationCreated, ["userId", userId])
+                  ) {
+                    notificationsList = sortBy(data.notificationCreated, [
+                      "created"
+                    ])
+                  } else {
+                    notificationsList = sortBy(notifications, ["created"])
+                  }
+                  const newNotifications = notificationsList.filter(
+                    item => item.status === "new"
+                  )
+                  const notifCount = newNotifications.length
+                  return (
+                    <Menu.Item>
+                      {/* <Button circular color="orange" icon="bell" /> */}
+                      <Dropdown
+                        trigger={this.renderNotif(notifCount, client)}
+                        pointing="top right"
+                        icon={null}
+                      >
+                        <Dropdown.Menu>
+                          {isEmpty(notifications) ? (
+                            <Dropdown.Item
+                              key={"notif-0"}
+                              text="No notifications"
+                              icon="bell"
+                            />
+                          ) : (
+                            notificationsList.reverse().map((item, index) => {
+                              let icon, url
+                              const {
+                                _id,
+                                contentDomain,
+                                contentId,
+                                followerUserId,
+                                label,
+                                status,
+                                created,
+                                senderUserId
+                              } = item
+                              switch (item.notifType) {
+                                case "comment":
+                                  icon = "comment alternate"
+                                  url = `/boards${contentDomain}/content/${contentId}`
+                                  break
+                                case "message":
+                                  icon = "discussions"
+                                  url = `/user/${senderUserId}`
+                                  break
+                                case "post":
+                                  icon = "edit"
+                                  url = `/boards${contentDomain}/content/${contentId}`
+                                  break
+                                case "follow":
+                                  icon = "users"
+                                  url = `/user/${followerUserId}`
+                                  break
+                                default:
+                                  icon = "bell"
+                                  url = "/"
+                                  break
+                              }
+                              return (
+                                <Dropdown.Item
+                                  key={`notif${index}`}
+                                  active={status !== "visited"}
+                                  as={Link}
+                                  name="notification"
+                                  to={url}
+                                  text={`${label}`}
+                                  description={`${moment(created).fromNow()}`}
+                                  icon={icon}
+                                  onClick={() =>
+                                    this.handleVisitNotif(client, _id, status)
+                                  }
+                                />
+                              )
+                            })
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Menu.Item>
+                  )
+                }}
+              </Subscription>
             )
           }}
         </Query>
