@@ -4,19 +4,19 @@ import { BasicLayout } from "../Layouts"
 import { GlobalHeader } from "../Header"
 import Footer from "../Footer/Footer"
 import {
-  Home,
-  CreateNewScoreboard,
-  Scoreboard,
-  Login,
-  Signup,
-  Terms,
-  RequestInvite,
-  Shareables,
-  SubmitContent,
-  User,
   AppSettings,
+  Boards,
   Content,
-  Boards
+  CreateNewScoreboard,
+  Home,
+  Login,
+  RequestInvite,
+  Scoreboard,
+  Shareables,
+  Signup,
+  SubmitContent,
+  Terms,
+  User
 } from "../../routes"
 import PrivateRoute from "../PrivateRoute"
 
@@ -26,6 +26,7 @@ import "@fortawesome/fontawesome-free/css/all.css"
 import { Container } from "semantic-ui-react"
 
 import "./App.css"
+import GlobalChat from "../Chat/GlobalChat"
 
 class App extends Component {
   render() {
@@ -62,7 +63,7 @@ class App extends Component {
             {/* <Route path={"/:username"} component={User} /> */}
           </Switch>
         </Container>
-        {console.log("paths", path)}
+        <GlobalChat />
         {path !== "/invite" && <Footer />}
       </BasicLayout>
     )

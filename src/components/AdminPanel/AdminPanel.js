@@ -48,7 +48,6 @@ class AdminPanel extends Component {
                 label={`${pendingUsers.length}`}
                 onClick={() => this.setState({ memberModalShow: true })}
               />
-              <Button color="teal" icon="edit" />
               <Mutation mutation={ACCEPT_USER}>
                 {(acceptUserToBoard, { data, error }) => {
                   if (error) return <div>Error: {error.message}</div>

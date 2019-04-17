@@ -2,12 +2,12 @@ import React, { PureComponent } from "react"
 import {
   Button,
   Container,
+  Divider,
   Grid,
   Message,
-  Segment,
-  Divider
+  Segment
 } from "semantic-ui-react"
-import { Query, withApollo } from "react-apollo"
+import { Mutation, Query, withApollo } from "react-apollo"
 import { connect } from "react-redux"
 import gql from "graphql-tag"
 
@@ -18,6 +18,7 @@ import VotingBoard from "../../components/VotingBoard/VotingBoard"
 import Maximized from "../../components/Chat/Maximized"
 import Minimized from "../../components/Chat/Minimized"
 import VotingPopup from "../../components/VotingBoard/VotingPopup"
+import AdminPanel from "../../components/AdminPanel/AdminPanel"
 
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 import "./Content.css"
@@ -52,6 +53,7 @@ const QUERY_USER_PROFILE = gql`
       contents {
         _id
         domain {
+          _id
           key
         }
         creator {
@@ -64,8 +66,8 @@ const QUERY_USER_PROFILE = gql`
   }
 `
 
-const getContent = gql`
-  query content($contentId: String, $key: String) {
+export const getContent = gql`
+  query content($contentId: String!, $key: String!) {
     content(contentId: $contentId) {
       creatorId
       _id
@@ -96,8 +98,16 @@ const getContent = gql`
       }
     }
     domain(key: $key) {
+      _id
       allowedUserIds
+      pendingUserIds
+      adminIds
       privacy
+    }
+    userContentChatRoom(contentId: $contentId) {
+      _id
+      users
+      messageType
     }
   }
 `
@@ -130,7 +140,7 @@ const addQuote = gql`
   }
 `
 
-const MESSAGE_MUTATION = gql`
+export const MESSAGE_MUTATION = gql`
   mutation createMessage($message: MessageInput!) {
     createMessage(message: $message) {
       _id
@@ -144,7 +154,7 @@ const MESSAGE_MUTATION = gql`
   }
 `
 
-const CHAT_SUBSCRIPTION = gql`
+export const CHAT_SUBSCRIPTION = gql`
   subscription onMessageCrated($contentId: String!) {
     messageCreated(contentId: $contentId) {
       _id
@@ -172,6 +182,15 @@ const CHAT_QUERY = gql`
       text
       imageUrl
       date
+    }
+  }
+`
+
+const ADD_PENDING_USER = gql`
+  mutation addPendingUser($domainId: String!, $userId: String!) {
+    addPendingUser(domainId: $domainId, userId: $userId) {
+      allowedUserIds
+      pendingUserIds
     }
   }
 `
@@ -288,6 +307,18 @@ class Content extends PureComponent {
     this.setState({ select })
   }
 
+  renderAdminPanel = (domainId, adminIds) => {
+    if (adminIds.find(id => id === this.props.userId)) {
+      return (
+        <Grid.Column width={4}>
+          <AdminPanel domainId={domainId} />
+        </Grid.Column>
+      )
+    } else {
+      return null
+    }
+  }
+
   render = () => {
     const { contentId, domain } = this.props.match.params
     if (!contentId) return <div>No content id passed!</div>
@@ -308,6 +339,9 @@ class Content extends PureComponent {
             if (error) return <div>{`Error: ${error}`}</div>
 
             let showPage = true
+
+            if (loading) return <div>Loading</div>
+
             if (!loading) {
               const { allowedUserIds, privacy } = data.domain
               const { creatorId } = data.content
@@ -318,26 +352,70 @@ class Content extends PureComponent {
                 creatorId === this.props.creatorId
             }
 
-            if (!showPage)
+            //  In Pending Ids
+            if (
+              data.domain.pendingUserIds.find(id => id === this.props.userId)
+            ) {
+              return (
+                <Message positive>
+                  <Message.Header>
+                    You have successfully requested to join the board. You're
+                    request is under consideration of the Admin and you will be
+                    informed if accepted.
+                  </Message.Header>
+                </Message>
+              )
+            }
+
+            if (!showPage) {
+              const { _id: domainId } = data.domain
+
               return (
                 <Segment as={Container} basic>
                   <Message negative>
                     <Message.Header>
                       You are not authorize to view this content!
                     </Message.Header>
-                    <p>
-                      <Button color="teal" size="mini">
-                        Ask to be invited
-                      </Button>
-                    </p>
                   </Message>
+                  <Mutation domain={domainId} mutation={ADD_PENDING_USER}>
+                    {(addPendingUser, { data, error }) => {
+                      console.log("Mutation add pending user props", this.props)
+                      const { userId } = this.props
+                      // const { domainId : _id } = data.domain
+                      console.log("Mutation data.domain", data)
+                      if (!data)
+                        return (
+                          <Button
+                            color="teal"
+                            size="mini"
+                            onClick={() =>
+                              addPendingUser({
+                                variables: { domainId, userId }
+                              })
+                            }
+                          >
+                            Request to Join Board
+                          </Button>
+                        )
+                      return (
+                        <Message positive>
+                          <Message.Header>
+                            Thanks, we'll get that right over for the Admin to
+                            review...
+                          </Message.Header>
+                        </Message>
+                      )
+                    }}
+                  </Mutation>
                 </Segment>
               )
-
+            }
             const { title, text, scoreDetails, comments, created } = loading
               ? tempData
               : data.content
             const creator = loading ? "" : data.content.creator || {}
+            const { userContentChatRoom } = data
+            const { _id: domainId, adminIds } = data.domain
 
             return (
               <React.Fragment>
@@ -378,6 +456,9 @@ class Content extends PureComponent {
                         score={scoreDetails}
                         created={created}
                         onSelect={this.handleSelect}
+                        userContentChatRoom={userContentChatRoom}
+                        contentId={contentId}
+                        key={domain}
                         loading={loading}
                       >
                         {/* <ActionPopup
@@ -408,6 +489,7 @@ class Content extends PureComponent {
                       />
                     </Grid.Column>
                   </Grid.Row>
+                  {this.renderAdminPanel(domainId, adminIds)}
                 </Grid>
                 <Query query={CHAT_QUERY} variables={variables}>
                   {({ subscribeToMore, ...result }) => (

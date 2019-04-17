@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react"
-import { withApollo } from "react-apollo"
+import React, { PureComponent, Fragment } from "react"
+import { withApollo, Query, Subscription } from "react-apollo"
 import { connect } from "react-redux"
 import { Link, withRouter } from "react-router-dom"
 import {
@@ -8,16 +8,20 @@ import {
   Image,
   Menu,
   Search,
-  Container
+  Container,
+  Label
 } from "semantic-ui-react"
 import { toast, ToastContainer } from "react-toastify"
 import axios from "axios"
 import $ from "jquery"
+import { isEmpty, sortBy, find } from "lodash"
+import moment from "moment"
 
 import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
 import {
   tokenValidator,
-  userLogin
+  userLogin,
+  userLogout
 } from "../../actions/creators/loginActionCreator"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
@@ -39,6 +43,22 @@ const search = gql`
       _id
       name
     }
+  }
+`
+const GET_USER_NOTIFICATIONS = gql`
+  query notifications($userId: String!) {
+    notifications(userId: $userId)
+  }
+`
+const UDATE_NOTIFICATION_STATUS = gql`
+  mutation updateNotificationStatus($userId: String!, $status: String!) {
+    updateNotificationStatus(userId: $userId, status: $status)
+  }
+`
+
+const SUBSCRIBER_NOTIFICATIONS = gql`
+  subscription notificationCreated($userId: String!) {
+    notificationCreated(userId: $userId)
   }
 `
 
@@ -68,6 +88,10 @@ class HeaderComponent extends PureComponent {
         imageSize: 2500 * ratio + "px " + 100 * ratio + "px"
       })
     })
+
+    if (!tokenValidator()) {
+      this.props.logout(null)
+    }
   }
 
   UNSAFE_componentWillMount = () => {
@@ -144,6 +168,29 @@ class HeaderComponent extends PureComponent {
           })
         }
       }
+    }
+  }
+
+  handleViewNotif = (notifCount, client) => {
+    if (notifCount > 0) {
+      const userId = this.props.login.user._id
+      client.mutate({
+        mutation: UDATE_NOTIFICATION_STATUS,
+        variables: { userId, status: "seen" }
+      })
+    }
+  }
+
+  handleVisitNotif = (client, id, status) => {
+    const userId = this.props.login.user._id
+    if (status !== "visited") {
+      client.mutate({
+        mutation: UDATE_NOTIFICATION_STATUS,
+        variables: { userId: id, status: "visited" },
+        refetchQueries: [
+          { query: GET_USER_NOTIFICATIONS, variables: { userId } }
+        ]
+      })
     }
   }
 
@@ -229,6 +276,42 @@ class HeaderComponent extends PureComponent {
               to={"/logout"}
               text="Sign Out"
               icon="sign out"
+              onClick={() => {}}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu.Item>
+    )
+  }
+
+  renderNotif = (notifCount, client) => {
+    return (
+      <Fragment>
+        <Button
+          circular
+          color="orange"
+          icon="bell"
+          className="notif-button"
+          onClick={() => this.handleViewNotif(notifCount, client)}
+        />
+        {notifCount > 0 && (
+          <Label color="red" id="notif-counter" floating circular>
+            {notifCount}
+          </Label>
+        )}
+      </Fragment>
+    )
+  }
+
+  renderDefaultNotif = () => {
+    return (
+      <Menu.Item>
+        <Dropdown trigger={this.renderNotif()} pointing="top right" icon={null}>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              key={"notif-0"}
+              text="No notifications"
+              icon="bell"
             />
           </Dropdown.Menu>
         </Dropdown>
@@ -239,6 +322,7 @@ class HeaderComponent extends PureComponent {
   renderRightMenuItem = () => {
     const { isLoading, value, results, noResult } = this.state
     if (!tokenValidator()) return this.renderLoginMenuItem()
+    const userId = this.props.login.user._id
     return (
       <Menu.Menu position="right" stackable="true" className="item">
         <Menu.Item as={Link} name="home" to={"/home"} className="item-menu">
@@ -263,10 +347,116 @@ class HeaderComponent extends PureComponent {
             showNoResults={noResult}
           />
         </Menu.Item>
-
-        <Menu.Item>
-          <Button circular color="orange" icon="bell" />
-        </Menu.Item>
+        <Query
+          query={GET_USER_NOTIFICATIONS}
+          variables={{ userId }}
+          fetchPolicy={"cache-and-network"}
+        >
+          {({ loading, error, data: { notifications }, client }) => {
+            return (
+              <Subscription
+                subscription={SUBSCRIBER_NOTIFICATIONS}
+                variables={{ userId }}
+                onSubscriptionData={({ client, subscriptionData }) => {
+                  console.log("Notifications", subscriptionData)
+                }}
+              >
+                {({ loading2, error2, data }) => {
+                  const isLoading = loading || loading2
+                  const isError = error || error2
+                  if (isLoading) return this.renderDefaultNotif()
+                  if (isError) return this.renderDefaultNotif()
+                  let notificationsList
+                  if (
+                    data &&
+                    find(data.notificationCreated, ["userId", userId])
+                  ) {
+                    notificationsList = sortBy(data.notificationCreated, [
+                      "created"
+                    ])
+                  } else {
+                    notificationsList = sortBy(notifications, ["created"])
+                  }
+                  const newNotifications = notificationsList.filter(
+                    item => item.status === "new"
+                  )
+                  const notifCount = newNotifications.length
+                  return (
+                    <Menu.Item>
+                      {/* <Button circular color="orange" icon="bell" /> */}
+                      <Dropdown
+                        trigger={this.renderNotif(notifCount, client)}
+                        pointing="top right"
+                        icon={null}
+                      >
+                        <Dropdown.Menu>
+                          {isEmpty(notifications) ? (
+                            <Dropdown.Item
+                              key={"notif-0"}
+                              text="No notifications"
+                              icon="bell"
+                            />
+                          ) : (
+                            notificationsList.reverse().map((item, index) => {
+                              let icon, url
+                              const {
+                                _id,
+                                contentDomain,
+                                contentId,
+                                followerUserId,
+                                label,
+                                status,
+                                created,
+                                senderUserId
+                              } = item
+                              switch (item.notifType) {
+                                case "comment":
+                                  icon = "comment alternate"
+                                  url = `/boards${contentDomain}/content/${contentId}`
+                                  break
+                                case "message":
+                                  icon = "discussions"
+                                  url = `/user/${senderUserId}`
+                                  break
+                                case "post":
+                                  icon = "edit"
+                                  url = `/boards${contentDomain}/content/${contentId}`
+                                  break
+                                case "follow":
+                                  icon = "users"
+                                  url = `/user/${followerUserId}`
+                                  break
+                                default:
+                                  icon = "bell"
+                                  url = "/"
+                                  break
+                              }
+                              return (
+                                <Dropdown.Item
+                                  key={`notif${index}`}
+                                  active={status !== "visited"}
+                                  as={Link}
+                                  name="notification"
+                                  to={url}
+                                  text={`${label}`}
+                                  description={`${moment(created).fromNow()}`}
+                                  icon={icon}
+                                  onClick={() =>
+                                    this.handleVisitNotif(client, _id, status)
+                                  }
+                                />
+                              )
+                            })
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Menu.Item>
+                  )
+                }}
+              </Subscription>
+            )
+          }}
+        </Query>
         {tokenValidator() && this.renderUserAccount()}
       </Menu.Menu>
     )
@@ -302,7 +492,6 @@ class HeaderComponent extends PureComponent {
 
   render = () => {
     const pathName = this.props.location.pathname
-
     if (pathName === this.props.routing.url + "/invite") return ""
     return (
       <Menu
@@ -341,6 +530,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   guestLogin: (username, password, history) => {
     dispatch(userLogin(username, password, history))
+  },
+  logout: history => {
+    dispatch(userLogout(history))
   },
   updateCurrentSong: (artistId, songId) =>
     dispatch({

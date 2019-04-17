@@ -4,52 +4,8 @@ import { connect } from "react-redux"
 import Maximized from "../../components/Chat/Maximized"
 import Minimized from "../../components/Chat/Minimized"
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
-import gql from "graphql-tag"
 import PropTypes from "prop-types"
-
-const MESSAGE_MUTATION = gql`
-  mutation onCreateUserMessage($message: UserMessageInput!, $userId: String!) {
-    createUserMessage(message: $message, userId: $userId) {
-      _id
-      messageRoomId
-      userName
-      text
-      date
-    }
-  }
-`
-
-const CHAT_SUBSCRIPTION = gql`
-  subscription onUserMessageCreated($messageRoomId: String!) {
-    userMessageCreated(messageRoomId: $messageRoomId) {
-      _id
-      messageRoomId
-      userId
-      userName
-      userAvatar
-      title
-      text
-      imageUrl
-      date
-    }
-  }
-`
-
-const CHAT_QUERY = gql`
-  query userMessages($messageRoomId: String!) {
-    userMessages(messageRoomId: $messageRoomId) {
-      _id
-      messageRoomId
-      userId
-      userName
-      userAvatar
-      title
-      text
-      imageUrl
-      date
-    }
-  }
-`
+import { CHAT_QUERY, CHAT_SUBSCRIPTION, MESSAGE_MUTATION } from "./ChatGraphQL"
 
 class UserChat extends PureComponent {
   sendMessage = data => {
@@ -92,8 +48,6 @@ class UserChat extends PureComponent {
                         if (!subscriptionData.data) return prev
                         const newMessage =
                           subscriptionData.data.userMessageCreated
-                        console.log({ newMessage })
-                        console.log({ prev })
                         return Object.assign({}, prev, {
                           userMessages: [...prev.userMessages, newMessage]
                         })

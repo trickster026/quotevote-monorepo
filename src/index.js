@@ -9,6 +9,8 @@ import { PersistGate } from "redux-persist/integration/react"
 
 import store, { persistor } from "./config/redux"
 import client from "./config/apollo"
+import "react-dates/initialize"
+import "react-dates/lib/css/_datepicker.css"
 
 ReactDOM.render(
   <ApolloProvider client={client}>

@@ -1,18 +1,14 @@
 import React, { Component } from "react"
-import { connect } from "react-redux"
-import {
-  Grid,
-  Header,
-  Pagination,
-  Segment,
-  Placeholder
-} from "semantic-ui-react"
+import { Grid, Pagination, Placeholder, Segment } from "semantic-ui-react"
 import { Query } from "react-apollo"
 import gql from "graphql-tag"
-import { APP_TOKEN } from "../../utils/constants"
 import moment from "moment"
+import ReadMoreReact from "read-more-react"
+import { APP_TOKEN } from "../../utils/constants"
 
 import "./TopContents.css"
+import PropTypes from "prop-types"
+import ContentModal from "./ContentModal"
 
 const query = gql`
   query paginate($page: PaginationInput!) {
@@ -30,10 +26,17 @@ class TopContents extends Component {
     if (this.state.page + 1 < total) this.setState({ page: activePage })
   }
 
+  renderNoData = (
+    <div className="top-contents-section">
+      <h5>Top Contents</h5>
+      <hr />
+      <Segment basic>No available contents</Segment>
+    </div>
+  )
+
   render = () => {
     const { page, limit } = this.state
-    const searchTerm = this.props.searchTerm
-
+    const { pageFilter } = this.props
     return (
       <Query
         query={query}
@@ -42,22 +45,14 @@ class TopContents extends Component {
             page,
             limit,
             type: "Content",
-            sort: "DESC",
-            searchTerm: searchTerm
+            ...pageFilter
           }
         }}
         context={{ token: APP_TOKEN }}
       >
-        {({ error, loading, data, refetch }) => {
+        {({ error, loading, data }) => {
           if (error) {
-            return (
-              <Segment>
-                <Header as="h1" style={{ fontSize: 24 }}>
-                  Top Contents
-                </Header>
-                <Segment basic>No available contents</Segment>
-              </Segment>
-            )
+            return this.renderNoData
           }
           if (loading)
             return (
@@ -100,7 +95,8 @@ class TopContents extends Component {
             )
 
           const { paginate } = data
-          console.log(paginate)
+          console.log({ paginate })
+          if (!paginate.data.length) return this.renderNoData
           return (
             <div className="top-contents-section">
               <h5>Top Contents</h5>
@@ -129,15 +125,19 @@ class TopContents extends Component {
                             </div>
                           </div>
                           <br />
-                          <p>{content.text}</p>
+                          <ReadMoreReact
+                            text={content.text}
+                            min={300}
+                            ideal={300}
+                            max={500}
+                            readMoreText={"[read more]"}
+                          />
                         </div>
                         <div className="top-content-text-info">
                           <Grid.Row>
                             <Grid.Column>
                               <small>
-                                <i>
-                                  <a href="/scoreboard">{content.title}</a>
-                                </i>
+                                <ContentModal content={content} />
                                 &nbsp; by{" "}
                                 {content.creator
                                   ? content.creator.name
@@ -151,7 +151,9 @@ class TopContents extends Component {
                             <i className="fas fa-clock" />
                             <small>
                               &nbsp;&nbsp;
-                              {moment(content.created).format("hh:mm:ss")}
+                              {moment(content.created).format(
+                                "MMM DD, YYYY hh:mm:ss"
+                              )}
                             </small>
                           </div>
                           <div className="top-content-icon-stamps">
@@ -187,12 +189,8 @@ class TopContents extends Component {
   }
 }
 
-const mapStateToProps = ({ filterContent }) => {
-  console.log("filterContent printing")
-  console.log(filterContent)
-  return {
-    searchTerm: filterContent.searchTerm
-  }
+TopContents.propTypes = {
+  pageFilter: PropTypes.object.isRequired
 }
 
-export default connect(mapStateToProps)(TopContents)
+export default TopContents

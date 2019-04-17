@@ -1,6 +1,8 @@
 import * as types from "../actions/types"
 
-const defaultState = {}
+const defaultState = {
+  isLoggedIn: false
+}
 
 const loginReducer = (state = defaultState, action) => {
   let _state

@@ -155,7 +155,9 @@ class MessageBox extends React.PureComponent {
             <React.Fragment>
               <ReactTooltip id={reactionId}>
                 {data.userMessageReactionToolTip.map(userMessageReaction => (
-                  <span>{`${userMessageReaction.user.name} reacted`}</span>
+                  <span key={`span-${userMessageReaction.id}`}>{`${
+                    userMessageReaction.user.name
+                  } reacted`}</span>
                 ))}
               </ReactTooltip>
             </React.Fragment>
