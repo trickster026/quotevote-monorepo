@@ -1,0 +1,36 @@
+.textFont {
+  font-family: "League Spartan Bold", arial, serif;
+}
+
+.period {
+  font-family: League Spartan;
+  font-size: 11px;
+  margin-top: 20px;
+  line-height: 11px;
+}
+
+.activity {
+  padding: 10px;
+  background: #f39200;
+}
+
+.row-margin {
+  margin-top: 20px;
+}
+
+.legend {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #0a054a;
+}
+
+.legend {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+}
