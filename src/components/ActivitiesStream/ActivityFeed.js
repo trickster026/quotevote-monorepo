@@ -28,26 +28,50 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max))
 }
 
+function formatContentDate(sDate) {
+  const a = moment.utc()
+  const b = moment.utc(sDate)
+  const dateDiff = a.diff(b, "days")
+  console.log({ a, b, dateDiff })
+  if (dateDiff <= 1) {
+    return moment(sDate)
+      .calendar()
+      .toString()
+      .replace("at", "@")
+  }
+
+  return moment(sDate).format("MMM Do")
+}
+
 const ActivityRows = props => (
   <div className="activity-rows">
     <Grid>
-      <Grid.Column width={1}>
-        <div className="period">
-          <strong>{props.dateCreated}</strong>
-        </div>
+      <Grid.Column width={1} className="period" floated="right">
+        <strong>{props.dateCreated}</strong>
       </Grid.Column>
       <Grid.Column width={13}>
         <fieldset style={{ borderColor: props.color }}>
           <legend className="legend" style={{ color: props.color }}>
-            {props.preTitletext} {props.name}
+            {props.event} by {props.name}
           </legend>
           <Grid>
             <Grid.Column width={13}>
-              <p>{props.content}</p>
+              <p
+                className={
+                  props.event === "quoted"
+                    ? "activityContentsQoute"
+                    : "activityContents"
+                }
+              >
+                {props.content}
+              </p>
             </Grid.Column>
             <Grid.Column float="right" width={3}>
-              <strong style={{ color: "green" }}>+{getRandomInt(1000)}</strong>{" "}
-              / <strong style={{ color: "red" }}>-{getRandomInt(1000)}</strong>
+              <strong className="activityScoreUp">+{getRandomInt(1000)}</strong>{" "}
+              <strong className="activityScore"> / </strong>
+              <strong className="activityScoreDown">
+                -{getRandomInt(1000)}
+              </strong>
             </Grid.Column>
           </Grid>
         </fieldset>
@@ -101,9 +125,9 @@ class ActivityFeed extends Component {
 
           return (
             <Segment style={{ margin: "0px" }}>
-              <div style={{ paddingBottom: "25px" }}>
+              <div style={{ padding: "10px 25px 25px 25px" }}>
                 {activities.map((act, index) => {
-                  console.log({ act })
+                  const dateCreated = formatContentDate(act.data.created)
                   switch (act.event) {
                     case "POSTED":
                       return (
@@ -112,12 +136,10 @@ class ActivityFeed extends Component {
                           id={act.data._id}
                           content={act.data.title}
                           color="#0A054A"
-                          dateCreated={moment(act.data.created).format(
-                            "hh:mm:ss"
-                          )}
+                          dateCreated={dateCreated}
                           points={act.data.score}
                           name={act.data.creator.name}
-                          preTitletext={"Posted by"}
+                          event={act.event.toLowerCase()}
                         />
                       )
                     case "QUOTED":
@@ -125,14 +147,12 @@ class ActivityFeed extends Component {
                         <ActivityRows
                           key={index}
                           id={act.data._id}
-                          content={act.data.quote}
+                          content={`"${act.data.quote}"`}
                           color="#0094FF"
-                          dateCreated={moment(act.data.created).format(
-                            "hh:mm:ss"
-                          )}
+                          dateCreated={dateCreated}
                           points="0"
                           name={act.data.creator.name}
-                          preTitletext={"Quoted by"}
+                          event={act.event.toLowerCase()}
                         />
                       )
                     case "VOTED":
@@ -142,12 +162,10 @@ class ActivityFeed extends Component {
                           id={act.data._id}
                           content={act.data.content.title}
                           color="#02D57C"
-                          dateCreated={moment(act.data.created).format(
-                            "hh:mm:ss"
-                          )}
+                          dateCreated={dateCreated}
                           points={act.data.points}
                           name={act.data.creator.name}
-                          preTitletext={"Voted by"}
+                          event={act.event.toLowerCase()}
                         />
                       )
                     case "COMMENTED":
@@ -157,12 +175,10 @@ class ActivityFeed extends Component {
                           id={act.data._id}
                           content={act.data.text}
                           color="#F8B300"
-                          dateCreated={moment(act.data.created).format(
-                            "hh:mm:ss"
-                          )}
+                          dateCreated={dateCreated}
                           points={act.data.content.score}
                           name={act.data.creator.name}
-                          preTitletext={"Commented by"}
+                          event={act.event.toLowerCase()}
                         />
                       )
                     default:
@@ -209,7 +225,7 @@ class ActivityFeed extends Component {
     return (
       <div>
         <div className="activity">
-          <Header className="textFont" size="huge" textAlign="center" inverted>
+          <Header className="textFont" size="large" textAlign="center" inverted>
             Activity Feed
           </Header>
           <div style={{ marginTop: "-45px" }}>
