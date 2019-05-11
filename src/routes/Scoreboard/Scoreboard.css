@@ -19,10 +19,10 @@
   background: #f0f0f0;
 }
 
-.scoreboard-rankings-section .ui.grid > .top-row {
+/* .scoreboard-rankings-section .ui.grid > .top-row {
   padding-top: 0px;
   background: #f0f0f0;
-}
+} */
 
 .scoreboard-rankings-section .ui.grid > .scoreboard-rankings-header-row {
   padding-bottom: 0px;

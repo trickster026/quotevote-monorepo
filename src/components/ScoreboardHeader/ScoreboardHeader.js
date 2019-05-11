@@ -1,13 +1,13 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Grid, Icon, Input } from "semantic-ui-react"
+import { /* Grid, */ Icon, Input, Header } from "semantic-ui-react"
 import { SEARCH_CONTENT } from "../../actions/types"
 import { DateRangePicker } from "react-dates"
 import moment from "moment"
 
 import "./ScoreboardHeader.css"
 import PropTypes from "prop-types"
-import ReactTooltip from "react-tooltip"
+// import ReactTooltip from "react-tooltip"
 
 class ScoreboardHeader extends Component {
   constructor(props) {
@@ -65,18 +65,67 @@ class ScoreboardHeader extends Component {
       startDate,
       endDate,
       focusedInput,
-      showCalendar,
-      sortByAsc
+      showCalendar
+      // sortByAsc
     } = this.state
     const display = showCalendar ? "block" : "none"
-    const sortIcon = sortByAsc ? "sort amount up" : "sort amount down"
-    const sortingTip = !sortByAsc ? "ascending" : "descending"
+    // const sortIcon = sortByAsc ? "sort amount up" : "sort amount down"
+    // const sortingTip = !sortByAsc ? "ascending" : "descending"
     return (
+      <div>
+        <div className="scoreboard-rankings-header-row">
+          <Header className="textFont" size="large" textAlign="center" inverted>
+            Top Posts
+          </Header>
+          <div style={{ marginTop: "-45px" }}>
+            <Icon
+              link
+              name="calendar"
+              size="big"
+              inverted
+              onClick={() => this.toggleCalendarVisibility()}
+              data-tip={`Filter by date range`}
+              color={showCalendar ? "green" : null}
+            />
+            <Icon link name="filter" size="big" inverted />
+            <Input
+              placeholder="Search..."
+              onChange={this.handleInputChange}
+              icon={
+                <Icon
+                  name="search"
+                  inverted
+                  circular
+                  link
+                  onClick={() => this.clickSearch()}
+                />
+              }
+            />
+          </div>
+          <div style={{ marginLeft: 38, display }}>
+            <DateRangePicker
+              isOutsideRange={() => false}
+              startDate={startDate} // momentPropTypes.momentObj or null,
+              startDateId="startDateRange" // PropTypes.string.isRequired,
+              endDate={endDate} // momentPropTypes.momentObj or null,
+              endDateId="endDateRange" // PropTypes.string.isRequired,
+              onDatesChange={this.handleDateRangeChange} // PropTypes.func.isRequired,
+              focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+              onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired
+            />
+          </div>
+        </div>
+      </div>
+    )
+    /* return (
       <Grid.Row columns={1} className="scoreboard-rankings-header-row">
         <Grid.Column width={16} className="scoreboard-rankings-header-column">
           <div className="scoreboard-rankings-header">
+            <Header className="textFont" size="large" textAlign="center" inverted>
+              Top Posts
+            </Header>
             <center>
-              <h3>Scoreboard Rankings</h3>
+              <h3>Top Posts</h3>
             </center>
             <div className="scoreboard-rankings-icons">
               <Grid>
@@ -147,7 +196,7 @@ class ScoreboardHeader extends Component {
           </div>
         </Grid.Column>
       </Grid.Row>
-    )
+    ) */
   }
 }
 

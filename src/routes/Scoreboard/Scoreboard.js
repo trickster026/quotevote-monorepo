@@ -1,9 +1,10 @@
 import React, { Component } from "react"
-import { Container, Grid } from "semantic-ui-react"
+import { Container, Grid, Segment } from "semantic-ui-react"
+import withSizes from "react-sizes"
 
 import ScoreboardHeader from "../../components/ScoreboardHeader/ScoreboardHeader"
 import TopContents from "../../components/TopContents/TopContents"
-import TopAuthors from "../../components/TopAuthors/TopAuthors"
+// import TopAuthors from "../../components/TopAuthors/TopAuthors"
 
 import "./Scoreboard.css"
 
@@ -22,6 +23,18 @@ class Scoreboard extends Component {
 
   render = () => {
     return (
+      <Segment as={this.props.isDesktop ? Container : null} basic>
+        <Grid relaxed={false}>
+          <Grid.Row columns={1} stretched>
+            <Grid.Column stretched>
+              <ScoreboardHeader handleFilterChange={this.handleFilterChange} />
+              <TopContents pageFilter={this.state.pageFilter} />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
+    )
+    /* return (
       <Container as={Container} className="scoreboard-rankings-section">
         <Grid>
           <ScoreboardHeader handleFilterChange={this.handleFilterChange} />
@@ -35,8 +48,12 @@ class Scoreboard extends Component {
           </Grid.Row>
         </Grid>
       </Container>
-    )
+    ) */
   }
 }
 
-export default Scoreboard
+const mapSizesToProps = ({ width }) => ({
+  isDesktop: width > 1600
+})
+
+export default withSizes(mapSizesToProps)(Scoreboard)
