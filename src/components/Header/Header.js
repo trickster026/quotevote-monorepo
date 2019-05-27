@@ -352,7 +352,7 @@ class HeaderComponent extends PureComponent {
           variables={{ userId }}
           fetchPolicy={"cache-and-network"}
         >
-          {({ loading, error, data: { notifications }, client }) => {
+          {({ loading, error, notifData, client }) => {
             return (
               <Subscription
                 subscription={SUBSCRIBER_NOTIFICATIONS}
@@ -375,7 +375,10 @@ class HeaderComponent extends PureComponent {
                       "created"
                     ])
                   } else {
-                    notificationsList = sortBy(notifications, ["created"])
+                    notificationsList = sortBy(
+                      notifData && notifData.notifications,
+                      ["created"]
+                    )
                   }
                   const newNotifications = notificationsList.filter(
                     item => item.status === "new"
@@ -390,7 +393,7 @@ class HeaderComponent extends PureComponent {
                         icon={null}
                       >
                         <Dropdown.Menu>
-                          {isEmpty(notifications) ? (
+                          {isEmpty(notifData && notifData.notifications) ? (
                             <Dropdown.Item
                               key={"notif-0"}
                               text="No notifications"

@@ -21,7 +21,7 @@ const UserPlaceHolder = () => (
             </Placeholder>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
+        {/* <Grid.Row>
           <Grid.Column floated="left" width={6}>
             <Placeholder fluid className="history">
               <Placeholder.Image rectangular />
@@ -44,6 +44,13 @@ const UserPlaceHolder = () => (
                 </Grid.Column>
               </Grid.Row>
             </Grid>
+          </Grid.Column>
+        </Grid.Row> */}
+        <Grid.Row>
+          <Grid.Column floated="left" width={16}>
+            <Placeholder fluid className="history">
+              <Placeholder.Image rectangular />
+            </Placeholder>
           </Grid.Column>
         </Grid.Row>
       </Grid>

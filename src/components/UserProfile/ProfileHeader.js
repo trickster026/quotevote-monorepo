@@ -3,20 +3,20 @@ import { withApollo } from "react-apollo"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import {
-  Button,
-  Container,
+  /*  Button,
+  Container, */
   Grid,
   Image,
-  Modal,
+  /* Modal, */
   Search
 } from "semantic-ui-react"
 import faker from "faker"
 import gql from "graphql-tag"
 import { APP_TOKEN } from "../../utils/constants"
-import UserText from "../UserText/UserText"
+/* import UserText from "../UserText/UserText" */
 import "./ProfileHeader.css"
 import PropTypes from "prop-types"
-import classnames from "classnames"
+/* import classnames from "classnames" */
 import { QUERY_USER_PROFILE } from "../../routes/User"
 
 const search = gql`
@@ -197,8 +197,8 @@ class ProfileHeader extends PureComponent {
   }
 
   render() {
-    const { user, texts, handleShowChat } = this.props
-    const { value, results, isLoading, noResult, toggle } = this.state
+    const { user /* texts, handleShowChat */ } = this.props
+    const { value, results, isLoading, noResult /* toggle */ } = this.state
     let scoreValues = "Score 8 (10 / -2)"
     const { scoreDetails } = user
     if (scoreDetails) {
@@ -207,9 +207,9 @@ class ProfileHeader extends PureComponent {
       } / -${scoreDetails.downvotes})`
     }
 
-    const hideProfileMenuButtons = this.props.login.user._id === user._id
+    /* const hideProfileMenuButtons = this.props.login.user._id === user._id
 
-    const buttonLabel = toggle ? "FOLLOWED" : "FOLLOW"
+    const buttonLabel = toggle ? "FOLLOWED" : "FOLLOW" */
 
     return (
       <div>
@@ -250,7 +250,7 @@ class ProfileHeader extends PureComponent {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Container
+        {/* <Container
           className={classnames(
             "button-group",
             hideProfileMenuButtons ? "button-hide" : "button-visible"
@@ -281,7 +281,7 @@ class ProfileHeader extends PureComponent {
           <Button color="twitter" onClick={this.handleFollow(!toggle)}>
             {buttonLabel}
           </Button>
-        </Container>
+        </Container> */}
       </div>
     )
   }
