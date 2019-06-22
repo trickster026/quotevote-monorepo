@@ -252,7 +252,7 @@ class Content extends PureComponent {
     let startIndex, endIndex
 
     const { client, match, creatorId, userId } = this.props
-    const { contentId } = match.params
+    const { contentId, domain } = match.params
 
     const HASHTAGS_REGEX = /#(\w|\d)+/g
     const hashtags = comment.match(HASHTAGS_REGEX)
@@ -282,7 +282,7 @@ class Content extends PureComponent {
       refetchQueries: [
         {
           query: getContent,
-          variables: { contentId }
+          variables: { contentId, key: domain }
         }
       ]
     })
