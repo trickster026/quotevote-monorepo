@@ -20,3 +20,12 @@
 .scoreboard-rankings-section .scoreboard-rankings-header-row .fa-search {
   cursor: pointer;
 }
+
+.textFont {
+  font-family: "League Spartan Bold", arial, serif;
+}
+
+.scoreboard-rankings-header-row {
+  padding: 15px 25px 15px 25px;
+  background: #0094ff;
+}

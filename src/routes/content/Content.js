@@ -23,6 +23,7 @@ import AdminPanel from "../../components/AdminPanel/AdminPanel"
 import { FixedWrapper, ThemeProvider } from "@livechat/ui-kit"
 import "./Content.css"
 import Contents from "../../components/ContentPanel/Contents"
+import { cloneDeep } from "lodash"
 
 const QUERY_USER_PROFILE = gql`
   query user($userId: String!) {
@@ -196,10 +197,10 @@ const ADD_PENDING_USER = gql`
 `
 
 class Content extends PureComponent {
-  handleVoting = (event, data) => {
+  handleVoting = async (event, data) => {
     const { select } = this.state
     const { client, match } = this.props
-    const { contentId } = match.params
+    const { contentId, domain } = match.params
 
     const vote = {
       ...data,
@@ -211,23 +212,47 @@ class Content extends PureComponent {
       text: select.text
     }
 
-    client.mutate({
+    const voteData = await client.mutate({
       mutation: addVote,
-      variables: { vote },
+      variables: {
+        vote
+      } /* ,
       refetchQueries: [
         {
           query: getContent,
           variables: { contentId }
         }
-      ]
+      ] */
     })
-  }
+    if (voteData && voteData.data.addVote) {
+      const { addVote } = voteData.data
+      const content = client.readQuery({
+        query: getContent,
+        variables: { contentId, key: domain }
+      })
 
+      const clonedContent = cloneDeep(content)
+
+      if (addVote.type === "upvote") {
+        let { upvotes } = clonedContent.content.scoreDetails
+        clonedContent.content.scoreDetails.upvotes = upvotes + 1
+      } else {
+        const { downvotes } = clonedContent.content.scoreDetails
+        clonedContent.content.scoreDetails.downvotes = downvotes + 1
+      }
+
+      client.writeQuery({
+        query: getContent,
+        variables: { contentId, key: domain },
+        data: { ...clonedContent }
+      })
+    }
+  }
   handleAddComment = (event, comment) => {
     let startIndex, endIndex
 
     const { client, match, creatorId, userId } = this.props
-    const { contentId } = match.params
+    const { contentId, domain } = match.params
 
     const HASHTAGS_REGEX = /#(\w|\d)+/g
     const hashtags = comment.match(HASHTAGS_REGEX)
@@ -257,7 +282,7 @@ class Content extends PureComponent {
       refetchQueries: [
         {
           query: getContent,
-          variables: { contentId }
+          variables: { contentId, key: domain }
         }
       ]
     })
@@ -334,7 +359,11 @@ class Content extends PureComponent {
 
     return (
       <div className="jumbotron">
-        <Query query={getContent} variables={variables}>
+        <Query
+          query={getContent}
+          variables={variables}
+          fetchPolicy="cache-and-network"
+        >
           {({ loading, error, data }) => {
             if (error) return <div>{`Error: ${error}`}</div>
 

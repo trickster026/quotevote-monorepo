@@ -148,3 +148,19 @@
   color: #e0e0e0;
   margin-bottom: 25px;
 }
+
+.top-content-row {
+  font-family: "League Spartan Bold", arial, serif;
+  font-size: 9px;
+  margin-top: 10px;
+  line-height: 11px;
+  padding: 0;
+}
+
+.top-content-row-margin {
+  margin-top: 35px;
+}
+
+.top-post-title {
+  margin-bottom: 5px;
+}
