@@ -1,26 +1,41 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import App from "./components/App/App"
-import { BrowserRouter as Router } from "react-router-dom"
+/*!
 
-import { ApolloProvider } from "react-apollo"
-import { Provider } from "react-redux"
-import { PersistGate } from "redux-persist/integration/react"
+=========================================================
+* Material Dashboard PRO React - v1.8.0
+=========================================================
 
-import store, { persistor } from "./config/redux"
-import client from "./config/apollo"
-import "react-dates/initialize"
-import "react-dates/lib/css/_datepicker.css"
+* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+import React from "react";
+import ReactDOM from "react-dom";
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+
+import AuthLayout from "layouts/Auth.js";
+import RtlLayout from "layouts/RTL.js";
+import AdminLayout from "layouts/Admin.js";
+import Scoreboard from "layouts/Scoreboard.js"
+import "assets/scss/material-dashboard-pro-react.scss?v=1.8.0";
+
+const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <App />
-        </Router>
-      </PersistGate>
-    </Provider>
-  </ApolloProvider>,
+  <Router history={hist}>
+    <Switch>
+      <Route path="/rtl" component={RtlLayout} />
+      <Route path="/auth" component={AuthLayout} />
+      <Route path="/admin" component={AdminLayout} />
+      <Route path="/hhsb" component={Scoreboard} />
+      <Redirect from="/" to="/hhsb" />
+    </Switch>
+  </Router>,
   document.getElementById("root")
-)
+);
