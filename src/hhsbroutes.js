@@ -30,7 +30,7 @@ import Wizard from "views/Forms/Wizard.js";
 import ContentFeed from "hhsbviews/topcontent.js"
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
-
+import MessageContainer from "hhsbviews/MessageContainer.js"
 
 // @material-ui/icons
 
@@ -74,12 +74,12 @@ var hhsbRoutes = [
   },
 
   {
-    path: "/",
-    name: "Ranking Filters",
+    path: "/ChatBar",
+    name: "Chat Feed",
     rtlName: "التقويم",
     icon: Place,
-    component: Calendar,
-    layout: "/admin"
+    component: MessageContainer,
+    layout: "/hhsb"
   },
   {
     path: "/",

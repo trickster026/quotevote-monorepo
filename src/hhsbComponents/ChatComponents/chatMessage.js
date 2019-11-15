@@ -12,9 +12,10 @@ import Chip from "@material-ui/core/Chip";
 import FaceIcon from "@material-ui/icons/Face";
 import FavoriteOutlinedIcon from "@material-ui/icons/FavoriteOutlined";
 import Grid from "@material-ui/core/Grid";
-const useStyles = makeStyles({
+import { height } from "@material-ui/system";
+const useStyles = makeStyles(props=>({
   card: {
-    maxWidth: 300
+    width:"100%"
   },
   bullet: {
     display: "inline-block",
@@ -28,16 +29,17 @@ const useStyles = makeStyles({
     marginBottom: 12
   },
   UserName: {
-    backgroundColor: props => props.color
+    backgroundColor: props => props.color,
+   
   }
-});
+}));
 
-export default function SimpleCard(props) {
+export default function Message(props) {
   const classes = useStyles(props);
   const bull = <span className={classes.bullet}>•</span>;
 
   return (
-    <div>
+    <div style={{width:"95%"}}>
       <Card className={classes.card}>
         <CardContent>
           <Grid
