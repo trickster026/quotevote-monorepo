@@ -31,7 +31,10 @@ import ContentFeed from "hhsbviews/topcontent.js"
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
 import MessageContainer from "hhsbviews/MessageContainer.js"
-
+import Chat from 'hhsbAssets/Chat.svg'
+import Home from 'hhsbAssets/Home.svg'
+import Avatar from 'hhsbAssets/Avatar.png'
+import add from 'hhsbAssets/add.png'
 // @material-ui/icons
 
 //import {face} from '@mdi/js';
@@ -50,7 +53,7 @@ var hhsbRoutes = [
     path: "/Profile",
     name: "Submit Text",
     rtlName: "لوحة القيادة",
-    icon: EmojiIcon,
+    icon: Home,
     component: Profile,
     layout: "/hhsb"
   },
@@ -59,7 +62,7 @@ var hhsbRoutes = [
     path: "/Trending",
     name: "Rankings",
     rtlName: "الحاجيات",
-    icon: mdiChartTimelineVariant,
+    icon: Avatar,
     component:ContentFeed,
     layout: "/hhsb"
   },
@@ -68,7 +71,7 @@ var hhsbRoutes = [
     path: "/Content",
     name: "Content Bookmarks",
     rtlName: "التقويم",
-    icon: mdiFileAlertOutline ,
+    icon: add ,
     component:ContentDisplay,
     layout: "/hhsb"
   },
@@ -77,33 +80,10 @@ var hhsbRoutes = [
     path: "/ChatBar",
     name: "Chat Feed",
     rtlName: "التقويم",
-    icon: Place,
+    icon: Chat,
     component: MessageContainer,
     layout: "/hhsb"
   },
-  {
-    path: "/",
-    name: "Settings",
-    rtlName: "التقويم",
-    icon: Build,
-    component: Calendar,
-    layout: "/admin"
-  },
-  {
-    path: "/",
-    name: "Charts",
-    rtlName: "التقويم",
-    icon: mdiChartTimelineVariant,
-    component: Calendar,
-    layout: "/admin"
-  },
-  {
-    path: "/",
-    name: "Saved",
-    rtlName: "التقويم",
-    icon:  DashboardIcon ,
-    component: Calendar,
-    layout: "/admin"
-  },
+  
 ];
 export default hhsbRoutes;

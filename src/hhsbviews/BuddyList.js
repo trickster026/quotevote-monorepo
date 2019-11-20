@@ -12,6 +12,8 @@ import Button from "@material-ui/core/Button";
 
 import Message from "hhsbComponents/ChatComponents/chatMessage.js"
 import InputWithIcon from "hhsbComponents/ChatComponents/chatSearch.js"
+import ListDividers from 'hhsbComponents/ChatComponents/List.js'
+
 export default function MessageContainer(){
     const useStyles = makeStyles({
         chatContainer: {
@@ -22,9 +24,7 @@ export default function MessageContainer(){
           justifyContent:"space-between",
           alignItems:"center",
           height:"800px",
-          wrap:"wrapContent",
-          paddingBottom:"5px"
-
+          wrap:"wrapContent"
         },
         bullet: {
           display: "inline-block",
@@ -53,37 +53,13 @@ export default function MessageContainer(){
     return(
         <GridContainer className={classes.chatContainer}>
             <GridContainer className={classes.header}>
-            <p className={classes.headerText}> Back</p>
+            <p className={classes.headerText}> Buddy List</p>
             </GridContainer>
-             <br></br>
-           
-              {messageData.map((message)=>{
-                return(<Message content={message.Content} color={message.Color} username={message.Username}/>)
-            })}
-            
-            
-            <div className={classes.margin}>     
-            <Card>
-            
-            
-                <Grid container spacing={1} alignItems="flex-end" justifyContent="space-between" wrap="nowrap">
-                  <Grid style={{ paddingBottom: "20px" }}>
-                    <FaceIcon style={{ backgroundColor: "#E91E63",width:"25px" ,padding:"5px",margin:"5px"}} />
-                  </Grid>
-
-                    <Grid item>
-                      <TextField id="input-with-icon-grid" label="type here" />
-                    </Grid>
-                    <Grid item>
-                    <Button style={{ backgroundColor: "#E91E63",color:"white",margin:"2px" }}>SEND</Button>
-                  </Grid>
-                  
-                </Grid>
-              
-            </Card>
-            </div>
-         
-        </GridContainer>
+            <GridContainer className={classes.header}>
+            <p className={classes.headerText}> Buddy List</p>
+            </GridContainer>
+         </GridContainer>   
+             
     )
 
 

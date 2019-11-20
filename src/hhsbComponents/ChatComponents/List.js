@@ -5,11 +5,11 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(props => ({
   root: {
     width: "100%",
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: props=>props.Color
   }
 }));
 
