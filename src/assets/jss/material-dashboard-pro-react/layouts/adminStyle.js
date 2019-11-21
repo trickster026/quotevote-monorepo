@@ -21,6 +21,21 @@ const appStyle = theme => ({
     transitionDuration: ".2s, .2s, .35s",
     transitionTimingFunction: "linear, linear, ease",
     [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${drawerMiniWidth}px)`
+    },
+    overflow: "auto",
+    position: "relative",
+    float: "right",
+    ...transition,
+    maxHeight: "100%",
+    width: "100%",
+    overflowScrolling: "touch"
+  },
+  mainPanelResize: {
+    transitionProperty: "top, bottom, width",
+    transitionDuration: ".2s, .2s, .35s",
+    transitionTimingFunction: "linear, linear, ease",
+    [theme.breakpoints.up("md")]: {
       width: `calc(100% - ${drawerWidth}px)`
     },
     overflow: "auto",

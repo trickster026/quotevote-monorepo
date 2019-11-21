@@ -415,6 +415,9 @@ const sidebarStyle = theme => ({
         ",.2)"
     }
   },
+  hidden:{
+    display:"none"
+  },
   orange: {
     "&,&:hover,&:focus": {
       color: whiteColor,
@@ -509,6 +512,7 @@ const sidebarStyle = theme => ({
     marginLeft: "23px",
     ...boxShadow
   },
+
   photoRTL: {
     float: "right",
     marginLeft: "12px",

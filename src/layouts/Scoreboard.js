@@ -28,7 +28,7 @@ export default function Scoreboard(props) {
   const { ...rest } = props;
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [miniActive, setMiniActive] = React.useState(false);
+  const [miniActive, setMiniActive] = React.useState(true);
   const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
   const [color, setColor] = React.useState("blue");
   const [bgColor, setBgColor] = React.useState("black");
@@ -142,7 +142,7 @@ export default function Scoreboard(props) {
   };
   const sidebarMinimize = () => {
     setMiniActive(!miniActive);
-    console.log('minimize')
+    console.log('minimize *****************************************')
   };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
@@ -161,12 +161,14 @@ export default function Scoreboard(props) {
         open={mobileOpen}
         color={color}
         bgColor={bgColor}
-        miniActive={true}
+        miniActive={miniActive}
         {...rest}
-        onClick={sidebarMinimize.bind(this)}
+        
       />
+      
       <div className={mainPanelClasses} ref={mainPanel}>
       
+       
         {/* On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>

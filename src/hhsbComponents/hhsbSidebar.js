@@ -15,12 +15,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Hidden from "@material-ui/core/Hidden";
 import Collapse from "@material-ui/core/Collapse";
 import Icon from "@material-ui/core/Icon";
-
+import Grid from "@material-ui/core/Grid";
 // core components
 import AdminNavbarLinks from "../components/Navbars/AdminNavbarLinks.js";
 
 import sidebarStyle from "../assets/jss/material-dashboard-pro-react/components/sidebarStyle.js";
-
+import MessageContainer from "./MessageContainer.js"
 import avatar from "../assets/img/faces/avatar.jpg";
 
 var ps;
@@ -29,29 +29,40 @@ var ps;
 // This was necessary so that we could initialize PerfectScrollbar on the links.
 // There might be something with the Hidden component from material-ui, and we didn't have access to
 // the links, and couldn't initialize the plugin.
+
 class SidebarWrapper extends React.Component {
   sidebarWrapper = React.createRef();
+  
+  
+  
   componentDidMount() {
-    if (navigator.platform.indexOf("Win") > -1) {
+    /** if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.sidebarWrapper.current, {
         suppressScrollX: true,
         suppressScrollY: false
       });
-    }
+    }*/
+   
   }
   componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
+    /*if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
+    */
   }
   render() {
-    const { className, user, headerLinks, links } = this.props;
+    const { className, user, headerLinks, links,MiniActive } = this.props;
+    console.log(MiniActive)
     return (
-      <div className={className} ref={this.sidebarWrapper}>
+      <Grid container direction="row" style={{overflow:"hidden"}}>
+    
+      <div className={className} ref={this.sidebarWrapper} style={{overflow:"hidden"}}>
         {user}
         {headerLinks}
         {links}
       </div>
+      <MessageContainer Display={MiniActive} />
+      </Grid>
     );
   }
 }
@@ -61,7 +72,8 @@ class Sidebar extends React.Component {
     super(props);
     this.state = {
       openAvatar: false,
-      miniActive: true,
+      miniActive: false,
+      MessageDisplay:null,
       ...this.getCollapseStates(props.routes)
     };
   }
@@ -262,6 +274,7 @@ class Sidebar extends React.Component {
     });
   };
   render() {
+    console.log(this.props.miniActive)
     const {
       classes,
       logo,
@@ -271,6 +284,8 @@ class Sidebar extends React.Component {
       bgColor,
       rtlActive
     } = this.props;
+    
+    
     const itemText =
       classes.itemText +
       " " +
@@ -465,6 +480,7 @@ class Sidebar extends React.Component {
         [classes.sidebarWrapperWithPerfectScrollbar]:
           navigator.platform.indexOf("Win") > -1
       });
+
     return (
       <div ref={this.mainPanel}>
         <Hidden mdUp implementation="css">
@@ -480,25 +496,22 @@ class Sidebar extends React.Component {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-           
+             <Grid container direction="row" >
             <SidebarWrapper
               className={sidebarWrapper}
-              
+              MiniActive={this.state.MessageDisplay}
            
               links={links}
             />
-            {image !== undefined ? (
-              <div
-                className={classes.background}
-                style={{ backgroundImage: "url(" + image + ")" }}
-              />
-            ) : null}
+           </Grid>
           </Drawer>
+        
+
         </Hidden>
         <Hidden smDown implementation="css">
           <Drawer
-            onMouseOver={() => this.setState({ miniActive: false })}
-            onMouseOut={() => this.setState({ miniActive: true })}
+            onMouseOver={() => this.setState({ miniActive: false,MessageDisplay:null })}
+            onMouseOut={() => this.setState({ miniActive: true,MessageDisplay:"none" })}
             anchor={rtlActive ? "right" : "left"}
             variant="permanent"
             open
@@ -509,7 +522,7 @@ class Sidebar extends React.Component {
             
             <SidebarWrapper
               className={sidebarWrapper}
-         
+              MiniActive={this.state.MessageDisplay}
               links={links}
             />
             {image !== undefined ? (
@@ -519,6 +532,7 @@ class Sidebar extends React.Component {
               />
             ) : null}
           </Drawer>
+         
         </Hidden>
       </div>
     );

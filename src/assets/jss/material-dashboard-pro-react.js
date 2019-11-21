@@ -52,7 +52,7 @@ const hexToRgb = input => {
 // // // Variables - Styles that are used on more than one component
 // #############################
 
-const drawerWidth = 260;
+const drawerWidth = 560;
 
 const drawerMiniWidth = 80;
 
