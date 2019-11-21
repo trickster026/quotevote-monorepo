@@ -30,11 +30,16 @@ import Wizard from "views/Forms/Wizard.js";
 import ContentFeed from "hhsbviews/topcontent.js"
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
+import HomePage from "hhsbviews/HomePage.js"
 import MessageContainer from "hhsbviews/MessageContainer.js"
 import Chat from 'hhsbAssets/Chat.svg'
 import Home from 'hhsbAssets/Home.svg'
 import Avatar from 'hhsbAssets/Avatar.png'
 import add from 'hhsbAssets/add.png'
+import Trending from  'hhsbAssets/Trending.png'
+import Settings from 'hhsbAssets/Settings.png'
+import Search from 'hhsbAssets/Search.png'
+import Alert from 'hhsbAssets/Alerts.png'
 // @material-ui/icons
 
 //import {face} from '@mdi/js';
@@ -50,26 +55,26 @@ import mdiChartTimelineVariant from  "@material-ui/icons/Timeline";
 import EmojiIcon from "hhsbIcons/EmojiIcon.js"
 var hhsbRoutes = [
   {
-    path: "/Profile",
-    name: "Submit Text",
+    path: "/Home",
+    name: "Home Page",
     rtlName: "لوحة القيادة",
     icon: Home,
-    component: Profile,
+    component: HomePage,
     layout: "/hhsb"
   },
   
   {
     path: "/Trending",
-    name: "Rankings",
+    name: "My Profile",
     rtlName: "الحاجيات",
     icon: Avatar,
-    component:ContentFeed,
+    component:Profile,
     layout: "/hhsb"
   },
   
   {
-    path: "/Content",
-    name: "Content Bookmarks",
+    path: "/SubmitContent",
+    name: "Content Display",
     rtlName: "التقويم",
     icon: add ,
     component:ContentDisplay,
@@ -77,10 +82,42 @@ var hhsbRoutes = [
   },
 
   {
+    path: "/TrendingContent",
+    name: "Trending Content",
+    rtlName: "التقويم",
+    icon: Trending,
+    component:ContentFeed ,
+    layout: "/hhsb"
+  },
+  {
     path: "/ChatBar",
     name: "Chat Feed",
     rtlName: "التقويم",
     icon: Chat,
+    component: MessageContainer,
+    layout: "/hhsb"
+  },
+  {
+    path: "/ChatBar",
+    name: "Chat Feed",
+    rtlName: "التقويم",
+    icon: Search,
+    component: MessageContainer,
+    layout: "/hhsb"
+  },
+  {
+    path: "/ChatBar",
+    name: "Chat Feed",
+    rtlName: "التقويم",
+    icon: Alert,
+    component: MessageContainer,
+    layout: "/hhsb"
+  },
+  {
+    path: "/ChatBar",
+    name: "Chat Feed",
+    rtlName: "التقويم",
+    icon: Settings,
     component: MessageContainer,
     layout: "/hhsb"
   },

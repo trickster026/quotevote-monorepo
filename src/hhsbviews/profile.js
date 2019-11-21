@@ -34,14 +34,20 @@ export default function Profile() {
 
     return(
         <Card style={{display:"flex",flexBasis:"800px"}} >
+      
+          
           <CardBody >
+        
            <GridContainer  
                direction="row"
                justify="center"
                alignItems="center"
                
               >
-                <GridContainer alignItems="center"  direction="row"  style={{"width":"50%"}}>
+                <GridContainer justify="center" wrap="nowrap"  direction="column"  style={{"width":"50%"}}>
+                   <GridContainer justify="center" wrap="nowrap"  direction="row" >
+                     <p style={{fontSize:"20px",color:"gray",font:"League Spartan",fontWeight: "900", textDecoration:"underline",textShadow: "1px 1px gray"}} >All | Content | Votes | Comments | Quotes</p>
+                   </GridContainer >
                   <Slider
                     value={30}                  
                     valueLabelDisplay="auto"
@@ -54,9 +60,10 @@ export default function Profile() {
                 
               <GridContainer alignItems="center"  direction="row"
                 justify="space-between"  style={{backgroundColor:"#424556",boxShadow:"0 6px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",width:"75%",wrap:"nowrap"}}>  
-               <h3 style={{color:"white",font:"League Spartan",fontWeight: "bold",paddingLeft:"20px",paddingBottom:"5px"}}>Jane Doe</h3>                   
-                                                
-               
+                <GridContainer justify="center" wrap="nowrap"  direction="row" style={{width:"25%"}}>
+                  <h3 style={{color:"white",font:"League Spartan",fontWeight: "bold",paddingLeft:"20px",paddingBottom:"5px",marginRight:'10px'}}>Jane Doe</h3>                   
+                  <Button style={{backgroundColor:"#9C27B0"}}>Follow</Button>                                
+                </GridContainer>
               <div style={{display:'flex',justifyContent:'flex-end',flexDirection:"row"}}>
               <CustomizedInputBase></CustomizedInputBase>
               <img src={Calendar} style={{display:"flex",maxHeight:"40px",paddingLeft:"15px"}}/>
