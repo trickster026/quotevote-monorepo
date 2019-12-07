@@ -21,6 +21,7 @@ import AdminNavbarLinks from "../components/Navbars/AdminNavbarLinks.js";
 
 import sidebarStyle from "../assets/jss/material-dashboard-pro-react/components/sidebarStyle.js";
 import MessageContainer from "./MessageContainer.js"
+import ChatComponent from "./ChatComponent.js"
 import avatar from "../assets/img/faces/avatar.jpg";
 
 var ps;
@@ -61,7 +62,7 @@ class SidebarWrapper extends React.Component {
         {headerLinks}
         {links}
       </div>
-      <MessageContainer Display={MiniActive} />
+      <ChatComponent Display={MiniActive} />
       </Grid>
     );
   }

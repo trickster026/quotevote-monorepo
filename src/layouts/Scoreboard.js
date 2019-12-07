@@ -156,7 +156,7 @@ export default function Scoreboard(props) {
         routes={hhsbRoutes}
         
         logo={logo}
-        image={image}
+        
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}

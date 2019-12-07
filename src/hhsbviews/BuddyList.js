@@ -11,17 +11,18 @@ import FaceIcon from "@material-ui/icons/Face";
 import Button from "@material-ui/core/Button";
 
 import Message from "hhsbComponents/ChatComponents/chatMessage.js"
-import InputWithIcon from "hhsbComponents/ChatComponents/chatSearch.js"
-import ListDividers from 'hhsbComponents/ChatComponents/List.js'
 
-export default function MessageContainer(){
+import ListDividers from 'hhsbComponents/ChatComponents/List.js'
+import Alert from '../hhsbAssets/Alerts.png'
+
+export default function BuddyList(props){
     const useStyles = makeStyles({
         chatContainer: {
           width: '33%',
           maxWidth:"300px",
           backgroundColor:'#191919',
           flexDirection:"column",
-          justifyContent:"space-between",
+          justifyContent:"flex-start",
           alignItems:"center",
           height:"800px",
           wrap:"wrapContent"
@@ -49,15 +50,18 @@ export default function MessageContainer(){
         
       });
       const classes = useStyles();
-      let messageData=[{Content:"I said this thing",Color:"green",Username:"steve"},{Content:"well I say this other thing",Color:"red",Username:"alice"},{Content:"I sadi it much louder",Color:"red",Username:"bolb"}]
+      let Data=[{Text:"Following",Color:'gray',icon:Alert},{Text:"options2",Color:'#191919'},{Text:"option3",Color:'#191919'},{Text:"Content Posts",Color:'gray'},{Text:"option3",Color:'#191919'}]
+      let Data2=["following"]
+      let Data3=["content post"]
     return(
         <GridContainer className={classes.chatContainer}>
-            <GridContainer className={classes.header}>
+          
+            <GridContainer className={classes.header} onClick={props.toggle}>
             <p className={classes.headerText}> Buddy List</p>
+            
             </GridContainer>
-            <GridContainer className={classes.header}>
-            <p className={classes.headerText}> Buddy List</p>
-            </GridContainer>
+            
+            <ListDividers List={Data}/>
          </GridContainer>   
              
     )

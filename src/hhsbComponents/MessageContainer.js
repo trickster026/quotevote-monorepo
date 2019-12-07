@@ -11,7 +11,7 @@ import FaceIcon from "@material-ui/icons/Face";
 import Button from "@material-ui/core/Button";
 
 import Message from "hhsbComponents/ChatComponents/chatMessage.js"
-import InputWithIcon from "hhsbComponents/ChatComponents/chatSearch.js"
+
 import zIndex from "@material-ui/core/styles/zIndex";
 import { getThemeProps } from "@material-ui/styles";
 export default function MessageContainer(props){
@@ -55,7 +55,9 @@ export default function MessageContainer(props){
       let messageData=[{Content:"I said this thing",Color:"green",Username:"steve"},{Content:"well I say this other thing",Color:"red",Username:"alice"},{Content:"I sadi it much louder",Color:"red",Username:"bolb"}]
     return(
         <GridContainer className={classes.chatContainer}>
-            
+            <GridContainer className={classes.header} onClick={props.toggle}>
+               <p className={classes.headerText} > Back</p>
+            </GridContainer>
              <br></br>
            
               {messageData.map((message)=>{

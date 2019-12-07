@@ -32,6 +32,8 @@ import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
 import HomePage from "hhsbviews/HomePage.js"
 import MessageContainer from "hhsbviews/MessageContainer.js"
+import BuddyList from "hhsbviews/BuddyList.js"
+import ChatComponent from 'hhsbviews/ChatComponent.js'
 import Chat from 'hhsbAssets/Chat.svg'
 import Home from 'hhsbAssets/Home.svg'
 import Avatar from 'hhsbAssets/Avatar.png'
@@ -94,15 +96,15 @@ var hhsbRoutes = [
     name: "Chat Feed",
     rtlName: "التقويم",
     icon: Chat,
-    component: MessageContainer,
+    component: HomePage,
     layout: "/hhsb"
   },
   {
-    path: "/ChatBar",
-    name: "Chat Feed",
+    path: "/BuddyList",
+    name: "BuddyList Test",
     rtlName: "التقويم",
     icon: Search,
-    component: MessageContainer,
+    component:HomePage,
     layout: "/hhsb"
   },
   {
@@ -110,7 +112,7 @@ var hhsbRoutes = [
     name: "Chat Feed",
     rtlName: "التقويم",
     icon: Alert,
-    component: MessageContainer,
+    component: HomePage,
     layout: "/hhsb"
   },
   {
@@ -118,7 +120,7 @@ var hhsbRoutes = [
     name: "Chat Feed",
     rtlName: "التقويم",
     icon: Settings,
-    component: MessageContainer,
+    component: HomePage,
     layout: "/hhsb"
   },
   

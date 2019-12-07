@@ -4,12 +4,12 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-
-const useStyles = makeStyles(props => ({
+import GridContainer from "components/Grid/GridContainer.js";
+const useStyles = makeStyles(({
   root: {
-    width: "100%",
+    width: "300px",
     maxWidth: 360,
-    backgroundColor: props=>props.Color
+    backgroundColor:props=>props.Color
   }
 }));
 
@@ -22,8 +22,11 @@ export default function ListDividers(props) {
         return (
           <div>
             
-            <ListItem button>
-              <ListItemText primary={item} />
+            <ListItem button style={{backgroundColor:item.Color,width:"300px"}}>
+              <GridContainer alignItems="center">
+                <ListItemText primary={item.Text} />
+              </GridContainer>
+              <img src={item.icon} style={{height:"30px"}}/>
             </ListItem>
             <Divider />
           </div>

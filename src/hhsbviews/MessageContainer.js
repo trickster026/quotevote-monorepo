@@ -11,9 +11,9 @@ import FaceIcon from "@material-ui/icons/Face";
 import Button from "@material-ui/core/Button";
 
 import Message from "hhsbComponents/ChatComponents/chatMessage.js"
-import InputWithIcon from "hhsbComponents/ChatComponents/chatSearch.js"
+
 import zIndex from "@material-ui/core/styles/zIndex";
-export default function MessageContainer(){
+export default function MessageContainer(props){
     const useStyles = makeStyles({
         chatContainer: {
           width: '33%',
@@ -55,7 +55,7 @@ export default function MessageContainer(){
     return(
         <GridContainer className={classes.chatContainer}>
             <GridContainer className={classes.header}>
-            <p className={classes.headerText}> Back</p>
+            <p className={classes.headerText} onClick={props.toggle}> Back</p>
             </GridContainer>
              <br></br>
            
