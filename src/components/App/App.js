@@ -24,7 +24,7 @@ import "react-toastify/dist/ReactToastify.css"
 import "semantic-ui-css/semantic.min.css"
 import "@fortawesome/fontawesome-free/css/all.css"
 import { Container } from "semantic-ui-react"
-
+import ScoreBoard from "../../material-ui/layouts/Scoreboard.js"
 import "./App.css"
 import GlobalChat from "../Chat/GlobalChat"
 
@@ -34,12 +34,11 @@ class App extends Component {
     const startChar = url.indexOf("/", 8)
     const path = url.substr(startChar, url.length)
     return (
-      <BasicLayout>
-        <GlobalHeader />
-        <Container style={{ marginTop: "8em" }}>
+      <div>
+        <div>
           <Switch>
-            <Route exact path={"/"} component={Home} />
-            <Route path={"/home"} component={Home} />
+            <Route exact path={"/"} component={ScoreBoard} />
+            <Route path={"/home"} component={ScoreBoard} />
             <Route path={"/scoreboard"} component={Scoreboard} />
             <Route path={"/top-content"} component={Scoreboard} />
             <Route
@@ -62,10 +61,10 @@ class App extends Component {
             <PrivateRoute path={"/settings"} component={AppSettings} />
             {/* <Route path={"/:username"} component={User} /> */}
           </Switch>
-        </Container>
+        </div>
         <GlobalChat />
         {path !== "/invite" && <Footer />}
-      </BasicLayout>
+      </div>
     )
   }
 }
