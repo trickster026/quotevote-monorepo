@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect, Fragment } from "react";
 
@@ -9,12 +10,9 @@ import {
   Button,
   Zoom
 } from "@material-ui/core";
-import {
-  CheckBoxOutlined,
-  ClearOutlined,
-  ChatOutlined,
-  FormatQuote
-} from "@material-ui/icons";
+import { Up, Down, Comment, Quote } from "hhsbComponents/Icons";
+import { CONTENT_REGEX } from "utils/parser";
+import { isEmpty } from "lodash";
 
 const useStyles = makeStyles(theme => ({
   paperCollapsed: {
@@ -43,9 +41,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const VotingPopup = () => {
+const VotingPopup = props => {
   const classes = useStyles();
   const [expand, setExpand] = useState(false);
+  const [comment, setComment] = useState("");
+
+  const handleVote = (event, type) => {
+    props.onVote(event, {
+      type,
+      points: props.text.match(CONTENT_REGEX).length
+    });
+  };
+
+  const handleAddComment = () => {
+    const withQuote = !isEmpty(props.selectedText.text);
+    props.onAddComment(comment, withQuote);
+    /* setTimeout(() => {
+		  this.setState({ isCommenting: false })
+		}, 500) */
+    setComment("");
+  };
 
   useEffect(() => {
     const selectionPopover = document.querySelector("#popButtons");
@@ -73,17 +88,37 @@ const VotingPopup = () => {
           position: "absolute"
         }}
       >
-        <IconButton>
-          <CheckBoxOutlined className={classes.icon} />
+        <IconButton onClick={e => handleVote(e, "upvote")}>
+          <Up
+            width="419.000000pt"
+            height="419.000000pt"
+            viewBox="0 0 419.000000 419.000000"
+            className={classes.icon}
+          />
         </IconButton>
-        <IconButton>
-          <ClearOutlined className={classes.icon} />
+        <IconButton onClick={e => handleVote(e, "downvote")}>
+          <Down
+            width="563.000000pt"
+            height="563.000000pt"
+            viewBox="0 0 563.000000 563.000000"
+            className={classes.icon}
+          />
         </IconButton>
         <IconButton onClick={() => setExpand(!expand)}>
-          <ChatOutlined className={classes.icon} />
+          <Comment
+            width="598.000000pt"
+            height="598.000000pt"
+            viewBox="0 0 598.000000 598.000000"
+            className={classes.icon}
+          />
         </IconButton>
         <IconButton>
-          <FormatQuote className={classes.icon} />
+          <Quote
+            width="607.000000pt"
+            height="605.000000pt"
+            viewBox="0 0 607.000000 605.000000"
+            className={classes.icon}
+          />
         </IconButton>
       </Paper>
       <Zoom in={expand}>
@@ -97,11 +132,14 @@ const VotingPopup = () => {
                   variant="contained"
                   className={classes.button}
                   size="small"
+                  onClick={handleAddComment}
                 >
                   SEND
                 </Button>
               </InputAdornment>
             }
+            value={comment}
+            onChange={e => setComment(e.target.value)}
           />
         </Paper>
       </Zoom>
