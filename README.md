@@ -1,6 +1,6 @@
-# SCOREBOARD
+# VoxPOP
 
-Scoreboard was built to enable anyone, anywhere to create a forum where they can share their
+VoxPOP was built to enable anyone, anywhere to create a forum where they can share their
 knowledge and learn from others. The existing platforms all had problems, whether that
 was a system that could be gamed to exclude the people most in need of a place to have
 their voices heard, shady data collection practices, geographic limitations, or all of the
