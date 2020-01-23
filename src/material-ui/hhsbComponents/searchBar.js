@@ -32,9 +32,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function CustomizedInputBase() {
+export default function CustomizedInputBase({ searchText, onTextChange }) {
   const classes = useStyles()
-
   return (
     <Paper className={classes.root}>
       <IconButton className={classes.iconButton} aria-label="menu">
@@ -42,8 +41,9 @@ export default function CustomizedInputBase() {
       </IconButton>
       <InputBase
         className={classes.input}
-        placeholder="Search Google Maps"
-        inputProps={{ "aria-label": "search google maps" }}
+        placeholder="Search..."
+        inputProps={{ "aria-label": "searchText" }}
+        onChange={e => onTextChange(e)}
       />
       <IconButton className={classes.iconButton} aria-label="search" />
       <Divider className={classes.divider} orientation="vertical" />
