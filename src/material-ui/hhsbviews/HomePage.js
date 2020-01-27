@@ -14,8 +14,11 @@ import CustomInput from "material-ui/components/CustomInput/CustomInput.js"
 import Button from "material-ui/components/CustomButtons/Button.js"
 import { getThemeProps } from "@material-ui/styles"
 import Badge from "material-ui/components/Badge/Badge.js"
-import CustomizedInputBase from "../hhsbComponents/searchBar.js"
+import CustomizedInputBase, {
+  SearchResultsView
+} from "../hhsbComponents/searchBar.js"
 import { APP_TOKEN } from "../../utils/constants"
+import { GET_ARTIST_INFO, GET_TOP_ARTISTS } from "../../graphql/queries"
 
 import Pagination from "material-ui-flat-pagination"
 import SearchIcon from "@material-ui/icons/Search"
@@ -49,7 +52,7 @@ const search = gql`
   }
 `
 class HomePage extends Component {
-  state = { searchText: "" }
+  state = { searchText: "", searchResults: {} }
 
   NotificationData = [
     {
@@ -100,27 +103,40 @@ class HomePage extends Component {
   handleClick = x => {
     console.log(x)
   }
+
   search = () => {
     if (this.props.client) {
       return async payload => {
         return await this.props.client.query({
           query: search,
           context: { token: APP_TOKEN },
-          variables: { text: payload }
+          variables: { text: payload },
+          refetchQueries: [
+            {
+              query: GET_ARTIST_INFO,
+              variables: { artist_id: this.props.artistId }
+            },
+            {
+              query: GET_TOP_ARTISTS
+            }
+          ]
         })
       }
     }
   }
 
   handleTextChange = async ({ target: { value } }) => {
-    this.setState({ searchText: value })
-    console.log("changed to====>>", value)
-    const list = (await this.search()(value)).data
-    console.log("list======>.>>.>", list)
+    if (value.trim()) {
+      this.setState({ searchText: value })
+      const { data } = await this.search()(value)
+      // console.log("data========", data)
+      this.setState({ searchResults: data })
+    }
   }
 
   render() {
-    const { searchText } = this.state
+    console.log("this.state=====", this.state)
+    const { searchText, searchResults } = this.state
     return (
       <Card style={{ display: "flex", flexBasis: "800px" }}>
         <CardBody>
@@ -181,14 +197,16 @@ class HomePage extends Component {
                 style={{
                   display: "flex",
                   justifyContent: "flex-end",
-                  flexDirection: "row"
+                  flexDirection: "row",
+                  position: "relative"
                 }}
               >
                 <CustomizedInputBase
                   searchText={searchText}
                   onTextChange={this.handleTextChange}
-                  searchText="hello from the other side"
-                />{" "}
+                  searchResults={searchResults}
+                />
+                {/* {!!Object.keys(searchResults).length && <SearchResultsView searchResults={searchResults} />} */}{" "}
                 <img
                   src={Calendar}
                   style={{
@@ -233,7 +251,6 @@ class HomePage extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("state====", state)
   return {
     login: state.login
   }
