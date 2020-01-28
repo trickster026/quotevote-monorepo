@@ -52,7 +52,7 @@ const search = gql`
   }
 `
 class HomePage extends Component {
-  state = { searchText: "", searchResults: {} }
+  state = { searchText: "", searchResults: {}, isLoading: false }
 
   NotificationData = [
     {
@@ -127,16 +127,14 @@ class HomePage extends Component {
 
   handleTextChange = async ({ target: { value } }) => {
     if (value.trim()) {
-      this.setState({ searchText: value })
+      this.setState({ isLoading: true, searchText: value })
       const { data } = await this.search()(value)
-      // console.log("data========", data)
-      this.setState({ searchResults: data })
+      this.setState({ searchResults: data, isLoading: false })
     }
   }
 
   render() {
-    console.log("this.state=====", this.state)
-    const { searchText, searchResults } = this.state
+    const { searchText, searchResults, isLoading } = this.state
     return (
       <Card style={{ display: "flex", flexBasis: "800px" }}>
         <CardBody>
@@ -205,8 +203,8 @@ class HomePage extends Component {
                   searchText={searchText}
                   onTextChange={this.handleTextChange}
                   searchResults={searchResults}
+                  isLoading={isLoading}
                 />
-                {/* {!!Object.keys(searchResults).length && <SearchResultsView searchResults={searchResults} />} */}{" "}
                 <img
                   src={Calendar}
                   style={{

@@ -1,6 +1,7 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import Paper from "@material-ui/core/Paper"
+import { CircularProgress } from "@material-ui/core"
 import InputBase from "@material-ui/core/InputBase"
 import Divider from "@material-ui/core/Divider"
 import IconButton from "@material-ui/core/IconButton"
@@ -76,13 +77,23 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     textAlign: "center",
     color: theme.palette.text.secondary
+  },
+  progress: {
+    position: "absolute",
+    top: "100%",
+    width: "18em",
+    textAlign: "center",
+    transformOrigin: "center top",
+    background: "#fff",
+    left: 0
   }
 }))
 
 export default function CustomizedInputBase({
   searchText,
   onTextChange,
-  searchResults
+  searchResults,
+  isLoading
 }) {
   const classes = useStyles()
   return (
@@ -98,44 +109,52 @@ export default function CustomizedInputBase({
           onChange={onTextChange}
         />
         <IconButton className={classes.iconButton} aria-label="search" />
-        {/* <Divider className={classes.divider} orientation="vertical" /> */}
       </Paper>
       {/* this is hardcoded for search to return an object */}
-      {!!Object.keys(searchResults).length && (
-        <SearchResultsView searchResults={searchResults} />
+      {(!!Object.keys(searchResults).length || isLoading) && (
+        <SearchResultsView
+          searchResults={searchResults}
+          isLoading={isLoading}
+        />
       )}
     </>
   )
 }
 
-export function SearchResultsView({ searchResults }) {
+export function SearchResultsView({ searchResults, isLoading }) {
   const classes = useStyles()
-
-  // console.log("earchResults.searchContent====", searchResults)
-
   return (
-    <div className={classes.resultContent}>
-      {Object.keys(searchResults).map(resultCategory => {
-        // console.log("result==========", resultCategory)
-        const category = searchResults[resultCategory]
-        console.log("length of category", category.length)
-        if (category.length > 0) {
-          return (
-            <div className={classes.category}>
-              <div className={classes.name}>{category[0].__typename}</div>
-              <div className={classes.results}>
-                {category.map(content => (
-                  <Grid item xs={12}>
-                    <Paper className={classes.paper}>{content.title}</Paper>
-                  </Grid>
-                  // <Grid>{content.title || content.name}</Grid>
-                ))}
-              </div>
-            </div>
-          )
-        }
-        return <></>
-      })}
-    </div>
+    <>
+      {isLoading ? (
+        <div className={classes.progress}>
+          <CircularProgress disableShrink />
+        </div>
+      ) : (
+        <div className={classes.resultContent}>
+          {Object.keys(searchResults).map(resultCategory => {
+            const category = searchResults[resultCategory]
+            if (category.length > 0) {
+              return (
+                <div className={classes.category} key={`${resultCategory}`}>
+                  <div className={classes.name}>{category[0].__typename}</div>
+                  <div className={classes.results}>
+                    {category.map(content => (
+                      <Grid item xs={12} key={content.__id}>
+                        <Paper className={classes.paper}>
+                          {resultCategory === "searchCreator"
+                            ? content.name
+                            : content.title}
+                        </Paper>
+                      </Grid>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+            return <></>
+          })}
+        </div>
+      )}
+    </>
   )
 }
