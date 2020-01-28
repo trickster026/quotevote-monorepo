@@ -93,7 +93,7 @@ export default function ContentFeed() {
                 flexDirection: "row"
               }}
             >
-              <CustomizedInputBase></CustomizedInputBase>
+              {/* <CustomizedInputBase></CustomizedInputBase> */}
               <img
                 src={Calendar}
                 style={{
