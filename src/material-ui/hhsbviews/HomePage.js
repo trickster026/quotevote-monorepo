@@ -130,6 +130,9 @@ class HomePage extends Component {
       this.setState({ isLoading: true, searchText: value })
       const { data } = await this.search()(value)
       this.setState({ searchResults: data, isLoading: false })
+      return
+    } else {
+      this.setState({ isLoading: false, searchResults: {} })
     }
   }
 
