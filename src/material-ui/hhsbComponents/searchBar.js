@@ -135,7 +135,7 @@ export function SearchResultsView({ searchResults, isLoading }) {
             const category = searchResults[resultCategory]
             if (category.length > 0) {
               return (
-                <div className={classes.category} key={`${resultCategory}`}>
+                <div className={classes.category} key={resultCategory}>
                   <div className={classes.name}>{category[0].__typename}</div>
                   <div className={classes.results}>
                     {category.map(content => (
