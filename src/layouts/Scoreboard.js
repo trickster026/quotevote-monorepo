@@ -1,39 +1,43 @@
-import React from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
 import cx from "classnames";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React from "react";
+
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+// import GridContainer from "components/Grid/GridContainer.js";
+// import GridItem from "components/Grid/GridItem.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
 // core components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import Footer from "components/Footer/Footer.js";
+// import AdminNavbar from "components/Navbars/AdminNavbar.js";
+// import Footer from "components/Footer/Footer.js";
 import Sidebar from "hhsbComponents/hhsbSidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+// import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import hhsbRoutes from "hhsbroutes.js";
 
 import styles from "assets/jss/material-dashboard-pro-react/layouts/adminStyle.js";
-import ContentFeed from "../hhsbviews/topcontent.js"
+// import ContentFeed from "../hhsbviews/topcontent.js";
+import { tokenValidator } from "../actions/login";
+
 var ps;
 
 const useStyles = makeStyles(styles);
 
 export default function Scoreboard(props) {
   const { ...rest } = props;
+  const history = useHistory();
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [miniActive, setMiniActive] = React.useState(true);
-  const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
+  // const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
   const [color, setColor] = React.useState("blue");
   const [bgColor, setBgColor] = React.useState("black");
   // const [hasImage, setHasImage] = React.useState(true);
-  const [fixedClasses, setFixedClasses] = React.useState("dropdown");
+  // const [fixedClasses, setFixedClasses] = React.useState("dropdown");
   const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
   // styles
   const classes = useStyles();
@@ -67,67 +71,61 @@ export default function Scoreboard(props) {
     };
   });
   // functions for changeing the states from components
-  const handleImageClick = image => {
-    setImage(image);
-  };
-  const handleColorClick = color => {
-    setColor(color);
-  };
-  const handleBgColorClick = bgColor => {
-    switch (bgColor) {
-      case "white":
-        setLogo(require("assets/img/logo.svg"));
-        break;
-      default:
-        setLogo(require("assets/img/logo-white.svg"));
-        break;
-    }
-    setBgColor(bgColor);
-  };
-  const handleFixedClick = () => {
-    if (fixedClasses === "dropdown") {
-      setFixedClasses("dropdown show");
-    } else {
-      setFixedClasses("dropdown");
-    }
-  };
+  // const handleImageClick = image => {
+  //   setImage(image);
+  // };
+  // const handleColorClick = color => {
+  //   setColor(color);
+  // };
+  // const handleBgColorClick = bgColor => {
+  //   switch (bgColor) {
+  //     case "white":
+  //       setLogo(require("assets/img/logo.svg"));
+  //       break;
+  //     default:
+  //       setLogo(require("assets/img/logo-white.svg"));
+  //       break;
+  //   }
+  //   setBgColor(bgColor);
+  // };
+  // const handleFixedClick = () => {
+  //   if (fixedClasses === "dropdown") {
+  //     setFixedClasses("dropdown show");
+  //   } else {
+  //     setFixedClasses("dropdown");
+  //   }
+  // };
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   const getRoute = () => {
     return window.location.pathname !== "/admin/full-screen-maps";
   };
-  const getActiveRoute = routes => {
-    let activeRoute = "Default Brand Text";
-     for (let i = 0; i < routes.length; i++) {
-      console.log(routes[i])
-      if (routes[i].collapse) {
-        let collapseActiveRoute = getActiveRoute(routes[i].views);
-        if (collapseActiveRoute !== activeRoute) {
-          return collapseActiveRoute;
-        }
-      } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
-          console.log(routes[i].name)
-          return routes[i].name;
-        }
-      }
-    }
-    console.log(activeRoute)
-    
-    return activeRoute;
-  };
+  // const getActiveRoute = routes => {
+  //   let activeRoute = "Default Brand Text";
+  //    for (let i = 0; i < routes.length; i++) {
+  //     if (routes[i].collapse) {
+  //       let collapseActiveRoute = getActiveRoute(routes[i].views);
+  //       if (collapseActiveRoute !== activeRoute) {
+  //         return collapseActiveRoute;
+  //       }
+  //     } else {
+  //       if (
+  //         window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
+  //       ) {
+  //         console.log(routes[i].name)
+  //         return routes[i].name;
+  //       }
+  //     }
+  //   }
+  //   return activeRoute;
+  // };
   const getRoutes = routes => {
-    console.log(routes)
     return routes.map((prop, key) => {
-      console.log(prop)
       if (prop.collapse) {
         return getRoutes(prop.views);
       }
       if (prop.layout) {
-        console.log(prop)
         return (
           <Route
             path={prop.layout + prop.path}
@@ -140,10 +138,10 @@ export default function Scoreboard(props) {
       }
     });
   };
-  const sidebarMinimize = () => {
-    setMiniActive(!miniActive);
-    console.log('minimize *****************************************')
-  };
+  // const sidebarMinimize = () => {
+  //   setMiniActive(!miniActive);
+  //   console.log('minimize *****************************************')
+  // };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
       setMobileOpen(false);
@@ -152,23 +150,18 @@ export default function Scoreboard(props) {
 
   return (
     <div className={classes.wrapper}>
+      {!tokenValidator() && history.push("/unauth")}
       <Sidebar
         routes={hhsbRoutes}
-        
         logo={logo}
-        
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
         bgColor={bgColor}
         miniActive={miniActive}
         {...rest}
-        
       />
-      
       <div className={mainPanelClasses} ref={mainPanel}>
-      
-       
         {/* On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
@@ -187,8 +180,6 @@ export default function Scoreboard(props) {
             </Switch>
           </div>
         )}
-       
-       
       </div>
     </div>
   );

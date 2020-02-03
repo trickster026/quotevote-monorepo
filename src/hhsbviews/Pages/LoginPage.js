@@ -25,6 +25,7 @@ import { userLogin } from "actions/login";
 
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { tokenValidator } from "../../actions/login";
 
 import styles from "assets/jss/material-dashboard-pro-react/views/loginPageStyle.js";
 
@@ -58,6 +59,7 @@ export default function LoginPage() {
   };
   return (
     <div className={classes.container}>
+      {tokenValidator() && history.push("/hhsb/Home")}
       <GridContainer justify="center">
         <GridItem xs={12} sm={6} md={4}>
           <form onKeyPress={e => handleFormSubmit(e)}>

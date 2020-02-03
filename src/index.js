@@ -26,6 +26,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import RtlLayout from "layouts/RTL.js";
 import Scoreboard from "layouts/Scoreboard.js";
+import TokenExpired from "layouts/TokenExpired.js";
 import store, { persistor } from "config/redux";
 
 import "assets/scss/material-dashboard-pro-react.scss?v=1.8.0";
@@ -42,6 +43,7 @@ ReactDOM.render(
             <Route path="/auth" component={AuthLayout} />
             <Route path="/admin" component={AdminLayout} />
             <Route path="/hhsb" component={Scoreboard} />
+            <Route path="/unauth" component={TokenExpired} />
             <Redirect from="/" to="/auth" />
           </Switch>
         </Router>
