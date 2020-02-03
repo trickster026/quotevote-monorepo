@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import {
   USER_LOGIN_FAILURE,
   USER_LOGIN_REQUEST,
@@ -61,22 +61,22 @@ const getToken = async (username, password) => {
   }
 };
 
-// export function tokenValidator() {
-//   const storedToken = localStorage.getItem("token");
+export function tokenValidator() {
+  const storedToken = localStorage.getItem("token");
 
-//   const result = jwt.verify(storedToken, "HHSB", function(err, decoded) {
-//     if (err) {
-//       localStorage.removeItem("token");
-//       // console.log("Error", err);
-//       return false;
-//     } else {
-//       // console.log(decoded);
-//       return true;
-//     }
-//   });
+  const result = jwt.verify(storedToken, "HHSB", function(err, decoded) {
+    if (err) {
+      localStorage.removeItem("token");
+      // console.log("Error", err);
+      return false;
+    } else {
+      // console.log(decoded);
+      return true;
+    }
+  });
 
-//   return result;
-// }
+  return result;
+}
 
 // export function clearToken() {
 //   localStorage.removeItem("token");

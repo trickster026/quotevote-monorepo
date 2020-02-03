@@ -6,13 +6,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import SvgIcon from '@material-ui/core/SvgIcon';
 // @material-ui/icons
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import AddLocationIcon from '@material-ui/icons/AddLocation';
 import styles from "assets/jss/material-dashboard-pro-react/components/accordionStyle.js";
-import Chat from '../../hhsbAssets/Chat.svg'
+import Chat from "../../hhsbAssets/Chat.svg";
 const useStyles = makeStyles(styles);
 
 export default function Accordion(props) {
@@ -35,10 +32,12 @@ export default function Accordion(props) {
               expanded: classes.expansionPanelExpanded
             }}
           >
-       
             <ExpansionPanelSummary
-             
-              expandIcon={<div> <ExpandMore/> </div>}
+              expandIcon={
+                <div>
+                  <ExpandMore />
+                </div>
+              }
               classes={{
                 root: classes.expansionPanelSummary,
                 expanded: classes.expansionPanelSummaryExpaned,
@@ -47,10 +46,9 @@ export default function Accordion(props) {
               }}
             >
               <h4 className={classes.title}>{prop.title}</h4>
-              <img src={Chat} />
-              <img src={Chat} />
+              <img alt=" " src={Chat} />
+              <img alt=" " src={Chat} />
             </ExpansionPanelSummary>
-           
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
               {prop.content}
             </ExpansionPanelDetails>
