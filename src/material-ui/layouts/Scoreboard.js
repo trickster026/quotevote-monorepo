@@ -176,7 +176,7 @@ export default function ScoreBoard(props) {
                 {getRoutes(hhsbRoutes)}
                 <Redirect from="/admin" to="/admin/dashboard" />
               </Switch>
-              Route
+              {/* Route */}
             </div>
           </div>
         ) : (
