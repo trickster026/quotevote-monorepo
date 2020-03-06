@@ -1,27 +1,32 @@
-import * as types from "../actions/types"
+import {
+  USER_LOGIN_FAILURE,
+  USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESS,
+  USER_LOGOUT
+} from "actions/types";
 
-const defaultState = {
-  isLoggedIn: false
-}
+export const userInitialState = {
+  loading: false,
+  loginError: null,
+  user: {}
+};
 
-const loginReducer = (state = defaultState, action) => {
-  let _state
+export const userReducer = (state = userInitialState, action) => {
   switch (action.type) {
-    case types.USER_LOGIN_REQUEST:
-      _state = { ...state, ...action.payload }
-      return _state
-    case types.USER_LOGIN_SUCCESS:
-      _state = { ...state, ...action.payload }
-      return _state
-    case types.USER_LOGIN_FAILURE:
-      _state = { ...state, ...action.payload }
-      return _state
-    case types.USER_LOGOUT:
-      _state = { ...state, ...action.payload }
-      return _state
+    case USER_LOGIN_REQUEST:
+      return {
+        ...state,
+        loading: true
+      };
+    case USER_LOGIN_SUCCESS:
+      return { ...state, ...action.payload };
+    case USER_LOGIN_FAILURE:
+      return { ...state, ...action.payload };
+    case USER_LOGOUT:
+      return { ...state, ...action.payload };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default loginReducer
+export default userReducer;
