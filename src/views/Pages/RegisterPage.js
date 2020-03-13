@@ -1,5 +1,8 @@
 import React from "react";
 
+//firebase
+import firebase from 'firebase';
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -31,6 +34,8 @@ const useStyles = makeStyles(styles);
 
 export default function RegisterPage() {
   const [checked, setChecked] = React.useState([]);
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
   const handleToggle = value => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -42,7 +47,25 @@ export default function RegisterPage() {
     }
     setChecked(newChecked);
   };
+  const handleEmail = email => {
+    console.log('email changed', email);
+    setEmail(email)
+  }
+
+  const handlePassword = password => {
+    console.log('password changed', password);
+    setPassword(password)
+  }
+  const handleSubmit = () => {
+    console.log('submitting with ', email, password);
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(user => {
+      console.log('created', user)
+    })
+  }
+  
   const classes = useStyles();
+  console.log('email state is', email)
   return (
     <div className={classes.container}>
       <GridContainer justify="center">
@@ -119,7 +142,8 @@ export default function RegisterPage() {
                             <Email className={classes.inputAdornmentIcon} />
                           </InputAdornment>
                         ),
-                        placeholder: "Email..."
+                        placeholder: "Email...",
+                        onChange: e => handleEmail(e.target.value)
                       }}
                     />
                     <CustomInput
@@ -138,7 +162,8 @@ export default function RegisterPage() {
                             </Icon>
                           </InputAdornment>
                         ),
-                        placeholder: "Password..."
+                        placeholder: "Password...",
+                        onChange: e => handlePassword(e.target.value),
                       }}
                     />
                     <FormControlLabel
@@ -168,7 +193,7 @@ export default function RegisterPage() {
                       }
                     />
                     <div className={classes.center}>
-                      <Button round color="primary">
+                      <Button onClick={handleSubmit} round color="primary">
                         Get started
                       </Button>
                     </div>
