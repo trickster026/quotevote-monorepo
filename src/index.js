@@ -28,7 +28,6 @@ import RtlLayout from "layouts/RTL.js";
 import Scoreboard from "layouts/Scoreboard.js";
 import TokenExpired from "layouts/TokenExpired.js";
 import store, { persistor } from "config/redux";
-import firebaseConfig from 'config/firebaseConfig';
 
 import "assets/scss/material-dashboard-pro-react.scss?v=1.8.0";
 
