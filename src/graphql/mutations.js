@@ -11,3 +11,11 @@ export const CREATE_DOMAIN = gql`
       created
     }
   }`
+
+export const SUBMIT_TEXT = gql`
+  mutation submitContent($content: ContentInput!) {
+    addContent(content: $content) {
+      _id
+    }
+  }
+`
