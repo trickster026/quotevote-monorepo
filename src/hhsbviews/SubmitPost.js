@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
+import { useSelector } from 'react-redux'
 
 import { 
   TextField, 
@@ -9,7 +10,6 @@ import {
   FormControl,
   Divider,
   InputBase,
-  SnackBar,
   Modal,
   Typography
 } from "@material-ui/core"
@@ -21,7 +21,10 @@ import CardBody from "material-ui/components/Card/CardBody"
 import Button from "material-ui/components/CustomButtons/Button"
 import GridContainer from "material-ui/components/Grid/GridContainer"
 
-import { CREATE_DOMAIN, SUBMIT_TEXT, DOMAIN_QUERY } from '../graphql/mutations'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { CREATE_DOMAIN, SUBMIT_TEXT } from 'graphql/mutations'
+import { DOMAIN_QUERY } from 'graphql/query'
+
 
 const inputStyles = {
   color: "#E91E63",
@@ -33,15 +36,39 @@ const inputStyles = {
 export default function SubmitPost() {
   const [title, setTitle] = useState('[Enter Title]')
   const [text, setText] = useState('')
-  const [domainList, setDomainList] = useState([])
-  const [createSubScoreboard, setCreateSubScoreboard] = useState(false)
-  const [showShareableLink, setShowShareableLink] = useState(false) 
-  const [privacy, setPrivacy] = useState('private')
+  const [domain, setDomain] = useState({domain: {
+    title: 'Default'
+  }})
+  // const [createSubScoreboard, setCreateSubScoreboard] = useState(false)
+  // const [showShareableLink, setShowShareableLink] = useState(false) 
+  // const [privacy, setPrivacy] = useState('private')
+
+  const { user } = useSelector(state => state.loginReducer);
+  const { loading, error, data } = useQuery(DOMAIN_QUERY, {
+    variables: { limit: 0 }
+   })
+
+  const [submitText, { data: submitData }] = useMutation(SUBMIT_TEXT);
 
 
-  const handleSubmit = (event, submitText) => {
+  const handleSubmit =  async (event) => {
     event.preventDefault()
-    console.log('test')
+    try {
+      const { data } = await submitText({
+        variables: {
+          content: {
+            title: title,
+            text: text,
+            creatorId: user.creatorId,
+            domainId: domain._id
+          }
+        }
+      })
+      const { _id } = data.addContent
+      window.alert(`Sucessfully made post. Go to https://alpha.scoreboard.vote/boards/${domain.key}/content/${_id}`)
+    } catch (err) {
+      console.log('Something went wrong', {err})
+    }
   }
 
   const handleText = event => {
@@ -52,114 +79,20 @@ export default function SubmitPost() {
     setTitle(event.target.value)
   }
 
-
-  const handleSuccess = event => {
-    if (createSubScoreboard) {
-      // toast.success("New domain created successfully!")
-      setCreateSubScoreboard(false)
-    } else {
-      // toast.success("Submitted successfully!")
-      setTitle("")
-      setText("")
-      setShowShareableLink(true)
-    }
+  const handleDomain = event => {
+    setDomain(event.target.value)
   }
-
-  const handleError = event => {
-    // toast.error(
-      // "Content submission failed: Please provide input for required fields."
-    // )
+   
+  if (loading) {
+    return 'loading'
   }
-
-  const handleCopy = shareableLink => {
-    const textArea = document.createElement("textarea")
-    textArea.value = shareableLink
-    document.body.appendChild(textArea)
-    textArea.focus()
-    textArea.select()
-    document.execCommand("copy")
-    document.body.removeChild(textArea)
-    // toast.info("Copied to clipboard!")
-  }
-
-  const handleDropdownChange = (e, { options, value }) => {
-    this.setState({ domain: options.find(item => item.value === value) })
-  }
-
-  const handlePrivacyChange = (e, data) => {
-    console.log("handlePrivacyChange", data.value)
-    this.setState({ privacy: data.value })
-  }
-
-  const handleCreateSubScoreboard = () => {
-    this.setState({ createSubScoreboard: true })
-  }
-
-  const handleNewSubBoardInputChange = (e, { value }) => {
-    e.preventDefault()
-    this.setState({ domainTitle: value })
-  }
-  const handleCancelNewSubScoreboard = () => {
-    this.setState({ createSubScoreboard: false })
-  }
-
-  const renderCreateNewScoreboard = () => {
-    return (
-      <>
-        <TextField
-          label="New Subscoreboard"
-          placeholder="Add new subscoreboard"
-          onChange={this.handleNewSubBoardInputChange}
-          required
-        />
-        <Select
-          label="Privacy"
-
-          placeholder="Choose privacy"
-          onChange={this.handlePrivacyChange}
-        >
-          <MenuItem>Group 1</MenuItem>
-          <MenuItem>Group 3</MenuItem>
-          <MenuItem>Group 3</MenuItem>
-        </Select>
-
-      </>
-    )
-  }
-
-  const renderModal = id => {
-    const shareableLink = `/boards/${this.state.domain.key}/content/${id}`
-    return (
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-        open={this.state.showShareableLink}
-        onClose={this.handleClose}  
-      >
-        <Typography>Your shareable link is ready</Typography>
-        <Typography>
-          <div>
-            Share your text to your friends and family.
-            <Button
-              onClick={e => this.handleCopy(shareableLink)}
-              value={shareableLink}
-            />
-          </div>
-        </Typography>
-          <Button
-            as={Link}
-            positive
-            content="Go to text"
-            to={`/boards/${this.state.domain.key}/content/${id}`}
-          />
-          <Button negative onClick={this.handleClose}>
-            Close
-          </Button>
-      </Modal>
-    )
-  }
-  
-
+  else if(error) {
+    return 'error'
+  } else {  
+    const publicDomains = data.domains.filter(domain => {
+      return domain.privacy === 'public'
+    })
+    
     return (
       <GridContainer spacing={1} direction="col">
         <GridItem xs={6}>
@@ -202,7 +135,7 @@ export default function SubmitPost() {
             </CardHeader>
             <CardBody>
             <form
-            onSubmit={handleSubmit}
+             onSubmit={handleSubmit}
             >
             <TextField
               id="post"
@@ -221,15 +154,27 @@ export default function SubmitPost() {
             <div style={{marginTop: 24, display: 'flex', justifyContent: 'space-between', alixgnContent: 'center'}}>
               <div>
               <FormControl>
-              <InputLabel id="group">Group</InputLabel>
+                <InputLabel id="group-label" htmlFor="group">Group</InputLabel>
                 <Select
-                  labelId="group"
                   id="group"
-                 style={{ width: 200}}
+                  value={domain.title}
+                  placeholder={domain.title}
+                  onChange={handleDomain}
+                  style={{ width: 240 }}
                  >
-                <MenuItem>Group 1</MenuItem>
-                <MenuItem>Group 3</MenuItem>
-                <MenuItem>Group 3</MenuItem>
+                   <MenuItem value={domain.title}>
+                    {domain.title}
+                   </MenuItem>
+                {publicDomains.map(publicDomain => {
+                  return (
+                  <MenuItem
+                    name={publicDomain.key}
+                    value={publicDomain}
+                    key={publicDomain._id}
+                  >
+                      {publicDomain.title}
+                  </MenuItem>)
+                })}
                 </Select>
               </FormControl>
                 {
@@ -284,4 +229,5 @@ export default function SubmitPost() {
         </GridItem>
       </GridContainer>
   )
+}
 }
