@@ -126,6 +126,12 @@ function SubmitPost() {
     setTitle(event.target.value)
   }
 
+  const clearTitle = (event) => {
+    if (title === '[Enter Title]') {
+      setTitle('')
+    }
+  }
+
   const handleDomain = (event) => {
     setDomain(event.target.value)
   }
@@ -254,6 +260,8 @@ function SubmitPost() {
                 >
                   <InputBase
                     style={inputStyles}
+                    onClick={clearTitle}
+                    onFocus={clearTitle}
                     onChange={handleTitle}
                     value={title}
                     name="title"
