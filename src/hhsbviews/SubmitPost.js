@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { withRouter } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import { useSelector } from 'react-redux'
 
 import { 
@@ -24,14 +24,19 @@ import { makeStyles } from "@material-ui/core/styles"
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormLabel from '@material-ui/core/FormLabel'
 
+
+// Materi Icons
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
+import AssignmentIcon from '@material-ui/icons/Assignment'
+
 
 import GridItem from "material-ui/components/Grid/GridItem"
 import Card from "material-ui/components/Card/Card"
 import CardHeader from "material-ui/components/Card/CardHeader"
 import CardBody from "material-ui/components/Card/CardBody"
 import Button from "material-ui/components/CustomButtons/Button"
+import LoadingSpinner from "hhsbComponents/LoadingSpinner.js"
 import styles from "material-ui/assets/jss/material-dashboard-pro-react/views/sweetAlertStyle.js"
 
 import GridContainer from "material-ui/components/Grid/GridContainer"
@@ -53,7 +58,7 @@ const inputStyles = {
   fontWeight: "bold",
 }
 
-function SubmitPost({ history }) {
+function SubmitPost() {
   const classes = useStyles()
   const [alert, setAlert] = React.useState(null)
   const [title, setTitle] = useState('[Enter Title]')
@@ -64,6 +69,8 @@ function SubmitPost({ history }) {
   const [subScoreboardIsOpen, setCreateSubScoreboard] = useState(false)
   const [privacy, setPrivacy] = useState('private')
 
+  let history = useHistory()
+
   const { user } = useSelector((state) => state.loginReducer)
   const { loading, error, data } = useQuery(DOMAIN_QUERY, {
     variables: { limit: 0 },
@@ -72,6 +79,7 @@ function SubmitPost({ history }) {
   const [submitText, { data: submitData }] = useMutation(SUBMIT_TEXT)
   const [createDomain, { data: domainData}] = useMutation(CREATE_DOMAIN)
 
+  const DOMAIN = process.env.REACT_APP_DOMAIN || 'localhost:3000'
 
   const handleSubmit =  async (event) => {
     event.preventDefault()
@@ -106,8 +114,7 @@ function SubmitPost({ history }) {
       const domainKey = domain.key ? domain.key : domain.toLowerCase()
       successAlert(domainKey, _id)
     } catch (err) {
-      console.log({ err })
-      // errorAlert()
+      errorAlert()
     }
   }
 
@@ -148,23 +155,38 @@ function SubmitPost({ history }) {
         <Typography variant="caption">Share your text to your friends and family.</Typography>
         <Grid 
           container
-          justify="center" 
+          justify="space-around" 
           style={{ marginTop: 16 }}
+          wrap="nowrap"
         >
-          <div>
-            { shareableLink }
-          </div>
-          <Button 
-            color="primary"
-            onClick={handleCopy(process.env.REACT_APP_DOMAIN + shareableLink)}
-          >
-            Copy
-          </Button>
+          <GridItem style={{ overflow: 'auto' }}>
+            <pre>{ DOMAIN + shareableLink }</pre>
+          </GridItem>
+          <GridItem style={{ flex: 1}}>
+            <IconButton onClick={handleCopy(DOMAIN + shareableLink)}>
+              <Tooltip title="Copy Link to Clip Board"><AssignmentIcon/></Tooltip>
+            </IconButton>
+          </GridItem>
         </Grid>
       </SweetAlert>
     )
   }
-
+  
+  const errorAlert = () => {
+    setAlert(
+      <SweetAlert
+        error
+        style={{ display: "block", top: "50%" }}
+        title="Something went wrong!"
+        onConfirm={() => hideAlert()}
+        onCancel={() => hideAlert()}
+        confirmBtnCssClass={`${classes.button  } ${  classes.danger}`}
+        confirmBtnText="Ok"
+      >
+        We don't know what, yet let us know and we can find out
+      </SweetAlert>
+    )
+  }
   const hideAlert = () => {
     setAlert(null)
   }
@@ -173,12 +195,27 @@ function SubmitPost({ history }) {
     copy(shareableLink)
   }
 
+ 
   if (loading) {
-    return 'loading'
+    return (
+      <LoadingSpinner />
+    )
   }
   
   if(error) {
-    return 'error'
+    return (
+      <SweetAlert
+        error
+        style={{ display: "block", top: "50%" }}
+        title="Something went wrong!"
+        onConfirm={() => hideAlert()}
+        onCancel={() => hideAlert()}
+        confirmBtnCssClass={`${classes.button  } ${  classes.danger}`}
+        confirmBtnText="Ok"
+      >
+        We don't know what, yet let us know and we can find out
+      </SweetAlert>
+    )
   } 
 
   const userAllowedDomains = data.domains.filter((domain) => {
@@ -256,7 +293,7 @@ function SubmitPost({ history }) {
                 />
                 <div style={{marginTop: 24, display: 'flex', justifyContent: 'space-between', alixgnContent: 'center'}}>
                   <div>
-                    <FormControl>
+                    <FormControl required>
                       {
                         subScoreboardIsOpen && subScoreboardIsOpen                   ? 
                           <TextField
@@ -319,7 +356,7 @@ function SubmitPost({ history }) {
                 {
                   subScoreboardIsOpen &&
                 <div style={{ paddingTop  : 16}}>
-                  <FormControl component="fieldset" >
+                  <FormControl required component="fieldset" >
                     <FormLabel component="legend">Choose Visibility</FormLabel>
                     <RadioGroup aria-label="privacy" name="privacy" value={privacy} onChange={handlePrivacy}>
                       <FormControlLabel value="private" control={<Radio />} label="Private" />
@@ -361,4 +398,4 @@ function SubmitPost({ history }) {
   )
 }
 
-export default withRouter(SubmitPost)
+export default SubmitPost
