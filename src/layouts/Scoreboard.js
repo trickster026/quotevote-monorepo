@@ -147,7 +147,14 @@ export default function Scoreboard(props) {
       setMobileOpen(false);
     }
   };
-
+  const currentRoute = () => {
+    const {
+      location: { pathname }
+    } = props
+    console.log("pathname=====", pathname)
+    let currLocation = pathname.split("/")
+    return currLocation[currLocation.length - 1]
+  }
   return (
     <div className={classes.wrapper}>
       {!tokenValidator() && history.push("/unauth")}
@@ -159,6 +166,8 @@ export default function Scoreboard(props) {
         color={color}
         bgColor={bgColor}
         miniActive={miniActive}
+        currentRoute={currentRoute()}
+
         {...rest}
       />
       <div className={mainPanelClasses} ref={mainPanel}>

@@ -29,6 +29,7 @@ import Widgets from "views/Widgets/Widgets.js";
 import Wizard from "views/Forms/Wizard.js";
 import ContentFeed from "hhsbviews/topcontent.js"
 import SubmitPost from "hhsbviews/SubmitPost.js"
+import SearchView from "hhsbviews/SearchView.js"
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
 import HomePage from "hhsbviews/HomePage.js"
@@ -96,6 +97,14 @@ var hhsbRoutes = [
     rtlName: "التقويم",
     icon: Chat,
     component: HomePage,
+    layout: "/hhsb"
+  },
+  {
+    path: "/Search",
+    name: "Search",
+    rtlName: "search",
+    icon: Search,
+    component: SearchView,
     layout: "/hhsb"
   },
   {
