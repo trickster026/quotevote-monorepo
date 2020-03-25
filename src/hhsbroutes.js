@@ -31,6 +31,7 @@ import ContentFeed from "hhsbviews/topcontent.js"
 import SubmitPost from "hhsbviews/SubmitPost.js"
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
 import Profile from "hhsbviews/profile.js"
+import ManageInvites from 'hhsbviews/ManageInvites';
 import HomePage from "hhsbviews/HomePage.js"
 import MessageContainer from "hhsbviews/MessageContainer.js"
 import BuddyList from "hhsbviews/BuddyList.js"
@@ -63,6 +64,14 @@ var hhsbRoutes = [
     rtlName: "لوحة القيادة",
     icon: Home,
     component: HomePage,
+    layout: "/hhsb"
+  },
+  {
+    path: "/invites",
+    name: "Manage Invites",
+    rtlName: "Manage Invites",
+    icon: Avatar,
+    component: ManageInvites,
     layout: "/hhsb"
   },
   
