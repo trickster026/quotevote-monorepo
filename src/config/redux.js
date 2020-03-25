@@ -2,7 +2,7 @@ import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import localForage from "localforage";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
+
 
 import * as reducers from "reducers";
 
