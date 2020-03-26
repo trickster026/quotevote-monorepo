@@ -8,33 +8,31 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js"
-import { getThemeProps } from '@material-ui/styles';
+import {getThemeProps} from '@material-ui/styles';
 import Badge from "components/Badge/Badge.js";
-import CustomAccordion from  "./customExpansionPanel.js"
- const Content=(props)=> {
-    
+import CustomAccordion from "./customExpansionPanel.js"
+
+const Content = (props) => {
 
 
-    return(
+    return (
         <GridContainer>
-           <GridItem
-            direction="row"
-            justify="center"
-            alignItems="center"
-        >
-        
-        <CustomAccordion active={0}  collapses={props.MessageData} />
-        
-        </GridItem>
+            <GridItem
+                direction="row"
+                justify="center"
+                alignItems="center"
+            >
 
-          
-          
-        </GridContainer> 
+                <CustomAccordion active={0} collapses={props.MessageData}/>
 
+            </GridItem>
+
+
+        </GridContainer>
 
 
     )
-    
 
-}    
+
+}
 export default Content
