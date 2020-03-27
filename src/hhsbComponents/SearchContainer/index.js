@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { makeStyles, fade } from "@material-ui/core/styles"
 import gql from "graphql-tag"
 import InputBase from "@material-ui/core/InputBase"
@@ -6,7 +6,7 @@ import SearchIcon from "@material-ui/icons/Search"
 import SearchResultsView from "./SearchResults"
 import Card from "material-ui/components/Card/Card"
 import CardHeader from "material-ui/components/Card/CardHeader"
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks"
 
 const SEARCH = gql`
   query search($text: String!) {
@@ -28,10 +28,10 @@ const SEARCH = gql`
     }
   }
 `
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
     zIndex: 10,
-    flex: 1
+    flex: 1,
   },
   search: {
     position: 'relative',
@@ -78,18 +78,18 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "inherit",
     height: "58px",
     color: "#ff0000",
-    zIndex: 10
+    zIndex: 10,
   },
   input: {
     marginLeft: "10px",
-    flex: 1
+    flex: 1,
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   divider: {
     height: 28,
-    margin: 4
+    margin: 4,
   },
 
   name: {
@@ -103,17 +103,17 @@ const useStyles = makeStyles(theme => ({
     padding: ".4em 1em",
     fontWeight: 700,
     color: "rgba(0,0,0,.4)",
-    borderBottom: "1px solid rgba(34,36,38,.1)"
+    borderBottom: "1px solid rgba(34,36,38,.1)",
   },
   results: {
     width: "100%",
     display: "table-cell",
     background: "#fff",
     borderLeft: "1px solid rgba(34,36,38,.15)",
-    borderBottom: "2px solid rgba(34,36,38,.1)"
+    borderBottom: "2px solid rgba(34,36,38,.1)",
   },
   paper: {
-    textAlign: "center"
+    textAlign: "center",
   },
   progress: {
     position: "absolute",
@@ -122,36 +122,36 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     transformOrigin: "center top",
     background: "#fff",
-    left: 0
+    left: 0,
   },
   ruleStyle: {
     width: "200px",
-    borderBottom: "2px solid #9C27B0"
+    borderBottom: "2px solid #9C27B0",
   },
   textinput: {
     display: "flex",
-    flexDirection: "column"
-  }
+    flexDirection: "column",
+  },
 })
 )
 function SidebarSearchView(props) {
   const [searchText, updateSearch] = useState("")
   const { loading, error, data } = useQuery(SEARCH, {
-    variables: { text: searchText }
-  });
+    variables: { text: searchText },
+  })
 
   const handleTextChange = async ({ target: { value } }) => {
     if (value.trim()) {
       updateSearch(value)
     }
   }
-  const classes = useStyles();
+  const classes = useStyles()
 
   const { Display } = props
   return (
-    <div style={{ flex: 1, display: Display || "block", margin: "5px", height: "90vh" }}>
+    <div style={{ flex: 1, display: Display || "block", margin: "5px", marginRight: "16px", height: "90vh" }}>
       <Card style={{ zIndex: 10, height: "fit-content" }}>
-        <CardHeader style={{ backgroundColor: "white", margin: "5px", paddingLeft: 0 }}>
+        <CardHeader style={{ backgroundColor: "white", margin: "5px", paddingLeft: 0, paddingRight: 5 }}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -173,6 +173,7 @@ function SidebarSearchView(props) {
         <SearchResultsView
           searchResults={data}
           isLoading={loading}
+          isError={error}
         />
       )}
     </div>

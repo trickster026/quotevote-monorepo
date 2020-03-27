@@ -1,13 +1,13 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, compose, applyMiddleware } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import localForage from "localforage";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
+
 
 import * as reducers from "reducers";
 
 const rootReducer = combineReducers({ ...reducers });
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ;
+const composeEnhancer = (process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose;
 
 const persistConfig = {
   key: "root",
