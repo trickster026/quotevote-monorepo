@@ -19,6 +19,7 @@ export const USER_INVITE_REQUESTS = gql`
       userInviteRequests {
         email
         status
+        _id
       }
     }
 
@@ -26,10 +27,7 @@ export const USER_INVITE_REQUESTS = gql`
 `
 
 export const UPDATE_USER_INVITE_STATUS = gql`
-  mutation updateUserInviteRequest($id: String!, $action: String!) {
-    updateUserInviteRequest(id: $id, action: $action) {
-      id
-      action
-    }
+  mutation sendUserInviteApproval($user_invite_id: String!, $action: String!) {
+    sendUserInviteApproval(user_invite_id: $user_invite_id, action: $action)
   }
 `;

@@ -17,16 +17,6 @@ import { USER_INVITE_REQUESTS, UPDATE_USER_INVITE_STATUS } from 'graphql/query';
 import { Mutation } from '@apollo/react-components';
 
 
-/* const USER_INVITE_REQUESTS = gql`
-    query userInviteRequests {
-      userInviteRequests {
-        email
-        status
-      }
-    }
-`; */
-
-
 function createData(ID, email, status) {
   return { ID, email, status };
 }
@@ -115,12 +105,15 @@ function InviteTable(props) {
               <TableCell align="right">{row.email}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
               <TableCell align="right">
-                <Mutation mutation={UPDATE_USER_INVITE_STATUS}>
+                {row.status === 'ACCEPT' || row.status === 'APPROVED' ? <div></div>: 
+                  <Mutation mutation={UPDATE_USER_INVITE_STATUS}>
                   {(updateInviteStatus, { data }) => (
-                      <button onClick={(e) => updateInviteStatus({variables:{action: 'ACCEPT', id: row.id}}) }/>
+                      <Button onClick={(e) => updateInviteStatus({variables:{action: 'ACCEPT', user_invite_id: row._id}}) }>Accept</Button>
 
-                  )}
-                </Mutation>
+                    )}
+                  </Mutation>
+                }
+                
               </TableCell>
             </TableRow>
           ))}
@@ -132,6 +125,7 @@ function InviteTable(props) {
 
 export default function ManageInvites(props) {
   const {data} = useQuery(USER_INVITE_REQUESTS);
+  console.log('DATA', data)
     //const {contents} = data
     /* const handleAccept = (user) => {
       switch(user.status) {
