@@ -14,3 +14,11 @@ query domains($limit: Int!) {
   }
 }
 `
+export const USER_INVITE_REQUESTS = gql`
+    query userInviteRequests {
+      userInviteRequests {
+        email
+        status
+      }
+    }
+`

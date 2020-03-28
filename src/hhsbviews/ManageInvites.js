@@ -11,6 +11,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 
+import {useQuery} from '@apollo/react-hooks';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { USER_INVITE_REQUESTS } from 'graphql/query';
+
+/* const USER_INVITE_REQUESTS = gql`
+    query userInviteRequests {
+      userInviteRequests {
+        email
+        status
+      }
+    }
+`; */
+
 
 function createData(ID, email, status) {
   return { ID, email, status };
@@ -24,7 +37,6 @@ const rows = [
 function Headers() {
   const useStyles = makeStyles({
     h2: {
-      fontFamily: 'League Spartan',
       fontStyle: 'normal',
       fontWeight: 'bold',
       fontSize: '18px',
@@ -60,6 +72,8 @@ function Headers() {
 }
 
 function InviteTable(props) {
+  const {data, handleAccept} = props
+
   const useStyles = makeStyles({
 
     tableContainer: {
@@ -80,7 +94,7 @@ function InviteTable(props) {
 
   return (
     <TableContainer className={classes.tableContainer} component={Paper}>
-      <Table aria-label="simple table">
+      <Table aria-label="Invite Table">
         <TableHead className={classes.tableHead}>
           <TableRow>
             <TableCell className={classes.tableHead}>ID</TableCell>
@@ -90,14 +104,15 @@ function InviteTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.name}>
+          
+          {data.userInviteRequests.map(row => (
+            <TableRow key={row.email}>
               <TableCell component="th" scope="row">
-                {row.ID}
+                {row.email}
               </TableCell>
               <TableCell align="right">{row.email}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right"><Button color={'Primary'}> Accept</Button><Button color={'Secondary'}> Decline</Button></TableCell>
+              <TableCell align="right"><Button onClick={() => handleAccept(row)} color={'Primary'}> Accept</Button><Button color={'Secondary'}> Decline</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -107,12 +122,28 @@ function InviteTable(props) {
 }
 
 export default function ManageInvites(props) {
+  const {loading, error, data} = useQuery(USER_INVITE_REQUESTS);
+    //const {contents} = data
+    console.log('DATA', data)
+    if(data) {
+      return (
+          <GridContainer> 
+            <Headers />
+            <InviteTable data={data} handleAccept={handleAccept} />
+          </GridContainer>
+      )
+    }
+    else {
+      return (
+        <GridContainer>
+          loading
+        </GridContainer>
+      )
+    }
+    const handleAccept = (x) => {
+        console.log('clicked!')
+    }
 
-  return (
-      <GridContainer> 
-        <Headers />
-        <InviteTable />
-      </GridContainer>
-  )
+  
 }
 
