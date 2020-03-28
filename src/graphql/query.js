@@ -21,4 +21,15 @@ export const USER_INVITE_REQUESTS = gql`
         status
       }
     }
+
+
 `
+
+export const UPDATE_USER_INVITE_STATUS = gql`
+  mutation updateUserInviteRequest($id: String!, $action: String!) {
+    updateUserInviteRequest(id: $id, action: $action) {
+      id
+      action
+    }
+  }
+`;

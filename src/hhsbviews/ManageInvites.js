@@ -13,7 +13,9 @@ import Button from '@material-ui/core/Button';
 
 import {useQuery} from '@apollo/react-hooks';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { USER_INVITE_REQUESTS } from 'graphql/query';
+import { USER_INVITE_REQUESTS, UPDATE_USER_INVITE_STATUS } from 'graphql/query';
+import { Mutation } from '@apollo/react-components';
+
 
 /* const USER_INVITE_REQUESTS = gql`
     query userInviteRequests {
@@ -112,7 +114,14 @@ function InviteTable(props) {
               </TableCell>
               <TableCell align="right">{row.email}</TableCell>
               <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right"><Button onClick={() => handleAccept(row)} color={'Primary'}> Accept</Button><Button color={'Secondary'}> Decline</Button></TableCell>
+              <TableCell align="right">
+                <Mutation mutation={UPDATE_USER_INVITE_STATUS}>
+                  {(updateInviteStatus, { data }) => (
+                      <button onClick={(e) => updateInviteStatus({variables:{action: 'ACCEPT', id: row.id}}) }/>
+
+                  )}
+                </Mutation>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -122,14 +131,24 @@ function InviteTable(props) {
 }
 
 export default function ManageInvites(props) {
-  const {loading, error, data} = useQuery(USER_INVITE_REQUESTS);
+  const {data} = useQuery(USER_INVITE_REQUESTS);
     //const {contents} = data
-    console.log('DATA', data)
+    /* const handleAccept = (user) => {
+      switch(user.status) {
+        case 'RESEND':
+          break
+        case 'NEW':
+          const update = useMutation(UPDATE_USER_INVITE_STATUS)
+          console.log(update)
+      } */
+
     if(data) {
       return (
           <GridContainer> 
             <Headers />
-            <InviteTable data={data} handleAccept={handleAccept} />
+            <InviteTable 
+              data={data}  
+            />
           </GridContainer>
       )
     }
@@ -140,10 +159,8 @@ export default function ManageInvites(props) {
         </GridContainer>
       )
     }
-    const handleAccept = (x) => {
-        console.log('clicked!')
-    }
+    
 
-  
 }
+
 
