@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
 import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,7 +10,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
+import Button from 'components/CustomButtons/Button.js';
+import Badge from 'components/Badge/Badge.js';
 
 import {useQuery} from '@apollo/react-hooks';
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -17,14 +19,6 @@ import { USER_INVITE_REQUESTS, UPDATE_USER_INVITE_STATUS } from 'graphql/query';
 import { Mutation } from '@apollo/react-components';
 
 
-function createData(ID, email, status) {
-  return { ID, email, status };
-}
-
-const rows = [
-  createData(1, "jonathankolman@gmail.com", "NEW"),
-  createData(2, 'kendricklamar@gmail.com', 'NEW'),
-];
 
 function Headers() {
   const useStyles = makeStyles({
@@ -34,42 +28,85 @@ function Headers() {
       fontSize: '18px',
       lineHeight: '22px',
       /* identical to box height */
-
       letterSpacing: '0.2px',
-
       color: '#E91E63'
     },
     divider: {
         marginBottom: 10,
+        backgroundColor: '#ddd'
     },
-    littleTopBar: {
-      width: '48%',
-      marginRight: 10,
-      paddingLeft:10
-    },
+    gridItem: {
+      backgroundColor: 'white',
+    }
   });
   const classes = useStyles();
     return (
-      <GridContainer>
-        <Paper className={classes.littleTopBar}  elevation={3}> 
-                <h2 className={classes.h2}>User Invitation Requests</h2>
-                <Divider className={classes.divider} />
-        </Paper>
-        <Paper className={classes.littleTopBar} elevation={3}> 
-            <h2 className={classes.h2}>User Invite Statistics</h2>
-            <Divider className={classes.divider} />
-        </Paper>
-      </GridContainer>
+        <GridItem className={classes.gridItem} direction='row' justify='center' container backgroundColor="white"  elevation={3}> 
+            <h2 className={classes.h2}>User Invitation Requests</h2>
+        </GridItem>
+        
     )
 }
+function Status({ status }) {
+  switch(status) {
+    case 'ACCEPT':
+    return (
+      <Badge color="success">
+          Accepted
+      </Badge>
+    )
+    break
+    case 'DECLINED':
+    return (
+      <Badge color="rose">
+        {status}
+      </Badge>
+    )
+    break
+    default:
+    return (
+      <Badge color="warning">
+        NEW
+      </Badge>
+    )
+  }
+}
 
-function InviteTable(props) {
-  const {data, handleAccept} = props
-
+function ActionButton({status, id}) {
+  switch(status) {
+    case 'ACCEPT':
+      return (
+        <Button color='gray'>Resend</Button>
+      )
+      break
+    case 'APPROVED':
+      return (
+        <div>
+          <Button color='danger'>DECLINE</Button>
+          <Mutation mutation={UPDATE_USER_INVITE_STATUS}>
+            {(updateInviteStatus, { data }) => (
+                <Button color="success" onClick={(e) => updateInviteStatus({variables:{action: 'ACCEPT', user_invite_id: id}}) }>Accept</Button>
+              )}
+          </Mutation>
+        </div>
+      )
+      break
+    case 'DECLINED':
+      return (
+        <Button color='gray'> RESET</Button>
+      )
+      break
+    default:
+      return (
+        <div></div>
+      )
+  }
+}
+function InviteTable({ data }) {
   const useStyles = makeStyles({
 
     tableContainer: {
-      width: '48%',
+      // width: '48%',
       marginTop: 20
     },
     tableHead: {
@@ -83,36 +120,29 @@ function InviteTable(props) {
     }
   })
   const classes = useStyles();
+  
 
   return (
     <TableContainer className={classes.tableContainer} component={Paper}>
       <Table aria-label="Invite Table">
         <TableHead className={classes.tableHead}>
           <TableRow>
-            <TableCell className={classes.tableHead}>ID</TableCell>
-            <TableCell className={classes.tableHead} align="right">Email</TableCell>
-            <TableCell className={classes.tableHead} align="right">Status</TableCell>
-            <TableCell className={classes.tableHead} align="right">Action</TableCell>
+            <TableCell className={classes.tableHead} align="center">ID</TableCell>
+            <TableCell className={classes.tableHead} align="center">Email</TableCell>
+            <TableCell className={classes.tableHead} align="center">Status</TableCell>
+            <TableCell className={classes.tableHead} align="center">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          
-          {data.userInviteRequests.map(row => (
+          {data.userInviteRequests.map((row, index) => (
             <TableRow key={row.email}>
               <TableCell component="th" scope="row">
-                {row.email}
+                {index + 1}
               </TableCell>
-              <TableCell align="right">{row.email}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right">
-                {row.status === 'ACCEPT' || row.status === 'APPROVED' ? <div></div>: 
-                  <Mutation mutation={UPDATE_USER_INVITE_STATUS}>
-                  {(updateInviteStatus, { data }) => (
-                      <Button onClick={(e) => updateInviteStatus({variables:{action: 'ACCEPT', user_invite_id: row._id}}) }>Accept</Button>
-
-                    )}
-                  </Mutation>
-                }
+              <TableCell align="center">{row.email}</TableCell>
+              <TableCell align="center"><Status status={row.status} /></TableCell>
+              <TableCell align="center">
+                <ActionButton id={row._id} status={row.status} />
                 
               </TableCell>
             </TableRow>
@@ -125,7 +155,6 @@ function InviteTable(props) {
 
 export default function ManageInvites(props) {
   const {data} = useQuery(USER_INVITE_REQUESTS);
-  console.log('DATA', data)
     //const {contents} = data
     /* const handleAccept = (user) => {
       switch(user.status) {
