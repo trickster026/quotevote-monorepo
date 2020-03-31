@@ -16,6 +16,7 @@ const SEARCH = gql`
       creatorId
       domain {
         key
+        _id
       }
     }
     searchCreator(text: $text) {
