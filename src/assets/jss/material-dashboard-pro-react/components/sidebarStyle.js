@@ -416,7 +416,8 @@ const sidebarStyle = theme => ({
     }
   },
   hidden:{
-    display:"none"
+    display:"none",
+    flex: 1
   },
   orange: {
     "&,&:hover,&:focus": {
@@ -471,9 +472,11 @@ const sidebarStyle = theme => ({
     }
   },
   sidebarWrapper: {
+    flex: 1,
     position: "relative",
     height: "calc(100vh - 75px)",
     overflow: "auto",
+    maxWidth: "260px",
     width: "260px",
     zIndex: "4",
     overflowScrolling: "touch",

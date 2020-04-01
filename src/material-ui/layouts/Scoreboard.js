@@ -153,6 +153,14 @@ export default function ScoreBoard(props) {
       setMobileOpen(false)
     }
   }
+  // This function retrieves the current view for the active route. The split should not be necesssary but as of the time of writing this, all routes are prepended by /home/
+  const currentRoute = () => {
+    const {
+      location: { pathname }
+    } = props
+    let currLocation = pathname.split("/")
+    return currLocation[currLocation.length - 1]
+  }
 
   return (
     <div className={classes.wrapper}>
@@ -164,6 +172,7 @@ export default function ScoreBoard(props) {
         color={color}
         bgColor={bgColor}
         miniActive={miniActive}
+        currentRoute={currentRoute()}
         {...rest}
       />
 
