@@ -32,13 +32,13 @@ export default function Scoreboard(props) {
   const history = useHistory();
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [miniActive, setMiniActive] = React.useState(true);
+  const [miniActive] = React.useState(true);
   // const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
-  const [color, setColor] = React.useState("blue");
-  const [bgColor, setBgColor] = React.useState("black");
+  const [color] = React.useState("blue");
+  const [bgColor] = React.useState("black");
   // const [hasImage, setHasImage] = React.useState(true);
   // const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
+  const [logo] = React.useState(require("assets/img/logo-white.svg"));
   // styles
   const classes = useStyles();
   const mainPanelClasses =

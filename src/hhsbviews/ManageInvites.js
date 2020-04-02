@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Divider from '@material-ui/core/Divider';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,7 +13,6 @@ import Button from 'components/CustomButtons/Button.js';
 import Badge from 'components/Badge/Badge.js';
 
 import {useQuery} from '@apollo/react-hooks';
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { USER_INVITE_REQUESTS, UPDATE_USER_INVITE_STATUS } from 'graphql/query';
 import { Mutation } from '@apollo/react-components';
 
@@ -63,6 +61,12 @@ function Status({ status }) {
       </Badge>
     )
     break
+    case 'RESEND':
+      return (
+        <Badge color='gray'>
+          {status}
+        </Badge>
+      )
     default:
     return (
       <Badge color="warning">
@@ -96,6 +100,11 @@ function ActionButton({status, id}) {
         <Button color='gray'> RESET</Button>
       )
       break
+    
+    case 'RESEND':
+      return (
+        <Button color='gray'> Resend</Button>
+      )
     default:
       return (
         <div></div>
