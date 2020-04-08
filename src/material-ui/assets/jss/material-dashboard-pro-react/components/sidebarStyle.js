@@ -471,6 +471,7 @@ const sidebarStyle = theme => ({
     }
   },
   sidebarWrapper: {
+    flex: 1,
     position: "relative",
     height: "calc(100vh - 75px)",
     overflow: "auto",
