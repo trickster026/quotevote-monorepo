@@ -7,11 +7,18 @@ import SubmitPost from "hhsbviews/SubmitPost.js"
 import add from 'hhsbAssets/add.png'
 import Alert from 'hhsbAssets/Alerts.png'
 import Avatar from 'hhsbAssets/Avatar.png'
+
+import SearchView from "hhsbviews/SearchView.js"
+import ManageInvites from 'hhsbviews/ManageInvites';
 import Chat from 'hhsbAssets/Chat.svg'
 import Home from 'hhsbAssets/Home.svg'
 import Search from 'hhsbAssets/Search.png'
 import Settings from 'hhsbAssets/Settings.png'
 import Trending from  'hhsbAssets/Trending.png'
+// @material-ui/icons
+
+//import {face} from '@mdi/js';
+//import { mdiEmail } from '@mdi/js'; 
 
 var hhsbRoutes = [
   {
@@ -20,6 +27,14 @@ var hhsbRoutes = [
     rtlName: "لوحة القيادة",
     icon: Home,
     component: HomePage,
+    layout: "/hhsb"
+  },
+  {
+    path: "/invites",
+    name: "Manage Invites",
+    rtlName: "Manage Invites",
+    icon: Avatar,
+    component: ManageInvites,
     layout: "/hhsb"
   },
   
@@ -53,6 +68,14 @@ var hhsbRoutes = [
     rtlName: "التقويم",
     icon: Chat,
     component: HomePage,
+    layout: "/hhsb"
+  },
+  {
+    path: "/Search",
+    name: "Search",
+    rtlName: "search",
+    icon: Search,
+    component: SearchView,
     layout: "/hhsb"
   },
   {

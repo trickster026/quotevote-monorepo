@@ -42,6 +42,8 @@ import Trending from "./hhsbAssets/Trending.png"
 import Settings from "./hhsbAssets/Settings.png"
 import Search from "./hhsbAssets/Search.png"
 import Alert from "./hhsbAssets/Alerts.png"
+import SearchView from "./hhsbviews/SearchView"
+
 // @material-ui/icons
 
 //import {face} from '@mdi/js';
@@ -100,12 +102,12 @@ var hhsbRoutes = [
     layout: "/hhsb"
   },
   {
-    path: "/BuddyList",
-    name: "BuddyList Test",
-    rtlName: "التقويم",
+    path: "/Search",
+    name: "Search",
+    rtlName: "search",
     icon: Search,
-    component: HomePage,
-    layout: "/hhsb"
+    component: SearchView,
+    layout: "/home"
   },
   {
     path: "/ChatBar",
