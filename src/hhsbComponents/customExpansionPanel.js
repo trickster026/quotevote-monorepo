@@ -15,6 +15,8 @@ import Heart from '../hhsbAssets/Heart.svg'
 import Send from '../hhsbAssets/Send.svg'
 import GridContainer from "components/Grid/GridContainer.js";
 import { useHistory } from "react-router-dom";
+import limit from 'string-limit'
+
 const useStyles = makeStyles(styles);
 
 export default function CustomAccordion(props) {
@@ -39,7 +41,8 @@ export default function CustomAccordion(props) {
   return (
     <div className={classes.root}>
       {collapses.map((prop, key) => {
-        const postURL = `/hhsb/post/${prop.domain.key}/${prop._id}`
+        let { content, domain, _id, title, scoreDetails } = prop
+        const postURL = `/hhsb/post/${domain.key}/${_id}`
         return (
           <ExpansionPanel
             expanded={active === key}
@@ -64,7 +67,7 @@ export default function CustomAccordion(props) {
                   className={classes.title}
                   onClick={() => history.push(postURL)}
                 >
-                  {prop.title}
+                  {title}
                 </Link>
               </h4>
               <div style={{ diplay:'flex', width:"87%", alignItems:'flex-end', flex:'flex-shrink' }}>
@@ -72,8 +75,8 @@ export default function CustomAccordion(props) {
                   <div style={{ display:'flex', alignItems:'center', flexDirection: "row" }}>
                     <img alt="" src={Chat} style={{ paddingBottom:"10px", marginLeft:"20px", marginRight:'5px' }} />
                     <p>
-                      <span style={{ color: "green" }}>{`+${prop.scoreDetails.upvotes}`}</span>
-                      <span style={{ color: "red" }}>{`+${prop.scoreDetails.downvotes}`}</span>
+                      <span style={{ color: "green" }}>{`+${scoreDetails.upvotes}`}</span>
+                      <span style={{ color: "red" }}>{`+${scoreDetails.downvotes}`}</span>
                     </p>
                   </div>
                   <div style={{ display:'flex', alignItems:'center', flexDirection: "row", marginRight: '2%' }}>
@@ -98,7 +101,7 @@ export default function CustomAccordion(props) {
               </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-              {prop.content}
+              {limit(content, 300)}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );
