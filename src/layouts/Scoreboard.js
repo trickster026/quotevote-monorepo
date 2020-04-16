@@ -6,16 +6,16 @@ import React from "react"
 import PerfectScrollbar from "perfect-scrollbar"
 import "perfect-scrollbar/css/perfect-scrollbar.css"
 
-// import GridContainer from "components/Grid/GridContainer.js";
-// import GridItem from "components/Grid/GridItem.js";
+// import GridContainer from "mui-pro/Grid/GridContainer.js";
+// import GridItem from "mui-pro/Grid/GridItem.js";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles"
 
 // core components
-// import AdminNavbar from "components/Navbars/AdminNavbar.js";
-// import Footer from "components/Footer/Footer.js";
+// import AdminNavbar from "mui-pro/Navbars/AdminNavbar.js";
+// import Footer from "mui-pro/Footer/Footer.js";
 import Sidebar from "hhsbComponents/hhsbSidebar.js"
-// import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+// import FixedPlugin from "mui-pro/FixedPlugin/FixedPlugin.js";
 
 import hhsbRoutes from "hhsbroutes.js"
 
@@ -31,14 +31,14 @@ export default function Scoreboard(props) {
   const { ...rest } = props
   const history = useHistory()
   // states and functions
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [miniActive] = React.useState(true);
+  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [miniActive, setMiniActive] = React.useState(true)
   // const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
-  const [color] = React.useState("blue");
-  const [bgColor] = React.useState("black");
+  const [color, setColor] = React.useState("blue")
+  const [bgColor, setBgColor] = React.useState("black")
   // const [hasImage, setHasImage] = React.useState(true);
   // const [fixedClasses, setFixedClasses] = React.useState("dropdown");
-  const [logo] = React.useState(require("assets/img/logo-white.svg"));
+  const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"))
   // styles
   const classes = useStyles()
   const mainPanelClasses =
@@ -153,7 +153,7 @@ export default function Scoreboard(props) {
   return (
     <div className={classes.wrapper}>
       {!tokenValidator() && history.push("/unauth")}
-      {<Sidebar
+      <Sidebar
         routes={hhsbRoutes}
         logo={logo}
         handleDrawerToggle={handleDrawerToggle}
@@ -164,7 +164,7 @@ export default function Scoreboard(props) {
         currentRoute={currentRoute()}
 
         {...rest}
-      />}
+      />
       <div className={mainPanelClasses} ref={mainPanel}>
         {/* On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
