@@ -21,8 +21,8 @@ const Content = ({ MessageData }) => (
       alignItems="center"
     >
       <CustomAccordion active={0}  collapses={MessageData} />
-    </GridItem>    
-  </GridContainer> 
+    </GridItem>
+  </GridContainer>
 )
 
 export default Content
