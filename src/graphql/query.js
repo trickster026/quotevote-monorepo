@@ -31,3 +31,11 @@ export const UPDATE_USER_INVITE_STATUS = gql`
     sendUserInviteApproval(user_invite_id: $user_invite_id, action: $action)
   }
 `;
+
+export const GET_BOOK_MARKED = gql`
+  query getBookmarkedContents {
+    getBookmarkedContents {
+      lastMessage
+    }
+  } 
+`;

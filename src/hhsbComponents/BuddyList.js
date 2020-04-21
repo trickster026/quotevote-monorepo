@@ -1,11 +1,13 @@
+import React from "react";
+
 import { isEmpty } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import { useQuery } from '@apollo/react-hooks';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import gql from 'graphql-tag';
 import GridContainer from "components/Grid/GridContainer.js";
 import ListDividers from 'hhsbComponents/ChatComponents/List.js'
-import React from "react";
+
+import { GET_BOOK_MARKED } from "graphql/query"
 
 const useStyles = makeStyles({
   chatContainer: {
@@ -39,14 +41,6 @@ const useStyles = makeStyles({
   }
 });
 
-const GET_BOOK_MARKED = gql`
-  query getBookmarkedContents {
-    getBookmarkedContents {
-      lastMessage
-    }
-  } 
-`;
-
 export default function BuddyList(props){
   const classes = useStyles();
   const { loading, error, data } = useQuery(GET_BOOK_MARKED);
@@ -71,7 +65,7 @@ export default function BuddyList(props){
   return(
     <GridContainer className={classes.chatContainer}>
       <GridContainer className={classes.header} onClick={props.toggle}>
-      <p className={classes.headerText}>Buddy Lists</p>
+        <p className={classes.headerText}>Buddy Lists</p>
       </GridContainer>
       <ListDividers List={Data} />
     </GridContainer>

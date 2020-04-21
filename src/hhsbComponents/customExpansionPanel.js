@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
 import React from "react";
+import PropTypes from "prop-types";
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,6 +16,7 @@ import Send from '../hhsbAssets/Send.svg'
 import GridContainer from "components/Grid/GridContainer.js";
 import { useHistory } from "react-router-dom";
 import limit from 'string-limit'
+import copy from 'clipboard-copy'
 
 const useStyles = makeStyles(styles);
 
@@ -29,13 +30,7 @@ export default function CustomAccordion(props) {
   const classes = useStyles();
   const { collapses } = props;
   const handleCopy = (shareableLink, key) => {
-    const textArea = document.createElement("textarea")
-    textArea.value = shareableLink
-    document.body.appendChild(textArea)
-    textArea.focus()
-    textArea.select()
-    document.execCommand("copy")
-    document.body.removeChild(textArea)
+    copy(shareableLink)
     setActiveKey(key);
   }
   return (
