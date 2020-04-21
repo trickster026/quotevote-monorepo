@@ -1,17 +1,19 @@
+import React from 'react'
+
 import {useQuery} from '@apollo/react-hooks';
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
+import Card from "mui-pro/Card/Card.js"
+import CardBody from "mui-pro/Card/CardBody.js"
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CustomizedInputBase from 'hhsbComponents/searchBar'
 import gql from 'graphql-tag';
-import GridContainer from "components/Grid/GridContainer";
+import GridContainer from "mui-pro/Grid/GridContainer.js"
 import Pagination from "material-ui-flat-pagination";
-import React from 'react'
 import Slider from '@material-ui/core/Slider';
 
 import Calendar from 'hhsbAssets/Calendar.svg'
 import Emoji from 'hhsbAssets/FollowingEmoji.svg'
 import Filter from 'hhsbAssets/Filter.svg'
+import Box from '@material-ui/core/Box'
 
 import Content from "../hhsbComponents/ContentList"
 

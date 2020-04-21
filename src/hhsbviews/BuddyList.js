@@ -1,8 +1,20 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import GridContainer from "components/Grid/GridContainer.js";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Card from "@material-ui/core/Card";
+
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import FaceIcon from "@material-ui/icons/Face";
+import Button from "@material-ui/core/Button";
+
+import Message from "hhsbComponents/ChatComponents/chatMessage.js"
 import ListDividers from 'hhsbComponents/ChatComponents/List.js'
+
+import GridContainer from "mui-pro/Grid/GridContainer.js";
+
 import Alert from '../hhsbAssets/Alerts.png'
 
 export default function BuddyList(props){

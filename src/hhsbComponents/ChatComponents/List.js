@@ -1,12 +1,11 @@
 import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import GridContainer from "components/Grid/GridContainer.js";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-
+import Divider from "@material-ui/core/Divider";
+import GridContainer from "mui-pro/Grid/GridContainer.js";
 const useStyles = makeStyles(({
   root: {
     width: "300px",

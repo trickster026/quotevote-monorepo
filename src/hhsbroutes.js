@@ -17,90 +17,90 @@ import Settings from 'hhsbAssets/Settings.png'
 import Trending from  'hhsbAssets/Trending.png'
 // @material-ui/icons
 
-//import {face} from '@mdi/js';
-//import { mdiEmail } from '@mdi/js'; 
+// import {face} from '@mdi/js';
+// import { mdiEmail } from '@mdi/js';
 
-var hhsbRoutes = [
+const hhsbRoutes = [
   {
-    path: "/Home",
-    name: "Home Page",
-    rtlName: "لوحة القيادة",
+    path: '/Home',
+    name: 'Home Page',
+    rtlName: 'لوحة القيادة',
     icon: Home,
     component: HomePage,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
-    path: "/invites",
-    name: "Manage Invites",
-    rtlName: "Manage Invites",
+    path: '/invites',
+    name: 'Manage Invites',
+    rtlName: 'Manage Invites',
     icon: Avatar,
     component: ManageInvites,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
-  
+
   {
-    path: "/Trending",
-    name: "My Profile",
-    rtlName: "الحاجيات",
+    path: '/Trending',
+    name: 'My Profile',
+    rtlName: 'الحاجيات',
     icon: Avatar,
-    component:Profile,
-    layout: "/hhsb"
+    component: Profile,
+    layout: '/hhsb',
   },
   {
-    path: "/SubmitPost",
-    name: "Submit Post",
-    rtlName: "التقويم",
+    path: '/SubmitPost',
+    name: 'Submit Post',
+    rtlName: 'التقويم',
     icon: add,
-    component:SubmitPost,
-    layout: "/hhsb"
+    component: SubmitPost,
+    layout: '/hhsb',
   },
   {
-    path: "/TrendingContent",
-    name: "Trending Content",
-    rtlName: "التقويم",
+    path: '/TrendingContent',
+    name: 'Trending Content',
+    rtlName: 'التقويم',
     icon: Trending,
-    component:ContentFeed ,
-    layout: "/hhsb"
+    component: ContentFeed,
+    layout: '/hhsb',
   },
   {
-    path: "/ChatBar",
-    name: "Chat Feed",
-    rtlName: "التقويم",
+    path: '/ChatBar',
+    name: 'Chat Feed',
+    rtlName: 'التقويم',
     icon: Chat,
     component: HomePage,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
-    path: "/Search",
-    name: "Search",
-    rtlName: "search",
+    path: '/Search',
+    name: 'Search',
+    rtlName: 'search',
     icon: Search,
     component: SearchView,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
-    path: "/BuddyList",
-    name: "BuddyList Test",
-    rtlName: "التقويم",
+    path: '/BuddyList',
+    name: 'BuddyList Test',
+    rtlName: 'التقويم',
     icon: Search,
-    component:HomePage,
-    layout: "/hhsb"
+    component: HomePage,
+    layout: '/hhsb',
   },
   {
-    path: "/ChatBar",
-    name: "Chat Feed",
-    rtlName: "التقويم",
+    path: '/ChatBar',
+    name: 'Chat Feed',
+    rtlName: 'التقويم',
     icon: Alert,
     component: HomePage,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
-    path: "/ChatBar",
-    name: "Chat Feed",
-    rtlName: "التقويم",
+    path: '/ChatBar',
+    name: 'Chat Feed',
+    rtlName: 'التقويم',
     icon: Settings,
     component: HomePage,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
     path: "/post",
