@@ -4,7 +4,7 @@ import { isEmpty } from "lodash";
 import { makeStyles } from "@material-ui/core/styles";
 import { useQuery } from '@apollo/react-hooks';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import GridContainer from "components/Grid/GridContainer.js";
+import GridContainer from "mui-pro/Grid/GridContainer.js";
 import ListDividers from 'hhsbComponents/ChatComponents/List.js'
 
 import { GET_BOOK_MARKED } from "graphql/query"
