@@ -107,6 +107,7 @@ module.exports = {
     'react/no-array-index-key': 0,
     'jsx-a11y/href-no-hash': 'off',
     'react/no-did-update-set-state': 0,
+    'react/jsx-props-no-spreading': 0,
   },
   settings: {
     'import/resolver': {
@@ -114,9 +115,6 @@ module.exports = {
         paths: ['src'],
         extensions: ['.js'],
         moduleDirectory: ['node_modules'],
-      },
-      webpack: {
-        config: './webpack/webpack.prod.babel.js',
       },
     },
   },
