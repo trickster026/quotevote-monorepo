@@ -1,5 +1,5 @@
 import ContentDisplay from "hhsbviews/ContentDisplay.js"
-import ContentFeed from "hhsbviews/topcontent.js"
+import ContentFeed from "hhsbviews/TrendingPosts.js"
 import HomePage from "hhsbviews/HomePage.js"
 import Profile from "hhsbviews/profile.js"
 import SubmitPost from "hhsbviews/SubmitPost.js"

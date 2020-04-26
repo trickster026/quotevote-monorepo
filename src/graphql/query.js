@@ -1,12 +1,12 @@
 import gql from "graphql-tag"
 
-export const DOMAIN_QUERY = gql`
-query domains($limit: Int!) {
-  domains(limit: $limit) {
+export const GROUPS_QUERY = gql`
+query groups($limit: Int!) {
+  groups(limit: $limit) {
     _id
+    creatorId
     adminIds
     allowedUserIds
-    key
     privacy
     title
     url
@@ -99,4 +99,10 @@ export const GET_BOOK_MARKED = gql`
       lastMessage
     }
   } 
+`;
+
+export const GET_TOP_POSTS = gql`
+  query topPosts($limit: Int!, $offset: Int!, $searchKey: String!) {
+    topPosts(limit: $limit, offset: $offset, searchKey: $searchKey)
+  }
 `;

@@ -1,20 +1,19 @@
 import gql from "graphql-tag"
 
-export const CREATE_DOMAIN = gql`
-  mutation createDomain($domain: DomainInput!) {
-    createDomain(domain: $domain) {
+export const CREATE_GROUP = gql`
+  mutation createGroup($group: GroupInput!) {
+    createGroup(group: $group) {
       _id
       title
       description
       url
-      key
       created
     }
   }`
 
-export const SUBMIT_TEXT = gql`
-  mutation submitContent($content: ContentInput!) {
-    addContent(content: $content) {
+export const SUBMIT_POST = gql`
+  mutation addPost($post: PostInput!) {
+    addPost(post: $post) {
       _id
     }
   }
