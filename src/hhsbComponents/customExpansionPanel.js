@@ -23,6 +23,7 @@ const useStyles = makeStyles(styles);
 
 export default function CustomAccordion(props) {
   const history = useHistory();
+  const DOMAIN = process.env.REACT_APP_DOMAIN || 'localhost:3000'
   const [active, setActive] = React.useState(props.active);
   const [activeKey, setActiveKey] = React.useState(null);
   const handleChange = panel => (event, expanded) => {
@@ -37,8 +38,8 @@ export default function CustomAccordion(props) {
   return (
     <div className={classes.root}>
       {collapses.map((prop, key) => {
-        let { content, domain, _id, title, scoreDetails } = prop
-        const postURL = `/hhsb/post/${domain.key}/${_id}`
+        let { text, _id, title, upvotes, downvotes, url } = prop
+        // const postURL = `/hhsb/post/${title}/${_id}`
         return (
           <ExpansionPanel
             expanded={active === key}
@@ -61,7 +62,7 @@ export default function CustomAccordion(props) {
               <h4 className={classes.title} style={{ width:"10%" }}>
                 <Link
                   className={classes.title}
-                  onClick={() => history.push(postURL)}
+                  onClick={() => history.push(url)}
                 >
                   {title}
                 </Link>
@@ -71,12 +72,12 @@ export default function CustomAccordion(props) {
                   <div style={{ display:'flex', alignItems:'center', flexDirection: "row" }}>
                     <img alt="" src={Chat} style={{ paddingBottom:"10px", marginLeft:"20px", marginRight:'5px' }} />
                     <p>
-                      <span style={{ color: "green" }}>{`+${scoreDetails.upvotes}`}</span>
-                      <span style={{ color: "red" }}>{`+${scoreDetails.downvotes}`}</span>
+                      <span style={{ color: "green" }}>{`+${upvotes}`}</span>
+                      <span style={{ color: "red" }}>{`+${downvotes}`}</span>
                     </p>
                   </div>
                   <div style={{ display:'flex', alignItems:'center', flexDirection: "row", marginRight: '2%' }}>
-                    <Link onClick={() => handleCopy(postURL, key)}>
+                    <Link onClick={() => handleCopy(DOMAIN + url, key)}>
                       {activeKey === key ? (
                         <Tooltip
                           placement="top"
@@ -97,7 +98,7 @@ export default function CustomAccordion(props) {
               </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-              {limit(content, 300)}
+              {limit(text, 300)}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );

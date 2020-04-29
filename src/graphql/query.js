@@ -103,6 +103,6 @@ export const GET_BOOK_MARKED = gql`
 
 export const GET_TOP_POSTS = gql`
   query topPosts($limit: Int!, $offset: Int!, $searchKey: String!) {
-    topPosts(limit: $limit, offset: $offset, searchKey: $searchKey)
+    posts(limit: $limit, offset: $offset, searchKey: $searchKey)
   }
 `;

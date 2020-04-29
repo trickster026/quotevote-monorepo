@@ -17,17 +17,16 @@ import Box from '@material-ui/core/Box'
 import Content from "../hhsbComponents/ContentList"
 import { GET_TOP_POSTS } from 'graphql/query'
 
-export default function ContentFeed() {
-  const { loading, error, data } = useQuery(GET_TOP_POSTS);
-  
+export default function TrendingPosts() {
+  const { loading, error, data } = useQuery(GET_TOP_POSTS, {
+    variables: { limit: 5, offset: 0, searchKey: '' },
+  })
   if (loading) {
     return (<CircularProgress color="secondary"/>)
   }
 
-  // if (error) return `Something went wrong: ${error}`
-  // console.log("DATAAAA", {data})
-  // const {contents} = data
-  const contents = []
+  if (error) return `Something went wrong: ${error}`
+  const posts = (data && data.posts) || []
   // const handleClick = (x) => {
   //     console.log(x)
   // }
@@ -89,7 +88,7 @@ export default function ContentFeed() {
         <br></br>
         <br></br>
         <GridContainer>
-          <Content MessageData={contents}/>
+          <Content MessageData={posts}/>
         </GridContainer>
       </CardBody>
       <Pagination
