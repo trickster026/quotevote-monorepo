@@ -1,8 +1,9 @@
-import ContentDisplay from "hhsbviews/ContentDisplay.js"
+import PostPage from "hhsbviews/PostPage.js"
 import ContentFeed from "hhsbviews/TrendingPosts.js"
 import HomePage from "hhsbviews/HomePage.js"
 import Profile from "hhsbviews/profile.js"
 import SubmitPost from "hhsbviews/SubmitPost.js"
+import LoginPage from "hhsbviews/Pages/LoginPage.js";
 
 import add from 'hhsbAssets/add.png'
 import Alert from 'hhsbAssets/Alerts.png'
@@ -104,8 +105,17 @@ const hhsbRoutes = [
   },
   {
     path: "/post",
-    component: ContentDisplay,
+    component: PostPage,
     layout: "/hhsb"
+  },
+  {
+    path: "/login-page",
+    name: "Login Page",
+    rtlName: "هعذاتسجيل الدخول",
+    mini: "L",
+    rtlMini: "هعذا",
+    component: LoginPage,
+    layout: "/auth"
   },
 ];
 export default hhsbRoutes;

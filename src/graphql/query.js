@@ -24,50 +24,9 @@ export const USER_INVITE_REQUESTS = gql`
     }
   }
 `
-export const GET_CONTENT = gql`
-  query content($contentId: String!, $key: String!) {
-    content(contentId: $contentId) {
-      creatorId
-      _id
-      title
-      text
-      thumbnail
-      created
-      creator {
-        name
-        profileImageUrl
-        scoreDetails {
-          upvotes
-          downvotes
-          total
-        }
-      }
-      scoreDetails {
-        upvotes
-        downvotes
-        total
-      }
-      comments {
-        _id
-        userId
-        text
-        hashtags
-        created
-        quote
-      }
-    }
-    domain(key: $key) {
-      _id
-      allowedUserIds
-      pendingUserIds
-      adminIds
-      privacy
-    }
-    userContentChatRoom(contentId: $contentId) {
-      _id
-      users
-      messageType
-    }
+export const GET_POST = gql`
+  query post($postId: String!) {
+    post(postId: $postId) 
   }
 `
 

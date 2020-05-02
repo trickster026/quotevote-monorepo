@@ -15,6 +15,7 @@ export const SUBMIT_POST = gql`
   mutation addPost($post: PostInput!) {
     addPost(post: $post) {
       _id
+      url
     }
   }
 `
@@ -28,11 +29,8 @@ export const UPDATE_USER_INVITE_STATUS = gql`
 export const VOTE = gql`
   mutation addVote($vote: VoteInput!) {
     addVote(vote: $vote) {
-      contentId
+      postId
       type
-      points
-      startWordIndex
-      endWordIndex
     }
   }
 `
@@ -41,6 +39,15 @@ export const ADD_COMMENT = gql`
   mutation addComment($comment: CommentInput!) {
     addComment(comment: $comment) {
       _id
+    }
+  }
+`
+
+export const UPDATE_POST_BOOKMARK = gql`
+  mutation updatePostBookmark($postId: String!, $userId: String!) {
+    updatePostBookmark(postId: $postId, userId: $userId) {
+      _id,
+      bookmarkedBy
     }
   }
 `

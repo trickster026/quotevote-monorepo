@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {useQuery} from '@apollo/react-hooks';
 import Card from "mui-pro/Card/Card.js"
 import CardBody from "mui-pro/Card/CardBody.js"
-import CircularProgress from "@material-ui/core/CircularProgress";
-import CustomizedInputBase from 'hhsbComponents/searchBar'
+import CustomizedInputBase, { GET_SEARCH_KEY } from 'hhsbComponents/searchBar'
 import GridContainer from "mui-pro/Grid/GridContainer.js"
 import Pagination from "material-ui-flat-pagination";
 import Slider from '@material-ui/core/Slider';
@@ -12,74 +11,85 @@ import Slider from '@material-ui/core/Slider';
 import Calendar from 'hhsbAssets/Calendar.svg'
 import Emoji from 'hhsbAssets/FollowingEmoji.svg'
 import Filter from 'hhsbAssets/Filter.svg'
-import Box from '@material-ui/core/Box'
+import PostsList from 'hhsbComponents/PostsList'
 
-import Content from "../hhsbComponents/ContentList"
 import { GET_TOP_POSTS } from 'graphql/query'
 
 export default function TrendingPosts() {
+  const limit = 5
+  const [offset, setOffset] = useState(0)
+  const [total, setTotal] = useState(1)
+  const { data: { searchKey } } = useQuery(GET_SEARCH_KEY)
   const { loading, error, data } = useQuery(GET_TOP_POSTS, {
-    variables: { limit: 5, offset: 0, searchKey: '' },
+    variables: { limit, offset: 0, searchKey }
   })
-  if (loading) {
-    return (<CircularProgress color="secondary"/>)
-  }
+  
+  React.useEffect(() => {
+    if (data) {
+      setTotal(data.total)
+    }
+  }, [data])
 
   if (error) return `Something went wrong: ${error}`
   const posts = (data && data.posts) || []
-  // const handleClick = (x) => {
-  //     console.log(x)
-  // }
+
+  const handleSlider = (event, newValue) => {
+    setOffset(newValue)
+  }
 
   return (
-    <Card style={{"height": "800px"}}>
+    <Card style={{ display: 'flex', flexBasis: '800px' }}>
       <CardBody>
         <GridContainer
           direction="row"
           justify="center"
           alignItems="center"
         >
-          <GridContainer alignItems="center" direction="row" style={{"width": "50%"}}>
+          <GridContainer alignItems="center" direction="row" style={{ width: '50%' }}>
             <Slider
-              value={30}
+              defaultValue={limit}
+              value={offset}
               valueLabelDisplay="auto"
               aria-labelledby="range-slider"
+              max={total}
+              min={1}
+              onChange={handleSlider}
             />
           </GridContainer>
           <br></br>
           <br></br>
           <GridContainer
             alignItems="center"
-            justify="space-between"
             direction="row"
+            justify="space-between"
             style={{
-              backgroundColor: "#2A6797",
-              boxShadow: "0 6px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-              width: "75%",
-              wrap: "nowrap"
+              backgroundColor: '#2A6797',
+              boxShadow: '0 6px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+              width: '75%',
+              wrap: 'nowrap',
             }}
           >
             <h3
               style={{
-                color: "white",
-                font: "League Spartan",
-                fontWeight: "bold",
-                paddingLeft: "20px",
-                paddingBottom: "5px"
+                color: 'white',
+                font: 'League Spartan',
+                fontWeight: 'bold',
+                paddingLeft: '20px',
+                paddingBottom: '5px',
               }}
-            >Trending</h3>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: "row" }}>
-              <CustomizedInputBase></CustomizedInputBase>
-              <img alt="" src={Calendar} style={{ display: "flex", maxHeight: "40px", paddingLeft: "15px" }}/>
-              <img alt="" src={Filter} style={{ display: "flex", maxHeight: "40px", paddingLeft: "15px" }}/>
+            >
+              Trending Posts
+            </h3>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: 'row' }}>
+              <CustomizedInputBase setOffset={setOffset} />
+              <img alt="date" src={Calendar} style={{ display: 'flex', maxHeight: '40px', paddingLeft: '15px' }} />
+              <img alt="filter" src={Filter} style={{ display: 'flex', maxHeight: '40px', paddingLeft: '15px' }} />
               <img
-                alt=""
+                alt="group"
                 src={Emoji}
                 style={{
-                  display: "flex",
-                  maxHeight: "40px",
-                  paddingLeft: "15px",
-                  paddingRight: "15px"
+                  display: 'flex', maxHeight: '40px', paddingLeft: '15px', paddingRight: '15px',
                 }}
               />
             </div>
@@ -87,15 +97,14 @@ export default function TrendingPosts() {
         </GridContainer>
         <br></br>
         <br></br>
-        <GridContainer>
-          <Content MessageData={posts}/>
-        </GridContainer>
+        <PostsList Data={posts} loading={loading} limit={limit} />
       </CardBody>
       <Pagination
-        limit={10}
-        offset={0}
-        total={100}
-        onClick={(e, offset) => this.handleClick(offset)}
+        style={{ margin: 'auto' }}
+        limit={limit}
+        offset={offset}
+        total={total}
+        onClick={(e, offset) => setOffset(offset)}
       />
     </Card>
   )

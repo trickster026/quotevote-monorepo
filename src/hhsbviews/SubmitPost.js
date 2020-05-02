@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { 
   Grid,
@@ -50,6 +50,8 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { CREATE_GROUP, SUBMIT_POST } from 'graphql/mutations'
 import { GROUPS_QUERY } from 'graphql/query'
 
+import { SET_SELECTED_POST } from "actions/types";
+
 const useStyles = makeStyles(styles)
 
 const inputStyles = {
@@ -68,6 +70,8 @@ function SubmitPost() {
   const [groupId, setGroupId] = useState('')
   const [subScoreboardIsOpen, setCreateSubScoreboard] = useState(false)
   const [privacy, setPrivacy] = useState('private')
+
+  const dispatch = useDispatch()
 
   let history = useHistory()
 
@@ -108,8 +112,12 @@ function SubmitPost() {
           },
         },
       })
-      const { _id } = submitResult.data.addPost
-      successAlert(postGroupId.toLowerCase(), _id)
+      const { _id, url } = submitResult.data.addPost
+      dispatch({
+        type: SET_SELECTED_POST,
+        payload: _id
+      })
+      successAlert(url, _id)
     } catch (err) {
       errorAlert(err)
     }
@@ -142,8 +150,8 @@ function SubmitPost() {
     setPrivacy(event.target.value)
   }
 
-  const successAlert = (domainKey, id) => {
-    const shareableLink = `/boards/${domainKey}/content/${id}`
+  const successAlert = (shareableLink, id) => {
+    // const shareableLink = `/hhsb/${domainKey}/content/${id}`
 
     setAlert(
       <SweetAlert

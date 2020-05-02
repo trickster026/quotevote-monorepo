@@ -98,18 +98,18 @@ export default function HomePage() {
       setTotal(data.activities.total)
     }
   }, [data])
-
+  console.log('activities: ', activities);
   const activitiesData = !loading && activities && activities.length && activities.map((activity) => {
     const time = activity && formatContentDate(activity.data.created)
     switch (activity.event) {
       case 'VOTED':
         return {
           id: activity.data._id,
-          AlertTitle: `${activity.data.type.toUpperCase()}D`,
-          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}D`],
+          AlertTitle: `${activity.data.type.toUpperCase()}VOTED`,
+          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}VOTED`],
           AlertBody: activity.data.content.title,
           time,
-          points: activity.data.type === 'upvote' ? `+${activity.data.points}` : `-${activity.data.points}`,
+          points: '', /* activity.data.type === 'upvote' ? `+${activity.data.points}` : `-${activity.data.points}`, */
           creator: activity.data.creator,
         }
       case 'POSTED':
