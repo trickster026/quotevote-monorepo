@@ -38,8 +38,8 @@ const ACTIVITY_COLORS = {
 }
 
 const ACTIVITIES_QUERY = gql`
-  query activities($limit: Int!, $offset: Int!, $searchKey: String!, $activityEvent: JSON!) {
-    activities(limit: $limit, offset: $offset, searchKey: $searchKey, activityEvent: $activityEvent)
+  query activities($limit: Int!, $offset: Int!, $searchKey: String!, $activityTypes: JSON!) {
+    activities(limit: $limit, offset: $offset, searchKey: $searchKey, activityTypes: $activityTypes)
   }
 `
 
@@ -60,7 +60,7 @@ function formatContentDate(sDate) {
 export default function HomePage() {
   const classes = useStyles()
   const limit = 5
-  const [offset, setOffset] = useState(1)
+  const [offset, setOffset] = useState(0)
   const conditions = ['POSTED', 'VOTED', 'COMMENTED', 'QUOTED']
   const [selectedEvent, setSelectedEvent] = useState(conditions)
   const [selectAll, setSelectAll] = useState('ALL')
@@ -89,28 +89,28 @@ export default function HomePage() {
   const { data: { searchKey } } = useQuery(GET_SEARCH_KEY)
   const { loading, data } = useQuery(ACTIVITIES_QUERY, {
     variables: {
-      limit, offset, searchKey, activityEvent: selectedEvent,
+      limit, offset, searchKey, activityTypes: selectedEvent,
     },
   })
-
+  
   const { activities } = (!loading && data.activities) || { activities: { activities: [], total: 0 } }
   React.useEffect(() => {
     if (data) {
       setTotal(data.activities.total)
     }
   }, [data])
-
+  console.log('activities: ', activities);
   const activitiesData = !loading && activities && activities.length && activities.map((activity) => {
     const time = activity && formatContentDate(activity.data.created)
     switch (activity.event) {
       case 'VOTED':
         return {
           id: activity.data._id,
-          AlertTitle: `${activity.data.type.toUpperCase()}D`,
-          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}D`],
+          AlertTitle: `${activity.data.type.toUpperCase()}VOTED`,
+          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}VOTED`],
           AlertBody: activity.data.content.title,
           time,
-          points: activity.data.type === 'upvote' ? `+${activity.data.points}` : `-${activity.data.points}`,
+          points: '', /* activity.data.type === 'upvote' ? `+${activity.data.points}` : `-${activity.data.points}`, */
           creator: activity.data.creator,
         }
       case 'POSTED':
