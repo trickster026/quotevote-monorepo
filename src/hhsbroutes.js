@@ -1,16 +1,16 @@
-import PostPage from "hhsbviews/PostPage.js"
-import ContentFeed from "hhsbviews/TrendingPosts.js"
-import HomePage from "hhsbviews/HomePage.js"
-import Profile from "hhsbviews/profile.js"
-import SubmitPost from "hhsbviews/SubmitPost.js"
-import LoginPage from "hhsbviews/Pages/LoginPage.js";
+import PostPage from 'hhsbviews/PostPage.js'
+import LoginPage from 'hhsbviews/Pages/LoginPage.js'
 
 import add from 'hhsbAssets/add.png'
 import Alert from 'hhsbAssets/Alerts.png'
 import Avatar from 'hhsbAssets/Avatar.png'
 
-import SearchView from "hhsbviews/SearchView.js"
-import ManageInvites from 'hhsbviews/ManageInvites';
+import TrendingPosts from 'hhsbviews/TrendingPosts'
+import SubmitPost from 'hhsbviews/SubmitPost'
+import SearchView from 'hhsbviews/SearchView'
+import Profile from 'hhsbviews/profile'
+import ManageInvites from 'hhsbviews/ManageInvites'
+import HomePage from 'hhsbviews/HomePage'
 import Chat from 'hhsbAssets/Chat.svg'
 import Home from 'hhsbAssets/Home.svg'
 import Search from 'hhsbAssets/Search.png'
@@ -18,8 +18,8 @@ import Settings from 'hhsbAssets/Settings.png'
 import Trending from  'hhsbAssets/Trending.png'
 // @material-ui/icons
 
-// import {face} from '@mdi/js';
-// import { mdiEmail } from '@mdi/js';
+// import {face} from '@mdi';
+// import { mdiEmail } from '@mdi';
 
 const hhsbRoutes = [
   {
@@ -60,7 +60,7 @@ const hhsbRoutes = [
     name: 'Trending Content',
     rtlName: 'التقويم',
     icon: Trending,
-    component: ContentFeed,
+    component: TrendingPosts,
     layout: '/hhsb',
   },
   {

@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types'
 
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import { Link, Tooltip } from "@material-ui/core"
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import { makeStyles } from '@material-ui/core/styles'
+import { Link, Tooltip } from '@material-ui/core'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 // @material-ui/icons
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import styles from "assets/jss/material-dashboard-pro-react/components/accordionStyle.js";
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import styles from 'assets/jss/material-dashboard-pro-react/components/accordionStyle.js'
 import Chat from '../hhsbAssets/Chat.svg'
 import Heart from '../hhsbAssets/Heart.svg'
 import Send from '../hhsbAssets/Send.svg'
-import GridContainer from "mui-pro/Grid/GridContainer.js";
-import GridItem from "mui-pro/Grid/GridItem.js";
-import { useHistory } from "react-router-dom";
+import GridContainer from 'mui-pro/Grid/GridContainer.js'
+// import GridItem from 'mui-pro/Grid/GridItem.js'
+import { useHistory } from 'react-router-dom'
 import limit from 'string-limit'
 import copy from 'clipboard-copy'
 
@@ -38,7 +38,7 @@ export default function CustomAccordion(props) {
   return (
     <div className={classes.root}>
       {collapses.map((prop, key) => {
-        let { text, _id, title, upvotes, downvotes, url } = prop
+        let { text, /* _id, */ title, upvotes, downvotes, url } = prop
         // const postURL = `/hhsb/post/${title}/${_id}`
         return (
           <ExpansionPanel
@@ -59,7 +59,7 @@ export default function CustomAccordion(props) {
                 expandIcon: classes.expansionPanelSummaryExpandIcon
               }}
             >
-              <h4 className={classes.title} style={{ width:"10%" }}>
+              <h4 className={classes.title} style={{ width:'10%' }}>
                 <Link
                   className={classes.title}
                   onClick={() => history.push(url)}
@@ -67,38 +67,38 @@ export default function CustomAccordion(props) {
                   {title}
                 </Link>
               </h4>
-              <div style={{ diplay:'flex', width:"87%", alignItems:'flex-end', flex:'flex-shrink' }}>
-                <GridContainer direction="row" justify="space-between" spacing={3}>
-                  <div style={{ display:'flex', alignItems:'center', flexDirection: "row" }}>
-                    <img alt="" src={Chat} style={{ paddingBottom:"10px", marginLeft:"20px", marginRight:'5px' }} />
+              <div style={{ diplay:'flex', width:'87%', alignItems:'flex-end', flex:'flex-shrink' }}>
+                <GridContainer direction='row' justify='space-between' spacing={3}>
+                  <div style={{ display:'flex', alignItems:'center', flexDirection: 'row' }}>
+                    <img alt='Chat icon' src={Chat} style={{ paddingBottom:'10px', marginLeft:'20px', marginRight:'5px' }} />
                     <p>
-                      <span style={{ color: "green" }}>{`+${upvotes}`}</span>
-                      <span style={{ color: "red" }}>{`+${downvotes}`}</span>
+                      <span style={{ color: 'green' }}>{`+${upvotes}`}</span>
+                      <span style={{ color: 'red' }}>{`+${downvotes}`}</span>
                     </p>
                   </div>
-                  <div style={{ display:'flex', alignItems:'center', flexDirection: "row", marginRight: '2%' }}>
+                  <div style={{ display:'flex', alignItems:'center', flexDirection: 'row', marginRight: '2%' }}>
                     <Link onClick={() => handleCopy(DOMAIN + url, key)}>
                       {activeKey === key ? (
                         <Tooltip
-                          placement="top"
-                          title="URL copied"
+                          placement='top'
+                          title='URL copied'
                           onClose={() => setActiveKey(null)}
                           arrow
                           open
                         >
-                          <img alt="" src={Send} style={{ paddingBottom:"10px", paddingTop:"10px", marginRight:'10px' }} />
+                          <img alt='Send icon' src={Send} style={{ paddingBottom:'10px', paddingTop:'10px', marginRight:'10px' }} />
                         </Tooltip>
                       ) : (
-                        <img alt="" src={Send} style={{ paddingBottom:"10px", paddingTop:"10px", marginRight:'10px' }} />
+                        <img alt='Send icon' src={Send} style={{ paddingBottom:'10px', paddingTop:'10px', marginRight:'10px' }} />
                       )}
                     </Link>
-                    <img alt="" src={Heart} style={{ paddingBottom:"10px", paddingTop:"10px" }} />
+                    <img alt='Heart icon' src={Heart} style={{ paddingBottom:'10px', paddingTop:'10px' }} />
                   </div>
                 </GridContainer>
               </div>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-              {limit(text, 300)}
+              {limit(text || '', 300)}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         );

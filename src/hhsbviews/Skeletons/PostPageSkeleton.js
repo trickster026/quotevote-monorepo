@@ -1,42 +1,42 @@
-import React from "react"
-import Card from "mui-pro/Card/Card.js"
-import CardBody from "mui-pro/Card/CardBody.js"
-import CardFooter from "mui-pro/Card/CardFooter.js"
-import CardHeader from "mui-pro/Card/CardHeader.js"
-import Divider from "@material-ui/core/Divider"
-import GridContainer from "mui-pro/Grid/GridContainer.js"
-import GridItem from "mui-pro/Grid/GridItem.js"
+import React from 'react'
+import Card from 'mui-pro/Card/Card'
+import CardBody from 'mui-pro/Card/CardBody'
+import CardFooter from 'mui-pro/Card/CardFooter'
+import CardHeader from 'mui-pro/Card/CardHeader'
+import Divider from '@material-ui/core/Divider'
+import GridContainer from 'mui-pro/Grid/GridContainer'
+import GridItem from 'mui-pro/Grid/GridItem'
 
-// import Content from "../hhsbComponents/ContentList.js";
-import Chat from "hhsbAssets/Chat.svg"
-import Heart from "hhsbAssets/Heart.svg"
-import Send from "hhsbAssets/Send.svg"
+// import Content from "../hhsbComponents/ContentList";
+import Chat from 'hhsbAssets/Chat.svg'
+import Heart from 'hhsbAssets/Heart.svg'
+import Send from 'hhsbAssets/Send.svg'
 
-// import styles from "assets/jss/material-dashboard-pro-react/views/dashboardStyle.js";
+// import styles from "assets/jss/material-dashboard-pro-react/views/dashboardStyle";
 
-import FaceIcon from "@material-ui/icons/Face"
-import Skeleton from "@material-ui/lab/Skeleton"
+import FaceIcon from '@material-ui/icons/Face'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 const PostPageSkeleton = () => (
   <div>
     <GridContainer spacing={1} direction="col">
       <GridItem xs={6}>
-        <Card style={{ height: "800px" }}>
+        <Card style={{ height: '800px' }}>
           <CardHeader style={{ zIndex: 0 }}>
             <div
               style={{
-                display: "flex",
-                direction: "row",
-                justifyContent: "space-between",
+                display: 'flex',
+                direction: 'row',
+                justifyContent: 'space-between',
                 zIndex: 0,
               }}
             >
               <div
                 style={{
-                  display: "flex",
-                  direction: "row",
-                  alignContent: "center",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  direction: 'row',
+                  alignContent: 'center',
+                  justifyContent: 'space-between',
                 }}
               >
                 <div
@@ -65,10 +65,10 @@ const PostPageSkeleton = () => (
                 </div>
                 <div
                   style={{
-                    color: "#E91E63",
-                    fontSize: "25px",
-                    font: "League Spartan",
-                    fontWeight: "bold",
+                    color: '#E91E63',
+                    fontSize: '25px',
+                    font: 'League Spartan',
+                    fontWeight: 'bold',
                   }}
                 >
                   <p>
@@ -96,10 +96,10 @@ const PostPageSkeleton = () => (
               </div>
               <div
                 style={{
-                  display: "flex",
-                  direction: "row",
-                  justifyContent: "flex-end",
-                  flexBasis: "100px",
+                  display: 'flex',
+                  direction: 'row',
+                  justifyContent: 'flex-end',
+                  flexBasis: '100px',
                 }}
               >
                 <p>
@@ -109,18 +109,18 @@ const PostPageSkeleton = () => (
                   alt="share"
                   src={Send}
                   style={{
-                    height: "15px",
-                    paddingLeft: "15px",
-                    paddingTop: "3px",
+                    height: '15px',
+                    paddingLeft: '15px',
+                    paddingTop: '3px',
                   }}
                 />
                 <img
                   alt="favorite"
                   src={Heart}
                   style={{
-                    height: "15px",
-                    paddingLeft: "15px",
-                    paddingTop: "3px",
+                    height: '15px',
+                    paddingLeft: '15px',
+                    paddingTop: '3px',
                   }}
                 />
               </div>
@@ -139,20 +139,20 @@ const PostPageSkeleton = () => (
           <CardHeader>
             <div
               style={{
-                display: "flex",
-                direction: "row",
-                justifyContent: "space-between",
+                display: 'flex',
+                direction: 'row',
+                justifyContent: 'space-between',
               }}
             >
               <p
                 style={{
-                  color: "#E91E63",
-                  fontSize: "25px",
-                  font: "League Spartan",
-                  fontWeight: "bold",
+                  color: '#E91E63',
+                  fontSize: '25px',
+                  font: 'League Spartan',
+                  fontWeight: 'bold',
                 }}
               >
-                  Comments
+                Comments
               </p>
             </div>
             <Divider />
@@ -166,10 +166,10 @@ const PostPageSkeleton = () => (
                 style={{
                   height: 60,
                   width: 60,
-                  backgroundColor: "#df2769",
-                  float: "left",
-                  margin: "0px 10px 10px 0px",
-                  textAlign: "center",
+                  backgroundColor: '#df2769',
+                  float: 'left',
+                  margin: '0px 10px 10px 0px',
+                  textAlign: 'center',
                   borderRadius: 3,
                   paddingTop: 17,
                 }}
@@ -185,7 +185,7 @@ const PostPageSkeleton = () => (
             </p>
           </CardBody>
           <CardFooter chart testimonial>
-            <span style={{ float: "right" }}>
+            <span style={{ float: 'right' }}>
               <Skeleton variant="text" width={250} />
             </span>
           </CardFooter>

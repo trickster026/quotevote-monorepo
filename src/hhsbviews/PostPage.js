@@ -1,36 +1,36 @@
 /* eslint-disable prefer-destructuring */
 // import { getThemeProps } from '@material-ui/styles';
-// import Accordion from "mui-pro/Accordion/Accordion.js";
-// import Badge from "mui-pro/Badge/Badge.js";
+// import Accordion from 'mui-pro/Accordion/Accordion.js';
+// import Badge from 'mui-pro/Badge/Badge.js';
 // import Box from '@material-ui/core/Box';
-// import Button from "mui-pro/CustomButtons/Button.js"
-import Card from "mui-pro/Card/Card.js"
-import CardBody from "mui-pro/Card/CardBody.js"
-import CardFooter from "mui-pro/Card/CardFooter.js"
-import CardHeader from "mui-pro/Card/CardHeader.js"
-import Divider from "@material-ui/core/Divider"
-import GridContainer from "mui-pro/Grid/GridContainer.js"
-import GridItem from "mui-pro/Grid/GridItem.js"
+// import Button from 'mui-pro/CustomButtons/Button.js'
+import Card from 'mui-pro/Card/Card.js'
+import CardBody from 'mui-pro/Card/CardBody.js'
+import CardFooter from 'mui-pro/Card/CardFooter.js'
+import CardHeader from 'mui-pro/Card/CardHeader.js'
+import Divider from '@material-ui/core/Divider'
+import GridContainer from 'mui-pro/Grid/GridContainer.js'
+import GridItem from 'mui-pro/Grid/GridItem.js'
 
-// import NavPills from "mui-pro/NavPills/NavPills.js";
-import VotingBoard from "hhsbComponents/VotingComponents/VotingBoard.js"
-import VotingPopup from "hhsbComponents/VotingComponents/VotingPopup.js"
-import React, { useState } from "react"
+// import NavPills from 'mui-pro/NavPills/NavPills.js';
+import VotingBoard from 'hhsbComponents/VotingComponents/VotingBoard.js'
+import VotingPopup from 'hhsbComponents/VotingComponents/VotingPopup.js'
+import React, { useState } from 'react'
 
-// import Content from "../hhsbComponents/ContentList.js";
-import Chat from "../hhsbAssets/Chat.svg"
-import Heart from "../hhsbAssets/Heart.svg"
-import Send from "../hhsbAssets/Send.svg"
+// import Content from '../hhsbComponents/ContentList.js';
+import Chat from '../hhsbAssets/Chat.svg'
+import Heart from '../hhsbAssets/Heart.svg'
+import Send from '../hhsbAssets/Send.svg'
 
-// import styles from "assets/jss/material-dashboard-pro-react/views/dashboardStyle.js";
+// import styles from 'assets/jss/material-dashboard-pro-react/views/dashboardStyle.js';
 
-import FaceIcon from "@material-ui/icons/Face"
-import { useQuery, useMutation } from "@apollo/react-hooks"
-import moment from "moment"
+import FaceIcon from '@material-ui/icons/Face'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import moment from 'moment'
 
-import PostPageSkeleton from "hhsbviews/Skeletons/PostPageSkeleton"
-import { useSelector } from "react-redux"
-import { cloneDeep, findIndex } from "lodash"
+import PostPageSkeleton from 'hhsbviews/Skeletons/PostPageSkeleton'
+import { useSelector } from 'react-redux'
+import { cloneDeep, findIndex } from 'lodash'
 
 import { GET_POST, GET_TOP_POSTS } from 'graphql/query'
 import { VOTE, ADD_COMMENT } from 'graphql/mutations'
@@ -41,13 +41,14 @@ const PostPage = () => {
   // const domain = urlSegment[5]
   // const contentId = urlSegment[6]
 
-  const [selectedText, setSelectedText] = useState("")
+  const [selectedText, setSelectedText] = useState('')
   const { user } = useSelector((state) => state.loginReducer)
   const { id: postId } = useSelector((state) => state.postReducer.selectedPost)
   const [addVote] = useMutation(VOTE, {
     update(
       cache,
       {
+        // eslint-disable-next-line no-shadow
         data: { addVote },
       }
     ) {
@@ -60,14 +61,14 @@ const PostPage = () => {
       const index = findIndex(clonedPost.post.votedBy, vote => vote.userId === user._id)
       if (index !== -1) {
         clonedPost.post.votedBy[index].type = addVote.type
-        clonedPost.post.upvotes = addVote.type === "up" ? 
+        clonedPost.post.upvotes = addVote.type === 'up' ? 
           clonedPost.post.upvotes + 1 : clonedPost.post.upvotes - 1
         
-        clonedPost.post.downvotes = addVote.type === "down" ? 
+        clonedPost.post.downvotes = addVote.type === 'down' ? 
           clonedPost.post.downvotes + 1 : clonedPost.post.downvotes - 1
       } else {
         clonedPost.post.votedBy.push({ type: addVote.type, userId: user._id })
-        if (addVote.type === "up") {
+        if (addVote.type === 'up') {
           clonedPost.post.upvotes = clonedPost.post.upvotes + 1
         } else {
           clonedPost.post.downvotes = clonedPost.post.downvotes + 1
@@ -82,7 +83,7 @@ const PostPage = () => {
     refetchQueries: [
       {
         query: GET_TOP_POSTS,
-        variables: { limit: 5, offset: 0, searchKey: "" },
+        variables: { limit: 5, offset: 0, searchKey: '' },
       },
     ],
   })
@@ -91,7 +92,7 @@ const PostPage = () => {
     refetchQueries: [
       {
         query: GET_TOP_POSTS,
-        variables: { limit: 5, offset: 0, searchKey: "" },
+        variables: { limit: 5, offset: 0, searchKey: '' },
       },
       {
         query: GET_POST,
@@ -136,7 +137,7 @@ const PostPage = () => {
     } else {
       startIndex = 0
       endIndex = 0
-      quoteText = ""
+      quoteText = ''
     }
 
     // TODO: ommit quote props if user did not highlight text
@@ -150,7 +151,7 @@ const PostPage = () => {
       postId,
       url: post.url,
       // hashtags,
-      quote: commentWithQuote ? quoteText : "",
+      quote: commentWithQuote ? quoteText : '',
     }
 
     addComment({ variables: { comment: newComment } })
@@ -158,72 +159,72 @@ const PostPage = () => {
 
   return (
     <div>
-      <GridContainer spacing={1} direction="col">
+      <GridContainer spacing={1} direction='col'>
         <GridItem xs={6}>
-          <Card style={{ height: "800px" }}>
+          <Card style={{ height: '800px' }}>
             <CardHeader style={{ zIndex: 0 }}>
               <div
                 style={{
-                  display: "flex",
-                  direction: "row",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  direction: 'row',
+                  justifyContent: 'space-between',
                   zIndex: 0,
                 }}
               >
                 <div
                   style={{
-                    display: "flex",
-                    direction: "row",
-                    alignContent: "center",
-                    justifyContent: "space-between",
+                    display: 'flex',
+                    direction: 'row',
+                    alignContent: 'center',
+                    justifyContent: 'space-between',
                   }}
                 >
                   <p
                     style={{
-                      color: "#E91E63",
-                      fontSize: "25px",
-                      font: "League Spartan",
-                      fontWeight: "bold",
+                      color: '#E91E63',
+                      fontSize: '25px',
+                      font: 'League Spartan',
+                      fontWeight: 'bold',
                     }}
                   >
                     {post.title}
                   </p>
                   <img
-                    alt=""
+                    alt=''
                     src={Chat}
-                    style={{ height: "20px", paddingLeft: "10px" }}
+                    style={{ height: '20px', paddingLeft: '10px' }}
                   />
                 </div>
                 <div
                   style={{
-                    display: "flex",
-                    direction: "row",
-                    justifyContent: "flex-end",
-                    flexBasis: "100px",
+                    display: 'flex',
+                    direction: 'row',
+                    justifyContent: 'flex-end',
+                    flexBasis: '100px',
                   }}
                 >
                   <p>
-                    <strong style={{ color: "green" }}>+</strong>
+                    <strong style={{ color: 'green' }}>+</strong>
                     {post.upvotes}/
-                    <strong style={{ color: "red" }}>-</strong>
+                    <strong style={{ color: 'red' }}>-</strong>
                     {post.downvotes}
                   </p>
                   <img
-                    alt=""
+                    alt='Send icon'
                     src={Send}
                     style={{
-                      height: "15px",
-                      paddingLeft: "15px",
-                      paddingTop: "3px",
+                      height: '15px',
+                      paddingLeft: '15px',
+                      paddingTop: '3px',
                     }}
                   />
                   <img
-                    alt=""
+                    alt='Heart icon'
                     src={Heart}
                     style={{
-                      height: "15px",
-                      paddingLeft: "15px",
-                      paddingTop: "3px",
+                      height: '15px',
+                      paddingLeft: '15px',
+                      paddingTop: '3px',
                     }}
                   />
                 </div>
@@ -254,17 +255,17 @@ const PostPage = () => {
             <CardHeader>
               <div
                 style={{
-                  display: "flex",
-                  direction: "row",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  direction: 'row',
+                  justifyContent: 'space-between',
                 }}
               >
                 <p
                   style={{
-                    color: "#E91E63",
-                    fontSize: "25px",
-                    font: "League Spartan",
-                    fontWeight: "bold",
+                    color: '#E91E63',
+                    fontSize: '25px',
+                    font: 'League Spartan',
+                    fontWeight: 'bold',
                   }}
                 >
                   Comments
@@ -283,10 +284,10 @@ const PostPage = () => {
                       style={{
                         height: 60,
                         width: 60,
-                        backgroundColor: "#df2769",
-                        float: "left",
-                        margin: "0px 10px 10px 0px",
-                        textAlign: "center",
+                        backgroundColor: '#df2769',
+                        float: 'left',
+                        margin: '0px 10px 10px 0px',
+                        textAlign: 'center',
                         borderRadius: 3,
                         paddingTop: 17,
                       }}
@@ -298,8 +299,8 @@ const PostPage = () => {
                   </p>
                 </CardBody>
                 <CardFooter chart testimonial>
-                  <span style={{ float: "right" }}>
-                    {moment(comment.created).format("MM/DD/YYYY hh:mm A")}
+                  <span style={{ float: 'right' }}>
+                    {moment(comment.created).format('MM/DD/YYYY hh:mm A')}
                   </span>
                 </CardFooter>
               </Card>

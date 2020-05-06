@@ -1,4 +1,4 @@
-import gql from "graphql-tag"
+import gql from 'graphql-tag'
 
 export const GROUPS_QUERY = gql`
 query groups($limit: Int!) {
@@ -50,7 +50,7 @@ export const SEARCH = gql`
       }
     }
   }
-`;
+`
 
 export const GET_BOOK_MARKED = gql`
   query getBookmarkedContents {
@@ -58,10 +58,10 @@ export const GET_BOOK_MARKED = gql`
       lastMessage
     }
   } 
-`;
+`
 
 export const GET_TOP_POSTS = gql`
   query topPosts($limit: Int!, $offset: Int!, $searchKey: String!) {
     posts(limit: $limit, offset: $offset, searchKey: $searchKey)
   }
-`;
+`
