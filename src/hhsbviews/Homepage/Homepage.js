@@ -10,12 +10,12 @@ import Calendar from 'hhsbAssets/Calendar.svg'
 import Filter from 'hhsbAssets/Filter.svg'
 import Emoji from 'hhsbAssets/FollowingEmoji.svg'
 import AlertList from 'hhsbComponents/AlertList'
-import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import moment from 'moment'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
 import { makeStyles } from '@material-ui/core/styles'
+import { ACTIVITIES_QUERY } from './HomepageGQL'
 
 const useStyles = makeStyles({
   headerToggle: {
@@ -30,18 +30,13 @@ const useStyles = makeStyles({
 
 const ACTIVITY_COLORS = {
   QOUTED: '#00CAE3',
-  UPVOTED: '#55B559',
-  DOWNVOTED: '#FF1100',
+  UP: '#55B559',
+  DOWN: '#FF1100',
   COMMENTED: '#FF9E0F',
   HEARTED: '#E91E63',
   POSTED: '#020202',
 }
 
-const ACTIVITIES_QUERY = gql`
-  query activities($limit: Int!, $offset: Int!, $searchKey: String!, $activityTypes: JSON!) {
-    activities(limit: $limit, offset: $offset, searchKey: $searchKey, activityTypes: $activityTypes)
-  }
-`
 
 function formatContentDate(sDate) {
   const a = moment.utc()
@@ -57,10 +52,10 @@ function formatContentDate(sDate) {
   return moment(sDate).format('MMM Do')
 }
 
-export default function HomePage() {
+export default function Homepage() {
   const classes = useStyles()
   const limit = 5
-  const [offset, setOffset] = useState(0)
+  const [offset, setOffset] = useState(1)
   const conditions = ['POSTED', 'VOTED', 'COMMENTED', 'QUOTED']
   const [selectedEvent, setSelectedEvent] = useState(conditions)
   const [selectAll, setSelectAll] = useState('ALL')
@@ -89,17 +84,17 @@ export default function HomePage() {
   const { data: { searchKey } } = useQuery(GET_SEARCH_KEY)
   const { loading, data } = useQuery(ACTIVITIES_QUERY, {
     variables: {
-      limit, offset, searchKey, activityTypes: selectedEvent,
+      limit, offset, searchKey, activityEvent: selectedEvent,
     },
   })
-  
-  const { activities } = (!loading && data.activities) || { activities: { activities: [], total: 0 } }
+
+  const { activities } = (!loading && data && data.activities) || { activities: { activities: [], total: 0 } }
   React.useEffect(() => {
     if (data) {
       setTotal(data.activities.total)
     }
   }, [data])
-  console.log('activities: ', activities);
+
   const activitiesData = !loading && activities && activities.length && activities.map((activity) => {
     const time = activity && formatContentDate(activity.data.created)
     switch (activity.event) {
@@ -107,10 +102,10 @@ export default function HomePage() {
         return {
           id: activity.data._id,
           AlertTitle: `${activity.data.type.toUpperCase()}VOTED`,
-          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}VOTED`],
+          color: ACTIVITY_COLORS[`${activity.data.type.toUpperCase()}`],
           AlertBody: activity.data.content.title,
           time,
-          points: '', /* activity.data.type === 'upvote' ? `+${activity.data.points}` : `-${activity.data.points}`, */
+          points: activity.data.type === 'up' ? `+${activity.data.points}` : `-${activity.data.points}`,
           creator: activity.data.creator,
         }
       case 'POSTED':
@@ -128,7 +123,7 @@ export default function HomePage() {
           id: activity.data._id,
           AlertTitle: activity.event,
           color: ACTIVITY_COLORS.QOUTED,
-          AlertBody: activity.data.quote,
+          AlertBody: `"${activity.data.quote}"`,
           time,
           points: '',
           creator: activity.data.creator,
@@ -138,7 +133,7 @@ export default function HomePage() {
           id: activity.data._id,
           AlertTitle: activity.event,
           color: ACTIVITY_COLORS.COMMENTED,
-          AlertBody: activity.data.text,
+          AlertBody: `"${activity.data.content}"`,
           time,
           points: '',
           creator: activity.data.creator,
@@ -252,7 +247,11 @@ export default function HomePage() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', flexDirection: 'row' }}>
               <CustomizedInputBase setOffset={setOffset} />
-              <img alt="Calendar Icon" src={Calendar} style={{ display: 'flex', maxHeight: '40px', paddingLeft: '15px' }} />
+              <img
+                alt="Calendar Icon"
+                src={Calendar}
+                style={{ display: 'flex', maxHeight: '40px', paddingLeft: '15px' }}
+              />
               <img alt="Filter Icon" src={Filter} style={{ display: 'flex', maxHeight: '40px', paddingLeft: '15px' }} />
               <img
                 alt="Emoji Icon"

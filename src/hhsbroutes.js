@@ -1,5 +1,5 @@
-import PostPage from 'hhsbviews/PostPage.js'
-import LoginPage from 'hhsbviews/Pages/LoginPage.js'
+import PostPage from 'hhsbviews/PostPage'
+import LoginPage from 'hhsbviews/Pages/LoginPage'
 
 import add from 'hhsbAssets/add.png'
 import Alert from 'hhsbAssets/Alerts.png'
@@ -10,16 +10,12 @@ import SubmitPost from 'hhsbviews/SubmitPost'
 import SearchView from 'hhsbviews/SearchView'
 import Profile from 'hhsbviews/profile'
 import ManageInvites from 'hhsbviews/ManageInvites'
-import HomePage from 'hhsbviews/HomePage'
+import HomePage from 'hhsbviews/Homepage/Homepage'
 import Chat from 'hhsbAssets/Chat.svg'
 import Home from 'hhsbAssets/Home.svg'
 import Search from 'hhsbAssets/Search.png'
 import Settings from 'hhsbAssets/Settings.png'
-import Trending from  'hhsbAssets/Trending.png'
-// @material-ui/icons
-
-// import {face} from '@mdi';
-// import { mdiEmail } from '@mdi';
+import Trending from 'hhsbAssets/Trending.png'
 
 const hhsbRoutes = [
   {
@@ -104,18 +100,18 @@ const hhsbRoutes = [
     layout: '/hhsb',
   },
   {
-    path: "/post",
+    path: '/post',
     component: PostPage,
-    layout: "/hhsb"
+    layout: '/hhsb',
   },
   {
-    path: "/login-page",
-    name: "Login Page",
-    rtlName: "هعذاتسجيل الدخول",
-    mini: "L",
-    rtlMini: "هعذا",
+    path: '/login-page',
+    name: 'Login Page',
+    rtlName: 'هعذاتسجيل الدخول',
+    mini: 'L',
+    rtlMini: 'هعذا',
     component: LoginPage,
-    layout: "/auth"
+    layout: '/auth',
   },
-];
-export default hhsbRoutes;
+]
+export default hhsbRoutes
