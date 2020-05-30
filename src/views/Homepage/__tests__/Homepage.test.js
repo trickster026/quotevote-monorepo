@@ -1,3 +1,4 @@
+import React from 'react'
 import Card from 'mui-pro/Card/Card'
 import Pagination from 'material-ui-flat-pagination'
 import { ACTIVITIES_QUERY } from '../HomepageGQL'
@@ -38,6 +39,7 @@ describe('Homepage component unit tests', () => {
   let component
   beforeEach(async () => {
     component = mount(
+      // eslint-disable-next-line react/jsx-no-undef
       <MockedProvider mocks={mocks} cache={cache} resolvers={{}} addTypename={false}>
         <Homepage />
       </MockedProvider>,
