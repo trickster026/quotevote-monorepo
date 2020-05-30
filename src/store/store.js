@@ -9,6 +9,7 @@ import thunk from 'redux-thunk'
 import * as reducers from 'store/reducers'
 
 const rootReducer = combineReducers({ ...reducers })
+// eslint-disable-next-line no-underscore-dangle
 const composeEnhancer = (process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null) || compose
 
 const persistConfig = {
