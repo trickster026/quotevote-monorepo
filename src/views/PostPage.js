@@ -1,28 +1,30 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable prefer-destructuring */
-// import { getThemeProps } from '@material-ui/styles';
-// import Accordion from 'mui-pro/Accordion/Accordion';
-// import Badge from 'mui-pro/Badge/Badge';
-// import Box from '@material-ui/core/Box';
-// import Button from 'mui-pro/CustomButtons/Button'
+import React, { useState } from 'react'
+
+import Button from 'mui-pro/CustomButtons/Button'
 import Card from 'mui-pro/Card/Card'
 import CardBody from 'mui-pro/Card/CardBody'
 import CardFooter from 'mui-pro/Card/CardFooter'
 import CardHeader from 'mui-pro/Card/CardHeader'
-import Divider from '@material-ui/core/Divider'
 import GridContainer from 'mui-pro/Grid/GridContainer'
 import GridItem from 'mui-pro/Grid/GridItem'
+import Snackbar from 'mui-pro/Snackbar/Snackbar'
 
-// import NavPills from 'mui-pro/NavPills/NavPills';
+import Divider from '@material-ui/core/Divider'
+import CardActions from '@material-ui/core/CardActions'
+
 import VotingBoard from 'components/VotingComponents/VotingBoard'
 import VotingPopup from 'components/VotingComponents/VotingPopup'
-import React, { useState } from 'react'
+import ApproveRejectPopover from 'hhsbComponents/ApproveRejectPopover'
 
 // import Content from '../components/ContentList';
 
 // import styles from 'assets/jss/material-dashboard-pro-react/views/dashboardStyle';
 
 import FaceIcon from '@material-ui/icons/Face'
+import CloseIcon from '@material-ui/icons/Close'
+import CheckIcon from '@material-ui/icons/Check'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import moment from 'moment'
 
@@ -31,10 +33,12 @@ import { useSelector } from 'react-redux'
 import { cloneDeep, findIndex } from 'lodash'
 
 import { GET_POST, GET_TOP_POSTS } from 'graphql/query'
-import { VOTE, ADD_COMMENT } from 'graphql/mutations'
-import Send from '../assets/img/Send.svg'
-import Heart from '../assets/img/Heart.svg'
-import Chat from '../assets/img/Chat.svg'
+import {
+  VOTE, ADD_COMMENT, APPROVE_POST, REJECT_POST,
+} from 'graphql/mutations'
+import Chat from 'assets/img/Chat.svg'
+import Heart from 'assets/img/Heart.svg'
+import Send from 'assets/img/Send.svg'
 
 const PostPage = () => {
   // const url = window.location.href
@@ -43,6 +47,9 @@ const PostPage = () => {
   // const contentId = urlSegment[6]
 
   const [selectedText, setSelectedText] = useState('')
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [snackBar, setSnackBar] = useState({ open: false, message: '', color: 'danger' })
+  const [buttonType, setButtonType] = useState('approved')
   const { user } = useSelector((state) => state.loginReducer)
   const { id: postId } = useSelector((state) => state.postReducer.selectedPost)
   const [addVote] = useMutation(VOTE, {
@@ -101,6 +108,24 @@ const PostPage = () => {
       },
     ],
   })
+
+  const [approvePost] = useMutation(APPROVE_POST, {
+    refetchQueries: [
+      {
+        query: GET_POST,
+        variables: { postId },
+      },
+    ],
+  })
+
+  const [rejectPost] = useMutation(REJECT_POST, {
+    refetchQueries: [
+      {
+        query: GET_POST,
+        variables: { postId },
+      },
+    ],
+  })
   // const classes = useStyles();
 
   const { loading, error, data } = useQuery(GET_POST, {
@@ -113,6 +138,10 @@ const PostPage = () => {
 
   const { post } = data
 
+  const disableApproveReject = user._id === post.userId
+  const disablApprove = post.approvedBy.includes(user._id)
+  const disableReject = post.rejectedBy.includes(user._id)
+
   const handleVoting = async (type) => {
     const vote = {
       // text: selectedText.text,
@@ -122,10 +151,23 @@ const PostPage = () => {
       startWordIndex: selectedText.startIndex,
       endWordIndex: selectedText.endIndex,
     }
-    addVote({ variables: { vote } })
+    try {
+      await addVote({ variables: { vote } })
+      setSnackBar({
+        open: true,
+        message: 'Voted Successfully',
+        color: 'success',
+      })
+    } catch (err) {
+      setSnackBar({
+        open: true,
+        message: `Vote Error: ${err.message}`,
+        color: 'danger',
+      })
+    }
   }
 
-  const handleAddComment = (comment, commentWithQuote = false) => {
+  const handleAddComment = async (comment, commentWithQuote = false) => {
     let startIndex; let endIndex; let
       quoteText
 
@@ -156,7 +198,67 @@ const PostPage = () => {
       quote: commentWithQuote ? quoteText : '',
     }
 
-    addComment({ variables: { comment: newComment } })
+    try {
+      await addComment({ variables: { comment: newComment } })
+      setSnackBar({
+        open: true,
+        message: 'Commented Successfully',
+        color: 'success',
+      })
+    } catch (err) {
+      setSnackBar({
+        open: true,
+        message: `Comment Error: ${err.message}`,
+        color: 'danger',
+      })
+    }
+  }
+
+  const handlePopoverOpen = (event, type) => {
+    setAnchorEl(event.currentTarget)
+    setButtonType(type)
+  }
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleApprovePost = async () => {
+    if (!disableApproveReject || !disablApprove) {
+      try {
+        setSnackBar({
+          open: true,
+          message: 'Approved Post Successfully',
+          color: 'success',
+        })
+        approvePost({ variables: { userId: user._id, postId: post._id } })
+      } catch (err) {
+        setSnackBar({
+          open: true,
+          message: `Approve Post Error: ${err.message}`,
+          color: 'danger',
+        })
+      }
+    }
+  }
+
+  const handleRejectPost = async () => {
+    if (!disableApproveReject || !disableReject) {
+      try {
+        rejectPost({ variables: { userId: user._id, postId: post._id } })
+        setSnackBar({
+          open: true,
+          message: 'Rejected Post Successfully',
+          color: 'success',
+        })
+      } catch (err) {
+        setSnackBar({
+          open: true,
+          message: `Reject Post error: ${err.message}`,
+          color: 'danger',
+        })
+      }
+    }
   }
 
   return (
@@ -251,6 +353,40 @@ const PostPage = () => {
                 )}
               </VotingBoard>
             </CardBody>
+            <CardActions>
+              <GridContainer spacing={4} justify="center">
+                <GridItem>
+                  <Button
+                    variant="contained"
+                    startIcon={<CloseIcon />}
+                    onMouseEnter={(e) => handlePopoverOpen(e, 'rejected')}
+                    onClick={handleRejectPost}
+                    style={{
+                      backgroundColor: '#f44336',
+                      color: 'white',
+                      opacity: disableApproveReject || disableReject ? 0.65 : 1,
+                    }}
+                  >
+                    { disableReject ? 'REJECTED' : 'REJECT' }
+                  </Button>
+                </GridItem>
+                <GridItem>
+                  <Button
+                    variant="contained"
+                    startIcon={<CheckIcon />}
+                    onMouseEnter={(e) => handlePopoverOpen(e, 'approved')}
+                    onClick={handleApprovePost}
+                    style={{
+                      backgroundColor: '#4caf50',
+                      color: 'white',
+                      opacity: disableApproveReject || disablApprove ? 0.65 : 1,
+                    }}
+                  >
+                    { disablApprove ? 'APPROVED' : 'APPROVE' }
+                  </Button>
+                </GridItem>
+              </GridContainer>
+            </CardActions>
           </Card>
         </GridItem>
         <GridItem xs={6} style={{ paddingBottom: 0 }}>
@@ -310,6 +446,21 @@ const PostPage = () => {
             ))}
         </GridItem>
       </GridContainer>
+      <ApproveRejectPopover
+        anchorEl={anchorEl}
+        handlePopoverClose={handlePopoverClose}
+        type={buttonType}
+        approvedBy={post.approvedBy}
+        rejectedBy={post.rejectedBy}
+      />
+      <Snackbar
+        place="bc"
+        color={snackBar.color}
+        message={snackBar.message}
+        open={snackBar.open}
+        closeNotification={() => setSnackBar({ open: false, message: '' })}
+        close
+      />
     </div>
   )
 }
