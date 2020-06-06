@@ -5,12 +5,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import { default as MaterialList } from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
 import GridContainer from 'mui-pro/Grid/GridContainer'
+
 const useStyles = makeStyles(({
   root: {
-    width: '300px',
-    maxWidth: 360,
+    flexGrow: 1,
     backgroundColor: (props) => props.Color,
   },
 }))
@@ -20,16 +19,12 @@ export default function ListDividers({ List }) {
   return (
     <MaterialList component="nav" className={classes.root} aria-label="mailbox folders">
       {List.map((item) => (
-        <div>
-
-          <ListItem button style={{ backgroundColor: item.Color, width: '300px' }}>
-            <GridContainer alignItems="center">
-              <ListItemText primary={item.Text} />
-            </GridContainer>
-            <img alt={item.icon} src={item.icon} style={{ height: '30px' }} />
-          </ListItem>
-          <Divider />
-        </div>
+        <ListItem button style={{ backgroundColor: item.Color, width: '300px' }}>
+          <GridContainer alignItems="center">
+            <ListItemText primary={item.Text} />
+          </GridContainer>
+          <img alt={item.icon} src={item.icon} style={{ height: '30px' }} />
+        </ListItem>
       ))}
     </MaterialList>
   )

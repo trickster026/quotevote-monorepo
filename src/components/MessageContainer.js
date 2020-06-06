@@ -3,83 +3,124 @@
 
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import GridContainer from 'mui-pro/Grid/GridContainer'
-import Card from '@material-ui/core/Card'
-import TextField from '@material-ui/core/TextField'
-import Grid from '@material-ui/core/Grid'
-import FaceIcon from '@material-ui/icons/Face'
-import Button from '@material-ui/core/Button'
+import ScrollableFeed from 'react-scrollable-feed'
 
-import Message from 'components/ChatComponents/chatMessage'
+import Message from 'components/ChatComponents/Message'
+import MessageSend from 'components/ChatComponents/MessageSend'
+
+import { useQuery, useSubscription } from '@apollo/react-hooks'
+import BuddyListLoader from './BuddyList/BuddyListLoader'
+import GridContainer from '../mui-pro/Grid/GridContainer'
+import { GET_ROOM_MESSAGES } from '../graphql/query'
+import { NEW_MESSAGE_SUBSCRIPTION } from '../graphql/subscription'
+
+// Testing purposes
+// import {testMessageData} from "./ChatComponents/ChatConstants"
+// const messageData = testMessageData
+// const loading = false
+// const error = null
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: '#191919',
+    color: 'white',
+    maxWidth: 360,
+    height: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    wrap: 'wrapContent',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+  },
+  header: {
+    width: '100%',
+    backgroundColor: '#615B5B',
+    color: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '8%',
+  },
+  messages: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    wrap: 'wrapContent',
+    height: '88%',
+    maxHeight: '88%',
+    margin: theme.spacing(1),
+    maxWidth: '360px',
+    width: '300px',
+  },
+  messageLoading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    wrap: 'wrapContent',
+    height: '80%',
+    overflowY: 'hidden',
+    overflowX: 'hidden',
+  },
+  sendMessage: {
+    position: 'absolute',
+    bottom: 0,
+    top: 'auto',
+    margin: theme.spacing(1),
+  },
+  headerText: {
+    fontSize: 'x-large',
+    fontWeight: 900,
+    overflow: 'hidden',
+  },
+}))
 
 export default function MessageContainer(props) {
-  const useStyles = makeStyles({
-    chatContainer: {
-      width: '100%',
-      maxWidth: '300px',
-      backgroundColor: '#191919',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      height: '800px',
-      wrap: 'wrapContent',
-      paddingBottom: '5px',
-      zIndex: 2000,
-      display: props.Display,
-    },
-    bullet: {
-      display: 'inline-block',
-      margin: '0 2px',
-      transform: 'scale(0.8)',
-    },
-    margin: {
-      width: '95%',
-    },
-    header: {
-      width: '100%',
-      backgroundColor: '#615B5B',
-      color: 'white',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '8%',
-    },
-    headerText: {
-      fontSize: 'x-large',
-      fontWeight: 900,
-    },
-  })
   const classes = useStyles(props)
-  const messageData = [{ Content: 'src/components/MessageContainer', Color: 'green', Username: 'steve' }, { Content: 'well I say this other thing', Color: 'red', Username: 'alice' }, { Content: 'I sadi it much louder', Color: 'red', Username: 'bolb' }]
+  const { selectedRoom, toggle } = props
+  const { messageType, title, _id: messageRoomId } = selectedRoom.room
+  const {
+    loading, error, data, refetch,
+  } = useQuery(GET_ROOM_MESSAGES, {
+    variables: { messageRoomId },
+  })
+
+  useSubscription(
+    NEW_MESSAGE_SUBSCRIPTION,
+    {
+      variables: { messageRoomId },
+      onSubscriptionData: async () => {
+        await refetch()
+      },
+    },
+  )
+
+  if (error) return 'Something went wrong!'
+
+  const messageData = (!loading && data.messages.map((message) => ({
+    messageData: message,
+    Content: message.text,
+    Color: 'green',
+    Username: message.userName,
+  }))) || []
+
   return (
-    <GridContainer className={classes.chatContainer}>
-      <GridContainer className={classes.header} onClick={props.toggle}>
-        <p className={classes.headerText}> Back</p>
+    <GridContainer className={classes.root}>
+      <GridContainer className={classes.header} onClick={() => toggle(null)}>
+        <p className={classes.headerText}>Back</p>
       </GridContainer>
-      <br></br>
-      {messageData.map((message) => (<Message content={message.Content} color={message.Color} username={message.Username} />))}
-      <div className={classes.margin}>
-        <Card>
-          <Grid container spacing={1} alignItems="flex-end" justifyContent="space-between" wrap="nowrap">
-            <Grid style={{ paddingBottom: '20px' }}>
-              <FaceIcon
-                style={{
-                  backgroundColor: '#E91E63', width: '25px', padding: '5px', margin: '5px',
-                }}
-              />
-            </Grid>
-
-            <Grid item>
-              <TextField id="input-with-icon-grid" label="type here" />
-            </Grid>
-            <Grid item>
-              <Button style={{ backgroundColor: '#E91E63', color: 'white', margin: '2px' }}>SEND</Button>
-            </Grid>
-
-          </Grid>
-
-        </Card>
-      </div>
-
+      <GridContainer className={loading ? classes.messageLoading : classes.messages}>
+        {loading ? <BuddyListLoader /> : (
+          <ScrollableFeed className={classes.messages}>
+            {
+              messageData.map((message) => (
+                <Message content={message.Content} color={message.Color} username={message.Username} />
+              ))
+            }
+          </ScrollableFeed>
+        )}
+      </GridContainer>
+      <GridContainer className={classes.sendMessage}>
+        <MessageSend messageRoomId={messageRoomId} type={messageType} title={title} />
+      </GridContainer>
     </GridContainer>
   )
 }

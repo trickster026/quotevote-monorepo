@@ -12,6 +12,7 @@ import Chip from '@material-ui/core/Chip'
 import FaceIcon from '@material-ui/icons/Face'
 import FavoriteOutlinedIcon from '@material-ui/icons/FavoriteOutlined'
 import Grid from '@material-ui/core/Grid'
+
 const useStyles = makeStyles(() => ({
   card: {
     width: '100%',
@@ -38,7 +39,7 @@ export default function Message(props) {
   // const bull = <span className={classes.bullet}>•</span>
 
   return (
-    <div style={{ width: '95%' }}>
+    <div style={{ width: '95%', marginTop: '10px' }}>
       <Card className={classes.card}>
         <CardContent>
           <Grid
