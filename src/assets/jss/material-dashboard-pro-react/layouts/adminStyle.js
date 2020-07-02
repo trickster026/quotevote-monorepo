@@ -6,8 +6,50 @@ import {
 } from 'assets/jss/material-dashboard-pro-react'
 
 const appStyle = (theme) => ({
-  wrapper: {
+  root: {
+    flexGrow: 1,
+    backgroundColor: 'white',
+  },
+  toolbar: {
+    marginRight: theme.spacing(1),
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuIcons: {
+    color: 'secondary',
+  },
+  profileRow: {
     display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  profileBlockImage: {
+    width: '100px',
+  },
+  profileBlockName: {
+    marginLeft: '5px',
+    fontFamily: 'Montserrat',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    lineHeight: '24px',
+    color: '#424556',
+    paddingTop: '10px',
+    paddingRight: '10px',
+  },
+  voxPop: {
+    height: '80px',
+  },
+  rightMenuButton: {
+    marginLeft: theme.spacing(1),
+  },
+  appBar: {
+    color: 'light',
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  title: {
+    flexGrow: 1,
   },
   mainPanel: {
     transitionProperty: 'top, bottom, width',
@@ -41,14 +83,24 @@ const appStyle = (theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: drawerWidth,
-      marginRight: drawerWidth + 30,
+    height: '100%',
+    marginTop: theme.spacing(10),
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(1),
+      marginLeft: drawerMiniWidth,
+    },
+  },
+  contentChat: {
+    flexGrow: 1,
+    height: '100%',
+    marginTop: theme.spacing(10),
+    [theme.breakpoints.up('md')]: {
+      marginRight: drawerWidth,
     },
     [theme.breakpoints.down('sm')]: {
-      marginLeft: 0,
-      marginRight: 0,
+      marginRight: drawerWidth,
+      marginTop: theme.spacing(1),
+      marginLeft: drawerMiniWidth,
     },
   },
   container: { ...containerFluid },

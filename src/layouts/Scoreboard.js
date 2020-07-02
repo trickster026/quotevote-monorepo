@@ -6,35 +6,48 @@ import {
 } from 'react-router-dom'
 // creates a beautiful scrollbar
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
-// Images
 import logoWhite from 'assets/img/logo-white.svg'
-// @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles'
-// core components
-import MenuSidebar from 'components/MenuSidebar'
+
+import Hidden from '@material-ui/core/Hidden'
+import { createMuiTheme, makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 import appRoutes from 'routes'
-
 import styles from 'assets/jss/material-dashboard-pro-react/layouts/adminStyle'
 import { tokenValidator } from 'store/actions/login'
-import PopoverMenu from '../components/PopoverMenu'
 import ChatDrawer from '../components/ChatComponents/ChatDrawer'
+import MainNavBar from '../components/Navbars/MainNavBar'
+import Sidebar from '../mui-pro/Sidebar/Sidebar'
 
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#fff',
+    },
+    secondary: {
+      main: '#35a511',
+    },
+  },
+  typography: {
+    useNextVariants: true,
+  },
+})
 const useStyles = makeStyles(styles)
 
 export default function Scoreboard(props) {
-  const { ...rest } = props
   const history = useHistory()
   const [mobileOpen, setMobileOpen] = React.useState(false)
-  const [color] = React.useState('blue')
-  const [bgColor] = React.useState('black')
-  const [logo] = React.useState(logoWhite)
   const [page, setPage] = React.useState('Home')
   // styles
   const classes = useStyles()
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
+
+  const [color] = React.useState('blue')
+  const [bgColor] = React.useState('black')
+  const [logo] = React.useState(logoWhite)
   const getRoute = () => window.location.pathname !== '/admin/full-screen-maps'
   const getRoutes = (routes) => routes.map((prop, key) => {
     if (prop.collapse) {
@@ -52,22 +65,6 @@ export default function Scoreboard(props) {
     return null
   })
 
-  const currentRoute = () => {
-    const {
-      location: { pathname },
-    } = props
-    const currLocation = pathname.split('/')
-    return currLocation[currLocation.length - 1]
-  }
-  const [anchorEl, setAnchorEl] = React.useState(null)
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
   const routes = getRoutes(appRoutes)
   useEffect(() => {
     const {
@@ -80,42 +77,58 @@ export default function Scoreboard(props) {
     setPage(currentPage[0].name)
   }, [props])
 
-  return (
-    <div className={classes.wrapper}>
-      {!tokenValidator() && history.push('/unauth')}
-      <MenuSidebar
-        routes={appRoutes}
-        logo={logo}
-        handleDrawerToggle={handleDrawerToggle}
-        open={mobileOpen} // true for development. mobileOpen for prod
-        color={color}
-        bgColor={bgColor}
-        currentRoute={currentRoute()}
-        {...rest}
-      />
+  const [chatOpen, setChatOpen] = React.useState(false)
 
-      <main className={classes.content}>
-        <PopoverMenu
-          classes={classes}
-          anchorEl={anchorEl}
-          handleClick={handleClick}
-          handleClose={handleClose}
-          appRoutes={appRoutes}
-          page={page}
-        />
-        {getRoute() ? (
-          <Switch>
-            {routes}
-            <Redirect from="/admin" to="/admin/dashboard" />
-          </Switch>
-        ) : (
-          <Switch>
-            {routes}
-            <Redirect from="/admin" to="/admin/dashboard" />
-          </Switch>
-        )}
-        <ChatDrawer />
-      </main>
-    </div>
+  const currentRoute = () => {
+    const {
+      location: { pathname },
+    } = props
+    const currLocation = pathname.split('/')
+    return currLocation[currLocation.length - 1]
+  }
+
+
+  return (
+    <MuiThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <Hidden only={['xs', 'sm']}>
+          <MainNavBar
+            classes={classes}
+            setChatOpen={setChatOpen}
+            page={page}
+            chatOpen={chatOpen}
+          />
+        </Hidden>
+        <Hidden only={['md', 'lg', 'xl']}>
+          <Sidebar
+            routes={appRoutes}
+            logo={logo}
+            handleDrawerToggle={handleDrawerToggle}
+            open={mobileOpen}
+            color={color}
+            bgColor={bgColor}
+            currentRoute={currentRoute()}
+            {...props}
+            miniActive
+          />
+        </Hidden>
+        {!tokenValidator() && history.push('/unauth')}
+        <main className={chatOpen ? classes.contentChat : classes.content}>
+          {getRoute() ? (
+            <Switch>
+              {routes}
+              <Redirect from="/admin" to="/admin/dashboard" />
+            </Switch>
+          ) : (
+            <Switch>
+              {routes}
+              <Redirect from="/admin" to="/admin/dashboard" />
+            </Switch>
+          )}
+          {chatOpen && <ChatDrawer />}
+        </main>
+      </div>
+    </MuiThemeProvider>
   )
 }
