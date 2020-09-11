@@ -17,9 +17,6 @@ import {
 } from 'assets/jss/material-dashboard-pro-react'
 
 const pagesHeaderStyle = (theme) => ({
-  voxPop: {
-    height: '40px',
-  },
   appBar: {
     backgroundColor: 'transparent',
     boxShadow: 'none',
@@ -112,9 +109,11 @@ const pagesHeaderStyle = (theme) => ({
   navLink: {
     color: whiteColor,
     margin: '0 5px',
+    paddingTop: '15px',
+    paddingBottom: '15px',
     fontWeight: '500',
     fontSize: '12px',
-    // textTransform: 'uppercase',
+    textTransform: 'uppercase',
     borderRadius: '3px',
     lineHeight: '20px',
     position: 'relative',
@@ -124,36 +123,6 @@ const pagesHeaderStyle = (theme) => ({
     '&:hover,&:focus': {
       color: whiteColor,
       background: `rgba(${hexToRgb(grayColor[17])}, 0.2)`,
-    },
-  },
-  navLinkAccess: {
-    color: whiteColor,
-    margin: '0 5px',
-    fontWeight: '500',
-    fontSize: '12px',
-    borderRadius: '3px',
-    lineHeight: '20px',
-    position: 'relative',
-    display: 'block',
-    padding: '10px 15px',
-    textDecoration: 'none',
-    '&:hover,&:focus': {
-      color: whiteColor,
-    },
-  },
-  navLinkInvestNow: {
-    color: whiteColor,
-    margin: '0 5px',
-    fontWeight: '500',
-    fontSize: '12px',
-    borderRadius: '3px',
-    lineHeight: '20px',
-    position: 'relative',
-    display: 'block',
-    padding: '10px 15px',
-    textDecoration: 'none',
-    '&:hover,&:focus': {
-      color: whiteColor,
     },
   },
   listItemIcon: {
@@ -175,23 +144,9 @@ const pagesHeaderStyle = (theme) => ({
     display: 'inline-block',
     position: 'relative',
     whiteSpace: 'nowrap',
-    // textTransform: 'none'
-  },
-  listItemTextAccess: {
-    flex: 'none',
-    padding: '0',
-    minWidth: '0',
-    margin: 0,
-    display: 'inline-block',
-    position: 'relative',
-    whiteSpace: 'nowrap',
   },
   navLinkActive: {
     backgroundColor: `rgba(${hexToRgb(whiteColor)}, 0.1)`,
-  },
-  navLinkActiveAccess: {
-    borderRadius: '5px',
-    backgroundColor: '#00cf6e',
   },
   drawerPaper: {
     border: 'none',

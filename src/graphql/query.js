@@ -116,9 +116,3 @@ export const GET_USER_ACTIVITY = gql`
     activities(user_id: $user_id, limit: $limit, offset: $offset, searchKey: $searchKey, startDateRange: $startDateRange, endDateRange: $endDateRange, activityEvent: $activityEvent)
   }
 `
-
-export const GET_CHECK_DUPLICATE_EMAIL = gql`
-  query checkDuplicateEmail($email: String!) {
-    checkDuplicateEmail(email: $email)
-  }
-`
