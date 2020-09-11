@@ -14,7 +14,6 @@ import { ApolloProvider, useMutation, useQuery } from '@apollo/react-hooks'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import client from 'config/apollo'
 import fetch from 'jest-fetch-mock'
-import 'mutationobserver-shim'
 
 const cache = new InMemoryCache()
 cache.writeData({
@@ -22,7 +21,13 @@ cache.writeData({
     searchKey: '',
   },
 })
-
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+}
+global.localStorage = localStorageMock
 global.React = React
 global.shallow = shallow
 global.render = render
@@ -42,6 +47,5 @@ global.useMutation = useMutation
 global.client = client
 global.cache = cache
 global.fetch = fetch
-global.MutationObserver = window.MutationObserver
 
 configure({ adapter: new Adapter(), disableLifecycleMethods: true })
