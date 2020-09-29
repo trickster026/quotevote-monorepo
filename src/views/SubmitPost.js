@@ -60,7 +60,7 @@ const inputStyles = {
 
 function SubmitPost() {
   const classes = useStyles()
-  const [alert, setAlert] = React.useState(null)
+  const [alert, setAlert] = useState(null)
   const [postTitle, setPostTitle] = useState('[Enter Title]')
   const [postText, setPostText] = useState('')
   const [groupName, setGroupName] = useState('')
@@ -230,9 +230,7 @@ function SubmitPost() {
   const userAllowedGroups =
     (data &&
       data.groups.filter((group) => {
-        const isUserAllowed = group.allowedUserIds.find(
-          (id) => id === user._id,
-        )
+        const isUserAllowed = group.allowedUserIds.find((id) => id === user._id)
         return (
           group.privacy === 'public' ||
           (group.privacy === 'private' && isUserAllowed)
