@@ -52,6 +52,10 @@ export const GET_POST = gql`
       rejectedBy
       reportedBy
       bookmarkedBy
+      creator {
+        name
+        avatar
+      }
       comments {
         _id
         created
@@ -63,6 +67,7 @@ export const GET_POST = gql`
         url
         reaction
         user {
+          username
           name
           avatar
         }
