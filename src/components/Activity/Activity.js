@@ -4,10 +4,9 @@ import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
+import { Grid } from '@material-ui/core'
 import SubHeader from '../SubHeader'
 import ActivityList from './ActivityList'
-import GridContainer from '../../mui-pro/Grid/GridContainer'
-import GridItem from '../../mui-pro/Grid/GridItem'
 import { GET_USER_ACTIVITY } from '../../graphql/query'
 import FilterInputs from '../Filter/FilterInputs'
 import { FILTER_VALUE } from '../../store/filter'
@@ -16,9 +15,7 @@ import ErrorBoundary from '../ErrorBoundary'
 const useStyles = makeStyles(({
   root: {
     display: 'flex',
-    flexBasis: '100%',
     flexGrow: 1,
-    overflow: 'hidden',
   },
 }))
 
@@ -69,20 +66,26 @@ export default function Activity({ showSubHeader = true }) {
   const filterState = useSelector((state) => state.filter)
   return (
     <ErrorBoundary>
-      <GridContainer className={classes.root}>
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        alignItems="stretch"
+        className={classes.root}
+      >
         {showSubHeader && (
-          <GridItem xs={12}>
+          <Grid item xs={12}>
             <SubHeader
               headerName="Activity Feed"
               setOffset={setOffset}
               showSubHeader={showSubHeader}
             />
-          </GridItem>
+          </Grid>
         )}
 
         {
           filterState.filter.visibility || filterState.date.visibility || filterState.search.visibility ? (
-            <GridItem xs={12}>
+            <Grid item xs={12}>
               <FilterInputs
                 classes={classes}
                 filterState={filterState}
@@ -95,11 +98,11 @@ export default function Activity({ showSubHeader = true }) {
                 dateRangeFilter={dateRangeFilter}
                 showFilterIconButton
               />
-            </GridItem>
+            </Grid>
           ) : null
         }
 
-        <GridItem xs={12}>
+        <Grid item xs={12}>
           <ActivityList
             data={data}
             loading={loading}
@@ -110,8 +113,8 @@ export default function Activity({ showSubHeader = true }) {
             fetchMore={fetchMore}
             variables={variables}
           />
-        </GridItem>
-      </GridContainer>
+        </Grid>
+      </Grid>
     </ErrorBoundary>
   )
 }
