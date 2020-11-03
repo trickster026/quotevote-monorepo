@@ -53,8 +53,10 @@ export const GET_POST = gql`
       reportedBy
       bookmarkedBy
       creator {
+        _id
         name
         avatar
+        username
       }
       comments {
         _id
@@ -160,6 +162,7 @@ export const GET_TOP_POSTS = gql`
           name
           username
           avatar
+          _id
         }
       }
       pagination {
@@ -172,8 +175,8 @@ export const GET_TOP_POSTS = gql`
 `
 
 export const GET_USER = gql`
-  query user($user_id: String!) {
-    user(user_id: $user_id) {
+  query user($username: String!) {
+    user(username: $username) {
       _id
       name
       username
@@ -220,6 +223,7 @@ query activities(
         bookmarkedBy
         created
         creator {
+          _id
           name
           username
           avatar
