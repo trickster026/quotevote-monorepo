@@ -5,7 +5,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import BlockIcon from '@material-ui/icons/Block'
 import LinkIcon from '@material-ui/icons/Link'
-import { Comment, Favorite, PersonAdd } from '@material-ui/icons'
+import { Favorite, PersonAdd } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useMutation } from '@apollo/react-hooks'
@@ -23,6 +23,7 @@ import {
 import { GET_POST, GET_TOP_POSTS } from '../../graphql/query'
 import ApproveRejectPopover from '../ApproveRejectPopver/ApproveRejectPopover'
 import AvatarDisplay from '../Avatar'
+import PostMessageButton from './PostMessageButton'
 
 const useStyles = makeStyles(() => ({
   header2: {
@@ -359,9 +360,7 @@ function Post({ post, user }) {
           }}
           onMouseEnter={(e) => handlePopoverOpen(e, 'approved')}
         />
-        <IconButton className={classes.expand}>
-          <Comment />
-        </IconButton>
+        <PostMessageButton className={classes.expand} post={post} />
         <IconButton>
           <PersonAdd />
         </IconButton>
