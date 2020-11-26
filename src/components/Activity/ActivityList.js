@@ -5,23 +5,109 @@ import InfiniteScroll from 'react-infinite-scroller'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import { Box } from '@material-ui/core'
-import PostCard from '../Post/PostCard'
+import { useMutation } from '@apollo/react-hooks'
+import { useHistory } from 'react-router-dom'
 import AlertSkeletonLoader from '../AlertSkeletonLoader'
-import { SET_HIDDEN_POSTS } from '../../store/ui'
 import ActivityEmptyList from './ActivityEmptyList'
 import LoadingSpinner from '../LoadingSpinner'
 import { getGridListCols, useWidth } from '../../utils/display'
+import { ActivityCard } from '../../ui/ActivityCard'
+import getCardBackgroundColor from '../../utils/getCardBackgroundColor'
+import { CREATE_POST_MESSAGE_ROOM, UPDATE_POST_BOOKMARK } from '../../graphql/mutations'
+import {
+  GET_CHAT_ROOMS, GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY,
+} from '../../graphql/query'
+import { SET_SELECTED_POST } from '../../store/ui'
+import getActivityContent from '../../utils/getActivityContent'
 
-function LoadActivityList({
-  data, onLoadMore,
-}) {
+function LoadActivityCard({ width, activity }) {
+  const {
+    post, user, quote, comment, vote, created, activityType,
+  } = activity
+  const {
+    url, bookmarkedBy, upvotes, downvotes,
+  } = post
+  const postId = post._id
+  const { username, avatar, name } = user
+  const currentUser = useSelector((state) => state.user.data)
+  const [createPostMessageRoom] = useMutation(CREATE_POST_MESSAGE_ROOM)
+  const [updatePostBookmark] = useMutation(UPDATE_POST_BOOKMARK)
+  const limit = 5
+  const type = activityType === 'VOTED' ? `${vote.type}${activity.activityType}` : activity.activityType
+  const content = getActivityContent(type, post, quote, vote, comment)
+  const handleLike = async () => {
+    await updatePostBookmark({
+      variables: { postId, userId: currentUser._id },
+    })
+
+    await createPostMessageRoom({
+      variables: { postId },
+      refetchQueries: [
+        {
+          query: GET_CHAT_ROOMS,
+        },
+        {
+          query: GET_POST,
+          variables: {
+            postId,
+          },
+        },
+        {
+          query: GET_USER_ACTIVITY,
+          variables: {
+            user_id: currentUser._id,
+            limit,
+            offset: 0,
+            searchKey: '',
+            activityEvent: [],
+          },
+        },
+        {
+          query: GET_TOP_POSTS,
+          variables: { limit, offset: 0, searchKey: '' },
+        },
+      ],
+    })
+  }
+  const history = useHistory()
+  const handleRedirectToProfile = () => {
+    history.push(`/hhsb/Profile/${username}`)
+  }
+  const isLiked = bookmarkedBy.includes(currentUser._id)
   const dispatch = useDispatch()
-  const user = useSelector((state) => state.user.data)
+  const handleCardClick = () => {
+    dispatch(SET_SELECTED_POST(postId))
+    history.push(url)
+  }
+
+  return (
+    <ActivityCard
+      avatar={avatar}
+      cardColor={getCardBackgroundColor(type)}
+      name={name}
+      username={username}
+      date={created}
+      upvotes={upvotes}
+      downvotes={downvotes}
+      liked={isLiked}
+      post={post}
+      content={content}
+      width={width}
+      onLike={handleLike}
+      handleRedirectToProfile={handleRedirectToProfile}
+      onCardClick={handleCardClick}
+      activityType={type}
+    />
+  )
+}
+LoadActivityCard.propTypes = {
+  width: PropTypes.number,
+  activity: PropTypes.object,
+}
+
+function LoadActivityList({ data, onLoadMore }) {
   const hiddenPosts = useSelector((state) => state.ui.hiddenPosts) || []
   const width = useWidth()
-  const handleHidePost = (post) => {
-    dispatch(SET_HIDDEN_POSTS(post._id))
-  }
 
   if (!data || !data.activities.pagination.total_count) {
     return (
@@ -30,11 +116,6 @@ function LoadActivityList({
   }
 
   const activities = data.activities.entities
-    .map((activity, index) => ({
-      ...activity.post,
-      activityType: activity.activityType === 'VOTED' ? `${activity.vote.type}${activity.activityType}` : activity.activityType,
-      rank: index + 1,
-    }))
     .filter((activity) => !hiddenPosts.includes(activity._id))
   const hasMore = data.activities.pagination.total_count > activities.length
   return (
@@ -46,20 +127,15 @@ function LoadActivityList({
     >
       <GridList cols={getGridListCols[width]}>
         {activities.map((activity, key) => (
-          <GridListTile key={key} rows={1.3} cols={1}>
+          <GridListTile key={key} rows={1.2} cols={1}>
             <Box
-              boxShadow={3}
+              boxShadow={5}
               style={{
                 marginRight: 20,
                 borderRadius: 7,
               }}
             >
-              <PostCard
-                limitText
-                {...activity}
-                onHidePost={handleHidePost}
-                user={user}
-              />
+              <LoadActivityCard activity={activity} width={width} />
             </Box>
           </GridListTile>
         ))}
@@ -68,7 +144,12 @@ function LoadActivityList({
   )
 }
 
-export default function ActivityList({
+LoadActivityList.propTypes = {
+  data: PropTypes.object.isRequired,
+  onLoadMore: PropTypes.func,
+}
+
+function ActivityList({
   data, loading, fetchMore, variables,
 }) {
   if (!data && loading) return <AlertSkeletonLoader cols={3} />
@@ -106,7 +187,4 @@ ActivityList.propTypes = {
   variables: PropTypes.object,
 }
 
-LoadActivityList.propTypes = {
-  data: PropTypes.object.isRequired,
-  onLoadMore: PropTypes.func,
-}
+export default ActivityList

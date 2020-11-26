@@ -10,17 +10,23 @@ import { loadCSS } from 'fg-loadcss'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import IconButton from '@material-ui/core/IconButton'
-import Icon from '@material-ui/core/Icon'
+import moment from 'moment'
+import stringLimit from 'string-limit'
+import BookmarkIcon from '@material-ui/icons/Bookmark'
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder'
+import AvatarDisplay from '../../components/Avatar'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: theme.typography.pxToRem(350),
-    padding: theme.typography.pxToRem(11),
-    maxHeight: theme.typography.pxToRem(140),
+    minHeight: theme.typography.pxToRem(200),
+    maxHeight: theme.typography.pxToRem(200),
     borderRadius: '6px',
     backgroundColor: (props) => (props.cardColor ? props.cardColor : '#FFF'),
     width: (props) => (props.width ? props.width : '100%'),
@@ -30,9 +36,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: theme.typography.pxToRem(20),
+    marginBottom: 10,
   },
   activityBody: {
     marginLeft: theme.typography.pxToRem(20),
+    cursor: 'pointer',
+  },
+  avatar: {
+    cursor: 'pointer',
+  },
+  expand: {
+    marginLeft: 'auto',
+    padding: 0,
+  },
+  content: {
+    minHeight: theme.typography.pxToRem(130),
   },
 }))
 
@@ -44,7 +62,15 @@ function ActivityHeader({ name, date }) {
         {name}
       </Typography>
       <Typography color="textPrimary" variant="caption">
-        {date}
+        {moment(date).calendar(null, {
+          sameDay: '[Today]',
+          nextDay: '[Tomorrow]',
+          nextWeek: 'dddd',
+          lastDay: '[Yesterday]',
+          lastWeek: '[Last] dddd',
+          sameElse: 'MMM DD, YYYY',
+        })}
+        {` @ ${moment(date).format('h:mm A')}`}
       </Typography>
     </div>
   )
@@ -56,20 +82,42 @@ ActivityHeader.propTypes = {
 }
 
 function ActivityContent({
-  name, date, content, avatar, width,
+  name, date, content, avatar, width, handleRedirectToProfile, username, onCardClick,
+  post, activityType,
 }) {
   const classes = useStyles()
-  const contentLength = width > 350 ? 500 : 100
-
+  const contentLength = width > 350 ? 100 : 50
+  const title = post.title ? stringLimit(post.title, 20) : ''
   return (
-    <Box display="flex">
-      <Avatar alt="profile" src={avatar} />
-      <Box flexGrow={1}>
+    <Box display="flex" className={classes.content}>
+      <Avatar
+        onClick={() => handleRedirectToProfile(username)}
+        className={classes.avatar}
+      >
+        <AvatarDisplay
+          height="40"
+          width="40"
+          className={classes.avatarStyle}
+          {...avatar}
+        />
+      </Avatar>
+      <Box flexGrow={1} onClick={onCardClick}>
         <ActivityHeader name={name} date={date} />
         <Typography className={classes.activityBody} variant="body1">
+          <b>
+            {activityType.toUpperCase()}
+          </b>
+          {' on '}
+          <i>
+            {title}
+          </i>
+        </Typography>
+        <Typography className={classes.activityBody} variant="body1">
+          &quot;
           {content.length > 100 ?
             `${content.slice(0, contentLength)}...` :
             content}
+          &quot;
         </Typography>
       </Box>
     </Box>
@@ -78,26 +126,35 @@ function ActivityContent({
 
 ActivityContent.propTypes = {
   name: PropTypes.string,
+  username: PropTypes.string,
   date: PropTypes.string,
   content: PropTypes.string,
   avatar: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
   width: PropTypes.number,
+  handleRedirectToProfile: PropTypes.func,
+  onCardClick: PropTypes.func,
+  post: PropTypes.object,
+  activityType: PropTypes.string,
 }
 
 function ActivityActions({
   upvotes, downvotes, liked, onLike,
 }) {
+  const classes = useStyles()
   return (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
+    <>
       <Typography variant="caption">{`+${upvotes} / -${downvotes}`}</Typography>
-      <IconButton onClick={(e) => onLike(liked, e)} style={{ padding: 0 }}>
+      <IconButton
+        onClick={(e) => onLike(liked, e)}
+        className={classes.expand}
+      >
         {liked ? (
-          <Icon className="far fa-heart" />
+          <BookmarkIcon />
         ) : (
-          <Icon className="fas fa-heart" />
+          <BookmarkBorderIcon />
         )}
       </IconButton>
-    </Box>
+    </>
   )
 }
 
@@ -120,11 +177,16 @@ export const ActivityCard = memo(
     liked = false,
     width,
     onLike = () => {},
+    onCardClick = () => {},
+    handleRedirectToProfile = () => {},
+    username,
+    post = {},
+    activityType = '',
   }) => {
     React.useEffect(() => {
       const node = loadCSS(
         'https://use.fontawesome.com/releases/v5.12.0/css/all.css',
-        document.querySelector('#font-awesome-css'),
+        document.querySelector('#font-awesome-css')
       )
 
       return () => {
@@ -135,21 +197,30 @@ export const ActivityCard = memo(
     const classes = useStyles({ cardColor, width })
     return (
       <Card className={classes.root}>
-        <ActivityContent
-          name={name}
-          date={date}
-          content={content}
-          avatar={avatar}
-        />
-        <ActivityActions
-          upvotes={upvotes}
-          downvotes={downvotes}
-          liked={liked}
-          onLike={onLike}
-        />
+        <CardContent>
+          <ActivityContent
+            name={name}
+            date={date}
+            content={content}
+            avatar={avatar}
+            username={username}
+            handleRedirectToProfile={handleRedirectToProfile}
+            onCardClick={onCardClick}
+            post={post}
+            activityType={activityType}
+          />
+        </CardContent>
+        <CardActions disableSpacing>
+          <ActivityActions
+            upvotes={upvotes}
+            downvotes={downvotes}
+            liked={liked}
+            onLike={onLike}
+          />
+        </CardActions>
       </Card>
     )
-  },
+  }
 )
 
 ActivityCard.propTypes = {
@@ -157,10 +228,15 @@ ActivityCard.propTypes = {
   content: PropTypes.string,
   cardColor: PropTypes.string,
   name: PropTypes.string,
+  username: PropTypes.string,
   date: PropTypes.string,
   upvotes: PropTypes.number,
   downvotes: PropTypes.number,
   liked: PropTypes.bool,
   width: PropTypes.number,
   onLike: PropTypes.func,
+  onCardClick: PropTypes.func,
+  handleRedirectToProfile: PropTypes.func,
+  post: PropTypes.object,
+  activityType: PropTypes.string,
 }
