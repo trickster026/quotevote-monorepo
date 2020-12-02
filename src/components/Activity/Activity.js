@@ -12,10 +12,19 @@ import FilterInputs from '../Filter/FilterInputs'
 import { FILTER_VALUE } from '../../store/filter'
 import ErrorBoundary from '../ErrorBoundary'
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexGrow: 1,
+  },
+  list: {
+    marginRight: 10,
+    maxWidth: '70%',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+      marginLeft: 10,
+      maxWidth: '100%',
+    },
   },
 }))
 
@@ -23,7 +32,7 @@ export default function Activity({ showSubHeader = true }) {
   const dispatch = useDispatch()
   const classes = useStyles()
   const limit = 15
-  const [offset, setOffset] = useState(1)
+  const [offset, setOffset] = useState(0)
   const conditions = ['POSTED', 'VOTED', 'COMMENTED', 'QUOTED', 'LIKED']
   const [selectedEvent, setSelectedEvent] = useState(conditions)
   const [dateRangeFilter, setDateRangeFilter] = useState({ startDate: '', endDate: '' })
@@ -75,8 +84,9 @@ export default function Activity({ showSubHeader = true }) {
         container
         direction="row"
         justify="center"
-        alignItems="stretch"
+        alignItems="center"
         className={classes.root}
+        spacing={4}
       >
         {showSubHeader && (
           <Grid item xs={12}>
@@ -107,7 +117,7 @@ export default function Activity({ showSubHeader = true }) {
           ) : null
         }
 
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.list}>
           <ActivityList
             data={data}
             loading={loading}
