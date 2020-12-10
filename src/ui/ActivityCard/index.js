@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '6px',
     backgroundColor: (props) => (props.cardColor ? props.cardColor : '#FFF'),
     width: (props) => (props.width ? props.width : '100%'),
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '100%',
+      minWidth: '100%',
+      width: '100%',
+    },
   },
   activityHeader: {
     display: 'flex',
@@ -86,8 +91,9 @@ function ActivityContent({
   post, activityType,
 }) {
   const classes = useStyles()
-  const contentLength = width > 500 ? 1000 : 100
-  const title = post.title ? stringLimit(post.title, 100) : ''
+  const contentLength = width > 500 ? 1000 : 500
+  const isPosted = activityType.toUpperCase() === 'POSTED'
+  const title = post.title ? stringLimit(post.title, isPosted ? 1000 : 100) : ''
   return (
     <Box display="flex" className={classes.content}>
       <Avatar
@@ -103,15 +109,24 @@ function ActivityContent({
       </Avatar>
       <Box flexGrow={1} onClick={onCardClick}>
         <ActivityHeader name={name} date={date} />
-        <Typography className={classes.activityBody} variant="body1">
-          <b>
-            {activityType.toUpperCase()}
-          </b>
-          {' on '}
-          <i>
-            {title}
-          </i>
-        </Typography>
+        {isPosted && (
+          <Typography className={classes.activityBody} variant="body1">
+            <b>
+              {title}
+            </b>
+          </Typography>
+        )}
+        {!isPosted && (
+          <Typography className={classes.activityBody} variant="body1">
+            <b>
+              {activityType.toUpperCase()}
+            </b>
+            {' on '}
+            <i>
+              {title}
+            </i>
+          </Typography>
+        )}
         <Typography className={classes.activityBody} variant="body1">
           &quot;
           {content.length > 1000 ?

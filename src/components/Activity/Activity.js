@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme) => ({
   list: {
     marginRight: 10,
     maxWidth: '70%',
+    marginBottom: 10,
     [theme.breakpoints.down('sm')]: {
-      marginRight: 0,
-      marginLeft: 10,
+      marginRight: 5,
+      marginLeft: 5,
       maxWidth: '100%',
     },
-    marginBottom: 10,
   },
 }))
 
@@ -90,7 +90,7 @@ export default function Activity({ showSubHeader = true, userId = '' }) {
         justify="center"
         alignItems="center"
         className={classes.root}
-        spacing={4}
+        spacing={2}
       >
         {showSubHeader && (
           <Grid item xs={12}>
