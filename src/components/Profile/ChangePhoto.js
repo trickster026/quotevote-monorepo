@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,6 +11,8 @@ import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import Divider from '@material-ui/core/Divider'
 
 // Local
 import { updateAvatar } from 'store/user'
@@ -23,6 +25,10 @@ import { SET_SNACKBAR } from '../../store/ui'
 const useStyles = makeStyles({
   selectInput: {
     width: '250px',
+    textAlign: 'center',
+  },
+  heading: {
+    color: 'grey',
   },
 })
 
@@ -32,6 +38,7 @@ const useStyles = makeStyles({
  * @returns {JSX.Element}
  */
 function ChangePhoto() {
+  const [allAvatars, addAvatar] = useState([])
   const user = useSelector((state) => state.user.data)
   const [updateUserAvatar] = useMutation(UPDATE_USER_AVATAR)
   let defaultAvatar = {}
@@ -58,54 +65,93 @@ function ChangePhoto() {
       open: true,
     }))
   }
+  const nameLookup = {
+    'Top Type': 'Top',
+    'Accessories Type': 'Accessories',
+    hairColor: 'Hair Color',
+    facialHairColor: 'Facial Hair Color',
+    facialHairType: 'Facial Hair',
+    clotheColor: 'Clothes',
+    eyeType: 'Eyes',
+    eyebrowType: 'Eyebrow',
+    'Mouth Type': 'Mouth',
+    'Skin Color': 'Skin',
+  }
 
+  const shouldIgnore = {
+    'Hat Color': true,
+    clotheType: true,
+    graphicType: true,
+  }
   const watchAllFields = watch()
 
-  const generateAvatar = () => avatarOptions.reduce((newAvatar, category) => [
-    ...newAvatar,
-    {
-      key: category.name,
-      option: category.options[Math.floor(Math.random() * Math.floor(category.options.length))],
-    },
-  ], [])
+  const generateAvatar = () => {
+    const avatar = avatarOptions.reduce((newAvatar, category) => [
+      ...newAvatar,
+      {
+        key: category.name,
+        option: category.options[Math.floor(Math.random() * Math.floor(category.options.length))],
+      },
+    ], [])
+    const newAvatars = allAvatars.concat({ avatar })
+    addAvatar(newAvatars)
+    return avatar
+  }
+
+  const pickLastAvatar = () => {
+    const { avatar } = allAvatars[allAvatars.length - 2]
+    return avatar
+  }
 
   return (
     <ThemeProvider theme={theme}>
       <Grid container>
-        <Grid item container column xs={12} md={6}>
-          <Grid item xs={12}>
-            <Typography variant="h5" noWrap>
+        <Grid item container column xs={6} md={6}>
+          <Grid item xs={10}>
+            <Typography className={classes.heading} variant="h4" noWrap>
+              <ArrowBackIcon size={15} />
               Create your avatar with AI
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={8}>
             <Typography variant="p">
               This is for anyone to make their beautiful personal avatar easily! If you have no idea what kind of style you want, you can hit the better or worse button until you find something you want.
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid style={{ marginLeft: 80 }} item md={11} xs={11}>
             <AvatarPreview height="150" width="150" {...watchAllFields} />
           </Grid>
-          <Grid item xs={12}>
+          <Grid style={{ marginLeft: 30 }} item xs={10}>
             <Button
               onClick={() => generateAvatar('better').map((q) => setValue(q.key, q.option))}
               variant="contained"
-              color="secondary"
+              style={{ backgroundColor: '#4baf4f', color: 'white', margin: 30 }}
             >
               Better
             </Button>
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => generateAvatar('worse').map((q) => setValue(q.key, q.option))}
+              onClick={() => {
+                pickLastAvatar().map((q) => setValue(q.key, q.option))
+              }}
             >
               Worse
             </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 150, marginLeft: -184 }}
+            >
+              Save
+            </Button>
           </Grid>
         </Grid>
-        <Grid item container column xs={6}>
-          <Grid xs={12} item>
-            <Typography variant="subtitle" noWrap>
+        <Divider orientation="vertical" flexItem />
+        <Grid style={{ marginLeft: 30 }} item container column md={5} xs={5}>
+          <Grid xs={14} item>
+            <Typography style={{ color: 'black' }} variant="h6" noWrap>
               Or you can create it manually
             </Typography>
           </Grid>
@@ -113,37 +159,38 @@ function ChangePhoto() {
             {
               avatarOptions.map((category) => {
                 const { displayName, name, options } = category
-                return (
-                  <Grid container item xs={12}>
-                    <Grid item xs={6}>
-                      <InputLabel id="demo-simple-select-helper-label">{displayName}</InputLabel>
-                      <Controller
-                        as={(
-                          <Select
-                            className={classes.selectInput}
-                          >
-                            {
-                              options.map((i) => <MenuItem value={i}>{i}</MenuItem>)
-                            }
-                          </Select>
-                        )}
-                        name={name}
-                        control={control}
-                      />
+                if (!shouldIgnore[displayName]) {
+                  return (
+                    <Grid container item>
+                      <Grid item>
+                        <Grid container>
+                          <Grid item style={{ margin: 15 }}>
+                            <InputLabel id="demo-simple-select-helper-label">{nameLookup[displayName]}</InputLabel>
+                          </Grid>
+                          <Grid item>
+                            <Controller
+                              as={(
+                                <Select
+                                  className={classes.selectInput}
+                                >
+                                  {
+                                    options.map((i) => <MenuItem value={i}>{i}</MenuItem>)
+                                  }
+                                </Select>
+                              )}
+                              name={name}
+                              control={control}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                )
+                  )
+                }
+                return null
               })
             }
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-              >
-                Change my Profile
-              </Button>
-            </Grid>
+
           </form>
         </Grid>
       </Grid>
