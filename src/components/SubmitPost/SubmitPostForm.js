@@ -11,8 +11,10 @@ import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import PropTypes from 'prop-types'
+import Mercury from '@postlight/mercury-parser'
 import { useMutation } from '@apollo/react-hooks'
 import { useDispatch } from 'react-redux'
+import { isEmpty } from 'lodash'
 import CardBody from '../../mui-pro/Card/CardBody'
 import Card from '../../mui-pro/Card/Card'
 import Button from '../../mui-pro/CustomButtons/Button'
@@ -101,6 +103,35 @@ function SubmitPostForm({ options = [], user }) {
     setSelectedGroup(null)
     reset()
   }
+  const [value, setValue] = React.useState({ title: '', content: '' })
+  const [isPasting, setPasting] = React.useState(false)
+
+  const handleTitleChange = (event) => {
+    setValue({ ...value, title: event.target.value })
+  }
+
+  const handleContentChange = (event) => {
+    const contentValue = event.target.value
+    const validURL = /^(?:http(s)?:\/\/)([\w.-])+(?:[\w.-]+)+([\w\-._~:/?#[\]@!$&'()*+,;=.])+$/
+    setValue({ ...value, content: contentValue })
+    if (isPasting && contentValue.match(validURL)) {
+      Mercury.parse(`https://cors-anywhere.herokuapp.com/${contentValue}`, { contentType: 'markdown' })
+        .then((result) => {
+          if (isEmpty(result.content)) {
+            setError('Could not extract site content.')
+            setShowAlert(true)
+          } else {
+            setValue({ title: result.title, content: result.content })
+          }
+        })
+    }
+    setPasting(false)
+  }
+
+  const handlePaste = () => {
+    setPasting(true)
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {showAlert && (
@@ -117,6 +148,8 @@ function SubmitPostForm({ options = [], user }) {
             id="title"
             className={classes.title}
             placeholder="Enter Title Here"
+            value={value.title}
+            onChange={handleTitleChange}
             name="title"
             inputRef={register({
               required: 'Title is required',
@@ -129,6 +162,9 @@ function SubmitPostForm({ options = [], user }) {
           <InputBase
             id="text"
             placeholder="Input text to submit post"
+            value={value.content}
+            onChange={handleContentChange}
+            onPaste={handlePaste}
             className={classes.text}
             multiline
             fullWidth
