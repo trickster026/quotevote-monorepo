@@ -6,13 +6,14 @@ import PropTypes from 'prop-types'
 
 const useStyles = (props) => makeStyles((theme) => {
   const color = props.tipColor || theme.palette.background.paper // Feel free to customise this like they do in Tooltip
+
   return {
     popoverRoot: {
       backgroundColor: color,
       maxWidth: 1000,
     },
     content: {
-      padding: theme.spacing(props.spacing),
+      padding: theme.spacing(props.spacing || 0),
       backgroundImage: props.tipBackgroundImage || color,
       borderRadius: '5px',
     },
