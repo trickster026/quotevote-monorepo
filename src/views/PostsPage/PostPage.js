@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
 import { useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import Post from '../../components/Post/Post'
 import PostActionList from '../../components/PostActions/PostActionList'
-import { GET_POST } from '../../graphql/query'
 import PostSkeleton from '../../components/Post/PostSkeleton'
+import { GET_ROOM_MESSAGES, GET_POST } from '../../graphql/query'
+import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscription'
+import PostChatSend from '../../components/PostChat/PostChatSend'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,14 +26,43 @@ function PostPage() {
   }, [])
 
   const postId = useSelector((state) => state.ui.selectedPost.id)
-  const { loading, error, data } = useQuery(GET_POST, {
+
+  const { loading: loadingPost, error: postError, data: postData } = useQuery(GET_POST, {
     variables: { postId },
     fetchPolicy: 'cache-and-network',
   })
+
   const user = useSelector((state) => state.user.data)
 
-  if (error) return 'Something went wrong!'
-  const { post } = !loading && data
+  const { post } = !loadingPost && postData
+
+  let messageRoomId
+  let title
+  if (post) {
+    messageRoomId = post.messageRoom._id
+    title = post.title
+  }
+
+  const {
+    loading: loadingMessages, data: messageData, refetch,
+  } = useQuery(GET_ROOM_MESSAGES, {
+    variables: { messageRoomId },
+  })
+
+  useSubscription(
+    NEW_MESSAGE_SUBSCRIPTION,
+    {
+      variables: { messageRoomId },
+      onSubscriptionData: async () => {
+        await refetch()
+      },
+    },
+  )
+
+  if (postError) return 'Something went wrong!'
+
+  const { messages } = (!loadingMessages && messageData) || []
+
   const {
     comments, votes, quotes, url,
   } = post || { comments: [], votes: [], quotes: [] }
@@ -48,6 +79,11 @@ function PostPage() {
   if (!isEmpty(quotes)) {
     postActions = postActions.concat(quotes)
   }
+
+  if (!isEmpty(messages)) {
+    postActions = postActions.concat(messages)
+  }
+
   return (
     <Grid
       container
@@ -59,10 +95,11 @@ function PostPage() {
       style={{ position: 'relative' }}
     >
       <Grid item xs={12} md={6}>
-        {loading ? <PostSkeleton /> : <Post post={post} loading={loading} user={user} />}
+        {loadingPost ? <PostSkeleton /> : <Post post={post} loading={loadingPost} user={user} />}
       </Grid>
-      <Grid item xs={12} md={6}>
-        <PostActionList loading={loading} postActions={postActions} postUrl={url} />
+      <Grid item className={classes.root} xs={12} md={6}>
+        <PostChatSend messageRoomId={messageRoomId} title={title} />
+        <PostActionList loading={loadingPost} postActions={postActions} postUrl={url} />
       </Grid>
     </Grid>
   )
