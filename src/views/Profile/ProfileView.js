@@ -60,9 +60,9 @@ function ProfileView({
 ProfileView.propTypes = {
   handleActivityEvent: PropTypes.func.isRequired,
   handleSelectAll: PropTypes.func.isRequired,
-  selectAll: PropTypes.func.isRequired,
-  filterState: PropTypes.string.isRequired,
-  setOffset: PropTypes.number.isRequired,
+  selectAll: PropTypes.string.isRequired,
+  filterState: PropTypes.object.isRequired,
+  setOffset: PropTypes.func.isRequired,
   profileUser: PropTypes.object.isRequired,
   loading: PropTypes.bool,
 }

@@ -29,6 +29,7 @@ function DisplayAvatar(props) {
     height,
     width: height,
   }
+
   return (
     <>
       <Avatar
@@ -64,7 +65,7 @@ DisplayAvatar.propTypes = {
   mouthType: PropTypes.string,
   skinColor: PropTypes.string,
   hatColor: PropTypes.string,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.any.isRequired,
 }
 
 export default DisplayAvatar

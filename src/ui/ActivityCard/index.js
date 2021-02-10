@@ -144,8 +144,8 @@ ActivityContent.propTypes = {
   username: PropTypes.string,
   date: PropTypes.string,
   content: PropTypes.string,
-  avatar: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
-  width: PropTypes.number,
+  avatar: PropTypes.any,
+  width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']),
   handleRedirectToProfile: PropTypes.func,
   onCardClick: PropTypes.func,
   post: PropTypes.object,
@@ -239,7 +239,7 @@ export const ActivityCard = memo(
 )
 
 ActivityCard.propTypes = {
-  avatar: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
+  avatar: PropTypes.any,
   content: PropTypes.string,
   cardColor: PropTypes.string,
   name: PropTypes.string,
@@ -248,7 +248,7 @@ ActivityCard.propTypes = {
   upvotes: PropTypes.number,
   downvotes: PropTypes.number,
   liked: PropTypes.bool,
-  width: PropTypes.number,
+  width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']),
   onLike: PropTypes.func,
   onCardClick: PropTypes.func,
   handleRedirectToProfile: PropTypes.func,

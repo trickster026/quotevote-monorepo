@@ -95,6 +95,7 @@ function BuddyItemList({ buddyList }) {
       dispatch(SELECTED_CHAT_ROOM(room))
     }
   }
+
   return (
     <>
       {!buddyList.length && (
@@ -106,7 +107,7 @@ function BuddyItemList({ buddyList }) {
       )}
       <List className={buddyList.length ? classes.root : classNames(classes.root, classes.blur)}>
         {itemList.map((item) => (
-          <>
+          <React.Fragment key={item.room._id}>
             <ListItem onClick={() => handleClickItem(item)}>
               <ListItemAvatar>
                 <Avatar>
@@ -131,7 +132,7 @@ function BuddyItemList({ buddyList }) {
               </ListItemSecondaryAction>
             </ListItem>
             <Divider className={classes.divider} />
-          </>
+          </React.Fragment>
         ))}
       </List>
     </>

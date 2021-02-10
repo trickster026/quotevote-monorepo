@@ -39,6 +39,8 @@ function LoadActivityCard({ width, activity }) {
       variables: { postId, userId: currentUser._id },
     })
 
+    console.log(avatar)
+
     await createPostMessageRoom({
       variables: { postId },
       refetchQueries: [
@@ -100,7 +102,7 @@ function LoadActivityCard({ width, activity }) {
   )
 }
 LoadActivityCard.propTypes = {
-  width: PropTypes.number,
+  width: PropTypes.oneOf(['lg', 'md', 'sm', 'xl', 'xs']),
   activity: PropTypes.object,
 }
 

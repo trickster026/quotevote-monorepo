@@ -48,11 +48,12 @@ export function LoadPostsList({
         spacing={0}
       >
         {rankedPosts.map((prop) => (
-          <Grid item style={{ marginBottom: -25 }}>
+          <Grid item style={{ marginBottom: -25 }} key={prop._id}>
             <PostCard
               {...prop}
               onHidePost={handleHidePost}
               user={user}
+              key={prop._id}
             />
           </Grid>
         ))}
@@ -62,9 +63,8 @@ export function LoadPostsList({
 }
 
 LoadPostsList.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
   onLoadMore: PropTypes.func.isRequired,
-  cols: PropTypes.number.isRequired,
 }
 
 export default function PostList({
@@ -76,7 +76,6 @@ export default function PostList({
   return (
     <LoadPostsList
       data={data}
-      cols={cols}
       onLoadMore={() => fetchMore({
         variables: {
           ...variables,
@@ -101,7 +100,7 @@ export default function PostList({
 }
 
 PostList.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   limit: PropTypes.number.isRequired,
   fetchMore: PropTypes.func.isRequired,

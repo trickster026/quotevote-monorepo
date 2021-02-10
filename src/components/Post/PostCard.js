@@ -158,6 +158,7 @@ function PostCard(props) {
     _id, text, title, upvotes, downvotes, url, bookmarkedBy, created, onHidePost, creator,
     activityType, limitText,
   } = props
+
   const cardBg = getCardBg(activityType)
   const postTitleStringLimit = width === 'xs' ? 25 : 50
   const handleRedirectToProfile = (username) => {
@@ -254,7 +255,7 @@ function PostCard(props) {
     </Card>
   )
 }
-PostCard.defaults = {
+PostCard.defaultProps = {
   activityType: 'POSTED',
 }
 
@@ -268,9 +269,9 @@ PostCard.propTypes = {
   bookmarkedBy: PropTypes.array.isRequired,
   created: PropTypes.string.isRequired,
   onHidePost: PropTypes.func.isRequired,
-  onBookmark: PropTypes.func.isRequired,
+  onBookmark: PropTypes.func,
   creator: PropTypes.any,
-  activityType: PropTypes.string.isRequired,
+  activityType: PropTypes.string,
   avatar: PropTypes.object,
   width: PropTypes.any,
   limitText: PropTypes.bool,
