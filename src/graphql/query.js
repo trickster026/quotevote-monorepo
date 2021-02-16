@@ -178,6 +178,28 @@ export const GET_ROOM_MESSAGES = gql`
   }
 `
 
+export const GET_MESSAGE_REACTIONS = gql`
+  query messageReactions ($messageId: String!){
+    messageReactions(messageId: $messageId) {
+      _id
+      emoji
+      messageId
+      userId
+    }
+  }
+`
+
+export const GET_ACTION_REACTIONS = gql`
+  query actionReactions ($actionId: String!){
+    actionReactions(actionId: $actionId) {
+      _id
+      emoji
+      actionId
+      userId
+    }
+  }
+`
+
 export const GET_TOP_POSTS = gql`
   query topPosts(
     $limit: Int!

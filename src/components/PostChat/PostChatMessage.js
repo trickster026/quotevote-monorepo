@@ -5,8 +5,11 @@ import {
   Grid, Paper, Typography, Avatar,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useQuery } from '@apollo/react-hooks'
 import AvatarDisplay from '../Avatar'
 import PostChatReactions from './PostChatReactions'
+import { GET_MESSAGE_REACTIONS } from '../../graphql/query'
+
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -26,7 +29,7 @@ const useStyles = makeStyles(() => ({
     background: '#ffffff',
     minHeight: 30,
     borderRadius: '6px',
-    padding: 14,
+    padding: '14px 14px 0px 14px',
     '&::after': {
       content: "''",
       position: 'absolute',
@@ -43,7 +46,7 @@ const useStyles = makeStyles(() => ({
     minHeight: 30,
     color: 'white',
     borderRadius: '6px',
-    padding: 14,
+    padding: '14px 14px 0px 14px',
     '&::after': {
       content: "''",
       position: 'absolute',
@@ -61,6 +64,12 @@ function PostChatMessage(props) {
   const userId = useSelector((state) => state.user.data._id)
   const isDefaultDirection = message.userId !== userId
   const direction = isDefaultDirection ? 'row' : 'row-reverse'
+
+  const { loading, data } = useQuery(GET_MESSAGE_REACTIONS, {
+    variables: { messageId: message._id },
+  })
+
+  const { messageReactions } = (!loading && data) || []
 
   return (
     <Grid
@@ -80,7 +89,7 @@ function PostChatMessage(props) {
           <Typography className={classes.text}>
             {message.text}
           </Typography>
-          <PostChatReactions created={message.created} />
+          <PostChatReactions created={message.created} messageId={message._id} reactions={messageReactions} isDefaultDirection={isDefaultDirection} />
         </Paper>
       </Grid>
     </Grid>

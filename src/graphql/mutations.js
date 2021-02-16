@@ -193,3 +193,41 @@ export const DELETE_NOTIFICATION = gql`
     }
   }
 `
+
+export const ADD_MESSAGE_REACTION = gql`
+  mutation addMessageReaction($reaction: ReactionInput!) {
+    addMessageReaction(reaction: $reaction) {
+      userId
+      messageId
+      emoji
+    }
+  }
+`
+
+export const ADD_ACTION_REACTION = gql`
+  mutation addActionReaction($reaction: ReactionInput!) {
+    addActionReaction(reaction: $reaction) {
+      userId
+      actionId
+      emoji
+    }
+  }
+`
+
+export const UPDATE_MESSAGE_REACTION = gql`
+  mutation updateReaction($_id: String! $emoji: String!) {
+    updateReaction(_id: $_id, emoji: $emoji) {
+      _id
+      emoji
+    }
+  }
+`
+
+export const UPDATE_ACTION_REACTION = gql`
+  mutation updateReaction($_id: String! $emoji: String!) {
+    updateReaction(_id: $_id, emoji: $emoji) {
+      _id
+      emoji
+    }
+  }
+`
