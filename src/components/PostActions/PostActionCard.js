@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Card, CardActions, CardContent, IconButton, Typography,
+  Card, CardActions, CardContent, IconButton, Typography, SvgIcon,
 } from '@material-ui/core'
 import { InsertLink } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
-import SvgIcon from '@material-ui/core/SvgIcon'
 import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/react-hooks'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,8 +17,6 @@ import { SET_FOCUSED_COMMENT, SET_SHARED_COMMENT } from '../../store/ui'
 import { GET_ACTION_REACTIONS } from '../../graphql/query'
 import { ReactComponent as DislikeIcon } from '../../assets/svg/Dislike.svg'
 import { ReactComponent as LikeIcon } from '../../assets/svg/Like.svg'
-import { ReactComponent as QuoteIcon } from '../../assets/svg/Quote.svg'
-import { ReactComponent as CommentIcon } from '../../assets/svg/Comment.svg'
 import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
 import PostChatMessage from '../PostChat/PostChatMessage'
 import CommentReactions from '../Comment/CommentReactions'
@@ -54,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function PostActionCard({ postAction, postUrl, selected }) {
+  const [commentSelected, setCommentSelected] = useState()
   const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -82,8 +80,18 @@ function PostActionCard({ postAction, postUrl, selected }) {
   }
 
   let postContent = content
-  let svgIcon = CommentIcon
+  let svgIcon
   let voteTags = ''
+
+  const handleClick = () => {
+    if (!commentSelected) {
+      dispatch(SET_FOCUSED_COMMENT(postAction))
+      setCommentSelected(true)
+    } else {
+      dispatch(SET_FOCUSED_COMMENT(sharedComment))
+      setCommentSelected(false)
+    }
+  }
 
   const handleRedirectToProfile = () => {
     history.push(`/hhsb/Profile/${username}`)
@@ -98,7 +106,6 @@ function PostActionCard({ postAction, postUrl, selected }) {
 
   if (quote) {
     postContent = quote.length ? quote : 'Quoted this post.'
-    svgIcon = QuoteIcon
   }
 
   useEffect(() => {
@@ -116,8 +123,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
 
   return (
     <Card
-      onMouseEnter={() => dispatch(SET_FOCUSED_COMMENT(postAction))}
-      onMouseLeave={() => dispatch(SET_FOCUSED_COMMENT(sharedComment))}
+      onClick={(event) => handleClick()}
       className={selected ? classes.selectedRoot : classes.root}
     >
       <IconButton
@@ -130,16 +136,22 @@ function PostActionCard({ postAction, postUrl, selected }) {
         {' '}
         <span className={classes.date}>{parsedDate}</span>
       </Typography>
-        {!voteType && (
-          <CardContent
-            className={classes.content}
-          >
+      {!voteType && (
+        <CardContent
+          className={classes.content}
+        >
           <p>
             {postContent}
           </p>
           </CardContent>
         )}
       <CardActions disableSpacing>
+        <SvgIcon
+          component={svgIcon}
+          fontSize="large"
+          viewBox="-10 -10 50 50"
+          htmlColor="black"
+        />
         <Typography display="inline">{voteTags}</Typography>
         <div className={classes.expand}>
           <CommentReactions actionId={_id} reactions={actionReactions} />
