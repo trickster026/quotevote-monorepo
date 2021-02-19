@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
 import { useMutation } from '@apollo/react-hooks'
 import { useSelector, useDispatch } from 'react-redux'
+import _ from 'lodash'
 
 // MUI
 import { MuiThemeProvider as ThemeProvider, makeStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputLabel from '@material-ui/core/InputLabel'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import Divider from '@material-ui/core/Divider'
+import {
+  Avatar, Typography, Grid, Button,
+} from '@material-ui/core'
 
 // Local
 import { updateAvatar } from 'store/user'
@@ -22,13 +17,93 @@ import { avatarOptions } from '../../utils/display'
 import theme from '../../themes/MainTheme'
 import { SET_SNACKBAR } from '../../store/ui'
 
+// Icons
+import Silhouette from '../../assets/svg/Silhouette.svg'
+import Glasses from '../../assets/svg/Glasses.svg'
+import Mouth from '../../assets/svg/Mouth.svg'
+import Shirt from '../../assets/svg/Shirt.svg'
+import Eyes from '../../assets/svg/Eyes.svg'
+import Hat from '../../assets/svg/Hat.svg'
+import Beard from '../../assets/svg/Beard.svg'
+import Eyebrow from '../../assets/svg/Eyebrow.svg'
+
 const useStyles = makeStyles({
-  selectInput: {
-    width: '250px',
-    textAlign: 'center',
+  fullCard: {
+    height: 'calc(95vh - 90px)',
+    paddingTop: 30,
   },
   heading: {
-    color: 'grey',
+    color: '#56DA9C',
+    fontSize: 40,
+  },
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, .6)',
+    borderRadius: 5,
+  },
+  optionCard: {
+    borderTop: '1px solid #CAE7FF',
+    padding: '20px 30px',
+  },
+  buttonCard: {
+    padding: '0px 30px',
+  },
+  heading2: {
+    color: '#97999A',
+    fontWeight: 'bold',
+    fontSize: 16,
+    padding: '10px 0px 0px 10px',
+  },
+  discardButton: {
+    backgroundColor: '#DB6666',
+    color: 'white',
+    fontSize: 30,
+    width: 163,
+    height: 88,
+    textTransform: 'none',
+    fontWeight: 'normal',
+    '&:hover': {
+      backgroundColor: '#E75656 !important',
+    },
+  },
+  bingoButton: {
+    backgroundColor: '#7DD6AD',
+    marginRight: 30,
+    color: 'white',
+    fontSize: 30,
+    width: 163,
+    height: 88,
+    textTransform: 'none',
+    fontWeight: 'normal',
+    '&:hover': {
+      backgroundColor: '#52E39F !important',
+    },
+  },
+  avatar: {
+    margin: 50,
+    height: 200,
+    width: 200,
+    backgroundColor: '#65C9FF',
+  },
+  size: {
+    height: 80,
+    width: 80,
+    backgroundColor: '#65C9FF',
+    margin: '5px 20px 5px 15px',
+    cursor: 'pointer',
+  },
+  svgButton: {
+    borderRadius: 100,
+    height: 80,
+    width: 80,
+    margin: '0px 30px 0px 15px',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 207, 110, .5) !important',
+    },
+  },
+  avatarRow: {
+    padding: 20,
+    height: 205,
+    overflowY: 'scroll',
   },
 })
 
@@ -38,26 +113,26 @@ const useStyles = makeStyles({
  * @returns {JSX.Element}
  */
 function ChangePhoto() {
-  const [allAvatars, addAvatar] = useState([])
   const user = useSelector((state) => state.user.data)
   const [updateUserAvatar] = useMutation(UPDATE_USER_AVATAR)
-  let defaultAvatar = {}
+  const [avatarOptionsArray, setAvatarOptionsArray] = useState()
+  const [updatedAvatar, setUpdatedAvatar] = useState()
+  const [selectedOptions, setSelectedOptions] = useState()
+  const [colorOptions, setColorOptions] = useState()
   //  prevent legacy image file avatars from crapping out front end
-  if (typeof user.avatar === 'object') {
+  let defaultAvatar = {}
+
+  if (updatedAvatar !== undefined) {
+    defaultAvatar = updatedAvatar
+  } else if (typeof user.avatar === 'object') {
     defaultAvatar = user.avatar
   }
-  const {
-    handleSubmit, watch, control, setValue,
-  } = useForm({
-    defaultValues: {
-      ...defaultAvatar,
-    },
-  })
+
   const dispatch = useDispatch()
   const classes = useStyles()
 
-  const onSubmit = async (formData) => {
-    const newAvatar = await updateUserAvatar({ variables: { user_id: user._id, avatarQualities: formData } })
+  const onSubmit = async (avatar) => {
+    const newAvatar = await updateUserAvatar({ variables: { user_id: user._id, avatarQualities: avatar } })
     await updateAvatar(dispatch, newAvatar.data.updateUserAvatar.avatar)
     dispatch(SET_SNACKBAR({
       type: 'danger',
@@ -65,133 +140,235 @@ function ChangePhoto() {
       open: true,
     }))
   }
-  const nameLookup = {
-    'Top Type': 'Top',
-    'Accessories Type': 'Accessories',
-    hairColor: 'Hair Color',
-    facialHairColor: 'Facial Hair Color',
-    facialHairType: 'Facial Hair',
-    clotheColor: 'Clothes',
-    eyeType: 'Eyes',
-    eyebrowType: 'Eyebrow',
-    'Mouth Type': 'Mouth',
-    'Skin Color': 'Skin',
+
+  const groupedAvatarOptions = _.groupBy(avatarOptions, 'name')
+
+  const {
+    topType, accessoriesType, facialHairType, clotheType, mouthType, eyebrowType, eyeType, facialHairColor, clotheColor, hairColor, hatColor, skinColor,
+  } = groupedAvatarOptions
+
+  topType.icon = Hat
+  accessoriesType.icon = Glasses
+  facialHairType.icon = Beard
+  clotheType.icon = Shirt
+  skinColor.icon = Silhouette
+  mouthType.icon = Mouth
+  eyeType.icon = Eyes
+  eyebrowType.icon = Eyebrow
+
+  const buttonOptions = []
+
+  buttonOptions.push(eyebrowType, topType, accessoriesType, facialHairType, clotheType, skinColor, mouthType, eyeType)
+
+  const displayAvatarOptions = []
+  const displayColorOptions = []
+
+  function handleIconClick(category) {
+    const { name, options } = category
+    switch (name) {
+      case 'topType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.topType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(name)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'eyebrowType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.eyebrowType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(null)
+        setColorOptions(null)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'eyeType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.eyeType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(null)
+        setColorOptions(null)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'clotheType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.clotheType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(name)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'skinColor':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.skinColor = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(null)
+        setColorOptions(null)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'facialHairType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.facialHairType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(name)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'mouthType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.mouthType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(null)
+        setColorOptions(null)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      case 'accessoriesType':
+        for (let i = 0; i < options.length; i++) {
+          const avatarCategoryDisplay = { ...defaultAvatar }
+          avatarCategoryDisplay.accessoriesType = options[i]
+          displayAvatarOptions.push(avatarCategoryDisplay)
+        }
+        setSelectedOptions(null)
+        setColorOptions(null)
+        setAvatarOptionsArray(displayAvatarOptions)
+        break
+      default:
+        setSelectedOptions(null)
+    }
   }
 
-  const shouldIgnore = {
-    'Hat Color': true,
-    clotheType: true,
-    graphicType: true,
-  }
-  const watchAllFields = watch()
-
-  const generateAvatar = () => {
-    const avatar = avatarOptions.reduce((newAvatar, category) => [
-      ...newAvatar,
-      {
-        key: category.name,
-        option: category.options[Math.floor(Math.random() * Math.floor(category.options.length))],
-      },
-    ], [])
-    const newAvatars = allAvatars.concat({ avatar })
-    addAvatar(newAvatars)
-    return avatar
-  }
-
-  const pickLastAvatar = () => {
-    const { avatar } = allAvatars[allAvatars.length - 2]
-    return avatar
+  function handleSelectAvatarOption(option) {
+    setUpdatedAvatar(option)
+    let colors
+    switch (selectedOptions) {
+      case 'topType':
+        if (option.topType.includes('WinterHat') || option.topType === 'Hijab' || option.topType === 'Turban') {
+          colors = hatColor[0].options
+          for (let i = 0; i < colors.length; i++) {
+            const avatarCategoryDisplay = { ...option }
+            avatarCategoryDisplay.hatColor = colors[i]
+            displayColorOptions.push(avatarCategoryDisplay)
+          }
+        } else if (option.topType === 'LongHairFrida' || option.topType === 'Eyepatch' || option.topType === 'NoHair' || option.topType === 'Hat' || option.topType === 'LongHairShavedSides') {
+          const avatarCategoryDisplay = { ...option }
+          displayColorOptions.push(avatarCategoryDisplay)
+        } else {
+          colors = hairColor[0].options
+          for (let i = 0; i < colors.length; i++) {
+            const avatarCategoryDisplay = { ...option }
+            avatarCategoryDisplay.hairColor = colors[i]
+            displayColorOptions.push(avatarCategoryDisplay)
+          }
+        }
+        setColorOptions(displayColorOptions)
+        break
+      case 'facialHairType':
+        if (option.facialHairType === 'Blank') {
+          const avatarCategoryDisplay = { ...option }
+          displayColorOptions.push(avatarCategoryDisplay)
+        } else {
+          colors = facialHairColor[0].options
+          for (let i = 0; i < colors.length; i++) {
+            const avatarCategoryDisplay = { ...option }
+            avatarCategoryDisplay.facialHairColor = colors[i]
+            displayColorOptions.push(avatarCategoryDisplay)
+          }
+        }
+        setColorOptions(displayColorOptions)
+        break
+      case 'clotheType':
+        if (option.clotheType.includes('Blazer')) {
+          const avatarCategoryDisplay = { ...option }
+          displayColorOptions.push(avatarCategoryDisplay)
+        } else {
+          colors = clotheColor[0].options
+          for (let i = 0; i < colors.length; i++) {
+            const avatarCategoryDisplay = { ...option }
+            avatarCategoryDisplay.clotheColor = colors[i]
+            displayColorOptions.push(avatarCategoryDisplay)
+          }
+        }
+        setColorOptions(displayColorOptions)
+        break
+      default:
+        setColorOptions(null)
+    }
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <Grid container>
-        <Grid item container column xs={6} md={6}>
-          <Grid item xs={10}>
-            <Typography className={classes.heading} variant="h4" noWrap>
-              <ArrowBackIcon size={15} />
-              Create your avatar with AI
+      <Grid container display="flex" direction="row" className={classes.fullCard}>
+        <Grid container item display="flex" direction="column" alignItems="center" xs={6}>
+          <Grid item>
+            <Typography className={classes.heading}>
+              Create your avatar
             </Typography>
           </Grid>
-          <Grid item xs={8}>
-            <Typography variant="p">
-              This is for anyone to make their beautiful personal avatar easily! If you have no idea what kind of style you want, you can hit the better or worse button until you find something you want.
-            </Typography>
+          <Grid item>
+            <Avatar className={classes.avatar}>
+              <AvatarPreview {...defaultAvatar} />
+            </Avatar>
           </Grid>
-          <Grid style={{ marginLeft: 80 }} item md={11} xs={11}>
-            <AvatarPreview height="150" width="150" {...watchAllFields} />
-          </Grid>
-          <Grid style={{ marginLeft: 30 }} item xs={10}>
-            <Button
-              onClick={() => generateAvatar('better').map((q) => setValue(q.key, q.option))}
-              variant="contained"
-              style={{ backgroundColor: '#4baf4f', color: 'white', margin: 30 }}
-            >
-              Better
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => {
-                pickLastAvatar().map((q) => setValue(q.key, q.option))
-              }}
-            >
-              Worse
-            </Button>
+          <Grid item>
             <Button
               type="submit"
-              variant="contained"
-              color="primary"
-              style={{ marginTop: 150, marginLeft: -184 }}
+              className={classes.bingoButton}
+              onClick={() => onSubmit(defaultAvatar)}
             >
-              Save
+              Bingo
+            </Button>
+            <Button
+              className={classes.discardButton}
+              onClick={() => setUpdatedAvatar(user.avatar)}
+            >
+              Nah
             </Button>
           </Grid>
         </Grid>
-        <Divider orientation="vertical" flexItem />
-        <Grid style={{ marginLeft: 30 }} item container column md={5} xs={5}>
-          <Grid xs={14} item>
-            <Typography style={{ color: 'black' }} variant="h6" noWrap>
-              Or you can create it manually
+        <Grid container item display="flex" direction="column" className={classes.card} xs={6}>
+          <Grid item>
+            <Typography className={classes.heading2}>
+              choose a feature to customize
             </Typography>
           </Grid>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {
-              avatarOptions.map((category) => {
-                const { displayName, name, options } = category
-                if (!shouldIgnore[displayName]) {
-                  return (
-                    <Grid container item key={category.name}>
-                      <Grid item>
-                        <Grid container>
-                          <Grid item style={{ margin: 15 }}>
-                            <InputLabel id="demo-simple-select-helper-label">{nameLookup[displayName]}</InputLabel>
-                          </Grid>
-                          <Grid item>
-                            <Controller
-                              as={(
-                                <Select
-                                  className={classes.selectInput}
-                                >
-                                  {
-                                    options.map((i) => <MenuItem value={i} key={i}>{i}</MenuItem>)
-                                  }
-                                </Select>
-                              )}
-                              name={name}
-                              control={control}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  )
-                }
-                return null
-              })
-            }
-
-          </form>
+          <Grid container display="flex" direction="column" className={classes.buttonCard}>
+            <Grid item container display="flex" direction="row" justify="space-evenly" className={classes.avatarRow}>
+              {buttonOptions.map((category) => (
+                <Button className={classes.svgButton} hover display="flex" justify="center" alignItems="center" onClick={() => handleIconClick(category[0])}>
+                  <img src={category.icon} alt={category.name} />
+                </Button>
+              ))}
+            </Grid>
+          </Grid>
+          <Grid container display="flex" direction="column" className={classes.optionCard}>
+            <Grid item container display="flex" direction="row" justify="space-evenly" className={classes.avatarRow}>
+              {avatarOptionsArray && avatarOptionsArray.map((option) => (
+                <Avatar className={classes.size} onClick={() => handleSelectAvatarOption(option)}>
+                  <AvatarPreview {...option} />
+                </Avatar>
+              ))}
+            </Grid>
+          </Grid>
+          <Grid container display="flex" direction="column" className={classes.optionCard}>
+            <Grid item container display="flex" direction="row" justify="space-evenly" className={classes.avatarRow}>
+              {colorOptions && colorOptions.map((option) => (
+                <Avatar className={classes.size} onClick={() => setUpdatedAvatar(option)}>
+                  <AvatarPreview {...option} />
+                </Avatar>
+              ))}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </ThemeProvider>

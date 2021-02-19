@@ -71,7 +71,7 @@ function PostChatSend(props) {
     }
 
     setText('')
-    
+
     const dateSubmitted = new Date()
     await createMessage({
       variables: { message },
