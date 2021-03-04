@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
+import _ from 'lodash'
 import { useQuery } from '@apollo/react-hooks'
 import { useParams, useHistory } from 'react-router'
 import { GET_FOLLOW_INFO } from 'graphql/query'
@@ -87,8 +88,10 @@ function FollowInfo({ filter }) {
                 getUserFollowInfo.map((f) => (
                   <UserFollowDisplay
                     profileUserId={userData._id}
-                    boolFol={userData._followingId.includes(f._id)}
+                    username={username}
+                    isFollowing={_.includes(userData._followingId, f.id)}
                     {...f}
+                    key={f.id}
                   />
                 ))
               }

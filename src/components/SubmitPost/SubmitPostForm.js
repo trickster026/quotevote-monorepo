@@ -4,7 +4,7 @@ import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete
 import { makeStyles } from '@material-ui/core/styles'
 import {
   CircularProgress,
-  Divider, FormControl, Grid, InputBase, Typography,
+  Divider, FormControl, Grid, InputBase, Typography, IconButton,
 } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import Radio from '@material-ui/core/Radio'
@@ -16,33 +16,53 @@ import { useMutation } from '@apollo/react-hooks'
 import { useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash'
 import CardBody from '../../mui-pro/Card/CardBody'
-import Card from '../../mui-pro/Card/Card'
 import Button from '../../mui-pro/CustomButtons/Button'
 import SubmitPostAlert from './SubmitPostAlert'
 import { SET_SELECTED_POST } from '../../store/ui'
 import { CREATE_GROUP, SUBMIT_POST } from '../../graphql/mutations'
 
 const useStyles = makeStyles({
+  root: {
+    width: 520,
+  },
   title: {
-    fontSize: '25px',
-    font: 'League Spartan',
-    fontWeight: 'bold',
+    color: '#00CF6E',
+    fontSize: 30,
+    margin: 'auto',
+    paddingLeft: 20,
+  },
+  exit: {
+    color: '#00CF6E',
+    fontSize: 30,
+    float: 'right',
   },
   text: {
     marginTop: 20,
     fontSize: '20px',
   },
+  input: {
+    margin: '20px 0px 0px 0px',
+  },
   group: {
-    fontSize: '20px',
+    margin: '20px 0px',
+  },
+  groupInput: {
+    backgroundColor: 'rgb(160, 243, 204, 0.6)',
+    width: 180,
+    marginLeft: 20,
+  },
+  label: {
+    color: '#00CF6E',
   },
   button: {
-    backgroundColor: '#00CF6E',
+    backgroundColor: '#75E2AF',
+    fontSize: 20,
   },
 })
 
 const filter = createFilterOptions()
 
-function SubmitPostForm({ options = [], user }) {
+function SubmitPostForm({ options = [], user, setOpen }) {
   const classes = useStyles()
   const dispatch = useDispatch()
   const {
@@ -57,6 +77,7 @@ function SubmitPostForm({ options = [], user }) {
   const handleVisibilityChange = (event) => {
     setPrivacy(event.target.value)
   }
+
   const onSubmit = async (values) => {
     const { title, text, group } = values
     try {
@@ -107,10 +128,12 @@ function SubmitPostForm({ options = [], user }) {
   const [isPasting, setPasting] = React.useState(false)
 
   const handleTitleChange = (event) => {
+    event.persist()
     setValue({ ...value, title: event.target.value })
   }
 
   const handleContentChange = (event) => {
+    event.persist()
     const contentValue = event.target.value
     const validURL = /^(?:http(s)?:\/\/)([\w.-])+(?:[\w.-]+)+([\w\-._~:/?#[\]@!$&'()*+,;=.])+$/
     setValue({ ...value, content: contentValue })
@@ -141,43 +164,62 @@ function SubmitPostForm({ options = [], user }) {
           error={error}
         />
       )}
-      <Card>
-        <CardBody>
-          <InputBase
-            fullWidth
-            id="title"
-            className={classes.title}
-            placeholder="Enter Title Here"
-            value={value.title}
-            onChange={handleTitleChange}
-            name="title"
-            inputRef={register({
-              required: 'Title is required',
-            })}
-            required
-            error={errors.title}
-            helperText={errors.title && errors.title.message}
-          />
-          <Divider />
-          <InputBase
-            id="text"
-            placeholder="Input text to submit post"
-            value={value.content}
-            onChange={handleContentChange}
-            onPaste={handlePaste}
-            className={classes.text}
-            multiline
-            fullWidth
-            name="text"
-            inputRef={register({
-              required: 'Post is required',
-            })}
-            required
-            error={errors.text}
-          />
-          <Divider />
+      <CardBody className={classes.root}>
+        <Grid
+          container
+          direction="row"
+        >
+          <Typography className={classes.title} variant="body2">Create a Post</Typography>
+          <IconButton className={classes.exit} onClick={() => setOpen(false)}>X</IconButton>
+        </Grid>
+        <InputBase
+          className={classes.input}
+          fullWidth
+          id="title"
+          placeholder="Enter Title"
+          value={value.title}
+          onChange={(event) => { handleTitleChange(event) }}
+          name="title"
+          inputRef={register({
+            required: 'Title is required',
+          })}
+          required
+          error={errors.title}
+          helperText={errors.title && errors.title.message}
+        />
+        <Divider />
+        <InputBase
+          className={classes.input}
+          id="text"
+          placeholder="Enter text or URL here"
+          value={value.content}
+          onChange={(event) => { handleContentChange(event) }}
+          onPaste={handlePaste}
+          multiline
+          fullWidth
+          name="text"
+          inputRef={register({
+            required: 'Post is required',
+          })}
+          required
+          error={errors.text}
+        />
+        <Divider />
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+          className={classes.group}
+        >
+          <Typography>
+            Who can see your post
+          </Typography>
 
           <Autocomplete
+            variant="outlined"
+            size="small"
+            className={classes.groupInput}
             value={selectedGroup}
             onChange={(event, newValue) => {
               if (typeof newValue === 'string') {
@@ -235,6 +277,8 @@ function SubmitPostForm({ options = [], user }) {
             renderOption={(option) => option.title}
             renderInput={(params) => (
               <TextField
+                variant="outlined"
+                className={classes.label}
                 {...params}
                 label="Select a group"
                 name="group"
@@ -244,12 +288,7 @@ function SubmitPostForm({ options = [], user }) {
                 })}
               />
             )}
-            fullWidth
           />
-
-          <Typography>
-            You can create private or public groups of people to shared your information.
-          </Typography>
 
           {isNewGroup && (
             <FormControl component="fieldset">
@@ -264,33 +303,32 @@ function SubmitPostForm({ options = [], user }) {
               </RadioGroup>
             </FormControl>
           )}
-
-          <Grid
-            container
-            direction="row"
-            justify="flex-end"
-            alignItems="flex-end"
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="flex-end"
+          alignItems="flex-end"
+        >
+          <Button
+            id="submit-button"
+            type="submit"
+            variant="contained"
+            fullWidth
+            className={classes.button}
+            disabled={loadingGroup || loading}
           >
-            <Button
-              id="submit-button"
-              type="submit"
-              variant="contained"
-              size="lg"
-              className={classes.button}
-              disabled={loadingGroup || loading}
-            >
-              Submit
-              {(loading || loadingGroup) && <CircularProgress size={20} style={{ marginLeft: 5 }} />}
+            POST
+            {(loading || loadingGroup) && <CircularProgress size={20} style={{ marginLeft: 5 }} />}
 
-            </Button>
-          </Grid>
-
-        </CardBody>
-      </Card>
+          </Button>
+        </Grid>
+      </CardBody>
     </form>
   )
 }
 SubmitPostForm.propTypes = {
+  setOpen: PropTypes.func,
   options: PropTypes.array,
   user: PropTypes.object,
 }

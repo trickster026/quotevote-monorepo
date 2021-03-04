@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
+import Dialog from '@material-ui/core/Dialog'
 import { NavLink } from 'react-router-dom'
 import Tab from '@material-ui/core/Tab'
 import SvgIcon from '@material-ui/core/SvgIcon'
-import IconButton from '@material-ui/core/IconButton'
 import { Typography } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import withWidth from '@material-ui/core/withWidth'
@@ -20,10 +20,11 @@ import { ReactComponent as HomeSvg } from '../../assets/svg/Home.svg'
 import { ReactComponent as TrendingSvg } from '../../assets/svg/TrendingIcon.svg'
 import { ReactComponent as AddPostSvg } from '../../assets/svg/AddPost.svg'
 import voxPopIcon from '../../assets/img/voxPopIcon.jpg'
-import AvatarDisplay from '../Avatar'
+import AvatarPreview from '../Avatar'
 import ChatMenu from '../Chat/ChatMenu'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
+import SubmitPost from '../SubmitPost/SubmitPost'
 
 function MainNavBar(props) {
   const {
@@ -32,6 +33,7 @@ function MainNavBar(props) {
   const selectedPage = useSelector((state) => state.ui.selectedPage)
   const avatar = useSelector((state) => state.user.data.avatar)
   const name = useSelector((state) => state.user.data.name)
+  const [open, setOpen] = React.useState(false);
   const fontSize = width === 'md' ? 'medium' : 'large'
   const dispatch = useDispatch()
   const client = useApolloClient()
@@ -46,6 +48,7 @@ function MainNavBar(props) {
   const handleVoxPop = () => {
     dispatch(SET_SELECTED_PAGE(0))
   }
+
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Grid
@@ -105,26 +108,21 @@ function MainNavBar(props) {
               </NavLink>
             </Grid>
             <Grid item lg={4}>
-              <NavLink
-                data-testid="submit-post-button"
-                id="submit-post-button"
-                to="/hhsb/SubmitPost"
-              >
-                <Tab
-                  icon={(
-                    <SvgIcon
-                      component={AddPostSvg}
-                      fontSize={fontSize}
-                      viewBox="0 0 32 32"
-                    />
-                  )}
-                  aria-label="Post"
-                  onClick={() => {
-                    handleMenu(2)
-                  }}
-                  value="post"
-                />
-              </NavLink>
+              <Tab
+                icon={(
+                  <SvgIcon
+                    component={AddPostSvg}
+                    fontSize={fontSize}
+                    viewBox="0 0 32 32"
+                  />
+                )}
+                aria-label="Post"
+                onClick={() => {
+                  handleMenu(2)
+                  setOpen(true)
+                }}
+                value="post"
+              />
             </Grid>
           </Tabs>
         </Grid>
@@ -145,7 +143,7 @@ function MainNavBar(props) {
                     className={classes.avatarRoundedButton}
                   >
                     <Avatar>
-                      <AvatarDisplay height="50" width="50" {...avatar} />
+                      <AvatarPreview height="50" width="50" {...avatar} />
                     </Avatar>
                     <Typography variant="h6" className={classes.profileBlockName}>
                       {name}
@@ -153,9 +151,9 @@ function MainNavBar(props) {
                   </Button>
                 </Hidden>
                 <Hidden lgUp>
-                  <IconButton size="medium">
-                    <Avatar height="35" width="35" {...avatar} />
-                  </IconButton>
+                  <Avatar height="35" width="35">
+                    <AvatarPreview {...avatar} />
+                  </Avatar>
                 </Hidden>
               </NavLink>
             </Grid>
@@ -169,9 +167,11 @@ function MainNavBar(props) {
               <SettingsMenu fontSize={fontSize} />
             </Grid>
           </Grid>
-
         </Grid>
       </Grid>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <SubmitPost setOpen={setOpen}/>
+      </Dialog>
     </AppBar>
   )
 }

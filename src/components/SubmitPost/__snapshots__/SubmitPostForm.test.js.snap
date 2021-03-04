@@ -3,62 +3,91 @@
 exports[`SubmitPostForm test - renders correctly 1`] = `
 <form>
   <div
-    class="makeStyles-card-5"
+    class="makeStyles-cardBody-10 makeStyles-root-1"
   >
     <div
-      class="makeStyles-cardBody-22"
+      class="MuiGrid-root MuiGrid-container"
     >
-      <div
-        class="MuiInputBase-root makeStyles-title-1 MuiInputBase-fullWidth"
-        required=""
+      <p
+        class="MuiTypography-root makeStyles-title-2 MuiTypography-body2"
       >
-        <input
-          class="MuiInputBase-input"
-          id="title"
-          name="title"
-          placeholder="Enter Title Here"
-          required=""
-          type="text"
-          value=""
-        />
-      </div>
-      <hr
-        class="MuiDivider-root"
-      />
-      <div
-        class="MuiInputBase-root makeStyles-text-2 MuiInputBase-fullWidth MuiInputBase-multiline"
-        required=""
+        Create a Post
+      </p>
+      <button
+        class="MuiButtonBase-root MuiIconButton-root makeStyles-exit-3"
+        tabindex="0"
+        type="button"
       >
-        <textarea
-          class="MuiInputBase-input MuiInputBase-inputMultiline"
-          id="text"
-          name="text"
-          placeholder="Input text to submit post"
-          required=""
-          rows="1"
-          style="height: 0px; overflow: hidden;"
+        <span
+          class="MuiIconButton-label"
+        >
+          X
+        </span>
+        <span
+          class="MuiTouchRipple-root"
         />
-        <textarea
-          aria-hidden="true"
-          class="MuiInputBase-input MuiInputBase-inputMultiline"
-          readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
-          tabindex="-1"
-        />
-      </div>
-      <hr
-        class="MuiDivider-root"
+      </button>
+    </div>
+    <div
+      class="MuiInputBase-root makeStyles-input-5 MuiInputBase-fullWidth"
+      required=""
+    >
+      <input
+        class="MuiInputBase-input"
+        id="title"
+        name="title"
+        placeholder="Enter Title"
+        required=""
+        type="text"
+        value=""
       />
+    </div>
+    <hr
+      class="MuiDivider-root"
+    />
+    <div
+      class="MuiInputBase-root makeStyles-input-5 MuiInputBase-fullWidth MuiInputBase-multiline"
+      required=""
+    >
+      <textarea
+        class="MuiInputBase-input MuiInputBase-inputMultiline"
+        id="text"
+        name="text"
+        placeholder="Enter text or URL here"
+        required=""
+        rows="1"
+        style="height: 0px; overflow: hidden;"
+      />
+      <textarea
+        aria-hidden="true"
+        class="MuiInputBase-input MuiInputBase-inputMultiline"
+        readonly=""
+        style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); width: 100%;"
+        tabindex="-1"
+      />
+    </div>
+    <hr
+      class="MuiDivider-root"
+    />
+    <div
+      class="MuiGrid-root makeStyles-group-6 MuiGrid-container MuiGrid-align-items-xs-center"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1"
+      >
+        Who can see your post
+      </p>
       <div
         aria-expanded="false"
-        class="MuiAutocomplete-root MuiAutocomplete-fullWidth MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
+        class="MuiAutocomplete-root makeStyles-groupInput-7 MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon"
         role="combobox"
+        variant="outlined"
       >
         <div
-          class="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
+          class="MuiFormControl-root MuiTextField-root makeStyles-label-8 MuiFormControl-fullWidth"
         >
           <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
+            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined"
             data-shrink="false"
             for="group"
             id="group-label"
@@ -66,14 +95,14 @@ exports[`SubmitPostForm test - renders correctly 1`] = `
             Select a group
           </label>
           <div
-            class="MuiInputBase-root MuiInput-root MuiInput-underline MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInput-fullWidth MuiInputBase-formControl MuiInput-formControl MuiInputBase-adornedEnd"
+            class="MuiInputBase-root MuiOutlinedInput-root MuiAutocomplete-inputRoot MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd MuiOutlinedInput-adornedEnd MuiInputBase-marginDense MuiOutlinedInput-marginDense"
           >
             <input
               aria-autocomplete="list"
               aria-invalid="false"
               autocapitalize="none"
               autocomplete="off"
-              class="MuiInputBase-input MuiInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd"
+              class="MuiInputBase-input MuiOutlinedInput-input MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd MuiOutlinedInput-inputAdornedEnd MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
               id="group"
               name="group"
               spellcheck="false"
@@ -134,33 +163,40 @@ exports[`SubmitPostForm test - renders correctly 1`] = `
                 />
               </button>
             </div>
+            <fieldset
+              aria-hidden="true"
+              class="PrivateNotchedOutline-root-19 MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                class="PrivateNotchedOutline-legendLabelled-21"
+              >
+                <span>
+                  Select a group
+                </span>
+              </legend>
+            </fieldset>
           </div>
         </div>
       </div>
-      <p
-        class="MuiTypography-root MuiTypography-body1"
+    </div>
+    <div
+      class="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-flex-end MuiGrid-justify-xs-flex-end"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-23 makeStyles-fullWidth-24 makeStyles-button-9"
+        id="submit-button"
+        tabindex="0"
+        type="submit"
       >
-        You can create private or public groups of people to shared your information.
-      </p>
-      <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-flex-end MuiGrid-justify-xs-flex-end"
-      >
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-31 makeStyles-lg-54 makeStyles-button-4"
-          id="submit-button"
-          tabindex="0"
-          type="submit"
+        <span
+          class="MuiButton-label"
         >
-          <span
-            class="MuiButton-label"
-          >
-            Submit
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </button>
-      </div>
+          POST
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
     </div>
   </div>
 </form>

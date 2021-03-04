@@ -11,12 +11,12 @@ import Avatar from 'components/Avatar'
   * @param {Object[]} numFollowers
   * @param {Object[]} numFollowing
   * @param {string} id
-  * @param {boolean} boolFol - whether or not logged in user follows this profile
+  * @param {boolean} isFollowing
   * @returns {JSX.Element}
 */
 
 function UserFollowDisplay({
-  avatar, username, numFollowers, numFollowing, id, boolFol,
+  avatar, username, numFollowers, numFollowing, id, isFollowing,
 }) {
   return (
     <Grid
@@ -44,17 +44,19 @@ function UserFollowDisplay({
       </Grid>
       <Grid item sm={3}>
         {
-          boolFol ? (
+          isFollowing ? (
             <FollowButton
-              isFollowing={boolFol}
+              isFollowing={isFollowing}
               profileUserId={id}
+              username={username}
             >
               Follow
             </FollowButton>
           ) : (
             <FollowButton
-              isFollowing={boolFol}
+              isFollowing={isFollowing}
               profileUserId={id}
+              username={username}
             >
               Unfollow
             </FollowButton>
@@ -71,7 +73,7 @@ UserFollowDisplay.propTypes = {
   numFollowers: PropTypes.number.isRequired,
   numFollowing: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
-  boolFol: PropTypes.bool.isRequired,
+  isFollowing: PropTypes.bool.isRequired,
 }
 
 export default UserFollowDisplay
