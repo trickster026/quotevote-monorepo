@@ -32,6 +32,7 @@ class SelectionPopover extends Component {
       popoverBox: {
         top: 0,
         left: 0,
+        right: 0,
       },
     }
 
@@ -52,12 +53,6 @@ class SelectionPopover extends Component {
     target.addEventListener('selectstart', this.handleMobileSelection)
     target.addEventListener('pointerup', this.handleRemoveInterval)
     target.addEventListener('pointermove', this.selectionChange)
-
-    // if (isMobile) {
-    //   document.oncontextmenu = function(event) {
-    //     return false
-    //   }
-    // }
   }
 
   componentWillUnmount() {
@@ -71,12 +66,11 @@ class SelectionPopover extends Component {
   render() {
     const { showPopover, children, style } = this.props // eslint-disable-line no-unused-vars
     const {
-      popoverBox: { top, left },
+      popoverBox: { top, left, right },
     } = this.state
-
     const visibility = showPopover ? 'visible' : 'hidden'
     const display = showPopover ? 'inline-block' : 'none'
-
+    
     return (
       <div
         id="selectionPopover"
@@ -88,6 +82,7 @@ class SelectionPopover extends Component {
           position: 'absolute',
           top,
           left,
+          right,
           zIndex: '1',
           ...style,
         }}
@@ -108,12 +103,6 @@ class SelectionPopover extends Component {
     this.interval = null
   };
 
-  handleMobileSelection = () => {
-    // if (isMobile) {
-    //   this.interval = setInterval(this.selectionChange, 10)
-    // }
-  };
-
   // eslint-disable-next-line consistent-return
   selectionChange = () => {
     const selection = window.getSelection()
@@ -129,26 +118,45 @@ class SelectionPopover extends Component {
     if (!selectionExists()) {
       return
     }
+    //console.log(window.innerWidth)
     const selectionBox = selection.getRangeAt(0).getBoundingClientRect()
     // eslint-disable-next-line react/no-string-refs
     const popoverBox = this.refs.selectionPopover.getBoundingClientRect()
+    let halfWindowWidth = window.innerWidth / 2
     const targetBox = document
       .querySelector('[data-selectable]')
       .getBoundingClientRect()
-    this.setState({
-      popoverBox: {
-        top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
-        left:
-          selectionBox.width / 2 -
-          popoverBox.width / 2 +
-          (selectionBox.left - targetBox.left),
-      },
-    })
+
+      if (window.innerWidth > 960) {
+        this.setState({
+          popoverBox: {
+            top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
+            left:
+              selectionBox.width / 2 -
+              popoverBox.width / 2 +
+              (selectionBox.left - targetBox.left),
+           },
+        })
+      } else if (window.innerWidth > 500 && window.innerWidth <= 960 && selectionBox.x > halfWindowWidth) {
+        this.setState({
+          popoverBox: {
+            top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
+            right:
+              (window.innerWidth - selectionBox.x) + 285
+          }
+        })
+      } else {
+        this.setState({
+          popoverBox: {
+            top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
+          }
+        })
+    } 
   };
 
   handleClickOutside = () => {
     this.props.onDeselect()
-  };
+  }
 }
 
 SelectionPopover.propTypes = {
@@ -162,6 +170,7 @@ SelectionPopover.propTypes = {
 
 SelectionPopover.defaultProps = {
   topOffset: 30,
+
   // eslint-disable-next-line react/default-props-match-prop-types
   showPopover: false,
 }
