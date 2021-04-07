@@ -38,14 +38,30 @@ const pagesHeaderStyle = (theme) => ({
     padding: '10px 0',
     transition: 'all 150ms ease 0s',
     minHeight: '50px',
-    display: 'block',
+    display: 'flex',
+  },
+  buttonDisplay: {
+    display: 'flex',
+    direction: 'column',
+  },
+  display: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  buttonSpacing: {
+    '& > *': {
+      margin: ((props) => props.isMobile ? theme.spacing(1) : theme.spacing(2)),
+    },
   },
   container: {
     ...container,
     minHeight: '50px',
   },
   flex: {
-    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      flex: 1,
+    },
   },
   title: {
     ...defaultFont,
@@ -110,6 +126,19 @@ const pagesHeaderStyle = (theme) => ({
       zIndex: '999',
       width: '100%',
       paddingRight: '15px',
+      marginLeft: 0,
+    },
+  },
+  listItemTextRequestInvite: {
+    backgroundColor: '#00cf6e',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#00cf6e',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '35px',
+      width: 100,
+      fontSize: 10,
     },
   },
   navLink: {
@@ -119,14 +148,19 @@ const pagesHeaderStyle = (theme) => ({
     fontSize: '12px',
     // textTransform: 'uppercase',
     borderRadius: '3px',
+    width: 80,
     lineHeight: '20px',
     position: 'relative',
     display: 'block',
+    textAlign: 'center',
     padding: '10px 15px',
     textDecoration: 'none',
     '&:hover,&:focus': {
       color: whiteColor,
       background: `rgba(${hexToRgb(grayColor[17])}, 0.2)`,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
     },
   },
   navLinkAccess: {
@@ -174,23 +208,11 @@ const pagesHeaderStyle = (theme) => ({
     flex: 'none',
     padding: '0',
     minWidth: '0',
-    marginLeft: 10,
     marginTop: 5,
     width: 45,
     display: 'inline-block',
     position: 'relative',
     whiteSpace: 'nowrap',
-  },
-  listItemTextRequestInvite: {
-    textTransform: 'none',
-    backgroundColor: '#00cf6e',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: '#00cf6e',
-    },
-    whiteSpace: 'nowrap',
-    marginLeft: 5,
-    marginRight: 5,
   },
   listItemTextAccess: {
     flex: 'none',

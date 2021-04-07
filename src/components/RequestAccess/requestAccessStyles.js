@@ -141,6 +141,11 @@ const requestAccessStyles = (theme) => ({
       marginTop: 25,
     },
   },
+  inputContainer: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
 })
 
 export default requestAccessStyles

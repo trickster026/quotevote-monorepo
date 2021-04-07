@@ -7,6 +7,11 @@ const landingPageStyle = (theme) => ({
   container: {
     ...container,
     zIndex: '4',
+    minWidth: '100%',
+    minHeight: '70vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   cardTitle: {
     ...cardTitle,
@@ -24,6 +29,25 @@ const landingPageStyle = (theme) => ({
     },
     marginLeft: '5px',
     marginRight: '5px',
+  },
+  listItem: {
+    position: 'relative',
+    display: 'block',
+    width: 'auto',
+    marginLeft: 5,
+    padding: '0',
+  },
+  listItemTextRequestInvite: {
+    backgroundColor: '#00cf6e',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#00cf6e',
+    },
+    width: 200,
+    fontSize: 15,
+    whiteSpace: 'nowrap',
+    marginLeft: 5,
+    marginRight: 5,
   },
   inputAdornment: {
     marginRight: '18px',
@@ -45,6 +69,7 @@ const landingPageStyle = (theme) => ({
     objectFit: 'contain',
     font: 'Montserrat',
     fontSize: '34px',
+    marginTop: 30,
     fontWeight: 'bold',
     letterspacing: '0.25px',
     [theme.breakpoints.down('sm')]: {
@@ -146,6 +171,61 @@ const landingPageStyle = (theme) => ({
       marginTop: 20,
       marginLeft: ((props) => props.isMobile ? 25 : 200),
       width: ((props) => props.isMobile ? 100 : 200),
+    },
+  },
+  select: {
+    fontSize: 25,
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: 60,
+    },
+  },
+  plans: {
+    paddingLeft: 50,
+
+  },
+  planAvatar: {
+    height: 300,
+    marginBottom: 20,
+  },
+  planButton: {
+    color: '#FFF',
+    borderColor: '#FFF',
+    width: 100,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 20,
+      width: '80%',
+    },
+  },
+  inputContainer: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
+  input: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    height: 45,
+    width: 250,
+    marginRight: 20,
+    paddingLeft: 20,
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 20,
+      marginRight: 0,
+    },
+  },
+  requestAccessBtn: {
+    textTransform: 'none',
+    backgroundColor: '#00cf6e',
+    color: 'white',
+    width: 150,
+    height: 45,
+    fontSize: 16,
+    marginRight: 5,
+    '&:hover': {
+      backgroundColor: '#00cf6e',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 250,
     },
   },
 })

@@ -2,6 +2,8 @@ import React from "react";
 import cx from "classnames";
 import PropTypes from "prop-types";
 import { NavLink, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import { SET_SELECTED_PLAN } from 'store/ui'
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +22,7 @@ import Menu from "@material-ui/icons/Menu";
 // core components
 import Button from "mui-pro/CustomButtons/Button";
 
+import SelectPlansButton from '../../components/CustomButtons/SelectPlansButton'
 import styles from "assets/jss/material-dashboard-pro-react/components/authNavbarStyle";
 import voxPopIcon from "../../assets/img/VoxPopLogo.svg";
 
@@ -30,6 +33,8 @@ export default function AuthNavbar(props) {
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
+  const dispatch = useDispatch()
+  const selectedPlan = useSelector((state) => state.ui.selectedPlan)
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => window.location.href.indexOf(routeName) > -1;
   const classes = useStyles();
@@ -39,9 +44,52 @@ export default function AuthNavbar(props) {
   });
   const history = useHistory()
 
+  const isPersonal = selectedPlan === 'personal'
+  const isBusiness = selectedPlan === 'business'
+  const isInvestors = selectedPlan === 'investors'
+
+  const setSelectedPlan = (type) => {
+    dispatch(SET_SELECTED_PLAN(type))
+  }
+
+  const planButtons = (
+    <div>
+    {(activeRoute("/auth/plans")) && (
+    <Hidden smDown>
+      <div className={classes.buttonSpacing}>
+        <SelectPlansButton
+          variant={isPersonal ? 'contained' : 'outlined'}
+          color="secondary"
+          onClick={() => setSelectedPlan('personal')}
+          style={{ background: isPersonal ? '#1D6CE7' : '' }}
+        >
+          Personal
+        </SelectPlansButton>
+        <SelectPlansButton
+          variant={isBusiness ? 'contained' : 'outlined'}
+          color="secondary"
+          onClick={() => setSelectedPlan('business')}
+          style={{ background: isBusiness ? '#791E89' : '' }}
+        >
+          Business
+        </SelectPlansButton>
+        <SelectPlansButton
+          variant={isInvestors ? 'contained' : 'outlined'}
+          color="secondary"
+          onClick={() => setSelectedPlan('investors')}
+          style={{ background: isInvestors ? '#E91E63' : '' }}
+        >
+          Investors
+        </SelectPlansButton>
+      </div>
+    </Hidden>
+    )}
+    </div>
+  )
+
   const list = (
     <List className={classes.list}>
-      {activeRoute("/auth/request-access") && (
+      {(activeRoute("/auth/request-access")) && (
         <ListItem className={classes.listItem}>
           <NavLink
             to="/auth/landing-page"
@@ -56,6 +104,62 @@ export default function AuthNavbar(props) {
             />
           </NavLink>
         </ListItem>
+      )}
+      {(activeRoute("/auth/learn-more")) && (  
+        <div className={classes.buttonDisplay}>
+          <ListItem className={classes.listItem}>
+            <Button
+              variant="contained"
+              className={classes.listItemTextRequestInvite}
+              type="submit"
+              onClick={() => history.push('/auth/request-access')}
+            >
+              Request Invite
+            </Button>
+          </ListItem>
+          <ListItem className={classes.listItem}>
+            <NavLink
+              to="/auth/login"
+              className={cx(classes.navLink, {
+                [classes.navLinkActive]: activeRoute("/auth/login")
+              })}
+            >
+              <ListItemText
+                primary="Login"
+                disableTypography
+                className={classes.listItemText}
+              />
+            </NavLink>
+          </ListItem>
+        </div>
+      )}
+      {(activeRoute("/auth/plans")) && (  
+        <div className={classes.buttonDisplay}>
+          <ListItem className={classes.listItem}>
+            <Button
+              variant="contained"
+              className={classes.listItemTextRequestInvite}
+              type="submit"
+              onClick={() => history.push('/auth/request-access')}
+            >
+              Request Invite
+            </Button>
+          </ListItem>
+          <ListItem className={classes.listItem}>
+            <NavLink
+              to="/auth/login"
+              className={cx(classes.navLink, {
+                [classes.navLinkActive]: activeRoute("/auth/login")
+              })}
+            >
+              <ListItemText
+                primary="Login"
+                disableTypography
+                className={classes.listItemText}
+              />
+            </NavLink>
+          </ListItem>
+        </div>
       )}
       {activeRoute("/auth/login") && (
         <React.Fragment>
@@ -78,19 +182,6 @@ export default function AuthNavbar(props) {
 
       {activeRoute("/auth/landing-page") && (
         <React.Fragment>
-          <Hidden mdDown>
-          <ListItem className={classes.listItem}>
-              <Button
-                variant="contained"
-                className={classes.listItemTextRequestInvite}
-                type="submit"
-                fullWidth
-                onClick={() => history.push('/auth/request-access')}
-              >
-                Request Invite
-              </Button>
-          </ListItem>
-          </Hidden>
           <ListItem className={classes.listItem}>
             <NavLink
               to="/auth/login"
@@ -145,7 +236,7 @@ export default function AuthNavbar(props) {
   );
   return (
     <AppBar position="static" className={classes.appBar + appBarClasses}>
-      <Toolbar className={classes.container}>
+      <Toolbar className={classes.display}>
         <Hidden smDown>
           <div className={classes.flex}>
             <IconButton color="primary" aria-label="upload picture" component="span">
@@ -160,6 +251,7 @@ export default function AuthNavbar(props) {
             </IconButton>
           </div>
         </Hidden>
+        {planButtons}
        {list}
       </Toolbar>
     </AppBar>
