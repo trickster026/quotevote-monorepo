@@ -118,7 +118,6 @@ class SelectionPopover extends Component {
     if (!selectionExists()) {
       return
     }
-    // console.log(window.innerWidth)
     const selectionBox = selection.getRangeAt(0).getBoundingClientRect()
     // eslint-disable-next-line react/no-string-refs
     const popoverBox = this.refs.selectionPopover.getBoundingClientRect()
@@ -132,9 +131,9 @@ class SelectionPopover extends Component {
         popoverBox: {
           top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
           left:
-              selectionBox.width / 2 -
-              popoverBox.width / 2 +
-              (selectionBox.left - targetBox.left),
+            selectionBox.width / 2 -
+            popoverBox.width / 2 +
+            (selectionBox.left - targetBox.left),
         },
       })
     } else if (window.innerWidth > 500 && window.innerWidth <= 960 && selectionBox.x > halfWindowWidth) {
@@ -142,7 +141,7 @@ class SelectionPopover extends Component {
         popoverBox: {
           top: selectionBox.top - 80 - targetBox.top - this.props.topOffset,
           right:
-              (window.innerWidth - selectionBox.x) + 285,
+            (window.innerWidth - selectionBox.x) + 285,
         },
       })
     } else {
@@ -152,7 +151,7 @@ class SelectionPopover extends Component {
         },
       })
     }
-  };
+  }
 
   handleClickOutside = () => {
     this.props.onDeselect()
