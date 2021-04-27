@@ -57,6 +57,7 @@ function PostChatReactions(props) {
   const parsedTime = parseCommentDate(created)
   const [addReaction] = useMutation(ADD_MESSAGE_REACTION, {
     onError: (err) => {
+      // eslint-disable-next-line no-console
       console.log(err)
     },
     refetchQueries: [{
@@ -69,6 +70,7 @@ function PostChatReactions(props) {
 
   const [updateReaction] = useMutation(UPDATE_MESSAGE_REACTION, {
     onError: (err) => {
+      // eslint-disable-next-line no-console
       console.log(err)
     },
     refetchQueries: [{

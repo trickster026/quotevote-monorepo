@@ -106,6 +106,10 @@ export const GET_POST = gql`
         messageType
         created
       }
+      postUrl {
+        _id
+        url
+      }
     }
   }
 `
@@ -225,6 +229,9 @@ export const GET_TOP_POSTS = gql`
         url
         bookmarkedBy
         created
+        postUrl {
+          url
+        }
         creator {
           name
           username
@@ -308,6 +315,9 @@ query activities(
           username
           avatar
         }
+        postUrl {
+          url
+        }
       }
       voteId
       vote {
@@ -378,7 +388,9 @@ export const GET_NOTIFICATIONS = gql`
       notificationType
       post {
         _id
-        url
+        postUrl {
+          url
+        }
       }
     }
   }

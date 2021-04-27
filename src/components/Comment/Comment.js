@@ -92,7 +92,7 @@ function Comment({ comment, postUrl, selected }) {
         <p>{content}</p>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton className={classes.expand} onClick={console.log('Hey')}>
+        <IconButton className={classes.expand}>
           <InsertEmoticon />
         </IconButton>
         <IconButton onClick={handleCopy}>

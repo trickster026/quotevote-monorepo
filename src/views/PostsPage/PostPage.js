@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
 import { useSelector } from 'react-redux'
-import { isEmpty, get } from 'lodash'
+import { isEmpty } from 'lodash'
 import Post from '../../components/Post/Post'
 import PostActionList from '../../components/PostActions/PostActionList'
 import PostSkeleton from '../../components/Post/PostSkeleton'
@@ -17,36 +18,45 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-function PostPage() {
+function PostPage({ postId }) {
   const classes = useStyles()
   const [postHeight, setPostHeight] = useState()
+
+  const idSelector = useSelector((state) => state.ui.selectedPost.id)
+  const user = useSelector((state) => state.user.data)
+
+  const {
+    loading: loadingPost,
+    error: postError,
+    data: postData,
+    refetch: refetchPost,
+  } = useQuery(GET_POST, {
+    variables: { postId },
+  })
+
+  const { post } = !loadingPost && postData
 
   // To reset the scroll when the selected post changes
   useEffect(() => {
     window.scrollTo(0, 0)
-    setPostHeight(document.getElementById('post').clientHeight)
-  }, [])
+    if (post) {
+      setPostHeight(document.getElementById('post').clientHeight)
+    }
+  }, [post])
 
-  const postId = useSelector((state) => state.ui.selectedPost.id)
-
-  const { loading: loadingPost, error: postError, data: postData } = useQuery(GET_POST, {
-    variables: { postId },
-    fetchPolicy: 'cache-and-network',
-  })
-
-  const user = useSelector((state) => state.user.data)
-
-  const post = !loadingPost && get(postData, 'post', false)
+  useEffect(() => {
+    refetchPost({ postId: idSelector })
+  }, [idSelector, refetchPost])
 
   let messageRoomId
   let title
   if (post) {
-    messageRoomId = post.messageRoom._id
-    title = post.title
+    messageRoomId = postData.post.messageRoom._id
+    title = postData.post.title
   }
 
   const {
-    loading: loadingMessages, data: messageData, refetch,
+    loading: loadingMessages, data: messageData, refetch: refetchMessages,
   } = useQuery(GET_ROOM_MESSAGES, {
     skip: !messageRoomId,
     variables: { messageRoomId },
@@ -58,7 +68,7 @@ function PostPage() {
       skip: !messageRoomId,
       variables: { messageRoomId },
       onSubscriptionData: async () => {
-        await refetch()
+        await refetchMessages()
       },
     },
   )
@@ -68,9 +78,11 @@ function PostPage() {
   const { messages } = (!loadingMessages && messageData) || []
 
   const {
-    comments, votes, quotes, url,
+    comments, votes, quotes, postUrl,
   } = post || { comments: [], votes: [], quotes: [] }
   let postActions = []
+
+  const { url } = !loadingPost && postUrl
 
   if (!isEmpty(comments)) {
     postActions = postActions.concat(comments)
@@ -107,6 +119,10 @@ function PostPage() {
       </Grid>
     </Grid>
   )
+}
+
+PostPage.propTypes = {
+  postId: PropTypes.string,
 }
 
 export default PostPage

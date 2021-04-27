@@ -39,7 +39,8 @@ function CommentReactions(props) {
   const { actionId, reactions } = props
   const [addReaction] = useMutation(ADD_ACTION_REACTION, {
     onError: (err) => {
-      console.log(err) // eslint-disable-line
+      // eslint-disable-next-line no-console
+      console.log(err)
     },
     refetchQueries: [{
       query: GET_ACTION_REACTIONS,
@@ -51,7 +52,8 @@ function CommentReactions(props) {
 
   const [updateReaction] = useMutation(UPDATE_ACTION_REACTION, {
     onError: (err) => {
-      console.log(err) // eslint-disable-line
+      // eslint-disable-next-line no-console
+      console.log(err)
     },
     refetchQueries: [{
       query: GET_ACTION_REACTIONS,

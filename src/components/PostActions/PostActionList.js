@@ -12,7 +12,10 @@ import PostActionCard from './PostActionCard'
 import { SET_FOCUSED_COMMENT, SET_SHARED_COMMENT } from '../../store/ui'
 
 function PostActionList({
-  postActions, loading, postUrl, postHeight,
+  postActions,
+  loading,
+  postUrl,
+  postHeight,
 }) {
   const location = useLocation()
   const { hash } = location
@@ -22,7 +25,6 @@ function PostActionList({
       dispatch(SET_FOCUSED_COMMENT(null))
       dispatch(SET_SHARED_COMMENT(null))
     }
-
     if (!loading && postActions.length && hash) {
       const element = document.getElementById(hash)
       element.scrollIntoView({ behavior: 'smooth' })

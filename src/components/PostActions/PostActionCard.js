@@ -123,7 +123,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
 
   return (
     <Card
-      onClick={handleClick}
+      onClick={() => handleClick()}
       className={selected ? classes.selectedRoot : classes.root}
     >
       <IconButton
