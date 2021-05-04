@@ -59,7 +59,7 @@ function MainNavBar(props) {
         wrap="nowrap"
       >
         <Grid item>
-          <NavLink to="/hhsb/Home" onClick={handleVoxPop}>
+          <NavLink to="/Home" onClick={handleVoxPop}>
             <img alt="Quote" src={QuoteIcon} className={classes.quote} />
           </NavLink>
         </Grid>
@@ -71,7 +71,7 @@ function MainNavBar(props) {
             textColor="secondary"
           >
             <Grid item lg={4}>
-              <NavLink to="/hhsb/Home">
+              <NavLink to="/Home">
                 <Tab
                   icon={(
                     <SvgIcon
@@ -90,7 +90,7 @@ function MainNavBar(props) {
               </NavLink>
             </Grid>
             <Grid item lg={4}>
-              <NavLink to="/hhsb/TrendingContent">
+              <NavLink to="/TrendingContent">
                 <Tab
                   icon={(
                     <SvgIcon
@@ -134,7 +134,7 @@ function MainNavBar(props) {
             alignItems="center"
           >
             <Grid item>
-              <NavLink to="/hhsb/Profile">
+              <NavLink to="/Profile">
                 <Hidden mdDown>
                   <Button
                     aria-label="Profile"

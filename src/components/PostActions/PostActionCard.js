@@ -94,7 +94,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
   }
 
   const handleRedirectToProfile = () => {
-    history.push(`/hhsb/Profile/${username}`)
+    history.push(`/Profile/${username}`)
   }
 
   if (voteType) {

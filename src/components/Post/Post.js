@@ -58,7 +58,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-function Post({ post, user }) {
+function Post({ post, user, postHeight }) {
   const classes = useStyles()
   const {
     title, creator, upvotes, downvotes, created, _id, userId,
@@ -179,7 +179,7 @@ function Post({ post, user }) {
       startWordIndex: startIndex,
       endWordIndex: endIndex,
       postId: _id,
-      url: post.url,
+      url: post.postUrl.url,
       // hashtags,
       quote: commentWithQuote ? quoteText : '',
     }
@@ -262,7 +262,7 @@ function Post({ post, user }) {
   }
 
   const handleRedirectToProfile = (username) => {
-    history.push(`/hhsb/Profile/${username}`)
+    history.push(`/Profile/${username}`)
   }
   const pointsHeader = (
     <div className={classes.points}>
@@ -288,8 +288,14 @@ function Post({ post, user }) {
       </IconButton>
     </div>
   )
+
   return (
-    <Card>
+    <Card
+      style={{
+        height: postHeight >= 742 ? '83vh' : 'auto',
+        overflow: 'auto',
+      }}
+    >
       <CardHeader
         className={classes.header1}
         title={cardTitle}
@@ -341,6 +347,7 @@ function Post({ post, user }) {
 Post.propTypes = {
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  postHeight: PropTypes.number,
 }
 
 export default Post

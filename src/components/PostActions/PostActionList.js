@@ -15,7 +15,6 @@ function PostActionList({
   postActions,
   loading,
   postUrl,
-  postHeight,
 }) {
   const location = useLocation()
   const { hash } = location
@@ -52,8 +51,7 @@ function PostActionList({
       {!isEmpty(postActions) ? (
         <List
           style={{
-            height: postHeight > 639 ? postHeight - 100 : '75vh',
-            // height: postActions.length > 2 ? '75vh' : 'auto',
+            height: postActions.length > 2 ? '75vh' : 'auto',
             marginTop: 5,
             width: '100%',
             position: 'relative',
@@ -85,7 +83,6 @@ PostActionList.propTypes = {
   postActions: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   postUrl: PropTypes.string,
-  postHeight: PropTypes.number,
 }
 
 export default PostActionList
