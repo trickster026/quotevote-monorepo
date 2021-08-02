@@ -8,6 +8,7 @@ import LogoutPage from './components/LogoutPage'
 import { ReactComponent as HomeSvg } from './assets/svg/Home.svg'
 import ProfileAvatar from './components/Profile/ProfileAvatar'
 import { ReactComponent as TrendingSvg } from './assets/svg/TrendingIcon.svg'
+import { ReactComponent as AddPostSvg } from './assets/svg/AddPost.svg'
 import { ReactComponent as NotificationsActiveSvg } from './assets/svg/NotificationsActive.svg'
 import NotificationMobileView from './components/Notifications/NotificationMobileView'
 
@@ -31,6 +32,7 @@ const routes = [
   {
     path: 'post',
     name: 'Posts',
+    icon: AddPostSvg,
     component: PostPage,
     layout: '/',
   },
