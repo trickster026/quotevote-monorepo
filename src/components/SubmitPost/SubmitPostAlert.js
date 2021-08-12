@@ -25,8 +25,8 @@ function SubmitPostAlert({
   const classes = useStyles()
   const history = useHistory()
   const DOMAIN = process.env.REACT_APP_DOMAIN || 'localhost:3000'
-  const handleCopy = () => {
-    copy(shareableLink)
+  const handleCopy = (shareablePostLink) => {
+    copy(shareablePostLink)
   }
 
   async function goToPost() {
