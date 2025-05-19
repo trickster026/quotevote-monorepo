@@ -1,10 +1,17 @@
-# VoxPOP
+# Quote Vote
 
-VoxPOP was built to enable anyone, anywhere to create a forum where they can share their
-knowledge and learn from others. The existing platforms all had problems, whether that
-was a system that could be gamed to exclude the people most in need of a place to have
-their voices heard, shady data collection practices, geographic limitations, or all of the
-above.
+Quote.Vote is a text-first platform for public dialogue,  
+where every post becomes a space for quoting, reflecting, and voting on ideas.  
+
+Contributors from around the world helped build this civic engagement tool—  
+without ads or algorithms, we can have transparent conversation.  
+
+Features such as targeted feedback via text highlights, public chat threads,  
+and voting mechanics support thoughtful interaction over reactive engagement.  
+
+Originally prototyped as Scoreboard, the project is now in preparation for open-source  
+and our team welcomes remix, reuse, and contributions from developers, designers,  
+and democratic technologists alike.
 
 ## Table of Contents
 - [Requirements](#requirements)
@@ -20,11 +27,11 @@ above.
 
 
 ## Installation
- Ensure the backend is running. Follow the [instructions.](https://github.com/scoreboardinc/voxpop-GraphQL-API/blob/master/README.md)
+ Ensure the backend is running. Follow the [instructions.](https://github.com/QuoteVote/quotevote-react/blob/master/README.md)
 
 2. Clone the repository
 
-    `git clone https://github.com/scoreboardinc/voxpop-React.git && cd voxpop-React`
+    `git clone https://github.com/QuoteVote/quotevote-react.git && cd quotevote-react`
 3. Create a `.env` file and add the following:
     ```
     NODE_ENV=dev
@@ -81,9 +88,9 @@ above.
 ## Contributing
 
 1. Clone the repo, this pull our dev branch. it's our default branch  
-  `git clone https://github.com/scoreboardinc/voxpop-React.git`
+  `git clone https://github.com/QuoteVote/quotevote-react.git`
 2. Install node_modules  
-`cd voxpop_react && npm i`
+`cd quotevote_react && npm i`
 3. Check out a new branch, with `dev-` prefix  
   `git checkout -b dev-feature`  
   for example `dev-eslint-fix`
@@ -99,7 +106,7 @@ Rest of git message
   * Make the adjustments needed so there is no warnings or errors.
   * Ensure you can build without any problems.  
     `npm run build`
-7. [Squash your commits](https://github.com/scoreboardinc/voxpop-React/wiki/Squashing-Commits) so there is only one.
+7. [Squash your commits](https://github.com/QuoteVote/quotevote-react/wiki/Squashing-Commits) so there is only one.
 8. Create your pull request with a descriptive title.  
 See the deployed version on the netlify preview build. Wait for code review, feedback, or approval.
 
@@ -120,4 +127,4 @@ See the deployed version on the netlify preview build. Wait for code review, fee
 - If you want to make queries or mutation put them in the src/graphql/mutation.js  or src/graphql/query.js
 
 ### Use Our Wiki
-Please use and contribute to the wiki: [voxpop-React Wiki](https://github.com/scoreboardinc/voxpop-React/wiki)
+Please use and contribute to the wiki: [voxpop-React Wiki](https://github.com/QuoteVote/quotevote-react/wiki)
