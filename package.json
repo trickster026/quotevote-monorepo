@@ -1,7 +1,13 @@
 {
-  "name": "voxpop-react",
-  "version": "0.0.9",
+  "license": "AGPL-3.0-or-later"
+}
+
+
+{
+  "name": "quotevote-react",
+  "version": "1.0.0",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@apollo/client": "^3.3.14",
     "@apollo/react-components": "^4.0.0",
