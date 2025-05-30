@@ -32,7 +32,8 @@ and democratic technologists alike.
 
 
 ## Installation
- Ensure the backend is running. Follow the [instructions.](https://github.com/QuoteVote/quotevote-react/blob/master/README.md)
+ Ensure the backend is running. Follow the [instructions.](https://github.com/QuoteVote/quotevote-api/blob/dev/README.md)
+ 
 
 2. Clone the repository
 
