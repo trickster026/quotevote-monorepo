@@ -1,5 +1,3 @@
-// This is to test Cursor push
-
 import React, { useEffect, useState } from 'react'
 import { GET_SEARCH_KEY } from 'components/SearchBar'
 import PropTypes from 'prop-types'
@@ -71,7 +69,7 @@ export default function Activity({ showSubHeader = true, userId = '' }) {
     limit,
     offset,
     searchKey,
-    activityEvent: selectedEvent,
+    activityEvent: JSON.stringify(selectedEvent),
     user_id: userId,
     startDateRange: dateRangeFilter.startDate,
     endDateRange: dateRangeFilter.endDate,

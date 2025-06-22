@@ -17,11 +17,25 @@ import FollowButton from 'components/CustomButtons/FollowButton'
 import VotingBoard from '../VotingComponents/VotingBoard'
 import VotingPopup from '../VotingComponents/VotingPopup'
 import { SET_SNACKBAR } from '../../store/ui'
-import { ADD_COMMENT, ADD_QUOTE, REPORT_POST, VOTE } from '../../graphql/mutations'
-import { GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY } from '../../graphql/query'
+import {
+  ADD_COMMENT,
+  ADD_QUOTE,
+  REPORT_POST,
+  VOTE,
+  APPROVE_POST,
+  REJECT_POST,
+} from '../../graphql/mutations'
+import {
+  GET_POST,
+  GET_TOP_POSTS,
+  GET_USER_ACTIVITY,
+} from '../../graphql/query'
 import AvatarDisplay from '../Avatar'
 import BookmarkIconButton from '../CustomButtons/BookmarkIconButton'
 import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
+import ApproveButton from '../CustomButtons/ApproveButton'
+import RejectButton from '../CustomButtons/RejectButton'
+import ApproveRejectPopover from '../ApproveRejectPopver/ApproveRejectPopover'
 
 const useStyles = makeStyles(() => ({
   header2: {
@@ -77,16 +91,32 @@ function Post({
   const dispatch = useDispatch()
   const history = useHistory()
   const parsedCreated = moment(created).format('LLL')
+  
+  // State declarations
   const [selectedText, setSelectedText] = useState('')
   const [open, setOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [popoverType, setPopoverType] = useState('')
+  
   const isFollowing = includes(_followingId, userId)
+
+  const handlePopoverOpen = (event, type) => {
+    console.log('Popover open:', { type, anchor: event.currentTarget });
+    setAnchorEl(event.currentTarget);
+    setPopoverType(type);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+    setPopoverType('')
+  }
 
   const [addVote] = useMutation(VOTE, {
     update(
       cache,
       {
         // eslint-disable-next-line no-shadow
-        data: { addVote },
+        data: { addVote: voteData },
       },
     ) {
       const data = cache.readQuery({
@@ -100,19 +130,19 @@ function Post({
         (vote) => vote.userId === user._id,
       )
       if (index !== -1) {
-        clonedPost.post.votedBy[index].type = addVote.type
+        clonedPost.post.votedBy[index].type = voteData.type
         clonedPost.post.upvotes =
-          addVote.type === 'up' ?
+          voteData.type === 'up' ?
             clonedPost.post.upvotes + 1 :
             clonedPost.post.upvotes - 1
 
         clonedPost.post.downvotes =
-          addVote.type === 'down' ?
+          voteData.type === 'down' ?
             clonedPost.post.downvotes + 1 :
             clonedPost.post.downvotes - 1
       } else {
-        clonedPost.post.votedBy.push({ type: addVote.type, userId: user._id })
-        if (addVote.type === 'up') {
+        clonedPost.post.votedBy.push({ type: voteData.type, userId: user._id })
+        if (voteData.type === 'up') {
           clonedPost.post.upvotes++
         } else {
           clonedPost.post.downvotes++
@@ -182,6 +212,38 @@ function Post({
         query: GET_POST,
         variables: { postId: _id },
       },
+    ],
+  })
+
+  const [approvePost] = useMutation(APPROVE_POST, {
+    refetchQueries: [
+      { query: GET_POST, variables: { postId: _id } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+    ],
+  });
+  const [rejectPost] = useMutation(REJECT_POST, {
+    refetchQueries: [
+      { query: GET_POST, variables: { postId: _id } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+    ],
+  });
+
+  const userIdStr = user._id?.toString();
+  const hasApproved = Array.isArray(post.approvedBy) && post.approvedBy.some(id => id?.toString() === userIdStr);
+  const hasRejected = Array.isArray(post.rejectedBy) && post.rejectedBy.some(id => id?.toString() === userIdStr);
+
+  const [removeApprove] = useMutation(APPROVE_POST, {
+    variables: { postId: _id, userId: user._id },
+    refetchQueries: [
+      { query: GET_POST, variables: { postId: _id } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+    ],
+  });
+  const [removeReject] = useMutation(REJECT_POST, {
+    variables: { postId: _id, userId: user._id },
+    refetchQueries: [
+      { query: GET_POST, variables: { postId: _id } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
     ],
   });
 
@@ -310,8 +372,8 @@ function Post({
     }
   }
 
-  const handleRedirectToProfile = (username) => {
-    history.push(`/Profile/${username}`)
+  const handleRedirectToProfile = (profileUsername) => {
+    history.push(`/Profile/${profileUsername}`)
   }
 
   const pointsHeader = (
@@ -344,6 +406,62 @@ function Post({
       </IconButton>
     </div>
   )
+
+  const handleApprovePost = async () => {
+    if (hasApproved) {
+      // Remove approval (toggle off)
+      try {
+        await removeApprove({ variables: { postId: _id, userId: user._id, remove: true } });
+        dispatch(
+          SET_SNACKBAR({ open: true, message: 'Approval removed', type: 'success' })
+        );
+      } catch (err) {
+        dispatch(
+          SET_SNACKBAR({ open: true, message: `Approve Error: ${err.message}`, type: 'danger' })
+        );
+      }
+    } else {
+      // Approve (and override reject if needed)
+      try {
+        await approvePost({ variables: { postId: _id, userId: user._id } });
+        dispatch(
+          SET_SNACKBAR({ open: true, message: 'Post Approved', type: 'success' })
+        );
+      } catch (err) {
+        dispatch(
+          SET_SNACKBAR({ open: true, message: `Approve Error: ${err.message}`, type: 'danger' })
+        );
+      }
+    }
+  };
+
+  const handleRejectPost = async () => {
+    if (hasRejected) {
+      // Remove rejection (toggle off)
+      try {
+        await removeReject({ variables: { postId: _id, userId: user._id, remove: true } });
+        dispatch(
+          SET_SNACKBAR({ open: true, message: 'Rejection removed', type: 'success' })
+        );
+      } catch (err) {
+        dispatch(
+          SET_SNACKBAR({ open: true, message: `Reject Error: ${err.message}`, type: 'danger' })
+        );
+      }
+    } else {
+      // Reject (and override approve if needed)
+      try {
+        await rejectPost({ variables: { postId: _id, userId: user._id } });
+        dispatch(
+          SET_SNACKBAR({ open: true, message: 'Post Rejected', type: 'success' })
+        );
+      } catch (err) {
+        dispatch(
+          SET_SNACKBAR({ open: true, message: `Reject Error: ${err.message}`, type: 'danger' })
+        );
+      }
+    }
+  };
 
   return (
     <Card
@@ -390,14 +508,36 @@ function Post({
         </VotingBoard>
       </CardContent>
 
-      <CardActions disableSpacing style={{ marginLeft: 20 }}>
-        <FollowButton
-          isFollowing={isFollowing}
-          profileUserId={userId}
-          username={username}
-          showIcon
-        />
-        <BookmarkIconButton post={post} user={user} />
+      <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginLeft: 20 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <RejectButton
+            onMouseOver={(e) => handlePopoverOpen(e, 'rejected')}
+            onClick={handleRejectPost}
+            selected={hasRejected}
+          />
+          <ApproveButton
+            onMouseOver={(e) => handlePopoverOpen(e, 'approved')}
+            onClick={handleApprovePost}
+            selected={hasApproved}
+          />
+          <ApproveRejectPopover
+            anchorEl={anchorEl}
+            handlePopoverClose={handlePopoverClose}
+            type={popoverType}
+            approvedBy={post.approvedBy}
+            rejectedBy={post.rejectedBy}
+          />
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <FollowButton
+            isFollowing={isFollowing}
+            profileUserId={userId}
+            username={username}
+            showIcon
+          />
+          <BookmarkIconButton post={post} user={user} />
+          {/* Add chat, person, and heart icons here as needed */}
+        </div>
       </CardActions>
       {open && (
         <SweetAlert
