@@ -14,7 +14,7 @@ import { serializeObjectIds } from '../utils/objectIdSerializer'
 const isLocalServer = process.env.REACT_APP_SERVER && process.env.REACT_APP_SERVER.includes('localhost')
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_SERVER ? `${process.env.REACT_APP_SERVER}/graphql` : 'http://localhost:5000/graphql',
+  uri: process.env.REACT_APP_SERVER ? `${process.env.REACT_APP_SERVER}/graphql` : 'https://api.quote.vote/graphql',
   credentials: isLocalServer ? 'include' : 'omit', // Only include credentials for local server
   headers: {
     authorization: localStorage.getItem('token') || '',
@@ -23,7 +23,7 @@ const httpLink = createHttpLink({
 
 // Create a WebSocket link:
 const wsLink = typeof window !== 'undefined' ? new GraphQLWsLink(createClient({
-  url: process.env.REACT_APP_SERVER_WS ? `${process.env.REACT_APP_SERVER_WS}/graphql` : 'ws://localhost:5000/graphql',
+  url: process.env.REACT_APP_SERVER_WS ? `${process.env.REACT_APP_SERVER_WS}/graphql` : 'wss://api.quote.vote/graphql',
   connectionParams: () => ({
     authToken: localStorage.getItem('token'),
   }),

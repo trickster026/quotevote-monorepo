@@ -2,17 +2,23 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import svgr from 'vite-plugin-svgr'
-import fs from 'fs'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
   const env = loadEnv(mode, process.cwd(), '')
-  
+
   return {
     plugins: [
-      react(),
+      react({
+        jsxRuntime: 'automatic',
+        babel: {
+          plugins: [
+            ['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }],
+          ]
+        },
+      }),
       svgr({
         svgrOptions: {
           icon: true,
@@ -25,16 +31,17 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': resolve(__dirname, 'src'),
         // Add aliases for common directories
-        'layouts': resolve(__dirname, 'src/layouts'),
-        'components': resolve(__dirname, 'src/components'),
-        'config': resolve(__dirname, 'src/config'),
-        'store': resolve(__dirname, 'src/store'),
-        'assets': resolve(__dirname, 'src/assets'),
-        'utils': resolve(__dirname, 'src/utils'),
-        'views': resolve(__dirname, 'src/views'),
+        layouts: resolve(__dirname, 'src/layouts'),
+        components: resolve(__dirname, 'src/components'),
+        config: resolve(__dirname, 'src/config'),
+        store: resolve(__dirname, 'src/store'),
+        assets: resolve(__dirname, 'src/assets'),
+        utils: resolve(__dirname, 'src/utils'),
+        views: resolve(__dirname, 'src/views'),
         'mui-pro': resolve(__dirname, 'src/mui-pro'),
-        'hoc': resolve(__dirname, 'src/hoc'),
-        'themes': resolve(__dirname, 'src/themes'),
+        hoc: resolve(__dirname, 'src/hoc'),
+        themes: resolve(__dirname, 'src/themes'),
+        'react/jsx-runtime': 'react/jsx-runtime.js',
       },
     },
     css: {
@@ -47,14 +54,18 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       open: true,
-      https: {
-        key: fs.readFileSync('./localhost-key.pem'),
-        cert: fs.readFileSync('./localhost.pem'),
-      },
+      // https: {
+      //   key: fs.readFileSync('./localhost-key.pem'),
+      //   cert: fs.readFileSync('./localhost.pem'),
+      // },
       fs: {
         // Allow serving files from one level up to the project root
-        allow: ['..']
-      }
+        allow: ['..'],
+      },
+    },
+    preview: {
+      port: 3000,
+      open: true,
     },
     build: {
       outDir: 'build',
@@ -71,11 +82,16 @@ export default defineConfig(({ mode }) => {
       'process.env.PUBLIC_URL': JSON.stringify(''),
       // Map REACT_APP_ environment variables
       'process.env.REACT_APP_SERVER': JSON.stringify(env.REACT_APP_SERVER),
-      'process.env.REACT_APP_SERVER_WS': JSON.stringify(env.REACT_APP_SERVER_WS),
+      'process.env.REACT_APP_SERVER_WS': JSON.stringify(
+        env.REACT_APP_SERVER_WS,
+      ),
       'process.env.REACT_APP_DOMAIN': JSON.stringify(env.REACT_APP_DOMAIN),
-      global: 'window'
+      global: 'window',
     },
     optimizeDeps: {
+      esbuildOptions: {
+        jsx: 'classic',
+      },
       include: [
         'react',
         'react-dom',
@@ -86,4 +102,4 @@ export default defineConfig(({ mode }) => {
       ],
     },
   }
-}) 
+})
