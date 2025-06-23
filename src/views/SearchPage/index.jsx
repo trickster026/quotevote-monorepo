@@ -1,13 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Typography,
-  InputBase,
-  Paper,
-  IconButton,
-  Popover,
-  Button,
-} from '@material-ui/core';
+import { Grid, Typography, InputBase, Paper, IconButton, Button } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
@@ -222,6 +214,7 @@ export default function SearchPage() {
     setFilterMode(filterMode === 'friends' ? 'all' : 'friends')
     setOffset(0)
     triggerQueryRefetch()
+    setShowResults(true)
   }
 
   const handleInteractionsFilter = () => {
@@ -229,6 +222,7 @@ export default function SearchPage() {
     setFilterMode(filterMode === 'interactions' ? 'all' : 'interactions')
     setOffset(0)
     triggerQueryRefetch()
+    setShowResults(true)
   }
 
   const handleDateFilterToggle = () => {
@@ -250,6 +244,7 @@ export default function SearchPage() {
       setIsCalendarVisible(false);
       setFocusedInput(null);
     }
+    setShowResults(true)
   }
 
   const clearDateFilter = () => {
@@ -468,24 +463,6 @@ export default function SearchPage() {
                     Posts sorted by total interactions (comments + votes + quotes)
                   </Typography>
                 )}
-              </Paper>
-            </Grid>
-          )}
-
-          {/* Debug Information */}
-          {showResults && (
-            <Grid item style={{ width: '100%', marginTop: 8 }}>
-              <Paper style={{ padding: 8, backgroundColor: '#f0f0f0' }}>
-                <Typography variant="caption" color="textSecondary">
-                  Debug: Filter Mode: {filterMode} | 
-                  Query: GET_TOP_POSTS | 
-                  User Following: {user?._followingId?.length || 0} users |
-                  Posts Count: {processedData?.posts?.entities?.length || 0} |
-                  Loading: {loading ? 'Yes' : 'No'} |
-                  Query Key: {queryKey} |
-                  Filter Key: {variables.filterKey} |
-                  Date Range: {dateRangeFilter.startDate ? dateRangeFilter.startDate.format('YYYY-MM-DD') : 'None'} to {dateRangeFilter.endDate ? dateRangeFilter.endDate.format('YYYY-MM-DD') : 'None'}
-                </Typography>
               </Paper>
             </Grid>
           )}
