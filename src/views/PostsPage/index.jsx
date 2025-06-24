@@ -1,21 +1,32 @@
-import React, { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Route } from 'react-router-dom'
 import PostController from 'components/Post/PostController'
 import { useLocation } from 'react-router'
+import { useDispatch } from 'react-redux'
+import { tokenValidator } from 'store/user'
 import SubmitPost from '../../components/SubmitPost/SubmitPost'
+import { Redirect } from 'react-router-dom'
 
 export default function PostRouter() {
-  const [, setOpen] = React.useState(true)
+  const [, setOpen] = useState(true)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
   const location = useLocation()
 
+  useEffect(() => {
+    if (location.pathname === '/post' && !tokenValidator(dispatch)) {
+      // trigger redirect below
+    }
+  }, [location.pathname, dispatch])
+
   if (location.pathname === '/post') {
-    return (
-      <SubmitPost setOpen={setOpen} />
-    )
+    if (!tokenValidator(dispatch)) {
+      return <Redirect to="/search" />
+    }
+    return <SubmitPost setOpen={setOpen} />
   }
 
   return (

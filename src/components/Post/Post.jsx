@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import {
-  Card, CardActions, CardContent, CardHeader, IconButton,
-} from '@material-ui/core'
+import { } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import BlockIcon from '@material-ui/icons/Block'
 import LinkIcon from '@material-ui/icons/Link'
@@ -18,6 +16,8 @@ import FollowButton from 'components/CustomButtons/FollowButton'
 import VotingBoard from '../VotingComponents/VotingBoard'
 import VotingPopup from '../VotingComponents/VotingPopup'
 import { SET_SNACKBAR } from '../../store/ui'
+import useGuestGuard from 'utils/useGuestGuard'
+import RequestInviteDialog from '../RequestInviteDialog'
 import {
   ADD_COMMENT,
   ADD_QUOTE,
@@ -25,7 +25,7 @@ import {
   VOTE,
   APPROVE_POST,
   REJECT_POST,
-  DELETE_POST,
+  DELETE_POST
 } from '../../graphql/mutations'
 import {
   GET_POST,
@@ -93,6 +93,7 @@ function Post({
   const { _followingId } = user
   const dispatch = useDispatch()
   const history = useHistory()
+  const ensureAuth = useGuestGuard()
   const parsedCreated = moment(created).format('LLL')
   
   // State declarations
@@ -257,6 +258,7 @@ function Post({
   });
 
   const handleReportPost = async () => {
+    if (!ensureAuth()) return
     try {
       const res = await reportPost({ variables: { postId: _id, userId: user._id } })
       const { reportedBy } = res.data.reportPost
@@ -280,6 +282,7 @@ function Post({
   }
 
   const handleAddComment = async (comment, commentWithQuote = false) => {
+    if (!ensureAuth()) return
     let startIndex
     let endIndex
     let quoteText
@@ -324,6 +327,7 @@ function Post({
     }
   }
   const handleVoting = async (obj) => {
+    if (!ensureAuth()) return
     const vote = {
       content: selectedText.text,
       postId: post._id,
@@ -353,6 +357,7 @@ function Post({
     }
   }
   const handleAddQuote = async () => {
+    if (!ensureAuth()) return
     const quote = {
       quote: selectedText.text,
       postId: post._id,
@@ -417,6 +422,7 @@ function Post({
   )
 
   const handleApprovePost = async () => {
+    if (!ensureAuth()) return
     if (hasApproved) {
       // Remove approval (toggle off)
       try {
@@ -445,6 +451,7 @@ function Post({
   };
 
   const handleRejectPost = async () => {
+    if (!ensureAuth()) return
     if (hasRejected) {
       // Remove rejection (toggle off)
       try {
@@ -487,97 +494,99 @@ function Post({
   };
 
   return (
-    <Card
-      style={{
-        height: postHeight >= 742 ? '83vh' : 'auto',
-        overflow: 'auto',
-      }}
-    >
-      <CardHeader
-        className={classes.header1}
-        title={cardTitle}
-        action={pointsHeader}
-      />
-      <CardHeader
-        className={classes.header2}
-        avatar={(
-          <IconButton
-            size="small"
-            onClick={() => handleRedirectToProfile(creator.username)}
-          >
-            <AvatarDisplay height={40} width={40} {...avatar} />
-          </IconButton>
-        )}
-        title={name}
-        subheader={parsedCreated}
-      />
-      <CardContent>
-        <VotingBoard
-          content={post.text}
-          onSelect={setSelectedText}
-          selectedText={selectedText}
-          highlights
-        >
-          {({ text }) => (
-            <VotingPopup
-              onVote={handleVoting}
-              onAddComment={handleAddComment}
-              onAddQuote={handleAddQuote}
-              text={text}
-              selectedText={selectedText}
-              votedBy={serializeVotedBy(post.votedBy)}
-            />
-          )}
-        </VotingBoard>
-      </CardContent>
-
-      <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginLeft: 20 }}>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <RejectButton
-            onMouseOver={(e) => handlePopoverOpen(e, 'rejected')}
-            onClick={handleRejectPost}
-            selected={hasRejected}
-          />
-          <ApproveButton
-            onMouseOver={(e) => handlePopoverOpen(e, 'approved')}
-            onClick={handleApprovePost}
-            selected={hasApproved}
-          />
-          <ApproveRejectPopover
-            anchorEl={anchorEl}
-            handlePopoverClose={handlePopoverClose}
-            type={popoverType}
-            approvedBy={post.approvedBy}
-            rejectedBy={post.rejectedBy}
-          />
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <FollowButton
-            isFollowing={isFollowing}
-            profileUserId={userId}
-            username={username}
-            showIcon
-          />
-          <BookmarkIconButton post={post} user={user} />
-          {(user._id === userId || user.admin) && (
-            <IconButton onClick={handleDelete} size="small">
-              <DeleteIcon />
+    <>
+      <Card
+        style={{
+          height: postHeight >= 742 ? '83vh' : 'auto',
+          overflow: 'auto',
+        }}
+      >
+        <CardHeader
+          className={classes.header1}
+          title={cardTitle}
+          action={pointsHeader}
+        />
+        <CardHeader
+          className={classes.header2}
+          avatar={(
+            <IconButton
+              size="small"
+              onClick={() => handleRedirectToProfile(creator.username)}
+            >
+              <AvatarDisplay height={40} width={40} {...avatar} />
             </IconButton>
           )}
-          {/* Add chat, person, and heart icons here as needed */}
-        </div>
-      </CardActions>
-      {open && (
-        <SweetAlert
-          confirmBtnCssClass={`${classes.button} ${classes.success}`}
-          success
-          onConfirm={hideAlert}
-          onCancel={hideAlert}
-          title="Post URL copied!"
-          timeout={1000}
+          title={name}
+          subheader={parsedCreated}
         />
-      )}
-    </Card>
+        <CardContent>
+          <VotingBoard
+            content={post.text}
+            onSelect={setSelectedText}
+            selectedText={selectedText}
+            highlights
+          >
+            {({ text }) => (
+              <VotingPopup
+                onVote={handleVoting}
+                onAddComment={handleAddComment}
+                onAddQuote={handleAddQuote}
+                text={text}
+                selectedText={selectedText}
+                votedBy={serializeVotedBy(post.votedBy)}
+              />
+            )}
+          </VotingBoard>
+        </CardContent>
+
+        <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginLeft: 20 }}>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <RejectButton
+              onMouseOver={(e) => handlePopoverOpen(e, 'rejected')}
+              onClick={handleRejectPost}
+              selected={hasRejected}
+            />
+            <ApproveButton
+              onMouseOver={(e) => handlePopoverOpen(e, 'approved')}
+              onClick={handleApprovePost}
+              selected={hasApproved}
+            />
+            <ApproveRejectPopover
+              anchorEl={anchorEl}
+              handlePopoverClose={handlePopoverClose}
+              type={popoverType}
+              rejectedBy={post.rejectedBy}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <FollowButton
+              isFollowing={isFollowing}
+              profileUserId={userId}
+              username={username}
+              showIcon
+            />
+            <BookmarkIconButton post={post} user={user} />
+            {(user._id === userId || user.admin) && (
+              <IconButton onClick={handleDelete} size="small">
+                <DeleteIcon />
+              </IconButton>
+            )}
+            {/* Add chat, person, and heart icons here as needed */}
+          </div>
+        </CardActions>
+        {open && (
+          <SweetAlert
+            confirmBtnCssClass={`${classes.button} ${classes.success}`}
+            success
+            onConfirm={hideAlert}
+            onCancel={hideAlert}
+            title="Post URL copied!"
+            timeout={1000}
+          />
+        )}
+      </Card>
+      <RequestInviteDialog open={openInvite} onClose={() => setOpenInvite(false)} />
+    </>
   )
 }
 
