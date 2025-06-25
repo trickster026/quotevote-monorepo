@@ -13,7 +13,7 @@ import { ActivityCard } from '../../ui/ActivityCard'
 import getCardBackgroundColor from '../../utils/getCardBackgroundColor'
 import { CREATE_POST_MESSAGE_ROOM, UPDATE_POST_BOOKMARK } from '../../graphql/mutations'
 import {
-    GET_CHAT_ROOMS, GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY,
+  GET_CHAT_ROOMS, GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY,
 } from '../../graphql/query'
 import { SET_SELECTED_POST } from '../../store/ui'
 import getActivityContent from '../../utils/getActivityContent'
@@ -23,6 +23,12 @@ function LoadActivityCard({ width, activity }) {
   const {
     post, user, quote, comment, vote, created, activityType,
   } = activity
+  
+  // Add null check for post before destructuring
+  if (!post) {
+    return null // or return a placeholder component
+  }
+  
   const {
     url, bookmarkedBy, upvotes, downvotes, comments, votes, quotes, messageRoom,
   } = post

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import Profile from 'components/Profile/ProfileController'
 import SimpleAvatarEditor from 'components/Profile/SimpleAvatarEditor'
@@ -9,7 +9,7 @@ export default function ProfileRouter() {
     window.scrollTo(0, 0)
   }, [])
   return (
-    <>
+    <div style={{ margin: '0 10%' }}>
       <Route exact path="/Profile">
         <Profile />
       </Route>
@@ -25,6 +25,6 @@ export default function ProfileRouter() {
       <Route exact path="/Profile/:username/followers">
         <FollowInfo filter="followers" />
       </Route>
-    </>
+    </div>
   )
 }
