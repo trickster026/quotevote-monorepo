@@ -1,9 +1,9 @@
 import {
-  ApolloClient,
-  InMemoryCache,
-  createHttpLink,
-  split,
-  ApolloLink,
+    ApolloClient,
+    InMemoryCache,
+    createHttpLink,
+    split,
+    ApolloLink,
 } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
@@ -16,9 +16,24 @@ const isLocalServer = process.env.REACT_APP_SERVER && process.env.REACT_APP_SERV
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_SERVER ? `${process.env.REACT_APP_SERVER}/graphql` : 'https://api.quote.vote/graphql',
   credentials: isLocalServer ? 'include' : 'omit', // Only include credentials for local server
-  headers: {
-    authorization: localStorage.getItem('token') || '',
-  },
+})
+
+// Create an auth link that dynamically adds the authorization header
+const authLink = new ApolloLink((operation, forward) => {
+  // Get the token from localStorage for each request
+  const token = localStorage.getItem('token')
+  
+  // Add the authorization header if token exists
+  if (token) {
+    operation.setContext({
+      headers: {
+        ...operation.getContext().headers,
+        authorization: token,
+      },
+    })
+  }
+  
+  return forward(operation)
 })
 
 // Create a WebSocket link:
@@ -51,8 +66,8 @@ const link = typeof window !== 'undefined' ? split(
     return kind === 'OperationDefinition' && operation === 'subscription'
   },
   wsLink,
-  objectIdSerializationLink.concat(httpLink)
-) : objectIdSerializationLink.concat(httpLink)
+  objectIdSerializationLink.concat(authLink.concat(httpLink))
+) : objectIdSerializationLink.concat(authLink.concat(httpLink))
 
 const cache = new InMemoryCache({
   typePolicies: {
