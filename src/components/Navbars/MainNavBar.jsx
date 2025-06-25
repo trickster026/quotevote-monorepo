@@ -87,7 +87,8 @@ function MainNavBar(props) {
         <Grid item>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
+            style={{ backgroundColor: '#2ecc71', color: 'white' }}
             onClick={() => {
               if (loggedIn) {
                 handleMenu(2)
@@ -149,19 +150,19 @@ function MainNavBar(props) {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => history.push('/auth/request-access')}
+              onClick={() => history.push('/auth/login')}
               className={classes.rightMenuButton}
             >
-              Request Invite
+              Login
             </Button>
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => history.push('/auth/login')}
+              onClick={() => history.push('/auth/request-access')}
               className={classes.rightMenuButton}
               style={{ backgroundColor: 'white' }}
             >
-              Login
+              Request Invite
             </Button>
           </Grid>
         )}
