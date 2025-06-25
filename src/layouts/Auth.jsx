@@ -89,7 +89,7 @@ export default function Pages(props) {
             >
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="/auth" to="/auth/landing-page" />
+                <Redirect from="/auth" to="/auth/search" />
               </Switch>
             </div>
           </div>

@@ -89,7 +89,7 @@ export default function AuthNavbar(props) {
       {(activeRoute("/auth/request-access")) && (
         <ListItem className={classes.listItem}>
           <NavLink
-            to="/auth/landing-page"
+            to="/search"
             className={cx(classes.navLink, {
               [classes.navLinkActive]: activeRoute("/auth/login")
             })}
@@ -177,7 +177,7 @@ export default function AuthNavbar(props) {
         </React.Fragment>
       )}
 
-      {activeRoute("/auth/landing-page") && (
+      {activeRoute("/search") && (
         <React.Fragment>
           <ListItem className={classes.listItem}>
             <NavLink
@@ -200,7 +200,7 @@ export default function AuthNavbar(props) {
         <React.Fragment>
           <ListItem className={classes.listItem}>
             <NavLink
-              to="/auth/landing-page"
+              to="search"
               className={cx(classes.navLinkInvestNow, {
                 [classes.navLinkActiveAccess]: activeRoute("/auth/investor-thanks")
               })}
