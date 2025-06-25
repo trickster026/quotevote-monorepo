@@ -52,7 +52,7 @@ function MainNavBar(props) {
       <Grid
         container
         direction="row"
-        justify="space-between"
+        justify="flex-start"
         alignItems="center"
         wrap="nowrap"
       >
@@ -83,6 +83,7 @@ function MainNavBar(props) {
             </Grid>
           </Tabs>
         </Grid>
+        <div className={classes.grow} />
         <Grid item>
           <Button
             variant="contained"
