@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { SET_HIDDEN_POSTS } from 'store/ui'
@@ -70,7 +69,7 @@ LoadPostsList.propTypes = {
 export default function PostList({
   data, loading, limit, fetchMore, variables, cols,
 }) {
-  if (loading) return <AlertSkeletonLoader limit={limit} rows={cols} />
+  if (loading && !data) return <AlertSkeletonLoader limit={limit} rows={cols} />
 
   const newOffset = data && data.posts.entities.length
   return (

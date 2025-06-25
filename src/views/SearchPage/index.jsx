@@ -303,6 +303,7 @@ export default function SearchPage() {
     skip: !showResults && !isGuestMode, // Show results automatically for guest mode
     errorPolicy: 'all', // Allow partial errors
     notifyOnNetworkStatusChange: true,
+    pollInterval: 3000, // Poll every 3 seconds
   })
 
   // Auto-show results for guest mode
