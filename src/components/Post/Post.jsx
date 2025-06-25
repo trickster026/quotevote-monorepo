@@ -109,6 +109,7 @@ function Post({
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [popoverType, setPopoverType] = useState('')
+  const [openInvite, setOpenInvite] = useState(false)
   const [showVoteButtons, setShowVoteButtons] = useState(() => {
     const stored = localStorage.getItem(`showVoteButtons-${_id}`)
     return stored ? JSON.parse(stored) : false
