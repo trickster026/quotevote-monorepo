@@ -1,4 +1,3 @@
-import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
 
@@ -40,7 +39,7 @@ function ProfileView({
 
   if (loading) return <LoadingSpinner />
 
-  if (Object.keys(profileUser).length === 0) {
+  if (!profileUser) {
     return (
       <Grid container>
         <Grid item xs={12} className={classes.emptyProfile}>
