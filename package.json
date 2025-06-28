@@ -1,0 +1,38 @@
+{
+  "name": "quote-vote-monorepo",
+  "version": "1.0.0",
+  "description": "Quote Vote Monorepo - Client and Server",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm install --legacy-peer-deps",
+    "install:client": "npm install --legacy-peer-deps --workspace=client",
+    "install:server": "npm install --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "dev:server": "npm run dev-mac --workspace=server",
+    "start:client": "npm run start --workspace=client",
+    "start:server": "npm run start --workspace=server",
+    "build:client": "npm run build --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "test:client": "npm run test --workspace=client",
+    "test:server": "npm run test --workspace=server",
+    "lint:client": "npm run lint:check --workspace=client",
+    "lint:server": "npm run lint --workspace=server",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm run build:server && npm run build:client",
+    "test": "npm run test:server && npm run test:client",
+    "lint": "npm run lint:server && npm run lint:client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "author": "Oliver Molina <olivermolina10@gmail.com>",
+  "license": "MIT"
+} 

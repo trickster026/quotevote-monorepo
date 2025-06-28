@@ -163,7 +163,6 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "gulp": "^4.0.2",
     "gulp-append-prepend": "^1.0.8",
-    "husky": "^4.3.0",
     "jest-enzyme": "^7.1.2",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.20.3",
@@ -184,10 +183,5 @@
       "not op_mini all"
     ],
     "development": []
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint:check && npm run test:coverage"
-    }
   }
 }

@@ -64,6 +64,7 @@ monorepo/
 │   │   └── utils/          # Utility functions
 │   ├── tests/              # Unit and integration tests
 │   └── dev_db/             # Development database setup
+├── package.json            # Monorepo configuration
 └── README.md
 ```
 
@@ -82,15 +83,21 @@ monorepo/
    cd monorepo
    ```
 
-2. **Install dependencies**
+2. **Install all dependencies (Monorepo Setup)**
    ```bash
-   # Install frontend dependencies
-   cd client
+   # Install dependencies for both client and server
+   npm run install:all
+   # or
    npm install --legacy-peer-deps
+   ```
+
+   **Alternative: Install individual workspaces**
+   ```bash
+   # Install only client dependencies
+   npm run install:client
    
-   # Install backend dependencies
-   cd ../server
-   npm install --legacy-peer-deps
+   # Install only server dependencies
+   npm run install:server
    ```
 
 3. **Environment Setup**
@@ -117,24 +124,23 @@ monorepo/
 
 4. **Start Development Database**
    ```bash
-   cd server
-   npm run dev-db-start
+   npm run dev-db-start --workspace=server
    ```
 
 5. **Run the Application**
-   
-   **Terminal 1 - Backend:**
+
+   **Option 1: Run both client and server simultaneously**
    ```bash
-   cd server
-   npm run dev-mac  # For macOS/Linux
-   # or
-   npm run dev      # For Windows
-   ```
-   
-   **Terminal 2 - Frontend:**
-   ```bash
-   cd client
    npm run dev
+   ```
+
+   **Option 2: Run individual services**
+   ```bash
+   # Terminal 1 - Backend
+   npm run dev:server
+   
+   # Terminal 2 - Frontend
+   npm run dev:client
    ```
 
 6. **Access the Application**
@@ -143,46 +149,114 @@ monorepo/
 
 ## 🧪 Testing
 
-### Frontend Testing
+### Run all tests
 ```bash
-cd client
-npm run test              # Run unit tests
-npm run test:coverage     # Run tests with coverage
-npm run cypress:open      # Run E2E tests
+npm run test
 ```
 
-### Backend Testing
+### Individual workspace testing
 ```bash
-cd server
-npm run test              # Run unit tests
-npm run unittest          # Run integration tests
+# Frontend tests
+npm run test:client
+
+# Backend tests
+npm run test:server
+```
+
+### Frontend specific testing
+```bash
+npm run cypress:open --workspace=client  # E2E tests
+```
+
+## 🏗️ Development Commands
+
+### Available Scripts
+```bash
+# Installation
+npm run install:all        # Install all dependencies
+npm run install:client     # Install client dependencies only
+npm run install:server     # Install server dependencies only
+
+# Development
+npm run dev               # Run both client and server
+npm run dev:client        # Run client only
+npm run dev:server        # Run server only
+
+# Building
+npm run build             # Build both client and server
+npm run build:client      # Build client only
+npm run build:server      # Build server only
+
+# Testing
+npm run test              # Test both client and server
+npm run test:client       # Test client only
+npm run test:server       # Test server only
+
+# Linting
+npm run lint              # Lint both client and server
+npm run lint:client       # Lint client only
+npm run lint:server       # Lint server only
 ```
 
 ## 📚 Documentation
 
 - **Storybook**: Component documentation and testing
   ```bash
-  cd client
-  npm run storybook
+  npm run storybook --workspace=client
   ```
 - **API Documentation**: Available at GraphQL Playground
 - **Component Documentation**: See `client/docs/` for detailed guides
 
 ## 🚀 Deployment
 
+### Build for Production
+```bash
+# Build both applications
+npm run build
+
+# Or build individually
+npm run build:client
+npm run build:server
+```
+
 ### Frontend Deployment
 ```bash
-cd client
-npm run build
-# Deploy the dist/ folder to your hosting service
+npm run build:client
+# Deploy the client/dist/ folder to your hosting service
 ```
 
 ### Backend Deployment
 ```bash
-cd server
-npm run build
-npm start  # Uses PM2 for production
+npm run build:server
+npm run start:server  # Uses PM2 for production
 ```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Peer dependency conflicts**
+   ```bash
+   # Use legacy peer deps flag
+   npm install --legacy-peer-deps
+   ```
+
+2. **Port conflicts**
+   - Frontend: Change port in `client/vite.config.js`
+   - Backend: Change `PORT` in server `.env` file
+
+3. **Database connection issues**
+   ```bash
+   # Start development database
+   npm run dev-db-start --workspace=server
+   ```
+
+4. **Workspace-specific issues**
+   ```bash
+   # Clear node_modules and reinstall
+   rm -rf node_modules client/node_modules server/node_modules
+   npm run install:all
+   ```
 
 ## 🤝 Contributing
 
@@ -197,6 +271,7 @@ npm start  # Uses PM2 for production
 - Write tests for new features
 - Update documentation as needed
 - Use conventional commit messages
+- Test both client and server before submitting PRs
 
 ## 📄 License
 
@@ -204,7 +279,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-- **Oliver Molina** - Lead Developer (olivermolina10@gmail.com)
+- **Louis Girifalco** - Mastermind
+- **Oliver Molina** - Developer
+- **Neo Isaac Amao** - Developer
 
 ## 🐛 Issues
 
