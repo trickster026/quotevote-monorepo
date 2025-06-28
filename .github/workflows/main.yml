@@ -2,13 +2,17 @@ name: Build and Test
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
 
     steps:
     - name: Checkout code
@@ -20,8 +24,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci --legacy-peer-deps
+    - name: Clean install (workaround for Vite/Rollup native module bug)
+      run: |
+        rm -rf node_modules package-lock.json
+        npm install --legacy-peer-deps
 
     - name: Build server
       run: npm run build:server
