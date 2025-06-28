@@ -1,19 +1,13 @@
 [build]
-  # Set the base directory to the client folder where your frontend app is located
   base = "client"
-  
-  # Build command for Vite
-  command = "npm run build"
-  
-  # Publish directory (Vite's configured output directory)
-  publish = "build"
+  command = "rm -rf node_modules package-lock.json && npm install --legacy-peer-deps && npm run build"
+  publish = "dist"  # Vite outputs to dist/ by default
 
 [build.environment]
-  # Set Node.js version
   NODE_VERSION = "18"
+  ROLLUP_SKIP_NATIVE = "true"
 
-# Redirect rules (if needed)
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200 
+  status = 200
