@@ -8,7 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import format from 'date-fns/format';
 import { jwtDecode } from 'jwt-decode';
-import { GET_TOP_POSTS } from '../../graphql/query';
+import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query';
 import { serializePost } from '../../utils/objectIdSerializer';
 import PostsList from '../../components/Post/PostsList';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -306,6 +306,8 @@ export default function SearchPage() {
     pollInterval: 3000, // Poll every 3 seconds
   })
 
+  const { data: featuredData } = useQuery(GET_FEATURED_POSTS)
+
   // Auto-show results for guest mode
   useEffect(() => {
     if (isGuestMode && !showResults) {
@@ -467,6 +469,9 @@ export default function SearchPage() {
 
   const processedData = processAndSortData(data)
 
+  const featuredPosts = (featuredData?.featuredPosts || [])
+    .map((post) => serializePost(post))
+
   // Create carousel items from posts for guest mode
   const createCarouselItems = (posts) => {
     if (!posts || !posts.length) return []
@@ -564,7 +569,15 @@ export default function SearchPage() {
                 </IconButton>
               </Paper>
             </Grid>
-            
+
+            {featuredPosts.length > 0 && (
+              <Grid item style={{ width: '100%', maxWidth: '800px' }}>
+                <Carousel navButtonsAlwaysVisible autoplay={false}>
+                  {createCarouselItems(featuredPosts)}
+                </Carousel>
+              </Grid>
+            )}
+
             {/* Filter Buttons - Always visible */}
             <Grid item className={classes.iconsContainer}>
               <IconButton 
@@ -583,7 +596,7 @@ export default function SearchPage() {
                 onClick={handleInteractionsFilter}
                 title="Sort by most interactions"
               >
-                🔥
+                🧲
               </IconButton>
               <IconButton 
                 aria-label="calendar" 
@@ -654,7 +667,7 @@ export default function SearchPage() {
                   <Typography variant="body2" color="textSecondary">
                     Active Filters:
                     {filterMode === 'friends' && ' 👥 Friends only'}
-                    {filterMode === 'interactions' && ' 🔥 Sorted by interactions'}
+                    {filterMode === 'interactions' && ' 🧲 Sorted by interactions'}
                     {dateRangeFilter.startDate && ` 📅 From ${format(dateRangeFilter.startDate, 'MMM d, yyyy')}`}
                     {dateRangeFilter.endDate && ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
                   </Typography>
@@ -810,6 +823,14 @@ export default function SearchPage() {
               </IconButton>
             </Paper>
           </Grid>
+
+          {featuredPosts.length > 0 && (
+            <Grid item style={{ width: '100%', maxWidth: '800px' }}>
+              <Carousel navButtonsAlwaysVisible autoplay={false}>
+                {createCarouselItems(featuredPosts)}
+              </Carousel>
+            </Grid>
+          )}
           {!showResults && (
             <Grid item>
               <Typography className={classes.tagline}>
@@ -834,7 +855,7 @@ export default function SearchPage() {
               onClick={handleInteractionsFilter}
               title="Sort by most interactions"
             >
-              🔥
+              🧲
             </IconButton>
             <IconButton 
               aria-label="calendar" 
@@ -904,7 +925,7 @@ export default function SearchPage() {
                 <Typography variant="body2" color="textSecondary">
                   Active Filters:
                   {filterMode === 'friends' && ' 👥 Friends only'}
-                  {filterMode === 'interactions' && ' 🔥 Sorted by interactions'}
+                  {filterMode === 'interactions' && ' 🧲 Sorted by interactions'}
                   {dateRangeFilter.startDate && ` 📅 From ${format(dateRangeFilter.startDate, 'MMM d, yyyy')}`}
                   {dateRangeFilter.endDate && ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
                 </Typography>
@@ -925,6 +946,11 @@ export default function SearchPage() {
           {showResults && (
             <Grid item xs={12} className={classes.list}>
               {loading && !processedData && <div>Loading...</div>}
+              {loading && processedData && (
+                <div style={{ textAlign: 'center', padding: '10px', color: '#666' }}>
+                  Refreshing results...
+                </div>
+              )}
               {processedData && (
                 <PostsList
                   data={processedData}
