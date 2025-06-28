@@ -1,6 +1,6 @@
 [build]
   base = "client"
-  command = "rm -rf node_modules package-lock.json && npm install --legacy-peer-deps && npm run build"
+  command = "npm run install:client && npm run build"
   publish = "dist"  # Vite outputs to dist/ by default
 
 [build.environment]
