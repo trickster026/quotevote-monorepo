@@ -137,3 +137,34 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Terraform
+**/.terraform/*
+
+# IDE folders
+.idea
+.vscode
+webstorm.config.js
+
+# Client-specific patterns
+/.pnp
+.pnp.js
+/build
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vite
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
