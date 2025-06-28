@@ -54,10 +54,6 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       open: true,
-      // https: {
-      //   key: fs.readFileSync('./localhost-key.pem'),
-      //   cert: fs.readFileSync('./localhost.pem'),
-      // },
       fs: {
         // Allow serving files from one level up to the project root
         allow: ['..'],
