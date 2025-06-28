@@ -1,0 +1,36 @@
+name: "quotevote"
+services:
+  mongo:
+    container_name: "quotevote-mongo"
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - "quotevote-dev-data:/data/db" 
+    networks:
+      - quotevote-net
+
+  mongo-express:
+    image: mongo-express:1.0.0-alpha.4 
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: localdev
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://localdev:password@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    networks:
+      - quotevote-net
+
+volumes:
+  quotevote-dev-data:
+
+networks:
+  quotevote-net:
+    driver: bridge

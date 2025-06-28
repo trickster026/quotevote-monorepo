@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+if [[ $1 == "start" ]]; then
+    echo "Starting the database..."
+    docker compose -f ./dev_db/compose.yml up -d
+elif [[ $1 == "stop" ]]; then
+    echo "Stopping the database..."
+    docker compose -f ./dev_db/compose.yml down
+elif [[ $1 == "help" ]]; then
+    echo""
+    echo "**********"
+    echo "Please use the following commands:"
+    echo "./dev-db start     spin up local mongoDB dockerized instance"
+    echo "./dev-db stop      stop local mongoDB dockerized instance"
+else
+    echo "Unrecognized command.${1}. Try ./dev-db help"
+    exit 1
+fi
