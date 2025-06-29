@@ -116,6 +116,9 @@
     "nodemon": "^2.0.3",
     "rimraf": "^3.0.2"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+  },
   "peerDependencies": {
     "graphql": "^16.0.0"
   },
