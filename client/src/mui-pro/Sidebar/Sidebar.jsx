@@ -243,6 +243,7 @@ class MenuSidebar extends React.Component {
     };
     const handleVoxPop = () => {
       dispatch(SET_SELECTED_PAGE(0))
+      this.props.history.push('/search')
     }
 
     const loggedIn = !!localStorage.getItem('token')

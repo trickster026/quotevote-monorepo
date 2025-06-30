@@ -57,7 +57,7 @@ function MainNavBar(props) {
         wrap="nowrap"
       >
         <Grid item>
-          <NavLink to="/Home" onClick={handleVoxPop}>
+          <NavLink to="/search" onClick={handleVoxPop}>
             <img alt="Quote" src="/assets/QuoteIcon.png" className={classes.quote} />
           </NavLink>
         </Grid>
