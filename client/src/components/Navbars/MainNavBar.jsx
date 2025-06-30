@@ -16,7 +16,6 @@ import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Avatar from '@material-ui/core/Avatar'
 import AvatarPreview from '../Avatar'
-import ChatMenu from '../Chat/ChatMenu'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
@@ -133,9 +132,6 @@ function MainNavBar(props) {
                     </Avatar>
                   </Hidden>
                 </NavLink>
-              </Grid>
-              <Grid item>
-                <ChatMenu fontSize={fontSize} />
               </Grid>
               <Grid item>
                 <NotificationMenu fontSize={fontSize} />
