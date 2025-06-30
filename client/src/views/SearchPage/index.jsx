@@ -801,7 +801,7 @@ export default function SearchPage() {
           {isGuestMode && (
             <>
               {featuredData?.featuredPosts ? (
-                                featuredPosts.length > 0 ? (
+                featuredPosts.length > 0 ? (
                   <Grid item style={{ width: '100%', maxWidth: '800px' }}>
                     <Carousel navButtonsAlwaysVisible autoplay={false}>
                       {createCarouselItems(featuredPosts)}
@@ -809,6 +809,9 @@ export default function SearchPage() {
                   </Grid>
                 ) : (
                   <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+                      ⭐
+                    </div>
                     <Typography variant="h6" style={{ color: '#666' }}>
                       No featured posts available
                     </Typography>
@@ -842,7 +845,7 @@ export default function SearchPage() {
 
           {!isGuestMode && (
             <Grid item xs={12} className={classes.list}>
-              {loading && !processedData ? (
+              {loading && !processedData && (
                 <div style={{ textAlign: 'center', padding: '2rem' }}>
                   <LoadingSpinner size={60} />
                   <Typography
@@ -872,7 +875,9 @@ export default function SearchPage() {
                       : 'Please wait while we fetch the latest conversations'}
                   </Typography>
                 </div>
-                            ) : processedData ? (
+              )}
+
+              {processedData && (
                 <PostsList
                   data={processedData}
                   loading={loading}
@@ -881,8 +886,19 @@ export default function SearchPage() {
                   variables={variables}
                   cols={1}
                 />
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
+              )}
+
+              {(!processedData || processedData?.posts?.entities?.length === 0) && !loading && (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    padding: '2rem',
+                    marginTop: '2rem',
+                  }}
+                >
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+                    🔍
+                  </div>
                   <Typography variant="h6" style={{ color: '#666' }}>
                     No posts found
                   </Typography>
