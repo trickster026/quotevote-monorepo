@@ -162,7 +162,11 @@ function MainNavBar(props) {
           </Grid>
         )}
       </Grid>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullScreen={width === 'xs' || width === 'sm'}
+      >
         <SubmitPost setOpen={setOpen} />
       </Dialog>
     </AppBar>

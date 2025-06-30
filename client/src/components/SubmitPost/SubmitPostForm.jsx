@@ -16,9 +16,12 @@ import SubmitPostAlert from './SubmitPostAlert'
 import { SET_SELECTED_POST } from '../../store/ui'
 import { CREATE_GROUP, SUBMIT_POST } from '../../graphql/mutations'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
-    width: 'auto',
+    width: 600,
+    [theme.breakpoints.down('sm')]: {
+      width: '100vw',
+    },
   },
   title: {
     color: '#00CF6E',
@@ -39,6 +42,9 @@ const useStyles = makeStyles({
     margin: '20px 0px 0px 0px',
     '& textarea': {
       minHeight: '75vh',
+      [theme.breakpoints.down('sm')]: {
+        minHeight: '50vh',
+      },
     },
   },
   group: {
