@@ -7,6 +7,11 @@
   NODE_VERSION = "20"
   ROLLUP_SKIP_NATIVE = "true"
 
+[dev]
+  command = "npm install --legacy-peer-deps && npm run dev:server"
+  port = 3000
+  publish = "build"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

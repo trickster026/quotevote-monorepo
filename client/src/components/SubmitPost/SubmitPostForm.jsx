@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  CircularProgress, Divider, Grid, Hidden, IconButton, InputBase, Typography,
+    CircularProgress, Divider, Grid, Hidden, IconButton, InputBase, Typography,
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#75E2AF',
     fontSize: 20,
   },
-})
+}));
 
 const filter = createFilterOptions()
 
