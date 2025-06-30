@@ -8,6 +8,7 @@ import { useQuery } from '@apollo/react-hooks'
 import SignupForm from '../../components/SignupForm/SignupForm'
 import { VERIFY_PASSWORD_RESET_TOKEN } from '../../graphql/query'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import StripePaymentDialog from '../../components/StripePaymentDialog'
 
 const useStyles = makeStyles(styles)
 
@@ -21,6 +22,7 @@ export default function SignupPage() {
   })
   const user = (data && data.verifyUserPasswordResetToken) || false
   const classes = useStyles()
+  const [showPaymentDialog, setShowPaymentDialog] = React.useState(true)
 
   React.useEffect(() => {
     const script = document.createElement('script')
@@ -37,6 +39,10 @@ export default function SignupPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingData, user])
 
+  const handleClosePaymentDialog = () => {
+    setShowPaymentDialog(false)
+  }
+
   if (loadingData) return <LoadingSpinner />
 
   return (
@@ -45,14 +51,12 @@ export default function SignupPage() {
         <GridItem xs={12} sm={6} md={4}>
           <SignupForm user={user} token={token} />
         </GridItem>
-        <GridItem xs={12} sm={6} md={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {/* Stripe payment form */}
-          <stripe-buy-button
-            buy-button-id="buy_btn_1RY6bhP3PjIJfZEbu5CpTDjo"
-            publishable-key="pk_live_51RXriSP3PjIJfZEb1tqnEGBOGFZBHREUxqWHeO22GASJ5It6MKfpakOE3oDtL7II20j5idUR6NuXrBlaKXvszY6q00nn8KxROy"
-          />
-        </GridItem>
       </GridContainer>
+      
+      <StripePaymentDialog 
+        open={showPaymentDialog} 
+        onClose={handleClosePaymentDialog} 
+      />
     </div>
   )
 }

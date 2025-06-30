@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useForm } from 'react-hook-form'
 
@@ -114,7 +114,7 @@ function SignupForm({
           >
             <Grid item>
               <Typography className={classes.header}>
-                Sign Up
+                Complete Your Registration
               </Typography>
             </Grid>
             <Grid item>
@@ -216,7 +216,7 @@ function SignupForm({
         </CardBody>
       </Card>
     </form>
-  )
+  );
 }
 
 SignupForm.propTypes = {
