@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridContainer from 'mui-pro/Grid/GridContainer'
+import GridItem from 'mui-pro/Grid/GridItem'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from 'assets/jss/material-dashboard-pro-react/views/loginPageStyle'
 import { useQuery } from '@apollo/react-hooks'
@@ -40,15 +41,17 @@ export default function SignupPage() {
 
   return (
     <div className={classes.container}>
-      <GridContainer justify="center" style={{ marginRight: 24 }}>
-        <SignupForm user={user} token={token} />
-        <div style={{ marginTop: 20 }}>
+      <GridContainer justify="center" spacing={3} style={{ marginRight: 24 }}>
+        <GridItem xs={12} sm={6} md={4}>
+          <SignupForm user={user} token={token} />
+        </GridItem>
+        <GridItem xs={12} sm={6} md={4} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {/* Stripe payment form */}
           <stripe-buy-button
             buy-button-id="buy_btn_1RY6bhP3PjIJfZEbu5CpTDjo"
             publishable-key="pk_live_51RXriSP3PjIJfZEb1tqnEGBOGFZBHREUxqWHeO22GASJ5It6MKfpakOE3oDtL7II20j5idUR6NuXrBlaKXvszY6q00nn8KxROy"
           />
-        </div>
+        </GridItem>
       </GridContainer>
     </div>
   )

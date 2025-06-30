@@ -1,20 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable consistent-return */
-import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 // @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles';
 
 // core components
-import AuthNavbar from 'mui-pro/Navbars/AuthNavbar'
-import Footer from 'mui-pro/Footer/Footer'
+import AuthNavbar from 'mui-pro/Navbars/AuthNavbar';
+import Footer from 'mui-pro/Footer/Footer';
 
-import routes from 'mui-pro/mui-routes'
+import routes from 'mui-pro/mui-routes';
 
-import styles from 'assets/jss/material-dashboard-pro-react/layouts/authStyle'
+import styles from 'assets/jss/material-dashboard-pro-react/layouts/authStyle';
 
-import { Grid } from '@material-ui/core'
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(styles)
 
@@ -89,7 +89,6 @@ export default function Pages(props) {
             >
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="/auth" to="/auth/search" />
               </Switch>
             </div>
           </div>
