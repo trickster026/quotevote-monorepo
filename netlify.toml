@@ -8,7 +8,7 @@
   ROLLUP_SKIP_NATIVE = "true"
 
 [dev]
-  command = "npm install --legacy-peer-deps && npm run dev:server"
+  command = "npm ci --legacy-peer-deps && npm run build"
   port = 3000
   publish = "build"
 
