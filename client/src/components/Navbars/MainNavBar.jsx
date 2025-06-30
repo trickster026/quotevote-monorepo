@@ -19,7 +19,6 @@ import AvatarPreview from '../Avatar'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
-import SearchIcon from '@material-ui/icons/Search'
 
 function MainNavBar(props) {
   const {
@@ -71,7 +70,7 @@ function MainNavBar(props) {
             <Grid item lg={4}>
               <NavLink to="/search">
                 <Tab
-                  icon={<SearchIcon />}
+                  label="Search"
                   aria-label="Trending"
                   onClick={() => {
                     handleMenu(1)
