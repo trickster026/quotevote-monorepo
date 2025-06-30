@@ -85,7 +85,8 @@
     "storybook": "^6.1.4",
     "string-limit": "^0.0.4",
     "styled-components": "^5.1.1",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.9.16",
+    "vite": "^5.4.19"
   },
   "scripts": {
     "dev": "vite",
@@ -173,7 +174,6 @@
     "react-is": "^16.13.1",
     "react-test-renderer": "^16.13.1",
     "sinon": "^9.0.2",
-    "vite": "^5.0.8",
     "vite-plugin-svgr": "^4.2.0",
     "vitest": "^1.0.4",
     "waait": "^1.0.5"
