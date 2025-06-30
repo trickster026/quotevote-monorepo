@@ -9,6 +9,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import SwipeableViews from 'react-swipeable-views'
 import { autoPlay } from 'react-swipeable-views-utils'
 import PropTypes from 'prop-types'
+
 const customTheme = createTheme({
   palette: {
     primary: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     alignContent: 'center',
     alignItems: 'center',
+    position: 'relative',
     [theme.breakpoints.down('sm')]: {
       maxWidth: 400,
       paddingLeft: 20,
@@ -41,6 +43,32 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 400,
       paddingLeft: 20,
     },
+  },
+  navigationButton: {
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    zIndex: 10,
+    backgroundColor: 'transparent',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
+  backButton: {
+    left: 10,
+  },
+  nextButton: {
+    right: 10,
+  },
+  stepperContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 10,
   },
 }))
 
@@ -72,8 +100,31 @@ function SwipeableTextMobileStepper({
   }, [activeStepProp])
 
   const navButtonsVisibility = navButtonsAlwaysVisible ? 'visible' : 'hidden'
+  
   return (
     <div className={classes.root}>
+      {/* Side Navigation Buttons */}
+      <Button 
+        size="small" 
+        onClick={handleBack} 
+        disabled={activeStep === 0} 
+        style={{ visibility: navButtonsVisibility }}
+        className={`${classes.navigationButton} ${classes.backButton}`}
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </Button>
+      
+      <Button 
+        size="small" 
+        onClick={handleNext} 
+        disabled={activeStep === maxSteps - 1} 
+        style={{ visibility: navButtonsVisibility }}
+        className={`${classes.navigationButton} ${classes.nextButton}`}
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </Button>
+
+      {/* Carousel Content */}
       {autoplay && (
         <AutoPlaySwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -81,8 +132,8 @@ function SwipeableTextMobileStepper({
           onChangeIndex={handleStepChange}
           enableMouseEvents
         >
-          {children.map((child) => (
-            <div className={classes.content}>
+          {children.map((child, index) => (
+            <div key={index} className={classes.content}>
               {child}
             </div>
           ))}
@@ -96,38 +147,31 @@ function SwipeableTextMobileStepper({
           onChangeIndex={handleStepChange}
           enableMouseEvents
         >
-          {children.map((child) => (
-            <div className={classes.content}>
+          {children.map((child, index) => (
+            <div key={index} className={classes.content}>
               {child}
             </div>
           ))}
         </SwipeableViews>
       )}
 
-      <MuiThemeProvider theme={customTheme}>
-        <MobileStepper
-          steps={maxSteps}
-          position="static"
-          variant="dots"
-          activeStep={activeStep}
-          style={{
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-          }}
-          nextButton={(
-            <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1} style={{ visibility: navButtonsVisibility }}>
-              Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </Button>
-          )}
-          backButton={(
-            <Button size="small" onClick={handleBack} disabled={activeStep === 0} style={{ visibility: navButtonsVisibility }}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-              Back
-            </Button>
-          )}
-        />
-      </MuiThemeProvider>
+      {/* Dots Indicator */}
+      <div className={classes.stepperContainer}>
+        <MuiThemeProvider theme={customTheme}>
+          <MobileStepper
+            steps={maxSteps}
+            position="static"
+            variant="dots"
+            activeStep={activeStep}
+            style={{
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+            }}
+            nextButton={null}
+            backButton={null}
+          />
+        </MuiThemeProvider>
+      </div>
     </div>
   )
 }
