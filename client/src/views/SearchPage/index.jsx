@@ -946,11 +946,7 @@ export default function SearchPage() {
           {showResults && (
             <Grid item xs={12} className={classes.list}>
               {loading && !processedData && <div>Loading...</div>}
-              {loading && processedData && (
-                <div style={{ textAlign: 'center', padding: '10px', color: '#666' }}>
-                  Refreshing results...
-                </div>
-              )}
+              {loading && processedData && null}
               {processedData && (
                 <PostsList
                   data={processedData}
