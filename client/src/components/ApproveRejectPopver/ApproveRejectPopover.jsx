@@ -31,13 +31,19 @@ const ApproveRejectPopover = (props) => {
   const classes = useStyles()
   const { loading, data } = useQuery(GET_USERS)
   const {
-    anchorEl, handlePopoverClose, type, approvedBy, rejectedBy, onViewAll,
+    anchorEl,
+    handlePopoverClose,
+    type,
+    approvedBy = [],
+    rejectedBy = [],
+    onViewAll,
   } = props
-  const typeArray = type === 'approved' ? approvedBy : rejectedBy
+  const typeArray = type === 'approved' ? approvedBy : type === 'rejected' ? rejectedBy : []
+  const safeTypeArray = Array.isArray(typeArray) ? typeArray : []
   const typeLabel = type === 'approved' ? 'approved' : type === 'rejected' ? 'rejected' : '';
   let userList = []
   if (data) {
-    userList = data.users.filter((user) => typeArray.includes(user._id))
+    userList = data.users.filter((user) => safeTypeArray.includes(user._id))
   }
   const displayList = userList.slice(0, MAX_DISPLAY)
   const renderListItems = () => {
