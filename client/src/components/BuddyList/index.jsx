@@ -13,14 +13,17 @@ function BuddyList({ search }) {
 
   const buddyList =
     (!error && !loading && data && !isEmpty(data.messageRooms) &&
-      data.messageRooms.map((item) => ({
+      data.messageRooms
+        .slice()
+        .sort((a, b) => new Date(b.created) - new Date(a.created))
+        .map((item) => ({
         room: item,
         Text: item.title,
         color: '#191919',
         type: item.messageType,
         avatar: item.avatar,
         unreadMessages: item.unreadMessages,
-      }))) ||
+        }))) ||
     []
 
   const filteredBuddyList = search ? buddyList.filter((buddy) => buddy.Text.includes(search)) : buddyList

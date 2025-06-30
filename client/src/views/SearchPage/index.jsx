@@ -537,7 +537,7 @@ export default function SearchPage() {
                   <Button variant="outlined" href="mailto:volunteer@quote.vote">Volunteer</Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" href="https://github.com/quotevote/quotevote-react" target="_blank">GitHub</Button>
+                  <Button variant="outlined" href="https://github.com/QuoteVote/quotevote-monorepo" target="_blank">GitHub</Button>
                 </Grid>
               </Grid>
             </Grid>
@@ -570,7 +570,7 @@ export default function SearchPage() {
               </Paper>
             </Grid>
 
-            {featuredPosts.length > 0 && (
+            {isGuestMode && featuredPosts.length > 0 && (
               <Grid item style={{ width: '100%', maxWidth: '800px' }}>
                 <Carousel navButtonsAlwaysVisible autoplay={false}>
                   {createCarouselItems(featuredPosts)}
@@ -824,7 +824,7 @@ export default function SearchPage() {
             </Paper>
           </Grid>
 
-          {featuredPosts.length > 0 && (
+          {isGuestMode && featuredPosts.length > 0 && (
             <Grid item style={{ width: '100%', maxWidth: '800px' }}>
               <Carousel navButtonsAlwaysVisible autoplay={false}>
                 {createCarouselItems(featuredPosts)}
@@ -946,11 +946,7 @@ export default function SearchPage() {
           {showResults && (
             <Grid item xs={12} className={classes.list}>
               {loading && !processedData && <div>Loading...</div>}
-              {loading && processedData && (
-                <div style={{ textAlign: 'center', padding: '10px', color: '#666' }}>
-                  Refreshing results...
-                </div>
-              )}
+              {loading && processedData && null}
               {processedData && (
                 <PostsList
                   data={processedData}
