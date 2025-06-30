@@ -19,7 +19,7 @@ import { createBrowserHistory } from 'history'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import {
-    Redirect, Route, Router, Switch,
+  Redirect, Route, Router, Switch,
 } from 'react-router-dom'
 import AuthLayout from 'layouts/Auth'
 import client from 'config/apollo'
@@ -61,11 +61,11 @@ ReactDOM.render(
             <Router history={hist}>
               <Switch>
                 <Route path="/auth" component={AuthLayout} />
-                <Route path="/" component={Scoreboard} />
                 <Route path="/unauth" component={TokenExpired} />
                 <Route path="/logout" component={LogoutPage} />
                 <Route path="/error" component={ErrorPage} />
-                <Redirect from="/" to="/search" />
+                <Route path="/" component={Scoreboard} />
+                <Redirect from="*" to="/search" />
               </Switch>
             </Router>
           </ThemeProvider>

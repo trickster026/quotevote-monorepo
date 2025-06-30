@@ -16,7 +16,6 @@ import Button from "@material-ui/core/Button";
 import MenuIcon from "@material-ui/icons/Menu";
 import sidebarStyle from "assets/jss/material-dashboard-pro-react/components/sidebarStyle";
 import { SET_SELECTED_PAGE } from "../../store/ui";
-import ChatMenu from "../../components/Chat/ChatMenu";
 import NotificationMenu from "../../components/Notifications/NotificationMenu";
 import SettingsMenu from "../../components/Settings/SettingsMenu";
 
@@ -243,6 +242,7 @@ class MenuSidebar extends React.Component {
     };
     const handleVoxPop = () => {
       dispatch(SET_SELECTED_PAGE(0))
+      this.props.history.push('/search')
     }
 
     const loggedIn = !!localStorage.getItem('token')
@@ -262,19 +262,18 @@ class MenuSidebar extends React.Component {
               <MenuIcon />
             </IconButton>
             <div className={classes.logo}>
-              <a
-                href="#"
+              <NavLink
+                to="/search"
                 className={classes.logoLink}
                 onClick={handleVoxPop}
               >
                 <div className={classes.logoImage}>
                   <img src="/assets/QuoteIcon.png" alt="logo" className={classes.img} />
                 </div>
-              </a>
+              </NavLink>
             </div>
             {loggedIn ? (
               <>
-                <ChatMenu />
                 <NotificationMenu />
                 <SettingsMenu />
               </>
