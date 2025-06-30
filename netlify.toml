@@ -1,11 +1,12 @@
 [build]
   base = "client"
-  command = "npm ci --legacy-peer-deps && npm run build"
+  command = "npm ci --legacy-peer-deps && ROLLUP_SKIP_NATIVE=true vite build && gulp licenses"
   publish = "build"
 
 [build.environment]
   NODE_VERSION = "20"
   ROLLUP_SKIP_NATIVE = "true"
+  NODE_ENV = "production"
 
 [dev]
   command = "npm ci --legacy-peer-deps && npm run build"
