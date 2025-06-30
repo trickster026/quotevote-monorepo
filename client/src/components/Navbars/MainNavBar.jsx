@@ -16,11 +16,9 @@ import Button from '@material-ui/core/Button'
 import Hidden from '@material-ui/core/Hidden'
 import Avatar from '@material-ui/core/Avatar'
 import AvatarPreview from '../Avatar'
-import ChatMenu from '../Chat/ChatMenu'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
-import SearchIcon from '@material-ui/icons/Search'
 
 function MainNavBar(props) {
   const {
@@ -57,7 +55,7 @@ function MainNavBar(props) {
         wrap="nowrap"
       >
         <Grid item>
-          <NavLink to="/Home" onClick={handleVoxPop}>
+          <NavLink to="/search" onClick={handleVoxPop}>
             <img alt="Quote" src="/assets/QuoteIcon.png" className={classes.quote} />
           </NavLink>
         </Grid>
@@ -72,7 +70,7 @@ function MainNavBar(props) {
             <Grid item lg={4}>
               <NavLink to="/search">
                 <Tab
-                  icon={<SearchIcon />}
+                  label="Search"
                   aria-label="Trending"
                   onClick={() => {
                     handleMenu(1)
@@ -135,9 +133,6 @@ function MainNavBar(props) {
                 </NavLink>
               </Grid>
               <Grid item>
-                <ChatMenu fontSize={fontSize} />
-              </Grid>
-              <Grid item>
                 <NotificationMenu fontSize={fontSize} />
               </Grid>
               <Grid item>
@@ -167,7 +162,11 @@ function MainNavBar(props) {
           </Grid>
         )}
       </Grid>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullScreen={width === 'xs' || width === 'sm'}
+      >
         <SubmitPost setOpen={setOpen} />
       </Dialog>
     </AppBar>
