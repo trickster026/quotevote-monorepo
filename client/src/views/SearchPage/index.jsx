@@ -917,6 +917,7 @@ export default function SearchPage() {
 
           {isGuestMode && (
             <>
+            {/* Discover section */}
               <Grid
                 item
                 style={{
@@ -928,7 +929,7 @@ export default function SearchPage() {
               >
                 <Typography
                   variant="h4"
-                  style={{ fontWeight: 700, marginBottom: 8 }}
+                  style={{ fontWeight: 700, marginBottom: "4rem", marginTop: '2rem' }}
                 >
                   <span style={{ color: '#2ecc71' }}>Discover</span>{' '}
                   <span style={{ color: '#111' }}>without bias</span>
@@ -945,7 +946,11 @@ export default function SearchPage() {
                     width: '100%',
                     boxSizing: 'border-box',
                     marginTop: '2rem',
+                    '@media (min-width: 900px)': {
+                      flexDirection: 'row',
+                    },
                   }}
+                  className="discover-section-flex"
                 >
                   {/* Left: Image */}
                   <div
@@ -1031,6 +1036,149 @@ export default function SearchPage() {
                 </div>
               </Grid>
 
+              {/* Share section */}
+              <Grid
+                item
+                style={{
+                  width: '100%',
+                  maxWidth: 1200,
+                  margin: '2rem auto 0 auto',
+                  padding: '0 5vw',
+                  paddingTop: '4rem',
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 700, marginTop: '2rem', marginBottom: '4rem' }}
+                >
+                  <span style={{ color: '#111' }}>Share</span>
+                  <span style={{ color: '#2ecc71' }}>your thoughts</span>{' '}
+                  <span style={{ color: '#111' }}>, ideas and plans</span>
+                </Typography>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 32,
+                    flexDirection: 'column',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    marginTop: '2rem',
+                    '@media (min-width: 900px)': {
+                      flexDirection: 'row',
+                    },
+                  }}
+                  className="discover-section-flex"
+                >
+                  {/* Left: Image */}
+                  <div
+                    style={{
+                      flex: '1 1 320px',
+                      minWidth: 220,
+                      maxWidth: 480,
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={
+                        process.env.PUBLIC_URL + '/assets/voting-popup.png'
+                      }
+                      alt="Example posts"
+                      style={{
+                        width: '100%',
+                        maxWidth: 600,
+                        height: 'auto',
+                      }}
+                    />
+                  </div>
+                  {/* Right: Text and Button */}
+                  <div
+                    style={{
+                      flex: '2 1 340px',
+                      minWidth: 220,
+                      maxWidth: 600,
+                      width: '100%',
+                      textAlign: 'left',
+                      marginLeft: 0,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      style={{
+                        fontWeight: 700,
+                        marginBottom: 12,
+                        color: '#111',
+                        fontSize: 22,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      Post to your social circle and beyond.
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        color: '#222',
+                        fontSize: 18,
+                        marginBottom: 12,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      Engage in meaningful, respectful discussions, that solve your problem, challenge your perspectives, or create a bit of whimsical fun..
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        color: '#222',
+                        fontSize: 18,
+                        marginBottom: 8,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      Highlight words,<br />then vote or <b>comment to provide feedback.</b>
+                    </Typography>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 32, marginTop: 32 }}>
+                      <Button
+                        variant="contained"
+                        style={{
+                          background: '#2ecc71',
+                          color: '#fff',
+                          fontWeight: 600,
+                          fontSize: 18,
+                          borderRadius: 8,
+                          padding: '10px 32px',
+                          textTransform: 'none',
+                          boxShadow: '0 2px 8px rgba(46,204,113,0.08)',
+                        }}
+                        href="/auth/request-access"
+                      >
+                        Request Invite
+                      </Button>
+                      <a
+                        href="#more-info"
+                        style={{
+                          color: '#2ecc71',
+                          fontWeight: 500,
+                          fontSize: 22,
+                          textDecoration: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginLeft: 16,
+                        }}
+                      >
+                        More info
+                        <span style={{ fontSize: 28, marginLeft: 6 }}>»</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </Grid>
+
+
               <Grid item style={{ marginTop: '2rem', textAlign: 'center' }}>
                 <Typography variant="body2" color="textSecondary">
                   Sign up to join the conversation and create your own posts!
@@ -1048,6 +1196,9 @@ export default function SearchPage() {
 if (typeof window !== 'undefined') {
   const style = document.createElement('style')
   style.innerHTML = `
+    .discover-section-flex {
+      flex-direction: column;
+    }
     @media (min-width: 900px) {
       .discover-section-flex {
         flex-direction: row !important;
