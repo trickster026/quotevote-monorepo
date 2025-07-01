@@ -18,6 +18,9 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Skeleton from '@material-ui/lab/Skeleton'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import Box from '@material-ui/core/Box'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { USER_INVITE_REQUESTS, GET_TOP_POSTS } from '@/graphql/query'
@@ -36,6 +39,30 @@ import controlPanelStylwa from './controlPanelStyles'
 import Unauthorized from '@/components/Unauthorized/Unauthorized'
 
 const useStyles = makeStyles(controlPanelStylwa)
+
+// TabPanel component for organizing content
+const TabPanel = ({ children, value, index, ...other }) => {
+  const classes = useStyles()
+  
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      className={classes.tabPanel}
+      {...other}
+    >
+      {value === index && <Box>{children}</Box>}
+    </div>
+  )
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+}
 
 const ActionButtons = ({ status, id }) => {
   const classes = useStyles()
@@ -181,7 +208,7 @@ const FeaturedPostsTable = () => {
   }
 
   return (
-    <Card style={{ marginTop: 30 }}>
+    <Card>
       <CardContent>
         <Typography className={classes.cardHeader}>Featured Posts</Typography>
         <TextField
@@ -268,7 +295,8 @@ const FeaturedPostsTable = () => {
   )
 }
 
-const ControlPanelContainer = ({ data }) => {
+// User Invitation Requests Tab Component
+const UserInvitationRequestsTab = ({ data }) => {
   const classes = useStyles()
   const [sortConfig, setSortConfig] = React.useState({
     key: 'joined',
@@ -282,7 +310,6 @@ const ControlPanelContainer = ({ data }) => {
     { key: 'status', label: 'Status' },
     { key: 'action', label: 'Action' }
   ]
-  const activeUsersCount = 0
   
   const handleSort = (key) => {
     setSortConfig(prevConfig => ({
@@ -328,11 +355,6 @@ const ControlPanelContainer = ({ data }) => {
     return sortData(filteredData)
   }
   
-  // statuses
-  // 1 = new / pending
-  // 2 = decline
-  // 3 = resend
-  // 4 = active
   const getStatusValue = (status) => {
     switch (Number(status)) {
       case 1:
@@ -345,7 +367,92 @@ const ControlPanelContainer = ({ data }) => {
         return ''
     }
   }
-  // eslint-disable-next-line radix
+
+  return (
+    <Card>
+      <CardContent>
+        <Typography className={classes.cardHeader}>
+          User Invitation Requests
+        </Typography>
+        <TextField
+          placeholder="Search by email..."
+          variant="outlined"
+          size="small"
+          value={emailFilter}
+          onChange={(e) => setEmailFilter(e.target.value)}
+          style={{ marginBottom: 16, width: '100%', maxWidth: 300 }}
+          InputProps={{
+            startAdornment: (
+              <span style={{ marginRight: 8, color: '#666' }}>🔍</span>
+            ),
+          }}
+        />
+        <TableContainer className={classes.tableContainer}>
+          <Table
+            className={classes.table}
+            aria-label="simple table"
+            stickyHeader
+          >
+            <TableHead classes={{ head: classes.columnHeader }}>
+              <TableRow>
+                {header.map((column) => (
+                  <TableCell
+                    key={column.key}
+                    align="center"
+                    className={classes.columnHeader}
+                    style={{ cursor: column.key !== 'action' ? 'pointer' : 'default' }}
+                    onClick={() => column.key !== 'action' && handleSort(column.key)}
+                  >
+                    {column.label}
+                    {sortConfig.key === column.key && column.key !== 'action' && (
+                      <span style={{ marginLeft: 5 }}>
+                        {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                      </span>
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filterAndSortData(data.userInviteRequests).map((row) => (
+                <TableRow key={row._id}>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="center">
+                    {moment(row.joined).format('MMM DD, YYYY')}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={cx({
+                        [classes.pendingStatus]: row.status === '1',
+                        [classes.declinedStatus]: row.status === '2',
+                        [classes.acceptedStatus]: row.status === '4',
+                      })}
+                      disableRipple
+                      disableElevation
+                    >
+                      {getStatusValue(row.status)}
+                    </Button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <ActionButtons status={row.status} id={row._id} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Statistics Tab Component
+const StatisticsTab = ({ data }) => {
+  const classes = useStyles()
+  const activeUsersCount = 0
+  
   const inviteRequestCount = data.userInviteRequests.filter(
     (user) => parseInt(user.status) === 1,
   ).length
@@ -388,6 +495,55 @@ const ControlPanelContainer = ({ data }) => {
       left: 0,
     },
   }
+
+  return (
+    <Card>
+      <CardContent>
+        <Typography className={classes.cardHeader} display="inline">
+          User Invitation Statistics
+        </Typography>
+        <Typography
+          className={classes.graphText}
+          display="inline"
+          style={{ float: 'right' }}
+        >
+          Invite Requests: {inviteRequestCount || 0}
+        </Typography>
+        <ChartistGraph
+          className="ct-chart-white-colors"
+          style={{
+            backgroundColor: '#00bcd4',
+            marginTop: 10,
+            marginBottom: 15,
+          }}
+          data={chartData}
+          type="Line"
+          options={chartOptions}
+          listener={dailySalesChart.animation}
+        />
+        <Typography className={classes.graphText} display="inline">
+          Total Users: {totalUsers || 0}
+        </Typography>
+        <Typography
+          className={classes.graphText}
+          display="inline"
+          style={{ float: 'right' }}
+        >
+          Active Users Today: {activeUsersCount}
+        </Typography>
+      </CardContent>
+    </Card>
+  )
+}
+
+const ControlPanelContainer = ({ data }) => {
+  const classes = useStyles()
+  const [tabValue, setTabValue] = React.useState(0)
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue)
+  }
+
   return (
     <Grid container spacing={2} className={classes.panelContainer}>
       <Grid container>
@@ -395,126 +551,33 @@ const ControlPanelContainer = ({ data }) => {
           Invite Control Panel
         </Typography>
       </Grid>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={7} lg={7} xl={6}>
-          <Card>
-            <CardContent>
-              <Typography className={classes.cardHeader}>
-                User Invitation Requests
-              </Typography>
-              <TextField
-                placeholder="Search by email..."
-                variant="outlined"
-                size="small"
-                value={emailFilter}
-                onChange={(e) => setEmailFilter(e.target.value)}
-                style={{ marginBottom: 16, width: '100%', maxWidth: 300 }}
-                InputProps={{
-                  startAdornment: (
-                    <span style={{ marginRight: 8, color: '#666' }}>🔍</span>
-                  ),
-                }}
-              />
-              <TableContainer className={classes.tableContainer}>
-                <Table
-                  className={classes.table}
-                  aria-label="simple table"
-                  stickyHeader
-                >
-                  <TableHead classes={{ head: classes.columnHeader }}>
-                    <TableRow>
-                      {header.map((column) => (
-                        <TableCell
-                          key={column.key}
-                          align="center"
-                          className={classes.columnHeader}
-                          style={{ cursor: column.key !== 'action' ? 'pointer' : 'default' }}
-                          onClick={() => column.key !== 'action' && handleSort(column.key)}
-                        >
-                          {column.label}
-                          {sortConfig.key === column.key && column.key !== 'action' && (
-                            <span style={{ marginLeft: 5 }}>
-                              {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                            </span>
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filterAndSortData(data.userInviteRequests).map((row) => (
-                      <TableRow key={row._id}>
-                        <TableCell align="left">{row.email}</TableCell>
-                        <TableCell align="center">
-                          {moment(row.joined).format('MMM DD, YYYY')}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            className={cx({
-                              [classes.pendingStatus]: row.status === '1',
-                              [classes.declinedStatus]: row.status === '2',
-                              [classes.acceptedStatus]: row.status === '4',
-                            })}
-                            disableRipple
-                            disableElevation
-                          >
-                            {getStatusValue(row.status)}
-                          </Button>
-                        </TableCell>
-                        <TableCell align="center">
-                          <ActionButtons status={row.status} id={row._id} />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={5} lg={5} xl={6} justify="center">
-          <Card>
-            <CardContent>
-              <Typography className={classes.cardHeader} display="inline">
-                User Invitation Statistics
-              </Typography>
-              <Typography
-                className={classes.graphText}
-                display="inline"
-                style={{ float: 'right' }}
-              >
-                Invite Requests: {inviteRequestCount || 0}
-              </Typography>
-              <ChartistGraph
-                className="ct-chart-white-colors"
-                style={{
-                  backgroundColor: '#00bcd4',
-                  marginTop: 10,
-                  marginBottom: 15,
-                }}
-                data={chartData}
-                type="Line"
-                options={chartOptions}
-                listener={dailySalesChart.animation}
-              />
-              <Typography className={classes.graphText} display="inline">
-                Total Users: {totalUsers || 0}
-              </Typography>
-              <Typography
-                className={classes.graphText}
-                display="inline"
-                style={{ float: 'right' }}
-              >
-                Active Users Today: {activeUsersCount}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12}>
+      
+      <Grid item xs={12}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          aria-label="control panel tabs"
+          className={classes.tabsContainer}
+          indicatorColor="secondary"
+          textColor="secondary"
+          variant="fullWidth"
+        >
+          <Tab label="User Invitation Requests" />
+          <Tab label="Statistics" />
+          <Tab label="Featured Posts" />
+        </Tabs>
+      </Grid>
+
+      <Grid item xs={12}>
+        <TabPanel value={tabValue} index={0}>
+          <UserInvitationRequestsTab data={data} />
+        </TabPanel>
+        <TabPanel value={tabValue} index={1}>
+          <StatisticsTab data={data} />
+        </TabPanel>
+        <TabPanel value={tabValue} index={2}>
           <FeaturedPostsTable />
-        </Grid>
+        </TabPanel>
       </Grid>
     </Grid>
   )
@@ -548,6 +611,14 @@ const ControlPanel = () => {
 }
 
 ControlPanelContainer.propTypes = {
+  data: PropTypes.object.isRequired,
+}
+
+UserInvitationRequestsTab.propTypes = {
+  data: PropTypes.object.isRequired,
+}
+
+StatisticsTab.propTypes = {
   data: PropTypes.object.isRequired,
 }
 

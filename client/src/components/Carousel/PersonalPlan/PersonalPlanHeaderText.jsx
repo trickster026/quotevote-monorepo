@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 
 function PersonalPlanHeaderText({ classes, index }) {
@@ -10,7 +9,7 @@ function PersonalPlanHeaderText({ classes, index }) {
           What is
           {' '}
           <span className={greenTitleText}>
-            VoxPOP
+            Quote Vote
           </span>
         </>
       )}

@@ -38,7 +38,7 @@ export default function LandingPage() {
     >
       <GridItem xs={12} className={classes.listContainer}>
         <ListItem className={classes.listItem}>
-          <img alt="voxPOP" src="/assets/QuoteVoteLogo.png" className={classes.voxPop} />
+          <img alt="quoteVote" src="/assets/QuoteVoteLogo.png" className={classes.voxPop} />
         </ListItem>
         <ListItem className={classes.listItem}>
           <Button

@@ -709,4 +709,4 @@ See the deployed version on the netlify preview build. Wait for code review, fee
 - If you want to make queries or mutation put them in the src/graphql/mutation.js  or src/graphql/query.js
 
 ### Use Our Wiki
-Please use and contribute to the wiki: [voxpop-React Wiki](https://github.com/QuoteVote/quotevote-react/wiki)
+Please use and contribute to the wiki: [Quote Vote-React Wiki](https://github.com/QuoteVote/quotevote-react/wiki)

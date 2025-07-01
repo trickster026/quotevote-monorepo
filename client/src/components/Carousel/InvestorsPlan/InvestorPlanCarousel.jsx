@@ -52,7 +52,7 @@ function InvestorCarouselFirstContent({ classes, setContentIndex, width }) {
       <GridItem xs={12} sm={12} md={6}>
         <Typography>
           <div className={opinionsText}>
-            We created VoxPop with promoting
+            We created Quote Vote with promoting
             {' '}
             <b>democracy and community as our pillar.</b>
             <br />
@@ -131,7 +131,7 @@ function InvestorCarouselSecondContent({ classes, setContentIndex, width }) {
             <b>we ensure shareholders have an equal voice, and provide a more inclusive opportunity to invest. </b>
             <br />
             <br />
-            We keep growth organized and open through voxPOP and
+            We keep growth organized and open through Quote Vote and
             {' '}
             <b>all shareholder opinions hold the same weight. </b>
             <br />
@@ -261,7 +261,7 @@ function InvestorCarouselThirdContent({ classes, width }) {
         </Grid>
       </Grid>
     </form>
-  )
+  );
 }
 
 function InvestorPlanCarousel(props) {

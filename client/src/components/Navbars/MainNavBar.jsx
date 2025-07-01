@@ -39,7 +39,7 @@ function MainNavBar(props) {
     dispatch(SET_SELECTED_PAGE(null))
   }
 
-  const handleVoxPop = () => {
+  const handleQuoteVote = () => {
     dispatch(SET_SELECTED_PAGE(0))
   }
 
@@ -53,7 +53,7 @@ function MainNavBar(props) {
         wrap="nowrap"
       >
         <Grid item>
-          <NavLink to="/search" onClick={handleVoxPop}>
+          <NavLink to="/search" onClick={handleQuoteVote}>
             <img alt="Quote" src="/assets/QuoteIcon.png" className={classes.quote} />
           </NavLink>
         </Grid>

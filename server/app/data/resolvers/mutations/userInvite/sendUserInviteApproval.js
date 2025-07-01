@@ -163,7 +163,7 @@ export const sendUserInviteApproval = (pubsub) => {
                   </div>
                   <p class="footer-p">
                     This email was sent to you by Quote. By using our services, you agree to our
-                    <a class="customer-agreements-anchor" href="https://quote.vote/">customer agreements.</a> ©VoxPOP 2020. All rights reserved.
+                    <a class="customer-agreements-anchor" href="https://quote.vote/">customer agreements.</a> ©Quote Vote 2020. All rights reserved.
                   </p>
               </div>  
             </div>
@@ -282,7 +282,7 @@ export const sendUserInviteApproval = (pubsub) => {
                   </div>
                   <p class="footer-p">
                     This email was sent to you by Quote. By using our services, you agree to our
-                    <a class="customer-agreements-anchor" href="https://quote.vote/">customer agreements.</a> ©VoxPOP 2020. All rights reserved.
+                    <a class="customer-agreements-anchor" href="https://quote.vote/">customer agreements.</a> ©Quote Vote 2020. All rights reserved.
                   </p>
               </div>  
             </div>

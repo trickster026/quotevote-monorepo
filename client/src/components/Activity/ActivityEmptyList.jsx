@@ -65,7 +65,7 @@ function ActivityEmptyList() {
     <GridContainer className={classes.root}>
       <GridItem xs={12}>
         <p className={classes.paragraph}>
-          Welcome to VoxPOP. To read some ideas you need to start following people. You can find your friends or you
+          Welcome to Quote Vote. To read some ideas you need to start following people. You can find your friends or you
           could go to the trending page and follow anyone.
         </p>
       </GridItem>

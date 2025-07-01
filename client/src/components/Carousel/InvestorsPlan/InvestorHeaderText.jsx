@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 
 function InvestorHeaderText({ classes, index }) {
@@ -7,7 +6,7 @@ function InvestorHeaderText({ classes, index }) {
     <>
       {index === 0 && (
         <>
-          Shape VoxPop &
+          Shape Quote Vote &
           {' '}
           <span className={greenTitleText}>
             Help it Scale

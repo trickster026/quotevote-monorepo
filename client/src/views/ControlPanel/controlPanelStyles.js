@@ -96,6 +96,14 @@ const requestAccessStyles = (theme) => ({
   filterInput: {
     marginBottom: 15,
   },
+  tabsContainer: {
+    borderBottom: 1,
+    borderColor: 'divider',
+    marginBottom: 20,
+  },
+  tabPanel: {
+    paddingTop: 20,
+  },
 })
 
 export default requestAccessStyles

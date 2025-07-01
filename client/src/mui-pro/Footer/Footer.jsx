@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
@@ -31,7 +30,7 @@ export default function Footer(props) {
           <Grid item xs={12} sm={9}>
             <Typography>
               &copy;{" "}
-              VoxPopuli, PBC made with &hearts; on Earth*
+              Quote Voteuli, PBC made with &hearts; on Earth*
               <div className={classes.grow} />
             </Typography>
           </Grid>

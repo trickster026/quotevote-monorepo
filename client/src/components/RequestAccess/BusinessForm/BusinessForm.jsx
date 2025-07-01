@@ -47,7 +47,7 @@ const BusinessForm = (props) => {
             unlimited access
           </b>
           {' '}
-          to voxPOP
+          to Quote Vote
         </Typography>
       </Grid>
       <Grid item xs={12} style={{ marginTop: requestInviteSuccessful ? '4%' : '2%' }}>

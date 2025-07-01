@@ -237,14 +237,14 @@ export default function AuthNavbar(props) {
         <Hidden smDown>
           <div className={classes.flex}>
             <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => history.push('/search')}>
-              <img alt="voxPOP" src="/assets/QuoteWhite.png" className={classes.voxPop} />
+              <img alt="Quote Vote" src="/assets/QuoteWhite.png" className={classes.voxPop} />
             </IconButton>
           </div>
         </Hidden>
         <Hidden mdUp>
           <div className={classes.flex}>
             <IconButton color="primary" aria-label="upload picture" component="span" className={classes.title}>
-              <img alt="voxPOP" src="/assets/QuoteWhite.png" className={classes.voxPop} />
+              <img alt="Quote Vote" src="/assets/QuoteWhite.png" className={classes.voxPop} />
             </IconButton>
           </div>
         </Hidden>
