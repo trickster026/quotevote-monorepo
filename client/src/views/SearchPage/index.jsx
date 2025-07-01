@@ -415,74 +415,27 @@ export default function SearchPage() {
     setFocusedInput(null)
   }
 
-  // Sort posts chronologically by date by default, or by interactions if interactions filter is active
+  // Return data exactly as received from API without any sorting
   const processAndSortData = (rawData) => {
     if (!rawData) return null
+
+    if(!rawData.posts || !rawData.posts.entities) {
+      return null
+    }
 
     console.log('Processing data with filter mode:', filterMode)
     console.log('Raw data:', rawData)
 
+    // Simply serialize the posts and return the data exactly as received
     let processedData = {
       ...rawData,
       posts: {
         ...rawData.posts,
-        entities: rawData.posts.entities.map((post) => serializePost(post)),
+        entities: rawData.posts?.entities?.map((post) => serializePost(post)),
       },
     }
 
-    // Sort by interactions if interactions filter is active
-    if (filterMode === 'interactions') {
-      console.log('Sorting by interactions')
-      console.log(
-        'Posts before sorting:',
-        processedData.posts.entities.map((p) => ({
-          id: p._id,
-          title: p.title,
-          comments: p.comments?.length || 0,
-          votes: p.votes?.length || 0,
-          quotes: p.quotes?.length || 0,
-          total:
-            (p.comments?.length || 0) +
-            (p.votes?.length || 0) +
-            (p.quotes?.length || 0),
-        })),
-      )
-
-      processedData.posts.entities.sort((a, b) => {
-        const aInteractions =
-          (a.comments?.length || 0) +
-          (a.votes?.length || 0) +
-          (a.quotes?.length || 0)
-        const bInteractions =
-          (b.comments?.length || 0) +
-          (b.votes?.length || 0) +
-          (b.quotes?.length || 0)
-        console.log(
-          `Post ${a._id}: ${aInteractions} interactions, Post ${b._id}: ${bInteractions} interactions`,
-        )
-        return bInteractions - aInteractions
-      })
-
-      console.log(
-        'Posts after sorting:',
-        processedData.posts.entities.map((p) => ({
-          id: p._id,
-          title: p.title,
-          total:
-            (p.comments?.length || 0) +
-            (p.votes?.length || 0) +
-            (p.quotes?.length || 0),
-        })),
-      )
-    } else {
-      // Sort chronologically by date (newest first) by default
-      console.log('Sorting chronologically by date (newest first)')
-      processedData.posts.entities.sort((a, b) => {
-        const dateA = new Date(a.created || a.createdAt || 0)
-        const dateB = new Date(b.created || b.createdAt || 0)
-        return dateB - dateA // Newest first
-      })
-    }
+    console.log('Returning data exactly as received from API (no sorting applied)')
 
     return processedData
   }

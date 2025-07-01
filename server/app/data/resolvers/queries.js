@@ -3,7 +3,6 @@ import * as postQuery from './queries/post';
 import * as groupQuery from './queries/group';
 import * as messageQuery from './queries/message';
 import * as userQuery from './queries/user';
-import * as voteQuery from './queries/vote';
 import * as notificationQuery from './queries/notification';
 
 export const resolver_query = function () {

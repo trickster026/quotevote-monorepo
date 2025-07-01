@@ -95,8 +95,8 @@ export const topPosts = (pubsub) => {
     const totalPosts = await PostModel.find(searchArgs).count();
 
     // Build sort criteria
-    const sortCriteria = {
-      createdAt: "desc", // Secondary sort by creation date for chronological ordering
+    let sortCriteria = {
+      created: "desc", // Secondary sort by creation date for chronological ordering
     };
 
     if(interactions) {
@@ -119,7 +119,6 @@ export const topPosts = (pubsub) => {
       .skip(offset)
       .limit(limit);
 
-    console.log('Trending posts:', trendingPosts);
 
     // Populate creator information
     const postsWithCreator = await Promise.all(
