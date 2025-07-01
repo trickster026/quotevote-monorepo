@@ -1,21 +1,27 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, InputBase, Paper, IconButton, Button } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
-import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import format from 'date-fns/format';
-import { jwtDecode } from 'jwt-decode';
-import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query';
-import { serializePost } from '../../utils/objectIdSerializer';
-import PostsList from '../../components/Post/PostsList';
-import ErrorBoundary from '../../components/ErrorBoundary';
-import Carousel from '../../components/Carousel/Carousel';
-import PostCard from '../../components/Post/PostCard';
-import Divider from '@material-ui/core/Divider';
-import LatestQuotes from '../../components/Quotes/LatestQuotes';
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  Grid,
+  Typography,
+  InputBase,
+  Paper,
+  IconButton,
+  Button,
+} from '@material-ui/core'
+import { useQuery } from '@apollo/react-hooks'
+import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import SearchIcon from '@material-ui/icons/Search'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import format from 'date-fns/format'
+import { jwtDecode } from 'jwt-decode'
+import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query'
+import { serializePost } from '../../utils/objectIdSerializer'
+import PostsList from '../../components/Post/PostsList'
+import ErrorBoundary from '../../components/ErrorBoundary'
+import Carousel from '../../components/Carousel/Carousel'
+import PostCard from '../../components/Post/PostCard'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -229,12 +235,12 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: '50%',
     },
   },
-}));
+}))
 
 export default function SearchPage() {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const [showResults, setShowResults] = useState(false)
+  const [showResults, setShowResults] = useState(true)
   const [searchKey, setSearchKey] = useState('')
   const hiddenPosts = useSelector((state) => state.ui.hiddenPosts) || []
   const user = useSelector((state) => state.user.data)
@@ -244,18 +250,12 @@ export default function SearchPage() {
     startDate: null,
     endDate: null,
   })
-  
+
   // New state for filter modes
   const [filterMode, setFilterMode] = useState('all') // 'all', 'friends', 'interactions'
-  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-  const [focusedInput, setFocusedInput] = useState(null);
-  
-  // Add a query key that changes when filters change to force refetch
-  const [queryKey, setQueryKey] = useState(0)
-  
-  // Carousel state for guest mode
-  const [activeStep, setActiveStep] = useState(0)
-  
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false)
+  const [focusedInput, setFocusedInput] = useState(null)
+
   // Guest mode state
   const [isGuestMode, setIsGuestMode] = useState(false)
 
@@ -263,16 +263,16 @@ export default function SearchPage() {
   const checkAuthentication = () => {
     const storedToken = localStorage.getItem('token')
     if (!storedToken) return false
-    
+
     try {
       const decoded = jwtDecode(storedToken)
       const currentTime = Date.now() / 1000
-      
+
       // Check if token is expired
       if (decoded.exp && decoded.exp < currentTime) {
         return false
       }
-      
+
       return true
     } catch (err) {
       return false
@@ -290,11 +290,24 @@ export default function SearchPage() {
     limit,
     offset,
     searchKey,
-    startDateRange: dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : '',
-    endDateRange: dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : '',
+    startDateRange: dateRangeFilter.startDate
+      ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
+      : '',
+    endDateRange: dateRangeFilter.endDate
+      ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
+      : '',
     friendsOnly: filterMode === 'friends',
+    interactions: filterMode === 'interactions',
     // Add a dummy variable that changes when filters change to force refetch
-    filterKey: `${filterMode}-${dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : ''}-${dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : ''}`,
+    filterKey: `${filterMode}-${
+      dateRangeFilter.startDate
+        ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
+        : ''
+    }-${
+      dateRangeFilter.endDate
+        ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
+        : ''
+    }`,
   }
 
   const { loading, error, data, fetchMore, refetch } = useQuery(GET_TOP_POSTS, {
@@ -318,7 +331,7 @@ export default function SearchPage() {
   // Function to trigger query refetch when filters change
   const triggerQueryRefetch = () => {
     console.log('Triggering query refetch with variables:', variables)
-    setQueryKey(prev => prev + 1)
+    setQueryKey((prev) => prev + 1)
     if (showResults) {
       refetch(variables)
     }
@@ -347,13 +360,13 @@ export default function SearchPage() {
 
   const handleFriendsFilter = () => {
     console.log('Friends filter clicked, current mode:', filterMode)
-    
+
     if (!user || !user._id) {
       console.log('User not logged in, cannot use friends filter')
       alert('Please log in to use the friends filter')
       return
     }
-    
+
     setFilterMode(filterMode === 'friends' ? 'all' : 'friends')
     setOffset(0)
     triggerQueryRefetch()
@@ -369,40 +382,40 @@ export default function SearchPage() {
   }
 
   const handleDateFilterToggle = (event) => {
-    const willBeVisible = !isCalendarVisible;
-    setIsCalendarVisible(willBeVisible);
-    setFocusedInput(willBeVisible ? 'startDate' : null);
-  };
+    const willBeVisible = !isCalendarVisible
+    setIsCalendarVisible(willBeVisible)
+    setFocusedInput(willBeVisible ? 'startDate' : null)
+  }
 
   const handleDateChange = (dateRange) => {
-    const [startDate, endDate] = dateRange;
-    setDateRangeFilter({ startDate, endDate });
-    setOffset(0);
+    const [startDate, endDate] = dateRange
+    setDateRangeFilter({ startDate, endDate })
+    setOffset(0)
     setTimeout(() => {
-      triggerQueryRefetch();
-    }, 100);
+      triggerQueryRefetch()
+    }, 100)
     if (startDate && endDate) {
-      setIsCalendarVisible(false);
-      setFocusedInput(null);
+      setIsCalendarVisible(false)
+      setFocusedInput(null)
     }
-    setShowResults(true);
-  };
+    setShowResults(true)
+  }
 
   const clearDateFilter = () => {
-    setDateRangeFilter({ startDate: null, endDate: null });
-    setOffset(0);
+    setDateRangeFilter({ startDate: null, endDate: null })
+    setOffset(0)
     setTimeout(() => {
-      triggerQueryRefetch();
-    }, 100);
-  };
+      triggerQueryRefetch()
+    }, 100)
+  }
 
   const clearDateFilterAndClose = () => {
-    clearDateFilter();
-    setIsCalendarVisible(false);
-    setFocusedInput(null);
-  };
+    clearDateFilter()
+    setIsCalendarVisible(false)
+    setFocusedInput(null)
+  }
 
-  // Sort posts by interactions if interactions filter is active
+  // Sort posts chronologically by date by default, or by interactions if interactions filter is active
   const processAndSortData = (rawData) => {
     if (!rawData) return null
 
@@ -420,39 +433,70 @@ export default function SearchPage() {
     // Sort by interactions if interactions filter is active
     if (filterMode === 'interactions') {
       console.log('Sorting by interactions')
-      console.log('Posts before sorting:', processedData.posts.entities.map(p => ({
-        id: p._id,
-        title: p.title,
-        comments: p.comments?.length || 0,
-        votes: p.votes?.length || 0,
-        quotes: p.quotes?.length || 0,
-        total: (p.comments?.length || 0) + (p.votes?.length || 0) + (p.quotes?.length || 0)
-      })))
-      
+      console.log(
+        'Posts before sorting:',
+        processedData.posts.entities.map((p) => ({
+          id: p._id,
+          title: p.title,
+          comments: p.comments?.length || 0,
+          votes: p.votes?.length || 0,
+          quotes: p.quotes?.length || 0,
+          total:
+            (p.comments?.length || 0) +
+            (p.votes?.length || 0) +
+            (p.quotes?.length || 0),
+        })),
+      )
+
       processedData.posts.entities.sort((a, b) => {
-        const aInteractions = (a.comments?.length || 0) + (a.votes?.length || 0) + (a.quotes?.length || 0)
-        const bInteractions = (b.comments?.length || 0) + (b.votes?.length || 0) + (b.quotes?.length || 0)
-        console.log(`Post ${a._id}: ${aInteractions} interactions, Post ${b._id}: ${bInteractions} interactions`)
+        const aInteractions =
+          (a.comments?.length || 0) +
+          (a.votes?.length || 0) +
+          (a.quotes?.length || 0)
+        const bInteractions =
+          (b.comments?.length || 0) +
+          (b.votes?.length || 0) +
+          (b.quotes?.length || 0)
+        console.log(
+          `Post ${a._id}: ${aInteractions} interactions, Post ${b._id}: ${bInteractions} interactions`,
+        )
         return bInteractions - aInteractions
       })
-      
-      console.log('Posts after sorting:', processedData.posts.entities.map(p => ({
-        id: p._id,
-        title: p.title,
-        total: (p.comments?.length || 0) + (p.votes?.length || 0) + (p.quotes?.length || 0)
-      })))
+
+      console.log(
+        'Posts after sorting:',
+        processedData.posts.entities.map((p) => ({
+          id: p._id,
+          title: p.title,
+          total:
+            (p.comments?.length || 0) +
+            (p.votes?.length || 0) +
+            (p.quotes?.length || 0),
+        })),
+      )
+    } else {
+      // Sort chronologically by date (newest first) by default
+      console.log('Sorting chronologically by date (newest first)')
+      processedData.posts.entities.sort((a, b) => {
+        const dateA = new Date(a.created || a.createdAt || 0)
+        const dateB = new Date(b.created || b.createdAt || 0)
+        return dateB - dateA // Newest first
+      })
     }
 
     return processedData
   }
 
   // Handle GraphQL errors gracefully
-  const hasError = error && error.graphQLErrors && error.graphQLErrors.length > 0
+  const hasError =
+    error && error.graphQLErrors && error.graphQLErrors.length > 0
   const errorMessage = hasError ? error.graphQLErrors[0].message : null
 
   if (hasError && errorMessage?.includes('friendsOnly')) {
     // If backend doesn't support friendsOnly, fall back to client-side filtering
-    console.warn('Backend does not support friendsOnly parameter, using client-side filtering')
+    console.warn(
+      'Backend does not support friendsOnly parameter, using client-side filtering',
+    )
   }
 
   if (error) {
@@ -469,15 +513,19 @@ export default function SearchPage() {
 
   const processedData = processAndSortData(data)
 
-  const featuredPosts = (featuredData?.featuredPosts || [])
-    .map((post) => serializePost(post))
+  const featuredPosts = (featuredData?.featuredPosts || []).map((post) =>
+    serializePost(post),
+  )
 
   // Create carousel items from posts for guest mode
   const createCarouselItems = (posts) => {
     if (!posts || !posts.length) return []
-    
+
     return posts.map((post) => (
-      <div key={post._id} style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <div
+        key={post._id}
+        style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}
+      >
         <PostCard
           _id={post._id}
           text={post.text}
@@ -498,289 +546,6 @@ export default function SearchPage() {
     ))
   }
 
-  // Guest mode carousel
-  if (isGuestMode && processedData && processedData.posts && processedData.posts.entities.length > 0) {
-    return (
-      <ErrorBoundary>
-        <div className={classes.root}>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            className={classes.container}
-          >
-            <Grid item>
-              <div className={classes.logoContainer}>
-                <img
-                  src="/assets/search-quote-vote.png"
-                  alt="logo"
-                  className={classes.logoImage}
-                />
-              </div>
-            </Grid>
-            <Grid item>
-              <Typography className={classes.tagline} style={{ marginBottom: '1rem' }}>
-                No algorithms. No ads. Just conversations.
-              </Typography>
-            </Grid>
-
-            {/* Action Buttons Row */}
-            <Grid item style={{ marginTop: 32, marginBottom: 16, width: '100%' }}>
-              <Grid container justifyContent="center" spacing={4}>
-                <Grid item>
-                  <Button variant="outlined" href="/auth/request-access" target="_blank">Request Invite</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" target="_blank">Donate</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" href="mailto:volunteer@quote.vote">Volunteer</Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" href="https://github.com/QuoteVote/quotevote-monorepo" target="_blank">GitHub</Button>
-                </Grid>
-              </Grid>
-            </Grid>
-            {/** Divider   */}  
-            <Grid item style={{ width: '100%', marginTop: 16, marginBottom: 16 }}>
-              <Divider />
-            </Grid>
-
-            {/* Search Bar - Always visible */}
-            <Grid item style={{ width: '100%', maxWidth: 600 }}>
-              <Paper
-                component="form"
-                className={classes.searchBar}
-                onSubmit={handleSearch}
-              >
-                <InputBase
-                  className={classes.input}
-                  placeholder="Search..."
-                  inputProps={{ 'aria-label': 'search' }}
-                  value={searchKey}
-                  onChange={(e) => setSearchKey(e.target.value)}
-                />
-                <IconButton
-                  type="submit"
-                  className={classes.iconButton}
-                  aria-label="search"
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Paper>
-            </Grid>
-
-            {isGuestMode && featuredPosts.length > 0 && (
-              <Grid item style={{ width: '100%', maxWidth: '800px' }}>
-                <Carousel navButtonsAlwaysVisible autoplay={false}>
-                  {createCarouselItems(featuredPosts)}
-                </Carousel>
-              </Grid>
-            )}
-
-            {/* Filter Buttons - Always visible */}
-            <Grid item className={classes.iconsContainer}>
-              <IconButton 
-                aria-label="friends" 
-                className={`${classes.icon} ${filterMode === 'friends' ? classes.activeFilter : ''}`}
-                onClick={handleFriendsFilter}
-                title={user && user._id ? "Show posts from friends only" : "Please log in to use friends filter"}
-                disabled={!user || !user._id}
-                style={{ opacity: (!user || !user._id) ? 0.5 : 1 }}
-              >
-                👥
-              </IconButton>
-              <IconButton 
-                aria-label="filter" 
-                className={`${classes.icon} ${filterMode === 'interactions' ? classes.activeFilter : ''}`}
-                onClick={handleInteractionsFilter}
-                title="Sort by most interactions"
-              >
-                🧲
-              </IconButton>
-              <IconButton 
-                aria-label="calendar" 
-                className={`${classes.icon} ${(dateRangeFilter.startDate || dateRangeFilter.endDate || isCalendarVisible) ? classes.activeFilter : ''}`}
-                onClick={e => handleDateFilterToggle(e)}
-                title="Filter by date range"
-              >
-                📅
-              </IconButton>
-            </Grid>
-            
-            {/* Date Picker - Always visible when calendar is open */}
-            {isCalendarVisible && (
-              <Grid item xs={12} style={{ marginTop: '20px', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 24px rgba(0,0,0,0.10)', background: '#fff', border: '1px solid #eee', maxWidth: 600 }}>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <Typography variant="subtitle2" style={{ marginBottom: 8, textAlign: 'center' }}>
-                      Start Date
-                    </Typography>
-                    <div className={classes.datePickerInput}>
-                      <DatePicker
-                        selected={dateRangeFilter.startDate}
-                        onChange={date => handleDateChange([date, dateRangeFilter.endDate])}
-                        selectsStart
-                        startDate={dateRangeFilter.startDate}
-                        endDate={dateRangeFilter.endDate}
-                        maxDate={dateRangeFilter.endDate || new Date()}
-                        dateFormat="MMM d, yyyy"
-                        placeholderText="Select start date"
-                      />
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <Typography variant="subtitle2" style={{ marginBottom: 8, textAlign: 'center' }}>
-                      End Date
-                    </Typography>
-                    <div className={classes.datePickerInput}>
-                      <DatePicker
-                        selected={dateRangeFilter.endDate}
-                        onChange={date => handleDateChange([dateRangeFilter.startDate, date])}
-                        selectsEnd
-                        startDate={dateRangeFilter.startDate}
-                        endDate={dateRangeFilter.endDate}
-                        minDate={dateRangeFilter.startDate}
-                        maxDate={new Date()}
-                        dateFormat="MMM d, yyyy"
-                        placeholderText="Select end date"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div style={{ marginTop: 16, textAlign: 'center' }}>
-                  <Button 
-                    variant="outlined" 
-                    onClick={clearDateFilterAndClose}
-                    size="small"
-                  >
-                    Clear and Close
-                  </Button>
-                </div>
-              </Grid>
-            )}
-            
-            {/* Filter Status Display */}
-            {(filterMode !== 'all' || dateRangeFilter.startDate || dateRangeFilter.endDate) && (
-              <Grid item style={{ width: '100%', marginTop: 16 }}>
-                <Paper style={{ padding: 16, backgroundColor: '#f8f9fa' }}>
-                  <Typography variant="body2" color="textSecondary">
-                    Active Filters:
-                    {filterMode === 'friends' && ' 👥 Friends only'}
-                    {filterMode === 'interactions' && ' 🧲 Sorted by interactions'}
-                    {dateRangeFilter.startDate && ` 📅 From ${format(dateRangeFilter.startDate, 'MMM d, yyyy')}`}
-                    {dateRangeFilter.endDate && ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
-                  </Typography>
-                  {filterMode === 'friends' && (
-                    <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginTop: 8 }}>
-                      Showing posts from people you follow
-                    </Typography>
-                  )}
-                  {filterMode === 'interactions' && (
-                    <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginTop: 8 }}>
-                      Posts sorted by total interactions (comments + votes + quotes)
-                    </Typography>
-                  )}
-                </Paper>
-              </Grid>
-            )}
-
-            {!isGuestMode && (
-              <Grid item style={{ width: '100%', maxWidth: 600 }}>
-                <LatestQuotes limit={5} />
-              </Grid>
-            )}
-            
-            <Grid item style={{ width: '100%', maxWidth: '800px' }}>
-              {loading && (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <Typography>Loading posts...</Typography>
-                </div>
-              )}
-              {processedData && (
-                <Carousel
-                  navButtonsAlwaysVisible
-                  autoplay={false}
-                  activeStepProp={activeStep}
-                  setActiveStepProp={setActiveStep}
-                >
-                  {createCarouselItems(processedData.posts.entities)}
-                </Carousel>
-              )}
-            </Grid>
-
-            {/* New Section: Discover without bias (matching provided image) */}
-            <Grid item style={{ width: '100%', maxWidth: 1200, margin: '2rem auto 0 auto', padding: '0 5vw' }}>
-                <Typography variant="h4" style={{ fontWeight: 700, marginBottom: 8 }}>
-                    <span style={{ color: '#2ecc71' }}>Discover</span> <span style={{ color: '#111' }}>without bias</span>
-                </Typography>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 32,
-                    flexDirection: 'column',
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    marginTop: '2rem',
-                  }}
-                >
-                  {/* Left: Image */}
-                  <div style={{ flex: '1 1 320px', minWidth: 220, maxWidth: 480, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                    <img
-                      src={process.env.PUBLIC_URL + '/assets/three-short-posts.png'}
-                      alt="Example posts"
-                      style={{
-                        width: '100%',
-                        maxWidth: 600,
-                        height: 'auto',
-                      }}
-                    />
-                  </div>
-                  {/* Right: Text and Button */}
-                  <div style={{ flex: '2 1 340px', minWidth: 220, maxWidth: 600, width: '100%', textAlign: 'left', marginLeft: 0 }}>
-                    <Typography variant="subtitle1" style={{ fontWeight: 600, marginBottom: 16, color: '#222' }}>
-                      All conversations are searchable without ads,<br />
-                      and discovered through exploration, not algorithms.
-                    </Typography>
-                    <ul style={{ color: '#333', fontSize: 16, margin: '0 0 24px 18px', padding: 0, lineHeight: 1.7 }}>
-                      <li>Filter by keyword, only show following, sort by most interactions, or select a date range.</li>
-                      <li>Find what people are talking about now, or during a historical event in the past.</li>
-                    </ul>
-                    <Button
-                      variant="contained"
-                      style={{
-                        background: '#2ecc71',
-                        color: '#fff',
-                        fontWeight: 600,
-                        fontSize: 16,
-                        borderRadius: 8,
-                        padding: '10px 32px',
-                        textTransform: 'none',
-                        boxShadow: '0 2px 8px rgba(46,204,113,0.08)'
-                      }}
-                      href="/auth/request-access"
-                    >
-                      Request Invite
-                    </Button>
-                  </div>
-                </div>
-            </Grid>
-
-            <Grid item style={{ marginTop: '2rem', textAlign: 'center' }}>
-              <Typography variant="body2" color="textSecondary">
-                Sign up to join the conversation and create your own posts!
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      </ErrorBoundary>
-    )
-  }
-
   return (
     <ErrorBoundary>
       <div className={classes.root}>
@@ -790,17 +555,69 @@ export default function SearchPage() {
           alignItems="center"
           className={classes.container}
         >
-          {!showResults && (
-            <Grid item>
-              <div className={classes.logoContainer}>
-                <img
-                  src="/assets/search-quote-vote.png"
-                  alt="logo"
-                  className={classes.logoImage}
-                />
-              </div>
+          <Grid item>
+            <div className={classes.logoContainer}>
+              <img
+                src="/assets/search-quote-vote.png"
+                alt="logo"
+                className={classes.logoImage}
+              />
+            </div>
+          </Grid>
+
+          <Grid item>
+            <Typography
+              className={classes.tagline}
+              style={{ marginBottom: '1rem' }}
+            >
+              No algorithms. No ads. Just conversations.
+            </Typography>
+          </Grid>
+
+          {/* Action Buttons Row */}
+          {isGuestMode && (
+            <Grid
+              item
+              style={{ marginTop: 32, marginBottom: 32, width: '100%' }}
+            >
+              <Grid container justifyContent="center" spacing={4}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    href="/auth/request-access"
+                    target="_blank"
+                    color="secondary"
+                  >
+                    Request Invite
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+                    target="_blank"
+                  >
+                    Donate
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="outlined" href="mailto:volunteer@quote.vote">
+                    Volunteer
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    href="https://github.com/QuoteVote/quotevote-monorepo"
+                    target="_blank"
+                  >
+                    GitHub
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           )}
+
           <Grid item style={{ width: '100%', maxWidth: 600 }}>
             <Paper
               component="form"
@@ -823,61 +640,79 @@ export default function SearchPage() {
               </IconButton>
             </Paper>
           </Grid>
-
-          {isGuestMode && featuredPosts.length > 0 && (
-            <Grid item style={{ width: '100%', maxWidth: '800px' }}>
-              <Carousel navButtonsAlwaysVisible autoplay={false}>
-                {createCarouselItems(featuredPosts)}
-              </Carousel>
-            </Grid>
-          )}
-          {!showResults && (
-            <Grid item>
-              <Typography className={classes.tagline}>
-                No algorithms. No ads. Just conversations.
-              </Typography>
-            </Grid>
-          )}
           <Grid item className={classes.iconsContainer}>
-            <IconButton 
-              aria-label="friends" 
-              className={`${classes.icon} ${filterMode === 'friends' ? classes.activeFilter : ''}`}
+            <IconButton
+              aria-label="friends"
+              className={`${classes.icon} ${
+                filterMode === 'friends' ? classes.activeFilter : ''
+              }`}
               onClick={handleFriendsFilter}
-              title={user && user._id ? "Show posts from friends only" : "Please log in to use friends filter"}
+              title={
+                user && user._id
+                  ? 'Show posts from friends only'
+                  : 'Please log in to use friends filter'
+              }
               disabled={!user || !user._id}
-              style={{ opacity: (!user || !user._id) ? 0.5 : 1 }}
+              style={{ opacity: !user || !user._id ? 0.5 : 1 }}
             >
               👥
             </IconButton>
-            <IconButton 
-              aria-label="filter" 
-              className={`${classes.icon} ${filterMode === 'interactions' ? classes.activeFilter : ''}`}
+            <IconButton
+              aria-label="filter"
+              className={`${classes.icon} ${
+                filterMode === 'interactions' ? classes.activeFilter : ''
+              }`}
               onClick={handleInteractionsFilter}
               title="Sort by most interactions"
             >
               🧲
             </IconButton>
-            <IconButton 
-              aria-label="calendar" 
-              className={`${classes.icon} ${(dateRangeFilter.startDate || dateRangeFilter.endDate || isCalendarVisible) ? classes.activeFilter : ''}`}
-              onClick={e => handleDateFilterToggle(e)}
+            <IconButton
+              aria-label="calendar"
+              className={`${classes.icon} ${
+                dateRangeFilter.startDate ||
+                dateRangeFilter.endDate ||
+                isCalendarVisible
+                  ? classes.activeFilter
+                  : ''
+              }`}
+              onClick={(e) => handleDateFilterToggle(e)}
               title="Filter by date range"
             >
               📅
             </IconButton>
           </Grid>
-          
+
           {isCalendarVisible && (
-            <Grid item xs={12} style={{ marginTop: '20px', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 24px rgba(0,0,0,0.10)', background: '#fff', border: '1px solid #eee', maxWidth: 600 }}>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
+            <Grid
+              item
+              xs={12}
+              style={{
+                marginTop: '20px',
+                padding: '20px',
+                borderRadius: '12px',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+                background: '#fff',
+                border: '1px solid #eee',
+                maxWidth: 600,
+              }}
+            >
+              <div
+                style={{ display: 'flex', justifyContent: 'center', gap: 16 }}
+              >
                 <div style={{ flex: 1 }}>
-                  <Typography variant="subtitle2" style={{ marginBottom: 8, textAlign: 'center' }}>
+                  <Typography
+                    variant="subtitle2"
+                    style={{ marginBottom: 8, textAlign: 'center' }}
+                  >
                     Start Date
                   </Typography>
                   <div className={classes.datePickerInput}>
                     <DatePicker
                       selected={dateRangeFilter.startDate}
-                      onChange={date => handleDateChange([date, dateRangeFilter.endDate])}
+                      onChange={(date) =>
+                        handleDateChange([date, dateRangeFilter.endDate])
+                      }
                       selectsStart
                       startDate={dateRangeFilter.startDate}
                       endDate={dateRangeFilter.endDate}
@@ -888,13 +723,18 @@ export default function SearchPage() {
                   </div>
                 </div>
                 <div style={{ flex: 1 }}>
-                  <Typography variant="subtitle2" style={{ marginBottom: 8, textAlign: 'center' }}>
+                  <Typography
+                    variant="subtitle2"
+                    style={{ marginBottom: 8, textAlign: 'center' }}
+                  >
                     End Date
                   </Typography>
                   <div className={classes.datePickerInput}>
                     <DatePicker
                       selected={dateRangeFilter.endDate}
-                      onChange={date => handleDateChange([dateRangeFilter.startDate, date])}
+                      onChange={(date) =>
+                        handleDateChange([dateRangeFilter.startDate, date])
+                      }
                       selectsEnd
                       startDate={dateRangeFilter.startDate}
                       endDate={dateRangeFilter.endDate}
@@ -907,8 +747,8 @@ export default function SearchPage() {
                 </div>
               </div>
               <div style={{ marginTop: 16, textAlign: 'center' }}>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   onClick={clearDateFilterAndClose}
                   size="small"
                 >
@@ -917,36 +757,129 @@ export default function SearchPage() {
               </div>
             </Grid>
           )}
-          
+
           {/* Filter Status Display */}
-          {showResults && (filterMode !== 'all' || dateRangeFilter.startDate || dateRangeFilter.endDate) && (
-            <Grid item style={{ width: '100%', marginTop: 16 }}>
-              <Paper style={{ padding: 16, backgroundColor: '#f8f9fa' }}>
-                <Typography variant="body2" color="textSecondary">
-                  Active Filters:
-                  {filterMode === 'friends' && ' 👥 Friends only'}
-                  {filterMode === 'interactions' && ' 🧲 Sorted by interactions'}
-                  {dateRangeFilter.startDate && ` 📅 From ${format(dateRangeFilter.startDate, 'MMM d, yyyy')}`}
-                  {dateRangeFilter.endDate && ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
-                </Typography>
-                {filterMode === 'friends' && (
-                  <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginTop: 8 }}>
-                    Showing posts from people you follow
+          {showResults &&
+            (filterMode !== 'all' ||
+              dateRangeFilter.startDate ||
+              dateRangeFilter.endDate) && (
+              <Grid item style={{ width: '100%', marginTop: 16 }}>
+                <Paper style={{ padding: 16, backgroundColor: '#f8f9fa' }}>
+                  <Typography variant="body2" color="textSecondary">
+                    Active Filters:
+                    {filterMode === 'friends' && ' 👥 Friends only'}
+                    {filterMode === 'interactions' &&
+                      ' 🧲 Sorted by interactions'}
+                    {dateRangeFilter.startDate &&
+                      ` 📅 From ${format(
+                        dateRangeFilter.startDate,
+                        'MMM d, yyyy',
+                      )}`}
+                    {dateRangeFilter.endDate &&
+                      ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
                   </Typography>
-                )}
-                {filterMode === 'interactions' && (
-                  <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginTop: 8 }}>
-                    Posts sorted by total interactions (comments + votes + quotes)
+                  {filterMode === 'friends' && (
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      style={{ display: 'block', marginTop: 8 }}
+                    >
+                      Showing posts from people you follow
+                    </Typography>
+                  )}
+                  {filterMode === 'interactions' && (
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      style={{ display: 'block', marginTop: 8 }}
+                    >
+                      Posts sorted by total interactions (comments + votes +
+                      quotes)
+                    </Typography>
+                  )}
+                </Paper>
+              </Grid>
+            )}
+
+          {isGuestMode && (
+            <>
+              {featuredData?.featuredPosts ? (
+                featuredPosts.length > 0 ? (
+                  <Grid item style={{ width: '100%', maxWidth: '800px' }}>
+                    <Carousel navButtonsAlwaysVisible autoplay={false}>
+                      {createCarouselItems(featuredPosts)}
+                    </Carousel>
+                  </Grid>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+                      ⭐
+                    </div>
+                    <Typography variant="h6" style={{ color: '#666' }}>
+                      No featured posts available
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      style={{ color: '#999', marginTop: '0.5rem' }}
+                    >
+                      Check back later for featured content
+                    </Typography>
+                  </div>
+                )
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <LoadingSpinner size={60} />
+                  <Typography
+                    variant="h6"
+                    style={{ marginTop: '1rem', color: '#666' }}
+                  >
+                    Loading featured posts...
                   </Typography>
-                )}
-              </Paper>
-            </Grid>
+                  <Typography
+                    variant="body2"
+                    style={{ marginTop: '0.5rem', color: '#999' }}
+                  >
+                    Please wait while we fetch featured content
+                  </Typography>
+                </div>
+              )}
+            </>
           )}
 
-          {showResults && (
+          {!isGuestMode && (
             <Grid item xs={12} className={classes.list}>
-              {loading && !processedData && <div>Loading...</div>}
-              {loading && processedData && null}
+              {loading && !processedData && (
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <LoadingSpinner size={60} />
+                  <Typography
+                    variant="h6"
+                    style={{ marginTop: '1rem', color: '#666' }}
+                  >
+                    {searchKey
+                      ? 'Searching posts...'
+                      : filterMode !== 'all'
+                      ? 'Applying filters...'
+                      : dateRangeFilter.startDate || dateRangeFilter.endDate
+                      ? 'Filtering by date...'
+                      : 'Loading posts...'}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ marginTop: '0.5rem', color: '#999' }}
+                  >
+                    {searchKey
+                      ? `Please wait while we search for "${searchKey}"`
+                      : filterMode === 'friends'
+                      ? 'Please wait while we fetch posts from your friends'
+                      : filterMode === 'interactions'
+                      ? 'Please wait while we sort posts by interactions'
+                      : dateRangeFilter.startDate || dateRangeFilter.endDate
+                      ? 'Please wait while we filter posts by date range'
+                      : 'Please wait while we fetch the latest conversations'}
+                  </Typography>
+                </div>
+              )}
+
               {processedData && (
                 <PostsList
                   data={processedData}
@@ -957,7 +890,302 @@ export default function SearchPage() {
                   cols={1}
                 />
               )}
+
+              {(!processedData || processedData?.posts?.entities?.length === 0) && !loading && (
+                <div
+                  style={{
+                    textAlign: 'center',
+                    padding: '2rem',
+                    marginTop: '2rem',
+                  }}
+                >
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+                    🔍
+                  </div>
+                  <Typography variant="h6" style={{ color: '#666' }}>
+                    No posts found
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ color: '#999', marginTop: '0.5rem' }}
+                  >
+                    Try adjusting your search or filters
+                  </Typography>
+                </div>
+              )}
             </Grid>
+          )}
+
+          {isGuestMode && (
+            <>
+            {/* Discover section */}
+              <Grid
+                item
+                style={{
+                  width: '100%',
+                  maxWidth: 1200,
+                  margin: '2rem auto 0 auto',
+                  padding: '0 5vw',
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 700, marginBottom: "4rem", marginTop: '2rem' }}
+                >
+                  <span style={{ color: '#2ecc71' }}>Discover</span>{' '}
+                  <span style={{ color: '#111' }}>without bias</span>
+                </Typography>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 32,
+                    flexDirection: 'column',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    marginTop: '2rem',
+                    '@media (min-width: 900px)': {
+                      flexDirection: 'row',
+                    },
+                  }}
+                  className="discover-section-flex"
+                >
+                  {/* Left: Image */}
+                  <div
+                    style={{
+                      flex: '1 1 320px',
+                      minWidth: 220,
+                      maxWidth: 480,
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={
+                        process.env.PUBLIC_URL + '/assets/three-short-posts.png'
+                      }
+                      alt="Example posts"
+                      style={{
+                        width: '100%',
+                        maxWidth: 600,
+                        height: 'auto',
+                      }}
+                    />
+                  </div>
+                  {/* Right: Text and Button */}
+                  <div
+                    style={{
+                      flex: '2 1 340px',
+                      minWidth: 220,
+                      maxWidth: 600,
+                      width: '100%',
+                      textAlign: 'left',
+                      marginLeft: 0,
+                    }}
+                  >
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        fontWeight: 600,
+                        marginBottom: 16,
+                        color: '#222',
+                      }}
+                    >
+                      All conversations are searchable without ads,
+                      <br />
+                      and discovered through exploration, not algorithms.
+                    </Typography>
+                    <ul
+                      style={{
+                        color: '#333',
+                        fontSize: 16,
+                        margin: '0 0 24px 18px',
+                        padding: 0,
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      <li>
+                        Filter by keyword, only show following, sort by most
+                        interactions, or select a date range.
+                      </li>
+                      <li>
+                        Find what people are talking about now, or during a
+                        historical event in the past.
+                      </li>
+                    </ul>
+                    <Button
+                      variant="contained"
+                      style={{
+                        background: '#2ecc71',
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: 16,
+                        borderRadius: 8,
+                        padding: '10px 32px',
+                        textTransform: 'none',
+                        boxShadow: '0 2px 8px rgba(46,204,113,0.08)',
+                      }}
+                      href="/auth/request-access"
+                    >
+                      Request Invite
+                    </Button>
+                  </div>
+                </div>
+              </Grid>
+
+              {/* Share section */}
+              <Grid
+                item
+                style={{
+                  width: '100%',
+                  maxWidth: 1200,
+                  margin: '2rem auto 0 auto',
+                  padding: '0 5vw',
+                  paddingTop: '4rem',
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  style={{ fontWeight: 700, marginTop: '2rem', marginBottom: '4rem' }}
+                >
+                  <span style={{ color: '#111' }}>Share</span>
+                  <span style={{ color: '#2ecc71' }}>your thoughts</span>{' '}
+                  <span style={{ color: '#111' }}>, ideas and plans</span>
+                </Typography>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 32,
+                    flexDirection: 'column',
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    marginTop: '2rem',
+                    '@media (min-width: 900px)': {
+                      flexDirection: 'row',
+                    },
+                  }}
+                  className="discover-section-flex"
+                >
+                  {/* Left: Image */}
+                  <div
+                    style={{
+                      flex: '1 1 320px',
+                      minWidth: 220,
+                      maxWidth: 480,
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={
+                        process.env.PUBLIC_URL + '/assets/voting-popup.png'
+                      }
+                      alt="Example posts"
+                      style={{
+                        width: '100%',
+                        maxWidth: 600,
+                        height: 'auto',
+                      }}
+                    />
+                  </div>
+                  {/* Right: Text and Button */}
+                  <div
+                    style={{
+                      flex: '2 1 340px',
+                      minWidth: 220,
+                      maxWidth: 600,
+                      width: '100%',
+                      textAlign: 'left',
+                      marginLeft: 0,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      style={{
+                        fontWeight: 700,
+                        marginBottom: 12,
+                        color: '#111',
+                        fontSize: 22,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      Post to your social circle and beyond.
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        color: '#222',
+                        fontSize: 18,
+                        marginBottom: 12,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      Engage in meaningful, respectful discussions, that solve your problem, challenge your perspectives, or create a bit of whimsical fun..
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        color: '#222',
+                        fontSize: 18,
+                        marginBottom: 8,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      Highlight words,<br />then vote or <b>comment to provide feedback.</b>
+                    </Typography>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 32, marginTop: 32 }}>
+                      <Button
+                        variant="contained"
+                        style={{
+                          background: '#2ecc71',
+                          color: '#fff',
+                          fontWeight: 600,
+                          fontSize: 18,
+                          borderRadius: 8,
+                          padding: '10px 32px',
+                          textTransform: 'none',
+                          boxShadow: '0 2px 8px rgba(46,204,113,0.08)',
+                        }}
+                        href="/auth/request-access"
+                      >
+                        Request Invite
+                      </Button>
+                      <a
+                        href="#more-info"
+                        style={{
+                          color: '#2ecc71',
+                          fontWeight: 500,
+                          fontSize: 22,
+                          textDecoration: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginLeft: 16,
+                        }}
+                      >
+                        More info
+                        <span style={{ fontSize: 28, marginLeft: 6 }}>»</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </Grid>
+
+
+              <Grid item style={{ marginTop: '2rem', textAlign: 'center' }}>
+                <Typography variant="body2" color="textSecondary">
+                  Sign up to join the conversation and create your own posts!
+                </Typography>
+              </Grid>
+            </>
           )}
         </Grid>
       </div>
@@ -967,14 +1195,16 @@ export default function SearchPage() {
 
 /* Add this to the bottom of the file (outside the component) for responsive flex direction */
 if (typeof window !== 'undefined') {
-  const style = document.createElement('style');
+  const style = document.createElement('style')
   style.innerHTML = `
+    .discover-section-flex {
+      flex-direction: column;
+    }
     @media (min-width: 900px) {
       .discover-section-flex {
         flex-direction: row !important;
       }
     }
-  `;
-  document.head.appendChild(style);
+  `
+  document.head.appendChild(style)
 }
-

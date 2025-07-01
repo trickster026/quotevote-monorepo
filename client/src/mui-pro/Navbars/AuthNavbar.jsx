@@ -236,7 +236,7 @@ export default function AuthNavbar(props) {
       <Toolbar className={classes.display}>
         <Hidden smDown>
           <div className={classes.flex}>
-            <IconButton color="primary" aria-label="upload picture" component="span">
+            <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => history.push('/search')}>
               <img alt="voxPOP" src="/assets/QuoteWhite.png" className={classes.voxPop} />
             </IconButton>
           </div>

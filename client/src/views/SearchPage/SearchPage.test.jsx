@@ -46,7 +46,8 @@ const mocks = [
         offset: 0,
         searchKey: '',
         startDateRange: '',
-        endDateRange: ''
+        endDateRange: '',
+        interactions: false
       }
     },
     result: {

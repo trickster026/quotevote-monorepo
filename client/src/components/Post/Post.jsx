@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  IconButton,
-  FormControlLabel,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    IconButton,
+    FormControlLabel,
 } from '@material-ui/core'
 import Switch from '@material-ui/core/Switch'
 import { makeStyles } from '@material-ui/core/styles'
@@ -27,18 +27,18 @@ import { SET_SNACKBAR } from '../../store/ui'
 import useGuestGuard from 'utils/useGuestGuard'
 import RequestInviteDialog from '../RequestInviteDialog'
 import {
-  ADD_COMMENT,
-  ADD_QUOTE,
-  REPORT_POST,
-  VOTE,
-  APPROVE_POST,
-  REJECT_POST,
-  DELETE_POST
+    ADD_COMMENT,
+    ADD_QUOTE,
+    REPORT_POST,
+    VOTE,
+    APPROVE_POST,
+    REJECT_POST,
+    DELETE_POST
 } from '../../graphql/mutations'
 import {
-  GET_POST,
-  GET_TOP_POSTS,
-  GET_USER_ACTIVITY,
+    GET_POST,
+    GET_TOP_POSTS,
+    GET_USER_ACTIVITY,
 } from '../../graphql/query'
 import AvatarDisplay from '../Avatar'
 import BookmarkIconButton from '../CustomButtons/BookmarkIconButton'
@@ -242,13 +242,13 @@ function Post({
   const [approvePost] = useMutation(APPROVE_POST, {
     refetchQueries: [
       { query: GET_POST, variables: { postId: _id } },
-      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '', interactions: false } },
     ],
   });
   const [rejectPost] = useMutation(REJECT_POST, {
     refetchQueries: [
       { query: GET_POST, variables: { postId: _id } },
-      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '', interactions: false } },
     ],
   });
 
@@ -260,20 +260,20 @@ function Post({
     variables: { postId: _id, userId: user._id },
     refetchQueries: [
       { query: GET_POST, variables: { postId: _id } },
-      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '', interactions: false } },
     ],
   });
   const [removeReject] = useMutation(REJECT_POST, {
     variables: { postId: _id, userId: user._id },
     refetchQueries: [
       { query: GET_POST, variables: { postId: _id } },
-      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '', interactions: false } },
     ],
   });
 
   const [deletePost] = useMutation(DELETE_POST, {
     refetchQueries: [
-      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '' } },
+      { query: GET_TOP_POSTS, variables: { limit: 5, offset: 0, searchKey: '', interactions: false } },
     ],
   });
 

@@ -2,10 +2,8 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
-import Tabs from '@material-ui/core/Tabs'
 import Dialog from '@material-ui/core/Dialog'
 import { NavLink, useHistory } from 'react-router-dom'
-import Tab from '@material-ui/core/Tab'
 import { Typography } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import withWidth from '@material-ui/core/withWidth'
@@ -58,28 +56,6 @@ function MainNavBar(props) {
           <NavLink to="/search" onClick={handleVoxPop}>
             <img alt="Quote" src="/assets/QuoteIcon.png" className={classes.quote} />
           </NavLink>
-        </Grid>
-        <Grid item>
-          <Tabs
-            value={selectedPage === null ? 0 : selectedPage}
-            onChange={handleMenu}
-            indicatorColor={selectedPage === null ? 'primary' : 'secondary'}
-            textColor="secondary"
-          >
-            {/* Home tab removed for all users */}
-            <Grid item lg={4}>
-              <NavLink to="/search">
-                <Tab
-                  label="Search"
-                  aria-label="Trending"
-                  onClick={() => {
-                    handleMenu(1)
-                  }}
-                  value="trending"
-                />
-              </NavLink>
-            </Grid>
-          </Tabs>
         </Grid>
         <div className={classes.grow} />
         <Grid item>
