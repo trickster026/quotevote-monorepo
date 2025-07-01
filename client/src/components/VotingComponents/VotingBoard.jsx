@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Container } from '@material-ui/core'
 
 import { parser } from 'utils/parser'
@@ -87,7 +87,7 @@ const VotingBoard = ({
         ))}
         <br />
       </Fragment>
-    ))
+    ));
   }
 
   return (

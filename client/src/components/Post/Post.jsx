@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import {
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    IconButton,
-    FormControlLabel,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  IconButton,
+  FormControlLabel,
 } from '@material-ui/core'
 import Switch from '@material-ui/core/Switch'
 import { makeStyles } from '@material-ui/core/styles'
@@ -27,18 +27,18 @@ import { SET_SNACKBAR } from '../../store/ui'
 import useGuestGuard from 'utils/useGuestGuard'
 import RequestInviteDialog from '../RequestInviteDialog'
 import {
-    ADD_COMMENT,
-    ADD_QUOTE,
-    REPORT_POST,
-    VOTE,
-    APPROVE_POST,
-    REJECT_POST,
-    DELETE_POST
+  ADD_COMMENT,
+  ADD_QUOTE,
+  REPORT_POST,
+  VOTE,
+  APPROVE_POST,
+  REJECT_POST,
+  DELETE_POST
 } from '../../graphql/mutations'
 import {
-    GET_POST,
-    GET_TOP_POSTS,
-    GET_USER_ACTIVITY,
+  GET_POST,
+  GET_TOP_POSTS,
+  GET_USER_ACTIVITY,
 } from '../../graphql/query'
 import AvatarDisplay from '../Avatar'
 import BookmarkIconButton from '../CustomButtons/BookmarkIconButton'
@@ -57,6 +57,7 @@ const useStyles = makeStyles(() => ({
     color: '#00cf6e',
     marginRight: 5,
     fontFamily: 'Montserrat',
+    fontSize: '20px',
   },
   blockIcon: {
     color: 'red',
@@ -71,9 +72,9 @@ const useStyles = makeStyles(() => ({
     color: 'red',
   },
   points: {
-    marginTop: 15,
+    marginTop: 10,
     marginRight: 20,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bolder',
     fontFamily: 'Montserrat',
   },
@@ -539,7 +540,7 @@ function Post({
           title={name}
           subheader={parsedCreated}
         />
-        <CardContent>
+        <CardContent style={{ fontSize: '16px' }}>
           <VotingBoard
             content={post.text}
             onSelect={setSelectedText}
