@@ -34,6 +34,16 @@ export const topPosts = (pubsub) => {
         $gte: new Date(startDateRange),
         $lte: new Date(endDateRange),
       };
+    } else if (startDateRange) {
+      // Handle single start date
+      searchArgs.pointTimestamp = {
+        $gte: new Date(startDateRange),
+      };
+    } else if (endDateRange) {
+      // Handle single end date
+      searchArgs.pointTimestamp = {
+        $lte: new Date(endDateRange),
+      };
     }
 
     // Handle friendsOnly filter - can be combined with search and date range
@@ -51,7 +61,6 @@ export const topPosts = (pubsub) => {
         };
       }
 
-
       // Get the current user's following list
       const currentUser = await UserModel.findById(
         context.user._id // eslint-disable-line no-underscore-dangle
@@ -61,9 +70,19 @@ export const topPosts = (pubsub) => {
         currentUser._followingId && // eslint-disable-line no-underscore-dangle
         currentUser._followingId.length > 0 // eslint-disable-line no-underscore-dangle
       ) {
-        searchArgs.userId = {
-          $in: currentUser._followingId, // eslint-disable-line no-underscore-dangle
-        };
+        // If userId filter already exists, we need to combine them with $and
+        if (searchArgs.userId) {
+          const existingUserIdFilter = searchArgs.userId;
+          searchArgs.$and = [
+            { userId: existingUserIdFilter },
+            { userId: { $in: currentUser._followingId } } // eslint-disable-line no-underscore-dangle
+          ];
+          delete searchArgs.userId;
+        } else {
+          searchArgs.userId = {
+            $in: currentUser._followingId, // eslint-disable-line no-underscore-dangle
+          };
+        }
       } else {
         // If user has no following, return empty results
         return {
@@ -84,6 +103,23 @@ export const topPosts = (pubsub) => {
 
     // Handle userId filter - can be combined with other filters
     if (userId) {
+      // If friendsOnly filter is also applied, we need to combine them
+      if (friendsOnly && context.user && context.user._id) {
+        const currentUser = await UserModel.findById(context.user._id);
+        if (currentUser && currentUser._followingId && currentUser._followingId.length > 0) {
+          // Check if the requested userId is in the user's following list
+          if (!currentUser._followingId.includes(userId)) {
+            return {
+              entities: [],
+              pagination: {
+                total_count: 0,
+                limit,
+                offset,
+              },
+            };
+          }
+        }
+      }
       searchArgs.userId = userId;
     }
 
@@ -96,7 +132,7 @@ export const topPosts = (pubsub) => {
     let totalPosts;
 
     if (interactions) {
-      // When interactions is true, use aggregation to get posts with comment counts
+      // When interactions is true, use aggregation to get posts with interaction counts
       const aggregationPipeline = [
         { $match: searchArgs },
         {
@@ -108,13 +144,30 @@ export const topPosts = (pubsub) => {
           }
         },
         {
+          $lookup: {
+            from: 'votes',
+            localField: '_id',
+            foreignField: 'postId',
+            as: 'votes'
+          }
+        },
+        {
           $addFields: {
-            commentCount: { $size: '$comments' }
+            commentCount: { $size: '$comments' },
+            voteCount: { $size: '$votes' },
+            totalInteractions: {
+              $add: [
+                { $size: '$comments' },
+                { $size: '$votes' }
+              ]
+            }
           }
         },
         {
           $sort: {
+            totalInteractions: -1,
             commentCount: -1,
+            voteCount: -1,
             dayPoints: -1,
             pointTimestamp: -1,
             created: -1
@@ -131,14 +184,6 @@ export const topPosts = (pubsub) => {
       // Get total count for pagination
       const countPipeline = [
         { $match: searchArgs },
-        {
-          $lookup: {
-            from: 'comments',
-            localField: '_id',
-            foreignField: 'postId',
-            as: 'comments'
-          }
-        },
         {
           $count: 'total'
         }
@@ -167,7 +212,13 @@ export const topPosts = (pubsub) => {
         offset,
         limit,
         totalPosts,
-        sortCriteria
+        sortCriteria,
+        filtersApplied: {
+          friendsOnly,
+          interactions,
+          dateRange: !!(startDateRange || endDateRange),
+          search: !!(searchKey && searchKey.trim())
+        }
       });
 
       trendingPosts = await PostModel.find(searchArgs)

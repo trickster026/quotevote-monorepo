@@ -251,8 +251,11 @@ export default function SearchPage() {
     endDate: null,
   })
 
-  // New state for filter modes
-  const [filterMode, setFilterMode] = useState('all') // 'all', 'friends', 'interactions'
+  // New state for multiple filter modes - now each filter can be active independently
+  const [activeFilters, setActiveFilters] = useState({
+    friends: false,
+    interactions: false,
+  })
   const [isCalendarVisible, setIsCalendarVisible] = useState(false)
   const [focusedInput, setFocusedInput] = useState(null)
 
@@ -296,10 +299,10 @@ export default function SearchPage() {
     endDateRange: dateRangeFilter.endDate
       ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
       : '',
-    friendsOnly: filterMode === 'friends',
-    interactions: filterMode === 'interactions',
+    friendsOnly: activeFilters.friends,
+    interactions: activeFilters.interactions,
     // Add a dummy variable that changes when filters change to force refetch
-    filterKey: `${filterMode}-${
+    filterKey: `${activeFilters.friends}-${activeFilters.interactions}-${
       dateRangeFilter.startDate
         ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
         : ''
@@ -331,19 +334,18 @@ export default function SearchPage() {
   // Function to trigger query refetch when filters change
   const triggerQueryRefetch = () => {
     console.log('Triggering query refetch with variables:', variables)
-    setQueryKey((prev) => prev + 1)
     if (showResults) {
       refetch(variables)
     }
   }
 
-  // Refetch when filter mode changes
+  // Refetch when active filters change
   useEffect(() => {
     if (showResults) {
-      console.log('Filter mode changed, refetching query')
+      console.log('Active filters changed, refetching query')
       refetch(variables)
     }
-  }, [filterMode, showResults])
+  }, [activeFilters, showResults])
 
   // Refetch when date range changes
   useEffect(() => {
@@ -359,7 +361,7 @@ export default function SearchPage() {
   }
 
   const handleFriendsFilter = () => {
-    console.log('Friends filter clicked, current mode:', filterMode)
+    console.log('Friends filter clicked, current state:', activeFilters.friends)
 
     if (!user || !user._id) {
       console.log('User not logged in, cannot use friends filter')
@@ -367,17 +369,21 @@ export default function SearchPage() {
       return
     }
 
-    setFilterMode(filterMode === 'friends' ? 'all' : 'friends')
+    setActiveFilters(prev => ({
+      ...prev,
+      friends: !prev.friends
+    }))
     setOffset(0)
-    triggerQueryRefetch()
     setShowResults(true)
   }
 
   const handleInteractionsFilter = () => {
-    console.log('Interactions filter clicked, current mode:', filterMode)
-    setFilterMode(filterMode === 'interactions' ? 'all' : 'interactions')
+    console.log('Interactions filter clicked, current state:', activeFilters.interactions)
+    setActiveFilters(prev => ({
+      ...prev,
+      interactions: !prev.interactions
+    }))
     setOffset(0)
-    triggerQueryRefetch()
     setShowResults(true)
   }
 
@@ -415,6 +421,12 @@ export default function SearchPage() {
     setFocusedInput(null)
   }
 
+  // Helper function to check if any filters are active
+  const hasActiveFilters = () => {
+    return activeFilters.friends || activeFilters.interactions || 
+           dateRangeFilter.startDate || dateRangeFilter.endDate
+  }
+
   // Return data exactly as received from API without any sorting
   const processAndSortData = (rawData) => {
     if (!rawData) return null
@@ -423,7 +435,7 @@ export default function SearchPage() {
       return null
     }
 
-    console.log('Processing data with filter mode:', filterMode)
+    console.log('Processing data with filter mode:', activeFilters)
     console.log('Raw data:', rawData)
 
     // Simply serialize the posts and return the data exactly as received
@@ -597,7 +609,7 @@ export default function SearchPage() {
             <IconButton
               aria-label="friends"
               className={`${classes.icon} ${
-                filterMode === 'friends' ? classes.activeFilter : ''
+                activeFilters.friends ? classes.activeFilter : ''
               }`}
               onClick={handleFriendsFilter}
               title={
@@ -613,7 +625,7 @@ export default function SearchPage() {
             <IconButton
               aria-label="filter"
               className={`${classes.icon} ${
-                filterMode === 'interactions' ? classes.activeFilter : ''
+                activeFilters.interactions ? classes.activeFilter : ''
               }`}
               onClick={handleInteractionsFilter}
               title="Sort by most interactions"
@@ -712,47 +724,44 @@ export default function SearchPage() {
           )}
 
           {/* Filter Status Display */}
-          {showResults &&
-            (filterMode !== 'all' ||
-              dateRangeFilter.startDate ||
-              dateRangeFilter.endDate) && (
-              <Grid item style={{ width: '100%', marginTop: 16 }}>
-                <Paper style={{ padding: 16, backgroundColor: '#f8f9fa' }}>
-                  <Typography variant="body2" color="textSecondary">
-                    Active Filters:
-                    {filterMode === 'friends' && ' 👥 Friends only'}
-                    {filterMode === 'interactions' &&
-                      ' 🧲 Sorted by interactions'}
-                    {dateRangeFilter.startDate &&
-                      ` 📅 From ${format(
-                        dateRangeFilter.startDate,
-                        'MMM d, yyyy',
-                      )}`}
-                    {dateRangeFilter.endDate &&
-                      ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
+          {showResults && hasActiveFilters() && (
+            <Grid item style={{ width: '100%', marginTop: 16 }}>
+              <Paper style={{ padding: 16, backgroundColor: '#f8f9fa' }}>
+                <Typography variant="body2" color="textSecondary">
+                  Active Filters:
+                  {activeFilters.friends && ' 👥 Friends only'}
+                  {activeFilters.interactions &&
+                    ' 🧲 Sorted by interactions'}
+                  {dateRangeFilter.startDate &&
+                    ` 📅 From ${format(
+                      dateRangeFilter.startDate,
+                      'MMM d, yyyy',
+                    )}`}
+                  {dateRangeFilter.endDate &&
+                    ` to ${format(dateRangeFilter.endDate, 'MMM d, yyyy')}`}
+                </Typography>
+                {activeFilters.friends && (
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={{ display: 'block', marginTop: 8 }}
+                  >
+                    Showing posts from people you follow
                   </Typography>
-                  {filterMode === 'friends' && (
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      style={{ display: 'block', marginTop: 8 }}
-                    >
-                      Showing posts from people you follow
-                    </Typography>
-                  )}
-                  {filterMode === 'interactions' && (
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      style={{ display: 'block', marginTop: 8 }}
-                    >
-                      Posts sorted by total interactions (comments + votes +
-                      quotes)
-                    </Typography>
-                  )}
-                </Paper>
-              </Grid>
-            )}
+                )}
+                {activeFilters.interactions && (
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={{ display: 'block', marginTop: 8 }}
+                  >
+                    Posts sorted by total interactions (comments + votes +
+                    quotes)
+                  </Typography>
+                )}
+              </Paper>
+            </Grid>
+          )}
 
           {isGuestMode && (
             <>
@@ -810,10 +819,8 @@ export default function SearchPage() {
                   >
                     {searchKey
                       ? 'Searching posts...'
-                      : filterMode !== 'all'
+                      : hasActiveFilters()
                       ? 'Applying filters...'
-                      : dateRangeFilter.startDate || dateRangeFilter.endDate
-                      ? 'Filtering by date...'
                       : 'Loading posts...'}
                   </Typography>
                   <Typography
@@ -822,12 +829,15 @@ export default function SearchPage() {
                   >
                     {searchKey
                       ? `Please wait while we search for "${searchKey}"`
-                      : filterMode === 'friends'
-                      ? 'Please wait while we fetch posts from your friends'
-                      : filterMode === 'interactions'
-                      ? 'Please wait while we sort posts by interactions'
-                      : dateRangeFilter.startDate || dateRangeFilter.endDate
-                      ? 'Please wait while we filter posts by date range'
+                      : hasActiveFilters()
+                      ? `Please wait while we apply filters: ${
+                          activeFilters.friends ? 'Friends only, ' : ''
+                        }${
+                          activeFilters.interactions ? 'Sorted by interactions, ' : ''
+                        }${
+                          dateRangeFilter.startDate || dateRangeFilter.endDate 
+                            ? 'Date range, ' : ''
+                        }`.replace(/,\s*$/, '')
                       : 'Please wait while we fetch the latest conversations'}
                   </Typography>
                 </div>
@@ -1143,7 +1153,7 @@ export default function SearchPage() {
         </Grid>
       </div>
     </ErrorBoundary>
-  )
+  );
 }
 
 /* Add this to the bottom of the file (outside the component) for responsive flex direction */
