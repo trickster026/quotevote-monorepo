@@ -256,12 +256,6 @@ export default function SearchPage() {
   const [isCalendarVisible, setIsCalendarVisible] = useState(false)
   const [focusedInput, setFocusedInput] = useState(null)
 
-  // Add a query key that changes when filters change to force refetch
-  const [queryKey, setQueryKey] = useState(0)
-
-  // Carousel state for guest mode
-  const [activeStep, setActiveStep] = useState(0)
-
   // Guest mode state
   const [isGuestMode, setIsGuestMode] = useState(false)
 
@@ -420,7 +414,7 @@ export default function SearchPage() {
     setFocusedInput(null)
   }
 
-  // Sort posts by interactions if interactions filter is active
+  // Sort posts chronologically by date by default, or by interactions if interactions filter is active
   const processAndSortData = (rawData) => {
     if (!rawData) return null
 
@@ -479,6 +473,14 @@ export default function SearchPage() {
             (p.quotes?.length || 0),
         })),
       )
+    } else {
+      // Sort chronologically by date (newest first) by default
+      console.log('Sorting chronologically by date (newest first)')
+      processedData.posts.entities.sort((a, b) => {
+        const dateA = new Date(a.created || a.createdAt || 0)
+        const dateB = new Date(b.created || b.createdAt || 0)
+        return dateB - dateA // Newest first
+      })
     }
 
     return processedData
