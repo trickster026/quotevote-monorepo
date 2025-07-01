@@ -22,8 +22,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { USER_INVITE_REQUESTS, GET_TOP_POSTS } from '@/graphql/query'
 import {
-    UPDATE_USER_INVITE_STATUS,
-    UPDATE_FEATURED_SLOT,
+  UPDATE_USER_INVITE_STATUS,
+  UPDATE_FEATURED_SLOT,
 } from '@/graphql/mutations'
 
 // react plugin for creating charts
@@ -270,8 +270,64 @@ const FeaturedPostsTable = () => {
 
 const ControlPanelContainer = ({ data }) => {
   const classes = useStyles()
-  const header = ['Email', 'Status', 'Action']
+  const [sortConfig, setSortConfig] = React.useState({
+    key: 'joined',
+    direction: 'desc'
+  })
+  const [emailFilter, setEmailFilter] = React.useState('')
+  
+  const header = [
+    { key: 'email', label: 'Email' },
+    { key: 'joined', label: 'Joined Date' },
+    { key: 'status', label: 'Status' },
+    { key: 'action', label: 'Action' }
+  ]
   const activeUsersCount = 0
+  
+  const handleSort = (key) => {
+    setSortConfig(prevConfig => ({
+      key,
+      direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+    }))
+  }
+  
+  const sortData = (data) => {
+    return [...data].sort((a, b) => {
+      let aValue, bValue
+      
+      switch (sortConfig.key) {
+        case 'email':
+          aValue = a.email.toLowerCase()
+          bValue = b.email.toLowerCase()
+          break
+        case 'joined':
+          aValue = new Date(a.joined)
+          bValue = new Date(b.joined)
+          break
+        case 'status':
+          aValue = a.status
+          bValue = b.status
+          break
+        default:
+          return 0
+      }
+      
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1
+      return 0
+    })
+  }
+  
+  const filterAndSortData = (data) => {
+    const filteredData = emailFilter 
+      ? data.filter(row => 
+          row.email.toLowerCase().includes(emailFilter.toLowerCase())
+        )
+      : data
+    
+    return sortData(filteredData)
+  }
+  
   // statuses
   // 1 = new / pending
   // 2 = decline
@@ -346,6 +402,19 @@ const ControlPanelContainer = ({ data }) => {
               <Typography className={classes.cardHeader}>
                 User Invitation Requests
               </Typography>
+              <TextField
+                placeholder="Search by email..."
+                variant="outlined"
+                size="small"
+                value={emailFilter}
+                onChange={(e) => setEmailFilter(e.target.value)}
+                style={{ marginBottom: 16, width: '100%', maxWidth: 300 }}
+                InputProps={{
+                  startAdornment: (
+                    <span style={{ marginRight: 8, color: '#666' }}>🔍</span>
+                  ),
+                }}
+              />
               <TableContainer className={classes.tableContainer}>
                 <Table
                   className={classes.table}
@@ -354,20 +423,31 @@ const ControlPanelContainer = ({ data }) => {
                 >
                   <TableHead classes={{ head: classes.columnHeader }}>
                     <TableRow>
-                      {header.map((name) => (
+                      {header.map((column) => (
                         <TableCell
+                          key={column.key}
                           align="center"
                           className={classes.columnHeader}
+                          style={{ cursor: column.key !== 'action' ? 'pointer' : 'default' }}
+                          onClick={() => column.key !== 'action' && handleSort(column.key)}
                         >
-                          {name}
+                          {column.label}
+                          {sortConfig.key === column.key && column.key !== 'action' && (
+                            <span style={{ marginLeft: 5 }}>
+                              {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                            </span>
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {data.userInviteRequests.map((row) => (
+                    {filterAndSortData(data.userInviteRequests).map((row) => (
                       <TableRow key={row._id}>
                         <TableCell align="left">{row.email}</TableCell>
+                        <TableCell align="center">
+                          {moment(row.joined).format('MMM DD, YYYY')}
+                        </TableCell>
                         <TableCell align="center">
                           <Button
                             variant="contained"
