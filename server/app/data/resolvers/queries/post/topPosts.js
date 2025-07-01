@@ -92,39 +92,95 @@ export const topPosts = (pubsub) => {
       searchArgs.approved = approved;
     }
 
-    const totalPosts = await PostModel.find(searchArgs).count();
+    let trendingPosts;
+    let totalPosts;
 
-    // Build sort criteria
-    let sortCriteria = {
-      created: "desc", // Secondary sort by creation date for chronological ordering
-    };
+    if (interactions) {
+      // When interactions is true, use aggregation to get posts with comment counts
+      const aggregationPipeline = [
+        { $match: searchArgs },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'postId',
+            as: 'comments'
+          }
+        },
+        {
+          $addFields: {
+            commentCount: { $size: '$comments' }
+          }
+        },
+        {
+          $sort: {
+            commentCount: -1,
+            dayPoints: -1,
+            pointTimestamp: -1,
+            created: -1
+          }
+        },
+        {
+          $skip: offset
+        },
+        {
+          $limit: limit
+        }
+      ];
 
-    if(interactions) {
-      sortCriteria.dayPoints = "desc";
-      sortCriteria.pointTimestamp = "desc";
+      // Get total count for pagination
+      const countPipeline = [
+        { $match: searchArgs },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: '_id',
+            foreignField: 'postId',
+            as: 'comments'
+          }
+        },
+        {
+          $count: 'total'
+        }
+      ];
+
+      const [postsResult, countResult] = await Promise.all([
+        PostModel.aggregate(aggregationPipeline),
+        PostModel.aggregate(countPipeline)
+      ]);
+
+      trendingPosts = postsResult;
+      totalPosts = countResult.length > 0 ? countResult[0].total : 0;
+    } else {
+      // Original logic for when interactions is false
+      totalPosts = await PostModel.find(searchArgs).count();
+
+      // Build sort criteria
+      let sortCriteria = {
+        created: "desc", // Secondary sort by creation date for chronological ordering
+      };
+
+      console.log('Search query details:', {
+        searchKey: searchKey,
+        searchKeyTrimmed: searchKey ? searchKey.trim() : null,
+        searchArgs,
+        offset,
+        limit,
+        totalPosts,
+        sortCriteria
+      });
+
+      trendingPosts = await PostModel.find(searchArgs)
+        .sort(sortCriteria)
+        .skip(offset)
+        .limit(limit);
     }
-
-    console.log('Search query details:', {
-      searchKey: searchKey,
-      searchKeyTrimmed: searchKey ? searchKey.trim() : null,
-      searchArgs,
-      offset,
-      limit,
-      totalPosts,
-      sortCriteria
-    });
-
-    const trendingPosts = await PostModel.find(searchArgs)
-      .sort(sortCriteria)
-      .skip(offset)
-      .limit(limit);
-
 
     // Populate creator information
     const postsWithCreator = await Promise.all(
       trendingPosts.map(async (post) => {
         const creator = await UserModel.findById(post.userId);
-        const postObj = post.toObject();
+        const postObj = post.toObject ? post.toObject() : post; // Handle both mongoose documents and aggregation results
         return {
           ...postObj,
           creator: creator
