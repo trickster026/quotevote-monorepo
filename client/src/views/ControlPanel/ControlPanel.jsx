@@ -22,8 +22,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { USER_INVITE_REQUESTS, GET_TOP_POSTS } from '@/graphql/query'
 import {
-  UPDATE_USER_INVITE_STATUS,
-  UPDATE_FEATURED_SLOT,
+    UPDATE_USER_INVITE_STATUS,
+    UPDATE_FEATURED_SLOT,
 } from '@/graphql/mutations'
 
 // react plugin for creating charts
@@ -140,6 +140,7 @@ const FeaturedPostsTable = () => {
     startDateRange: null,
     endDateRange: null,
     friendsOnly: false,
+    interactions: false,
   }
   const { data, refetch } = useQuery(GET_TOP_POSTS, {
     variables: queryVars,

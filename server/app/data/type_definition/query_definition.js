@@ -17,7 +17,7 @@ type Query {
   post(postId: String!): Post
 
   " This will query the list of posts "
-  posts(offset: Int, limit: Int, searchKey: String, startDateRange: String, endDateRange: String, friendsOnly: Boolean, groupId: String, userId: String, approved: Boolean, deleted: Boolean): Posts
+  posts(offset: Int, limit: Int, searchKey: String, startDateRange: String, endDateRange: String, friendsOnly: Boolean, groupId: String, userId: String, approved: Boolean, deleted: Boolean, interactions: Boolean): Posts
 
   " Posts selected for homepage carousel "
   featuredPosts: [Post]

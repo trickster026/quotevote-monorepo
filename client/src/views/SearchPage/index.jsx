@@ -297,6 +297,7 @@ export default function SearchPage() {
       ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
       : '',
     friendsOnly: filterMode === 'friends',
+    interactions: filterMode === 'interactions',
     // Add a dummy variable that changes when filters change to force refetch
     filterKey: `${filterMode}-${
       dateRangeFilter.startDate

@@ -1,41 +1,7 @@
 import PostModel from "../../models/PostModel";
 import UserModel from "../../models/UserModel";
 
-/**
- * Top Posts Query with Stackable Filters
- *
- * This query supports multiple filters that can be combined together:
- *
- * Examples of filter combinations:
- *
- * 1. Search + Date Range + Friends Only:
- *    posts(searchKey: "crypto", startDateRange: "2024-01-01",
- *          endDateRange: "2024-12-31", friendsOnly: true)
- *
- * 2. Group + User + Approved:
- *    posts(groupId: "group123", userId: "user456", approved: true)
- *
- * 3. Search + Group + Date Range:
- *    posts(searchKey: "technology", groupId: "tech-group",
- *          startDateRange: "2024-06-01", endDateRange: "2024-06-30")
- *
- * 4. Friends Only + Approved + Not Deleted:
- *    posts(friendsOnly: true, approved: true, deleted: false)
- *
- * 5. All filters combined:
- *    posts(searchKey: "ai", startDateRange: "2024-01-01",
- *          endDateRange: "2024-12-31", friendsOnly: true,
- *          groupId: "ai-group", approved: true)
- *
- * Available filters:
- * - searchKey: Text search in title and text fields
- * - startDateRange/endDateRange: Filter by date range
- * - friendsOnly: Show only posts from followed users
- * - groupId: Filter by specific group
- * - userId: Filter by specific user
- * - approved: Filter by approval status
- * - deleted: Filter by deletion status (defaults to false)
- */
+
 export const topPosts = (pubsub) => {
   return async (_, args, context) => {
     const {
@@ -47,8 +13,8 @@ export const topPosts = (pubsub) => {
       friendsOnly,
       groupId,
       userId,
-      approved,
-      deleted,
+      approved, 
+      interactions,
     } = args;
 
     // Build search arguments
@@ -126,21 +92,17 @@ export const topPosts = (pubsub) => {
       searchArgs.approved = approved;
     }
 
-    // Handle deleted filter - can be combined with other filters
-    // if (deleted !== undefined) {
-    //   searchArgs.deleted = deleted;
-    // } else {
-    //   // By default, only show non-deleted posts
-    //   // searchArgs.deleted = "false";
-    // }
-
     const totalPosts = await PostModel.find(searchArgs).count();
 
     // Build sort criteria
     const sortCriteria = {
-      dayPoints: "desc",
-      pointTimestamp: "desc",
+      createdAt: "desc", // Secondary sort by creation date for chronological ordering
     };
+
+    if(interactions) {
+      sortCriteria.dayPoints = "desc";
+      sortCriteria.pointTimestamp = "desc";
+    }
 
     console.log('Search query details:', {
       searchKey: searchKey,
