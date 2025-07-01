@@ -99,12 +99,14 @@ const appStyle = (theme) => ({
     height: '100%',
     marginTop: theme.spacing(10),
     overflow: 'hidden',
-    // marginLeft: '10%',
-    // marginRight: '10%',
+    width: '70%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(7),
       marginRight: 5,
       marginLeft: 5,
+      width: '95%',
     },
   },
   contentChat: {

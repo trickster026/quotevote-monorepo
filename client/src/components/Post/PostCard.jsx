@@ -154,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
   },
   postTitle: {
     font: 'Roboto',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#000000',
     whiteSpace: 'nowrap',
@@ -173,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
   },
   postContent: {
     font: 'Roboto',
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: 300,
     color: '#000000',
     display: '-webkit-box',
@@ -183,6 +183,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     lineHeight: '1.5',
     maxHeight: '72px',
+    textAlign: 'left',
   },
   votes: {
     height: 12,
