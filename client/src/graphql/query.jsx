@@ -213,6 +213,7 @@ export const GET_TOP_POSTS = gql`
     $endDateRange: String
     $friendsOnly: Boolean
     $interactions: Boolean
+    $userId: String
   ) {
     posts(
       limit: $limit
@@ -222,6 +223,7 @@ export const GET_TOP_POSTS = gql`
       endDateRange: $endDateRange
       friendsOnly: $friendsOnly
       interactions: $interactions
+      userId: $userId
     ) {
       entities {
         _id

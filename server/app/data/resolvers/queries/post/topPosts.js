@@ -1,8 +1,8 @@
-import PostModel from "../../models/PostModel";
-import UserModel from "../../models/UserModel";
+import mongoose from 'mongoose';
+import PostModel from '../../models/PostModel';
+import UserModel from '../../models/UserModel';
 
-
-export const topPosts = (pubsub) => {
+export const topPosts = () => {
   return async (_, args, context) => {
     const {
       limit,
@@ -13,7 +13,7 @@ export const topPosts = (pubsub) => {
       friendsOnly,
       groupId,
       userId,
-      approved, 
+      approved,
       interactions,
     } = args;
 
@@ -24,7 +24,7 @@ export const topPosts = (pubsub) => {
     if (searchKey && searchKey.trim()) {
       searchArgs.$or = [
         { title: { $regex: searchKey.trim(), $options: 'i' } },
-        { text: { $regex: searchKey.trim(), $options: 'i' } }
+        { text: { $regex: searchKey.trim(), $options: 'i' } },
       ];
     }
 
@@ -46,8 +46,28 @@ export const topPosts = (pubsub) => {
       };
     }
 
-    // Handle friendsOnly filter - can be combined with search and date range
-    if (friendsOnly) {
+    // Handle groupId filter - can be combined with other filters
+    if (groupId) {
+      searchArgs.groupId = groupId;
+    }
+
+    // Handle userId filter - if userId is provided, only return posts for that user
+    if (userId) {
+      console.log('topPosts - userId filter applied:', userId);
+      console.log('topPosts - userId type:', typeof userId);
+
+      // Convert userId to ObjectId if it's a string to ensure proper matching
+      const userIdToFilter = mongoose.Types.ObjectId.isValid(userId)
+        ? mongoose.Types.ObjectId(userId)
+        : userId;
+
+      searchArgs.userId = userIdToFilter;
+
+      // When filtering by specific userId, ignore friendsOnly filter
+      // This ensures we get all posts for the specified user
+      console.log('topPosts - searchArgs with userId:', searchArgs);
+    } else if (friendsOnly) {
+      // Handle friendsOnly filter - only apply when no specific userId is requested
       if (!context.user || !context.user._id) {
         // eslint-disable-line no-underscore-dangle
         // If friendsOnly is requested but no user context, return empty results
@@ -63,26 +83,16 @@ export const topPosts = (pubsub) => {
 
       // Get the current user's following list
       const currentUser = await UserModel.findById(
-        context.user._id // eslint-disable-line no-underscore-dangle
+        context.user._id, // eslint-disable-line no-underscore-dangle
       );
       if (
-        currentUser &&
-        currentUser._followingId && // eslint-disable-line no-underscore-dangle
-        currentUser._followingId.length > 0 // eslint-disable-line no-underscore-dangle
+        currentUser
+        && currentUser._followingId // eslint-disable-line no-underscore-dangle
+        && currentUser._followingId.length > 0 // eslint-disable-line no-underscore-dangle
       ) {
-        // If userId filter already exists, we need to combine them with $and
-        if (searchArgs.userId) {
-          const existingUserIdFilter = searchArgs.userId;
-          searchArgs.$and = [
-            { userId: existingUserIdFilter },
-            { userId: { $in: currentUser._followingId } } // eslint-disable-line no-underscore-dangle
-          ];
-          delete searchArgs.userId;
-        } else {
-          searchArgs.userId = {
-            $in: currentUser._followingId, // eslint-disable-line no-underscore-dangle
-          };
-        }
+        searchArgs.userId = {
+          $in: currentUser._followingId, // eslint-disable-line no-underscore-dangle
+        };
       } else {
         // If user has no following, return empty results
         return {
@@ -94,33 +104,6 @@ export const topPosts = (pubsub) => {
           },
         };
       }
-    }
-
-    // Handle groupId filter - can be combined with other filters
-    if (groupId) {
-      searchArgs.groupId = groupId;
-    }
-
-    // Handle userId filter - can be combined with other filters
-    if (userId) {
-      // If friendsOnly filter is also applied, we need to combine them
-      if (friendsOnly && context.user && context.user._id) {
-        const currentUser = await UserModel.findById(context.user._id);
-        if (currentUser && currentUser._followingId && currentUser._followingId.length > 0) {
-          // Check if the requested userId is in the user's following list
-          if (!currentUser._followingId.includes(userId)) {
-            return {
-              entities: [],
-              pagination: {
-                total_count: 0,
-                limit,
-                offset,
-              },
-            };
-          }
-        }
-      }
-      searchArgs.userId = userId;
     }
 
     // Handle approved filter - can be combined with other filters
@@ -140,28 +123,25 @@ export const topPosts = (pubsub) => {
             from: 'comments',
             localField: '_id',
             foreignField: 'postId',
-            as: 'comments'
-          }
+            as: 'comments',
+          },
         },
         {
           $lookup: {
             from: 'votes',
             localField: '_id',
             foreignField: 'postId',
-            as: 'votes'
-          }
+            as: 'votes',
+          },
         },
         {
           $addFields: {
             commentCount: { $size: '$comments' },
             voteCount: { $size: '$votes' },
             totalInteractions: {
-              $add: [
-                { $size: '$comments' },
-                { $size: '$votes' }
-              ]
-            }
-          }
+              $add: [{ $size: '$comments' }, { $size: '$votes' }],
+            },
+          },
         },
         {
           $sort: {
@@ -170,28 +150,28 @@ export const topPosts = (pubsub) => {
             voteCount: -1,
             dayPoints: -1,
             pointTimestamp: -1,
-            created: -1
-          }
+            created: -1,
+          },
         },
         {
-          $skip: offset
+          $skip: offset,
         },
         {
-          $limit: limit
-        }
+          $limit: limit,
+        },
       ];
 
       // Get total count for pagination
       const countPipeline = [
         { $match: searchArgs },
         {
-          $count: 'total'
-        }
+          $count: 'total',
+        },
       ];
 
       const [postsResult, countResult] = await Promise.all([
         PostModel.aggregate(aggregationPipeline),
-        PostModel.aggregate(countPipeline)
+        PostModel.aggregate(countPipeline),
       ]);
 
       trendingPosts = postsResult;
@@ -201,12 +181,12 @@ export const topPosts = (pubsub) => {
       totalPosts = await PostModel.find(searchArgs).count();
 
       // Build sort criteria
-      let sortCriteria = {
-        created: "desc", // Secondary sort by creation date for chronological ordering
+      const sortCriteria = {
+        created: 'desc', // Secondary sort by creation date for chronological ordering
       };
 
       console.log('Search query details:', {
-        searchKey: searchKey,
+        searchKey,
         searchKeyTrimmed: searchKey ? searchKey.trim() : null,
         searchArgs,
         offset,
@@ -217,36 +197,47 @@ export const topPosts = (pubsub) => {
           friendsOnly,
           interactions,
           dateRange: !!(startDateRange || endDateRange),
-          search: !!(searchKey && searchKey.trim())
-        }
+          search: !!(searchKey && searchKey.trim()),
+          userId: !!userId,
+        },
       });
+
+      console.log('topPosts - Final searchArgs:', searchArgs);
+      console.log('topPosts - userId being filtered:', userId);
 
       trendingPosts = await PostModel.find(searchArgs)
         .sort(sortCriteria)
         .skip(offset)
         .limit(limit);
+
+      console.log('topPosts - Posts found:', trendingPosts.length);
+      console.log(
+        'topPosts - First few posts userIds:',
+        trendingPosts.slice(0, 3).map((p) => p.userId),
+      );
     }
 
     // Populate creator information
     const postsWithCreator = await Promise.all(
       trendingPosts.map(async (post) => {
         const creator = await UserModel.findById(post.userId);
-        const postObj = post.toObject ? post.toObject() : post; // Handle both mongoose documents and aggregation results
+        // Handle both mongoose documents and aggregation results
+        const postObj = post.toObject ? post.toObject() : post;
         return {
           ...postObj,
           creator: creator
             ? {
-                _id: creator._id, // eslint-disable-line no-underscore-dangle
-                name: creator.name,
-                username: creator.username,
-                avatar: creator.avatar,
-              }
+              _id: creator._id, // eslint-disable-line no-underscore-dangle
+              name: creator.name,
+              username: creator.username,
+              avatar: creator.avatar,
+            }
             : null,
           votedBy: Array.isArray(postObj.votedBy)
             ? postObj.votedBy.map((v) => (v.userId ? v.userId.toString() : v))
             : [],
         };
-      })
+      }),
     );
 
     return {
@@ -259,3 +250,5 @@ export const topPosts = (pubsub) => {
     };
   };
 };
+
+export default topPosts;
