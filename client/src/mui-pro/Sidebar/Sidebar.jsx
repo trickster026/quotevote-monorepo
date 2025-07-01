@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { NavLink, withRouter } from 'react-router-dom'
 import cx from 'classnames'
@@ -17,7 +17,6 @@ import sidebarStyle from 'assets/jss/material-dashboard-pro-react/components/sid
 import { SET_SELECTED_PAGE } from '../../store/ui'
 import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
-import Button from '@material-ui/core/Button'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -37,30 +36,43 @@ function SidebarWrapper(props) {
   )
 }
 
-class MenuSidebar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      openAvatar: false,
-      miniActive: true,
-      MessageDisplay: null,
-      ...this.getCollapseStates(props.routes),
-    }
-  }
+const MenuSidebar = (props) => {
+  const {
+    classes,
+    routes,
+    bgColor,
+    rtlActive,
+    currentRoute,
+    open,
+    handleDrawerToggle,
+    dispatch,
+    history,
+    miniActive: propsMiniActive,
+    color,
+  } = props
 
-  // this creates the intial state of this component based on the collapse routes
-  // that it gets through this.props.routes
-  getCollapseStates = (routes) => {
+  // State management
+  const [openAvatar, setOpenAvatar] = useState(false)
+  const [miniActive, setMiniActive] = useState(true)
+  const [MessageDisplay, setMessageDisplay] = useState(null)
+  const [collapseStates, setCollapseStates] = useState({})
+
+  // Initialize collapse states on mount
+  useEffect(() => {
+    setCollapseStates(getCollapseStates(routes))
+  }, [routes])
+
+  // Helper functions
+  const getCollapseStates = (routes) => {
     let initialState = {}
-    routes.map((prop) => {
+    routes.forEach((prop) => {
       if (prop.collapse) {
         initialState = {
-          [prop.state]: this.getCollapseInitialState(prop.views),
-          ...this.getCollapseStates(prop.views),
+          [prop.state]: getCollapseInitialState(prop.views),
+          ...getCollapseStates(prop.views),
           ...initialState,
         }
       }
-      return null
     })
     return initialState
   }
@@ -68,9 +80,9 @@ class MenuSidebar extends React.Component {
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
   // while on the src/views/forms/RegularFormsx - route /admin/regular-forms
-  getCollapseInitialState(routes) {
+  const getCollapseInitialState = (routes) => {
     for (let i = 0; i < routes.length; i++) {
-      if (routes[i].collapse && this.getCollapseInitialState(routes[i].views)) {
+      if (routes[i].collapse && getCollapseInitialState(routes[i].views)) {
         return true
       }
       if (window.location.href.indexOf(routes[i].path) !== -1) {
@@ -81,74 +93,70 @@ class MenuSidebar extends React.Component {
   }
 
   // verifies if routeName is the one active (in browser input)
-  activeRoute = (routeName) =>
+  const activeRoute = (routeName) =>
     window.location.href.indexOf(routeName) > -1 ? 'active' : ''
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
-  createLinks = (routes) => {
-    const { classes, color, rtlActive } = this.props
+  const createGuestLinks = () => {
+    return [
+      <ListItem key="logo">
+        <img
+          src="/icons/android-chrome-192x192.png"
+          alt="QuoteVote Logo"
+          style={{ height: '30px', width: 'auto' }}
+        />
+      </ListItem>,
+      <ListItem key="donate">
+        <a
+          href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+        >
+          Donate
+        </a>
+      </ListItem>,
+      <ListItem key="volunteer">
+        <a
+          href="mailto:volunteer@quote.vote"
+          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+        >
+          Volunteer
+        </a>
+      </ListItem>,
+      <ListItem key="github">
+        <a
+          href="https://github.com/QuoteVote/quotevote-monorepo"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+        >
+          GitHub
+        </a>
+      </ListItem>,
+      <ListItem key="request-invite">
+        <a
+          onClick={() => history.push('/auth/request-access')}
+          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block', cursor: 'pointer' }}
+        >
+          Request Invite
+        </a>
+      </ListItem>,
+      <ListItem key="login">
+        <a
+          onClick={() => history.push('/auth/login')}
+          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block', cursor: 'pointer' }}
+        >
+          Login
+        </a>
+      </ListItem>,
+    ]
+  }
+
+  const createLinks = (routes) => {
     const loggedIn = !!localStorage.getItem('token')
-    let guestLinks = []
-    if (!loggedIn) {
-      guestLinks = [
-        <ListItem key="donate">
-          <Button
-            variant="outlined"
-            color="inherit"
-            href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
-            target="_blank"
-            style={{ borderWidth: 2, borderStyle: 'solid', width: '100%' }}
-            fullWidth
-          >
-            Donate
-          </Button>
-        </ListItem>,
-        <ListItem key="volunteer">
-          <Button
-            variant="outlined"
-            color="inherit"
-            href="mailto:volunteer@quote.vote"
-            style={{ borderWidth: 2, borderStyle: 'solid', width: '100%' }}
-            fullWidth
-          >
-            Volunteer
-          </Button>
-        </ListItem>,
-        <ListItem key="github">
-          <Button
-            href="https://github.com/QuoteVote/quotevote-monorepo"
-            target="_blank"
-            aria-label="GitHub"
-            style={{ width: '100%' }}
-            fullWidth
-          >
-            <i className="fab fa-github" style={{ fontSize: 32 }} />
-          </Button>
-        </ListItem>,
-        <ListItem key="request-invite">
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => this.props.history.push('/auth/request-access')}
-            style={{ width: '100%' }}
-            fullWidth
-          >
-            Request Invite
-          </Button>
-        </ListItem>,
-        <ListItem key="login">
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => this.props.history.push('/auth/login')}
-            style={{ width: '100%' }}
-            fullWidth
-          >
-            Login
-          </Button>
-        </ListItem>,
-      ]
-    }
+    const guestLinks = !loggedIn ? createGuestLinks() : []
     const routeLinks = loggedIn
       ? routes.map((prop, key) => {
           if (prop.path === '/post') return null
@@ -165,35 +173,35 @@ class MenuSidebar extends React.Component {
                   { [classes.collapseItem]: prop.icon === undefined },
                 )}
               >
-                <Collapse in={this.state[prop.state]} unmountOnExit>
+                <Collapse in={collapseStates[prop.state]} unmountOnExit>
                   <List className={`${classes.list} ${classes.collapseList}`}>
-                    {this.createLinks(prop.views)}
+                    {createLinks(prop.views)}
                   </List>
                 </Collapse>
               </ListItem>
             )
           }
           const innerNavLinkClasses = `${classes.collapseItemLink} ${cx({
-            [` ${classes[color]}`]: this.activeRoute(prop.path),
+            [` ${classes[color]}`]: activeRoute(prop.path),
           })}`
           const collapseItemMini = `${classes.collapseItemMini} ${cx({
             [classes.collapseItemMiniRTL]: rtlActive,
           })}`
           const navLinkClasses = `${classes.itemLink} ${cx({
-            [` ${classes[color]}`]: this.activeRoute(prop.path),
+            [` ${classes[color]}`]: activeRoute(prop.path),
           })}`
           const itemText = `${classes.itemText} ${cx({
             [classes.itemTextMini]:
-              this.props.miniActive && this.state.miniActive,
+              propsMiniActive && miniActive,
             [classes.itemTextMiniRTL]:
-              rtlActive && this.props.miniActive && this.state.miniActive,
+              rtlActive && propsMiniActive && miniActive,
             [classes.itemTextRTL]: rtlActive,
           })}`
           const collapseItemText = `${classes.collapseItemText} ${cx({
             [classes.collapseItemTextMini]:
-              this.props.miniActive && this.state.miniActive,
+              propsMiniActive && miniActive,
             [classes.collapseItemTextMiniRTL]:
-              rtlActive && this.props.miniActive && this.state.miniActive,
+              rtlActive && propsMiniActive && miniActive,
             [classes.collapseItemTextRTL]: rtlActive,
           })}`
           const itemIcon = `${classes.itemIcon} ${cx({
@@ -250,104 +258,103 @@ class MenuSidebar extends React.Component {
     return [...guestLinks, ...routeLinks]
   }
 
-  render() {
-    const {
-      classes,
-      routes,
-      bgColor,
-      rtlActive,
-      currentRoute,
-      open,
-      handleDrawerToggle,
-      dispatch,
-    } = this.props
+  const links = (
+    <List className={classes.list}>{createLinks(routes)}</List>
+  )
 
-    const links = (
-      <List className={classes.list}>{this.createLinks(routes)}</List>
-    )
+  const guestLinks = (
+    <List className={classes.list}>{createGuestLinks()}</List>
+  )
 
-    const drawerPaper = `${classes.drawerPaper} ${cx({
-      [classes.drawerPaperMini]: this.props.miniActive && this.state.miniActive,
-      [classes.drawerPaperRTL]: rtlActive,
-    })}`
-    const sidebarWrapper = `${classes.sidebarWrapper} ${cx({
-      [classes.drawerPaperMini]: this.props.miniActive && this.state.miniActive,
-      [classes.sidebarWrapperWithPerfectScrollbar]:
-        navigator.platform.indexOf('Win') > -1,
-    })}`
+  const drawerPaper = `${classes.drawerPaper} ${cx({
+    [classes.drawerPaperMini]: propsMiniActive && miniActive,
+    [classes.drawerPaperRTL]: rtlActive,
+  })}`
+  const sidebarWrapper = `${classes.sidebarWrapper} ${cx({
+    [classes.drawerPaperMini]: propsMiniActive && miniActive,
+    [classes.sidebarWrapperWithPerfectScrollbar]:
+      navigator.platform.indexOf('Win') > -1,
+  })}`
 
-    const handleDrawerOpen = () => {
-      handleDrawerToggle(true)
-    }
-    const handleVoxPop = () => {
-      dispatch(SET_SELECTED_PAGE(0))
-      this.props.history.push('/search')
-    }
+  const handleDrawerOpen = () => {
+    handleDrawerToggle(true)
+  }
+  const handleVoxPop = () => {
+    dispatch(SET_SELECTED_PAGE(0))
+    history.push('/search')
+  }
 
-    const loggedIn = !!localStorage.getItem('token')
+  const loggedIn = !!localStorage.getItem('token')
 
-    return (
-      <>
-        <AppBar position="fixed">
-          <Toolbar>
-            <Grid container alignItems="center" justifyContent="space-between">
-              {/* Left: Only menu icon */}
+  return (
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Grid container alignItems="center" justifyContent="space-between">
+            {/* Left: Only menu icon */}
+            <Grid item>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+
+            <Grid item> 
+              <img
+                src="/icons/android-chrome-192x192.png"
+                alt="QuoteVote Logo"
+                style={{ height: '30px', width: 'auto' }}
+              />
+            </Grid>
+
+            {/* Right: Empty for guests, user menu for logged in */}
+
+            {loggedIn && (
               <Grid item>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Grid>
-
-              {/* Right: Empty for guests, user menu for logged in */}
-
-              {loggedIn && (
-                <Grid item>
-                  <Grid container>
-                    <Grid item>
-                      <NotificationMenu />
-                    </Grid>
-                    <Grid item>
-                      <SettingsMenu />
-                    </Grid>
+                <Grid container>
+                  <Grid item>
+                    <NotificationMenu />
+                  </Grid>
+                  <Grid item>
+                    <SettingsMenu />
                   </Grid>
                 </Grid>
-              )}
-            </Grid>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          className={classes.drawer}
-          anchor={rtlActive ? 'left' : 'right'}
-          open={open}
-          classes={{
-            paper: `${drawerPaper} ${classes[bgColor + 'Background']}`,
-          }}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          SlideProps={{
-            direction: 'right',
-          }}
-        >
-          <Grid container direction="row">
-            <SidebarWrapper
-              className={sidebarWrapper}
-              MiniActive={this.state.MessageDisplay}
-              links={loggedIn ? links : null}
-              currentRoute={currentRoute}
-              isLoggedIn={loggedIn}
-            />
+              </Grid>
+            )}
           </Grid>
-        </Drawer>
-      </>
-    )
-  }
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        className={classes.drawer}
+        anchor={rtlActive ? 'left' : 'right'}
+        open={open}
+        classes={{
+          paper: `${drawerPaper} ${classes[bgColor + 'Background']}`,
+        }}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        SlideProps={{
+          direction: 'right',
+        }}
+      >
+        <Grid container direction="row">
+          <SidebarWrapper
+            className={sidebarWrapper}
+            MiniActive={MessageDisplay}
+            links={loggedIn ? links : guestLinks}
+            currentRoute={currentRoute}
+            isLoggedIn={loggedIn}
+          />
+        </Grid>
+      </Drawer>
+    </>
+  )
 }
 
 MenuSidebar.defaultProps = {
