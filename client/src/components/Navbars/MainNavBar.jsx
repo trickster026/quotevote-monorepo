@@ -141,7 +141,8 @@ function MainNavBar(props) {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        fullScreen={width === 'xs' || width === 'sm'}
+        maxWidth="sm"
+        fullWidth
       >
         <SubmitPost setOpen={setOpen} />
       </Dialog>

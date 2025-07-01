@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField'
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-    CircularProgress, Divider, Grid, Hidden, IconButton, InputBase, Typography,
+  CircularProgress, Divider, Grid, Hidden, IconButton, InputBase, Typography,
 } from '@material-ui/core'
 import { Controller, useForm } from 'react-hook-form'
 import PropTypes from 'prop-types'
@@ -18,10 +18,7 @@ import { CREATE_GROUP, SUBMIT_POST } from '../../graphql/mutations'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 600,
-    [theme.breakpoints.down('sm')]: {
-      width: '100vw',
-    },
+    width: '100%',
   },
   title: {
     color: '#00CF6E',

@@ -3,16 +3,25 @@ import PropTypes from 'prop-types'
 
 import AppBar from 'components/Navbars/ProfileHeader'
 import LoadingSpinner from 'components/LoadingSpinner'
-import { Grid, Link, Typography } from '@material-ui/core'
-import Activity from '../../components/Activity/Activity'
+import { Link, Typography } from '@material-ui/core'
+import UserPosts from '../../components/UserPosts'
 
 const useStyles = makeStyles(({
   root: {
     display: 'flex',
-    flexGrow: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
   },
   header: {
     marginTop: 20,
+    width: '100%',
+    maxWidth: '800px',
+  },
+  content: {
+    width: '100%',
+    maxWidth: '800px',
+    marginTop: '20px',
   },
   emptyProfile: {
     marginTop: 100,
@@ -41,29 +50,22 @@ function ProfileView({
 
   if (!profileUser) {
     return (
-      <Grid container>
-        <Grid item xs={12} className={classes.emptyProfile}>
+      <div className={classes.root}>
+        <div className={classes.emptyProfile}>
           <Typography variant="h6" align="center">
             Invalid user
           </Typography>
           <Link href="/home" className={classes.link}>
             Return to homepage.
           </Link>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Grid
-      container
-      direction="row"
-      justify="center"
-      alignItems="stretch"
-      className={classes.root}
-      spacing={4}
-    >
-      <Grid item xs={12} className={classes.header}>
+    <div className={classes.root}>
+      <div className={classes.header}>
         <AppBar
           handleActivityEvent={handleActivityEvent}
           handleSelectAll={handleSelectAll}
@@ -72,12 +74,12 @@ function ProfileView({
           setOffset={setOffset}
           profileUser={profileUser}
         />
-      </Grid>
+      </div>
 
-      <Grid item xs={12}>
-        <Activity showSubHeader={false} userId={profileUser._id} />
-      </Grid>
-    </Grid>
+      <div className={classes.content}>
+        <UserPosts userId={profileUser._id} />
+      </div>
+    </div>
   )
 }
 
