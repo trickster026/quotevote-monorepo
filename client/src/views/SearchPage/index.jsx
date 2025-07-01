@@ -539,50 +539,6 @@ export default function SearchPage() {
             </Typography>
           </Grid>
 
-          {/* Action Buttons Row */}
-          {isGuestMode && (
-            <Grid
-              item
-              style={{ marginTop: 32, marginBottom: 32, width: '100%' }}
-            >
-              <Grid container justifyContent="center" spacing={4}>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    href="/auth/request-access"
-                    target="_blank"
-                    color="secondary"
-                  >
-                    Request Invite
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
-                    target="_blank"
-                  >
-                    Donate
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" href="mailto:volunteer@quote.vote">
-                    Volunteer
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="outlined"
-                    href="https://github.com/QuoteVote/quotevote-monorepo"
-                    target="_blank"
-                  >
-                    GitHub
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          )}
-
           <Grid item style={{ width: '100%', maxWidth: 600 }}>
             <Paper
               component="form"

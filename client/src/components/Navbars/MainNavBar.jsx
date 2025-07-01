@@ -19,9 +19,7 @@ import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
 
 function MainNavBar(props) {
-  const {
-    classes, width,
-  } = props
+  const { classes, width } = props
   const selectedPage = useSelector((state) => state.ui.selectedPage)
   const avatar = useSelector((state) => state.user.data.avatar)
   const name = useSelector((state) => state.user.data.name)
@@ -45,98 +43,144 @@ function MainNavBar(props) {
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
-      <Grid
-        container
-        direction="row"
-        justify="flex-start"
-        alignItems="center"
-        wrap="nowrap"
-      >
+      <Grid container alignItems="center" wrap="nowrap" justifyContent="space-between">
+        {/* Left: Logo */}
         <Grid item>
           <NavLink to="/search" onClick={handleQuoteVote}>
-            <img alt="Quote" src="/assets/QuoteIcon.png" className={classes.quote} />
+            <img
+              alt="Quote"
+              src="/icons/android-chrome-192x192.png"
+              className={classes.quote}
+            />
           </NavLink>
         </Grid>
-        <div className={classes.grow} />
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ backgroundColor: '#2ecc71', color: 'white' }}
-            onClick={() => {
-              if (loggedIn) {
-                handleMenu(2)
-                setOpen(true)
-              } else {
-                history.push('/auth/request-access')
-              }
-            }}
-            className={classes.rightMenuButton}
-          >
-            Create Quote
-          </Button>
-        </Grid>
-        {loggedIn ? (
-          <Grid item>
+        {/* Center: Guest Action Buttons */}
+        {!loggedIn && (
+          <Grid item xs>
             <Grid
               container
-              direction="row"
-              justify="space-around"
+              justifyContent="center"
               alignItems="center"
+              spacing={2}
             >
               <Grid item>
-                <NavLink to="/Profile">
-                  <Hidden mdDown>
-                    <Button
-                      aria-label="Profile"
-                      color="inherit"
-                      onClick={handleProfileClick}
-                      className={classes.avatarRoundedButton}
-                    >
-                      <Avatar>
-                        <AvatarPreview height="50" width="50" {...avatar} />
-                      </Avatar>
-                      <Typography variant="h6" className={classes.profileBlockName}>
-                        {name}
-                      </Typography>
-                    </Button>
-                  </Hidden>
-                  <Hidden lgUp>
-                    <Avatar height="35" width="35">
-                      <AvatarPreview {...avatar} />
-                    </Avatar>
-                  </Hidden>
-                </NavLink>
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+                  target="_blank"
+                  className={classes.rightMenuButton}
+                  style={{ borderWidth: 2, borderStyle: 'solid' }}
+                >
+                  Donate
+                </Button>
               </Grid>
               <Grid item>
-                <NotificationMenu fontSize={fontSize} />
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  href="mailto:volunteer@quote.vote"
+                  className={classes.rightMenuButton}
+                  style={{ borderWidth: 2, borderStyle: 'solid' }}
+                >
+                  Volunteer
+                </Button>
               </Grid>
               <Grid item>
-                <SettingsMenu fontSize={fontSize} />
+                <Button
+                  href="https://github.com/QuoteVote/quotevote-monorepo"
+                  target="_blank"
+                  className={classes.rightMenuButton}
+                  aria-label="GitHub"
+                >
+                  <i className="fab fa-github" style={{ fontSize: 38 }} />
+                </Button>
               </Grid>
             </Grid>
           </Grid>
-        ) : (
-          <Grid item>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => history.push('/auth/login')}
-              className={classes.rightMenuButton}
-            >
-              Login
-            </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => history.push('/auth/request-access')}
-              className={classes.rightMenuButton}
-              style={{ backgroundColor: 'white' }}
-            >
-              Request Invite
-            </Button>
-          </Grid>
         )}
+        {/* Right: Login and Create Quote */}
+          {!loggedIn ? (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="secondary"
+                style={{ marginLeft: 8 }}
+                onClick={() => history.push('/auth/request-access')}
+                className={classes.rightMenuButton}
+              >
+                Request Invite
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => history.push('/auth/login')}
+                className={classes.rightMenuButton}
+              >
+                Login
+              </Button>
+            </Grid>
+          ) : (
+            <>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ backgroundColor: '#2ecc71', color: 'white' }}
+                  onClick={() => {
+                    handleMenu(2)
+                    setOpen(true)
+                  }}
+                  className={classes.rightMenuButton}
+                >
+                  Create Quote
+                </Button>
+              </Grid>
+
+              <Grid item>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-around"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    <NavLink to="/Profile">
+                      <Hidden mdDown>
+                        <Button
+                          aria-label="Profile"
+                          color="inherit"
+                          onClick={handleProfileClick}
+                          className={classes.avatarRoundedButton}
+                        >
+                          <Avatar>
+                            <AvatarPreview height="50" width="50" {...avatar} />
+                          </Avatar>
+                          <Typography
+                            variant="h6"
+                            className={classes.profileBlockName}
+                          >
+                            {name}
+                          </Typography>
+                        </Button>
+                      </Hidden>
+                      <Hidden lgUp>
+                        <Avatar height="35" width="35">
+                          <AvatarPreview {...avatar} />
+                        </Avatar>
+                      </Hidden>
+                    </NavLink>
+                  </Grid>
+                  <Grid item>
+                    <NotificationMenu fontSize={fontSize} />
+                  </Grid>
+                  <Grid item>
+                    <SettingsMenu fontSize={fontSize} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </>
+          )}
       </Grid>
       <Dialog
         open={open}
