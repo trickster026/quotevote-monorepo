@@ -17,6 +17,7 @@ import sidebarStyle from 'assets/jss/material-dashboard-pro-react/components/sid
 import { SET_SELECTED_PAGE } from '../../store/ui'
 import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
+import Button from '@material-ui/core/Button'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -111,17 +112,27 @@ const MenuSidebar = (props) => {
           href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            width: '100%',
+            display: 'block',
+          }}
         >
-          Donate
+          Donate 🤲
         </a>
       </ListItem>,
       <ListItem key="volunteer">
         <a
           href="mailto:volunteer@quote.vote"
-          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            width: '100%',
+            display: 'block',
+          }}
         >
-          Volunteer
+          Volunteer 🫱
         </a>
       </ListItem>,
       <ListItem key="github">
@@ -130,25 +141,42 @@ const MenuSidebar = (props) => {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"
-          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            width: '100%',
+            display: 'block',
+          }}
         >
-          GitHub
+          GitHub 🛠️
         </a>
       </ListItem>,
       <ListItem key="request-invite">
         <a
           onClick={() => history.push('/auth/request-access')}
-          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block', cursor: 'pointer' }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            width: '100%',
+            display: 'block',
+            cursor: 'pointer',
+          }}
         >
-          Request Invite
+          Request Invite 💌
         </a>
       </ListItem>,
       <ListItem key="login">
         <a
           onClick={() => history.push('/auth/login')}
-          style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block', cursor: 'pointer' }}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            width: '100%',
+            display: 'block',
+            cursor: 'pointer',
+          }}
         >
-          Login
+          Login 👤
         </a>
       </ListItem>,
     ]
@@ -191,15 +219,13 @@ const MenuSidebar = (props) => {
             [` ${classes[color]}`]: activeRoute(prop.path),
           })}`
           const itemText = `${classes.itemText} ${cx({
-            [classes.itemTextMini]:
-              propsMiniActive && miniActive,
+            [classes.itemTextMini]: propsMiniActive && miniActive,
             [classes.itemTextMiniRTL]:
               rtlActive && propsMiniActive && miniActive,
             [classes.itemTextRTL]: rtlActive,
           })}`
           const collapseItemText = `${classes.collapseItemText} ${cx({
-            [classes.collapseItemTextMini]:
-              propsMiniActive && miniActive,
+            [classes.collapseItemTextMini]: propsMiniActive && miniActive,
             [classes.collapseItemTextMiniRTL]:
               rtlActive && propsMiniActive && miniActive,
             [classes.collapseItemTextRTL]: rtlActive,
@@ -258,13 +284,9 @@ const MenuSidebar = (props) => {
     return [...guestLinks, ...routeLinks]
   }
 
-  const links = (
-    <List className={classes.list}>{createLinks(routes)}</List>
-  )
+  const links = <List className={classes.list}>{createLinks(routes)}</List>
 
-  const guestLinks = (
-    <List className={classes.list}>{createGuestLinks()}</List>
-  )
+  const guestLinks = <List className={classes.list}>{createGuestLinks()}</List>
 
   const drawerPaper = `${classes.drawerPaper} ${cx({
     [classes.drawerPaperMini]: propsMiniActive && miniActive,
@@ -292,24 +314,52 @@ const MenuSidebar = (props) => {
         <Toolbar>
           <Grid container alignItems="center" justifyContent="space-between">
             {/* Left: Only menu icon */}
-            <Grid item>
+            <Grid
+              item
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 onClick={handleDrawerOpen}
                 edge="start"
+                style={{ padding: 0 }}
               >
                 <MenuIcon />
               </IconButton>
-            </Grid>
-
-            <Grid item> 
               <img
                 src="/icons/android-chrome-192x192.png"
                 alt="QuoteVote Logo"
-                style={{ height: '30px', width: 'auto' }}
+                style={{ height: '35px', width: 'auto' }}
               />
             </Grid>
+
+            {!loggedIn && (
+              <Grid item style={{ display: 'flex', gap: 8 }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => history.push('/auth/request-access')}
+                  className={classes.rightMenuButton}
+                  size="small"
+                >
+                  Request Invite
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => history.push('/auth/login')}
+                  className={classes.rightMenuButton}
+                  size="small"
+                >
+                  Login
+                </Button>
+              </Grid>
+            )}
 
             {/* Right: Empty for guests, user menu for logged in */}
 

@@ -236,15 +236,15 @@ export default function AuthNavbar(props) {
       <Toolbar className={classes.display}>
         <Hidden smDown>
           <div className={classes.flex}>
-            <IconButton color="primary" aria-label="upload picture" component="span" onClick={() => history.push('/search')}>
-              <img alt="Quote Vote" src="/assets/QuoteWhite.png" className={classes.voxPop} />
+            <IconButton color="primary" aria-label="Quote Vote" component="span" onClick={() => history.push('/search')}>
+              <img alt="Quote Vote" src="/icons/android-chrome-192x192.png" className={classes.voxPop} />
             </IconButton>
           </div>
         </Hidden>
         <Hidden mdUp>
           <div className={classes.flex}>
-            <IconButton color="primary" aria-label="upload picture" component="span" className={classes.title}>
-              <img alt="Quote Vote" src="/assets/QuoteWhite.png" className={classes.voxPop} />
+            <IconButton color="primary" aria-label="Quote Vote" component="span" className={classes.title} onClick={() => history.push('/search')}>
+              <img alt="Quote Vote" src="/icons/android-chrome-192x192.png" className={classes.voxPop} />
             </IconButton>
           </div>
         </Hidden>

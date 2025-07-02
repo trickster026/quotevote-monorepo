@@ -37,7 +37,7 @@ import ApproveButton from '../CustomButtons/ApproveButton';
 import RejectButton from '../CustomButtons/RejectButton';
 import { serializeVotedBy } from '../../utils/objectIdSerializer';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   header2: {
     padding: 0,
     marginLeft: 10,
@@ -74,11 +74,18 @@ const useStyles = makeStyles(() => ({
   button: {
     margin: 10,
   },
+  postCard: {
+    height: 'auto',
+    overflow: 'auto',
+    [theme.breakpoints.up('md')]: {
+      height: (props) => props.postHeight >= 742 ? '83vh' : 'auto',
+    },
+  },
   ...buttonStyle,
 }))
 
 function Post({ post, user, postHeight, postActions, refetchPost }) {
-  const classes = useStyles()
+  const classes = useStyles({ postHeight })
   const { title, creator, created, _id, userId } = post
   const { name, avatar, username } = creator
   const { _followingId } = user
@@ -639,12 +646,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
 
   return (
     <>
-      <Card
-        style={{
-          height: postHeight >= 742 ? '83vh' : 'auto',
-          overflow: 'auto',
-        }}
-      >
+      <Card className={classes.postCard}>
         <CardHeader
           className={classes.header1}
           title={cardTitle}
