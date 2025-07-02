@@ -1,21 +1,40 @@
-import { useEffect, useState, useMemo } from 'react'
-import PropTypes from 'prop-types'
-import { Grid } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useSubscription } from '@apollo/react-hooks'
-import { useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
-import { Redirect } from 'react-router-dom'
-import Post from '../../components/Post/Post'
-import PostActionList from '../../components/PostActions/PostActionList'
-import PostSkeleton from '../../components/Post/PostSkeleton'
-import { GET_ROOM_MESSAGES, GET_POST } from '../../graphql/query'
-import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscription'
-import PostChatSend from '../../components/PostChat/PostChatSend'
+import { useEffect, useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { Grid, useMediaQuery } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useQuery, useSubscription } from '@apollo/react-hooks';
+import { useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
+import { Redirect } from 'react-router-dom';
+import Post from '../../components/Post/Post';
+import PostActionList from '../../components/PostActions/PostActionList';
+import PostSkeleton from '../../components/Post/PostSkeleton';
+import { GET_ROOM_MESSAGES, GET_POST } from '../../graphql/query';
+import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscription';
+import PostChatSend from '../../components/PostChat/PostChatSend';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: 10,
+  },
+  mobileContainer: {
+    height: '100vh',
+    maxHeight: '100vh',
+    overflow: 'hidden',
+    marginTop: 0,
+  },
+  desktopContainer: {
+    marginTop: 10,
+  },
+  mobilePostSection: {
+    height: '50vh',
+    overflow: 'auto',
+    padding: theme.spacing(2),
+  },
+  mobileInteractionSection: {
+    height: '50vh',
+    overflow: 'auto',
+    padding: theme.spacing(2),
   },
   emptyPost: {
     marginTop: 100,
@@ -31,6 +50,8 @@ const useStyles = makeStyles(() => ({
 
 function PostPage({ postId }) {
   const classes = useStyles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [postHeight, setPostHeight] = useState()
 
   const idSelector = useSelector((state) => state.ui.selectedPost.id)
@@ -131,14 +152,20 @@ function PostPage({ postId }) {
   return (
     <Grid
       container
-      direction="row"
-      justify="space-around"
-      alignItems="flex-start"
+      direction={{ xs: 'column', md: 'row' }}
+      justify={{ xs: 'flex-start', md: 'space-around' }}
+      alignItems={{ xs: 'stretch', md: 'flex-start' }}
       spacing={4}
-      className={classes.root}
+      className={isMobile ? classes.mobileContainer : classes.desktopContainer}
       style={{ position: 'relative' }}
     >
-      <Grid item xs={12} md={6} id="post">
+      <Grid 
+        item 
+        xs={12} 
+        md={6} 
+        id="post"
+        className={isMobile ? classes.mobilePostSection : ''}
+      >
         {loadingPost ? (
           <PostSkeleton />
         ) : (
@@ -152,7 +179,12 @@ function PostPage({ postId }) {
           />
         )}
       </Grid>
-      <Grid item className={classes.root} xs={12} md={6}>
+      <Grid 
+        item 
+        xs={12} 
+        md={6}
+        className={isMobile ? classes.mobileInteractionSection : ''}
+      >
         <PostChatSend messageRoomId={messageRoomId} title={title} />
         <PostActionList
           loading={loadingPost}
