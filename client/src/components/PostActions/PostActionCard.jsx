@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import {
-  Card, CardActions, CardContent, IconButton, Typography, SvgIcon,
+  Card,
+  CardActions,
+  CardContent,
+  IconButton,
+  Typography,
+  SvgIcon,
 } from '@material-ui/core'
 import { InsertLink } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
@@ -55,9 +60,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
   const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const {
-    user, content, created, _id,
-  } = postAction
+  const { user, content, created, _id } = postAction
   const { username, avatar, name } = user
   const parsedDate = parseCommentDate(created)
   const voteType = get(postAction, 'type')
@@ -115,10 +118,9 @@ function PostActionCard({ postAction, postUrl, selected }) {
     }
   }, [postAction, selected, dispatch])
 
+
   if (postAction.text) {
-    return (
-      <PostChatMessage message={postAction} key={postAction._id} />
-    )
+    return <PostChatMessage message={postAction} key={postAction._id} />
   }
 
   return (
@@ -126,20 +128,21 @@ function PostActionCard({ postAction, postUrl, selected }) {
       onClick={() => handleClick()}
       className={selected ? classes.selectedRoot : classes.root}
     >
-      <IconButton
-        onClick={() => handleRedirectToProfile()}
-      >
+      <IconButton onClick={() => handleRedirectToProfile()}>
         <AvatarDisplay height={20} width={20} {...avatar} />
       </IconButton>
       <Typography display="inline">
-        {name}
-        {' '}
-        <span className={classes.date}>{parsedDate}</span>
+        {name} <span className={classes.date}>{parsedDate}</span>
       </Typography>
+      {type === 'Vote' && (
+        <CardContent className={classes.content}>
+          <Typography display="inline">
+            {`❝ ${postAction.content} ❞`}
+          </Typography>
+        </CardContent>
+      )}
       {!voteType && (
-        <CardContent
-          className={classes.content}
-        >
+        <CardContent className={classes.content}>
           <p>
             {type === 'Quote' && '❝ '}
             {postContent}

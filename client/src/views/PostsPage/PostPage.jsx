@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useQuery, useSubscription } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
-import { Redirect } from 'react-router-dom';
-import Post from '../../components/Post/Post';
-import PostActionList from '../../components/PostActions/PostActionList';
-import PostSkeleton from '../../components/Post/PostSkeleton';
-import { GET_ROOM_MESSAGES, GET_POST } from '../../graphql/query';
-import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscription';
-import PostChatSend from '../../components/PostChat/PostChatSend';
+import { useEffect, useState, useMemo } from 'react'
+import PropTypes from 'prop-types'
+import { Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
+import { useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
+import { Redirect } from 'react-router-dom'
+import Post from '../../components/Post/Post'
+import PostActionList from '../../components/PostActions/PostActionList'
+import PostSkeleton from '../../components/Post/PostSkeleton'
+import { GET_ROOM_MESSAGES, GET_POST } from '../../graphql/query'
+import { NEW_MESSAGE_SUBSCRIPTION } from '../../graphql/subscription'
+import PostChatSend from '../../components/PostChat/PostChatSend'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -67,52 +67,60 @@ function PostPage({ postId }) {
   }
 
   const {
-    loading: loadingMessages, data: messageData, refetch: refetchMessages,
+    loading: loadingMessages,
+    data: messageData,
+    refetch: refetchMessages,
   } = useQuery(GET_ROOM_MESSAGES, {
     skip: !messageRoomId,
     variables: { messageRoomId },
   })
 
-  useSubscription(
-    NEW_MESSAGE_SUBSCRIPTION,
-    {
-      skip: !messageRoomId,
-      variables: { messageRoomId },
-      onSubscriptionData: async () => {
-        await refetchMessages()
-      },
+  useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
+    skip: !messageRoomId,
+    variables: { messageRoomId },
+    onSubscriptionData: async () => {
+      await refetchMessages()
     },
-  )
+  })
 
   if (postError) return <Redirect to="/error" />
 
   const { messages } = (!loadingMessages && messageData) || []
 
-  const {
-    comments, votes, quotes,
-  } = post || { comments: [], votes: [], quotes: [] }
-  let postActions = []
-
-  if (!isEmpty(comments)) {
-    postActions = postActions.concat(comments)
+  const { comments, votes, quotes } = post || {
+    comments: [],
+    votes: [],
+    quotes: [],
   }
 
-  if (!isEmpty(votes)) {
-    // Add voted text content to each vote based on startWordIndex and endWordIndex
-    const votesWithContent = votes.map(vote => ({
-      ...vote,
-      content: post.text.substring(vote.startWordIndex, vote.endWordIndex).replace(/(\r\n|\n|\r)/gm, '')
-    }))
-    postActions = postActions.concat(votesWithContent)
-  }
+  const postActions = useMemo(() => {
+    let postActions = []
 
-  if (!isEmpty(quotes)) {
-    postActions = postActions.concat(quotes)
-  }
+    if (!isEmpty(comments)) {
+      postActions = postActions.concat(comments)
+    }
 
-  if (!isEmpty(messages)) {
-    postActions = postActions.concat(messages)
-  }
+    if (!isEmpty(votes)) {
+      // Add voted text content to each vote based on startWordIndex and endWordIndex
+      const votesWithContent = votes.map((vote) => ({
+        ...vote,
+        content: post.text
+          .substring(vote.startWordIndex, vote.endWordIndex)
+          .replace(/(\r\n|\n|\r)/gm, ''),
+      }))
+      postActions = postActions.concat(votesWithContent)
+    }
+
+    if (!isEmpty(quotes)) {
+      postActions = postActions.concat(quotes)
+    }
+
+    if (!isEmpty(messages)) {
+      postActions = postActions.concat(messages)
+    }
+
+    return postActions
+  }, [comments, votes, quotes, messages, post])
 
   if (!loadingPost && !post) {
     return <Redirect to="/error" />
@@ -131,11 +139,26 @@ function PostPage({ postId }) {
       style={{ position: 'relative' }}
     >
       <Grid item xs={12} md={6} id="post">
-        {loadingPost ? <PostSkeleton /> : <Post post={post} loading={loadingPost} user={user} postHeight={postHeight} postActions={postActions} />}
+        {loadingPost ? (
+          <PostSkeleton />
+        ) : (
+          <Post
+            post={post}
+            loading={loadingPost}
+            user={user}
+            postHeight={postHeight}
+            postActions={postActions}
+            refetchPost={refetchPost}
+          />
+        )}
       </Grid>
       <Grid item className={classes.root} xs={12} md={6}>
         <PostChatSend messageRoomId={messageRoomId} title={title} />
-        <PostActionList loading={loadingPost} postActions={postActions} postUrl={url} />
+        <PostActionList
+          loading={loadingPost}
+          postActions={postActions}
+          postUrl={url}
+        />
       </Grid>
     </Grid>
   )
