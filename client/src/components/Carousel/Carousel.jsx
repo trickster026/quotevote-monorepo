@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-    createTheme, makeStyles, MuiThemeProvider, useTheme,
+  createTheme, makeStyles, MuiThemeProvider, useTheme,
 } from '@material-ui/core/styles'
 import MobileStepper from '@material-ui/core/MobileStepper'
 import Button from '@material-ui/core/Button'
@@ -30,19 +30,13 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 400,
-      paddingLeft: 20,
-    },
+    padding: 0,
+    margin: 0,
   },
   content: {
     alignContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 400,
-      paddingLeft: 20,
-    },
   },
   navigationButton: {
     position: 'absolute',
@@ -91,7 +85,7 @@ function SwipeableTextMobileStepper({
   const handleStepChange = (step) => {
     setActiveStep(step)
     if (step !== activeStepProp) {
-      setActiveStepProp(step)
+      setActiveStepProp?.(step)
     }
   }
 
