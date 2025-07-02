@@ -52,6 +52,7 @@ export const GET_POST = gql`
       rejectedBy
       reportedBy
       bookmarkedBy
+      enable_voting
       creator {
         _id
         name
