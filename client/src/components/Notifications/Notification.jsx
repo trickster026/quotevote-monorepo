@@ -14,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import LaunchIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router-dom'
 import NotificationLists from './NotificationLists'
+import { useMobileDetection } from '../../utils/display'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 function Notification({
   loading, notifications, spacing = 0, pageView, setOpenPopUp,
 }) {
+  const isMobileDevice = useMobileDetection()
   const classes = useStyles({ pageView })
   const history = useHistory()
   const handleClick = () => {
@@ -54,7 +56,7 @@ function Notification({
       spacing={spacing}
     >
       <Grid item>
-        <Typography variant="h5">Notifications</Typography>
+        {!isMobileDevice && <Typography variant="h5">Notifications</Typography>}
         <Divider />
         {!pageView && (
           <Tooltip
