@@ -98,7 +98,12 @@ function PostPage({ postId }) {
   }
 
   if (!isEmpty(votes)) {
-    postActions = postActions.concat(votes)
+    // Add voted text content to each vote based on startWordIndex and endWordIndex
+    const votesWithContent = votes.map(vote => ({
+      ...vote,
+      content: post.text.substring(vote.startWordIndex, vote.endWordIndex).replace(/(\r\n|\n|\r)/gm, '')
+    }))
+    postActions = postActions.concat(votesWithContent)
   }
 
   if (!isEmpty(quotes)) {

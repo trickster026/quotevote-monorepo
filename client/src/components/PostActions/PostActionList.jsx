@@ -19,6 +19,7 @@ function PostActionList({
   const location = useLocation()
   const { hash } = location
   const dispatch = useDispatch()
+
   React.useEffect(() => {
     if (!hash) {
       dispatch(SET_FOCUSED_COMMENT(null))

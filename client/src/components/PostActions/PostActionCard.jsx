@@ -78,7 +78,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
   const hideAlert = () => {
     setOpen(false)
   }
-
+  const type = postAction.__typename
   let postContent = content
   let svgIcon
   let voteTags = ''
@@ -141,7 +141,9 @@ function PostActionCard({ postAction, postUrl, selected }) {
           className={classes.content}
         >
           <p>
+            {type === 'Quote' && '❝ '}
             {postContent}
+            {type === 'Quote' && ' ❞'}
           </p>
         </CardContent>
       )}

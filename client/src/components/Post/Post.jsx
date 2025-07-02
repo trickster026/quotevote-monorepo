@@ -546,6 +546,7 @@ function Post({
             onSelect={setSelectedText}
             selectedText={selectedText}
             highlights
+            votes={post.votes}
           >
             {({ text }) => (
               <VotingPopup
