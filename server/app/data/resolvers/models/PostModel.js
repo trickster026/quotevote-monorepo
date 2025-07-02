@@ -88,6 +88,10 @@ const schema = mongoose.Schema({
   deleted: {
     type: Boolean,
     default: false,
+  },
+  enable_voting: {
+    type: Boolean,
+    default: false,
   }
 });
 

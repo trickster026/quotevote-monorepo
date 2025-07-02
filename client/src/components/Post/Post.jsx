@@ -1,31 +1,24 @@
-import { useState } from 'react'
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  IconButton,
-  FormControlLabel,
-} from '@material-ui/core'
-import Switch from '@material-ui/core/Switch'
-import { makeStyles } from '@material-ui/core/styles'
-import BlockIcon from '@material-ui/icons/Block'
-import LinkIcon from '@material-ui/icons/Link'
-import DeleteIcon from '@material-ui/icons/Delete'
-import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
-import { useMutation } from '@apollo/react-hooks'
-import { useHistory } from 'react-router-dom'
-import { includes } from 'lodash'
-import copy from 'clipboard-copy'
-import moment from 'moment'
-import SweetAlert from 'react-bootstrap-sweetalert'
-import FollowButton from 'components/CustomButtons/FollowButton'
-import VotingBoard from '../VotingComponents/VotingBoard'
-import VotingPopup from '../VotingComponents/VotingPopup'
-import { SET_SNACKBAR } from '../../store/ui'
-import useGuestGuard from 'utils/useGuestGuard'
-import RequestInviteDialog from '../RequestInviteDialog'
+import { useState } from 'react';
+import { Card, CardActions, CardContent, CardHeader, IconButton, FormControlLabel, Tooltip } from '@material-ui/core';
+import Switch from '@material-ui/core/Switch';
+import { makeStyles } from '@material-ui/core/styles';
+import BlockIcon from '@material-ui/icons/Block';
+import LinkIcon from '@material-ui/icons/Link';
+import DeleteIcon from '@material-ui/icons/Delete';
+import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useHistory } from 'react-router-dom';
+import { includes } from 'lodash';
+import copy from 'clipboard-copy';
+import moment from 'moment';
+import SweetAlert from 'react-bootstrap-sweetalert';
+import FollowButton from 'components/CustomButtons/FollowButton';
+import VotingBoard from '../VotingComponents/VotingBoard';
+import VotingPopup from '../VotingComponents/VotingPopup';
+import { SET_SNACKBAR } from '../../store/ui';
+import useGuestGuard from 'utils/useGuestGuard';
+import RequestInviteDialog from '../RequestInviteDialog';
 import {
   ADD_COMMENT,
   ADD_QUOTE,
@@ -34,15 +27,15 @@ import {
   APPROVE_POST,
   REJECT_POST,
   DELETE_POST,
-} from '../../graphql/mutations'
-import { GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY } from '../../graphql/query'
-import AvatarDisplay from '../Avatar'
-import BookmarkIconButton from '../CustomButtons/BookmarkIconButton'
-import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
-import ApproveButton from '../CustomButtons/ApproveButton'
-import RejectButton from '../CustomButtons/RejectButton'
-import ApproveRejectPopover from '../ApproveRejectPopver/ApproveRejectPopover'
-import { serializeVotedBy } from '../../utils/objectIdSerializer'
+  TOGGLE_VOTING,
+} from '../../graphql/mutations';
+import { GET_POST, GET_TOP_POSTS, GET_USER_ACTIVITY, GET_USERS } from '../../graphql/query';
+import AvatarDisplay from '../Avatar';
+import BookmarkIconButton from '../CustomButtons/BookmarkIconButton';
+import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle';
+import ApproveButton from '../CustomButtons/ApproveButton';
+import RejectButton from '../CustomButtons/RejectButton';
+import { serializeVotedBy } from '../../utils/objectIdSerializer';
 
 const useStyles = makeStyles(() => ({
   header2: {
@@ -97,31 +90,110 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
   // State declarations
   const [selectedText, setSelectedText] = useState('')
   const [open, setOpen] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [popoverType, setPopoverType] = useState('')
   const [openInvite, setOpenInvite] = useState(false)
-  const [showVoteButtons, setShowVoteButtons] = useState(() => {
-    const stored = localStorage.getItem(`showVoteButtons-${_id}`)
-    return stored ? JSON.parse(stored) : false
-  })
 
   const isFollowing = includes(_followingId, userId)
 
-  const handlePopoverOpen = (event, type) => {
-    console.log('Popover open:', { type, anchor: event.currentTarget })
-    setAnchorEl(event.currentTarget)
-    setPopoverType(type)
+  // Query to get user details for tooltips
+  const { loading: usersLoading, data: usersData } = useQuery(GET_USERS)
+
+  const getRejectTooltipContent = () => {
+    if (!post.rejectedBy || post.rejectedBy.length === 0) {
+      return 'No users rejected this post.'
+    }
+    
+    if (usersLoading || !usersData) {
+      return 'Loading...'
+    }
+
+    const rejectedUsers = usersData.users.filter((user) => 
+      post.rejectedBy.includes(user._id)
+    )
+    
+    if (rejectedUsers.length === 0) {
+      return 'No users rejected this post.'
+    }
+
+    const MAX_DISPLAY = 5
+    const displayUsers = rejectedUsers.slice(0, MAX_DISPLAY)
+    const remaining = rejectedUsers.length - MAX_DISPLAY
+
+    let content = `Users who rejected this post:\n`
+    displayUsers.forEach((user) => {
+      content += `• @${user.username}\n`
+    })
+    
+    if (remaining > 0) {
+      content += `\n... and ${remaining} more`
+    }
+
+    return content
   }
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null)
-    setPopoverType('')
+  const getApproveTooltipContent = () => {
+    if (!post.approvedBy || post.approvedBy.length === 0) {
+      return 'No users approved this post.'
+    }
+    
+    if (usersLoading || !usersData) {
+      return 'Loading...'
+    }
+
+    const approvedUsers = usersData.users.filter((user) => 
+      post.approvedBy.includes(user._id)
+    )
+    
+    if (approvedUsers.length === 0) {
+      return 'No users approved this post.'
+    }
+
+    const MAX_DISPLAY = 5
+    const displayUsers = approvedUsers.slice(0, MAX_DISPLAY)
+    const remaining = approvedUsers.length - MAX_DISPLAY
+
+    let content = `Users who approved this post:\n`
+    displayUsers.forEach((user) => {
+      content += `• @${user.username}\n`
+    })
+    
+    if (remaining > 0) {
+      content += `\n... and ${remaining} more`
+    }
+
+    return content
   }
 
-  const handleToggleVoteButtons = () => {
-    if (!showVoteButtons) {
-      setShowVoteButtons(true)
-      localStorage.setItem(`showVoteButtons-${_id}`, 'true')
+  const RejectTooltipContent = () => (
+    <div style={{ whiteSpace: 'pre-line' }}>
+      {getRejectTooltipContent()}
+    </div>
+  )
+
+  const ApproveTooltipContent = () => (
+    <div style={{ whiteSpace: 'pre-line' }}>
+      {getApproveTooltipContent()}
+    </div>
+  )
+
+  const handleToggleVoteButtons = async () => {
+    if (!ensureAuth()) return
+    try {
+      await toggleVoting({ variables: { postId: _id } })
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: post.enable_voting ? 'Voting disabled' : 'Voting enabled',
+          type: 'success',
+        }),
+      )
+    } catch (err) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: `Toggle voting error: ${err.message}`,
+          type: 'danger',
+        }),
+      )
     }
   }
 
@@ -223,6 +295,17 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
     Array.isArray(post.rejectedBy) &&
     post.rejectedBy.some((id) => id?.toString() === userIdStr)
 
+  // Check if user has already voted on this post
+  const hasVoted = Array.isArray(post.votedBy) && 
+    post.votedBy.some((vote) => vote.userId?.toString() === userIdStr)
+
+  // Get the user's vote type if they have voted
+  const getUserVoteType = () => {
+    if (!hasVoted) return null
+    const userVote = post.votedBy.find((vote) => vote.userId?.toString() === userIdStr)
+    return userVote ? userVote.type : null
+  }
+
   const [removeApprove] = useMutation(APPROVE_POST, {
     variables: { postId: _id, userId: user._id },
     refetchQueries: [
@@ -246,6 +329,16 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
 
   const [deletePost] = useMutation(DELETE_POST, {
     refetchQueries: [
+      {
+        query: GET_TOP_POSTS,
+        variables: { limit: 5, offset: 0, searchKey: '', interactions: false },
+      },
+    ],
+  })
+
+  const [toggleVoting] = useMutation(TOGGLE_VOTING, {
+    refetchQueries: [
+      { query: GET_POST, variables: { postId: _id } },
       {
         query: GET_TOP_POSTS,
         variables: { limit: 5, offset: 0, searchKey: '', interactions: false },
@@ -326,6 +419,19 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
   }
   const handleVoting = async (obj) => {
     if (!ensureAuth()) return
+    
+    // Check if user has already voted
+    if (hasVoted) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: 'You have already voted on this post',
+          type: 'warning',
+        }),
+      )
+      return
+    }
+    
     const vote = {
       content: selectedText.text,
       postId: post._id,
@@ -558,6 +664,19 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
           subheader={parsedCreated}
         />
         <CardContent style={{ fontSize: '16px' }}>
+          {hasVoted && (
+            <div style={{ 
+              backgroundColor: '#e3f2fd', 
+              padding: '8px 12px', 
+              borderRadius: '4px', 
+              marginBottom: '12px',
+              border: '1px solid #2196f3',
+              color: '#1976d2',
+              fontSize: '14px'
+            }}>
+              ✓ You have already {getUserVoteType() === 'up' ? 'upvoted' : 'downvoted'} this post
+            </div>
+          )}
           <VotingBoard
             content={post.text}
             onSelect={setSelectedText}
@@ -573,21 +692,37 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
                 text={text}
                 selectedText={selectedText}
                 votedBy={serializeVotedBy(post.votedBy)}
+                hasVoted={hasVoted}
+                userVoteType={getUserVoteType()}
               />
             )}
           </VotingBoard>
         </CardContent>
 
-        {user._id === userId && !showVoteButtons && (
+        {user._id === userId && !post.enable_voting && (
           <FormControlLabel
             control={
               <Switch
-                checked={showVoteButtons}
+                checked={post.enable_voting}
+                onChange={handleToggleVoteButtons}
+                color="secondary"
+              />
+            }
+            label="Enable Voting"
+            style={{ marginLeft: 20 }}
+          />
+        )}
+
+        {user._id === userId && !post.enable_voting && (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={post.enable_voting}
                 onChange={handleToggleVoteButtons}
                 color="primary"
               />
             }
-            label="Enable Voting"
+            label="Disable Voting"
             style={{ marginLeft: 20 }}
           />
         )}
@@ -601,24 +736,50 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
             marginLeft: 20,
           }}
         >
-          {showVoteButtons && (
+          {post.enable_voting && (
             <div style={{ display: 'flex', gap: 8 }}>
-              <RejectButton
-                onMouseOver={(e) => handlePopoverOpen(e, 'rejected')}
-                onClick={handleRejectPost}
-                selected={hasRejected}
-              />
-              <ApproveButton
-                onMouseOver={(e) => handlePopoverOpen(e, 'approved')}
-                onClick={handleApprovePost}
-                selected={hasApproved}
-              />
-              <ApproveRejectPopover
-                anchorEl={anchorEl}
-                handlePopoverClose={handlePopoverClose}
-                type={popoverType}
-                rejectedBy={post.rejectedBy}
-              />
+              <Tooltip 
+                title={<RejectTooltipContent />} 
+                arrow
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'rgba(0, 0, 0, 0.87)',
+                      '& .MuiTooltip-arrow': {
+                        color: 'rgba(0, 0, 0, 0.87)',
+                      },
+                    },
+                  },
+                }}
+              >
+                <div>
+                  <RejectButton
+                    onClick={handleRejectPost}
+                    selected={hasRejected}
+                  />
+                </div>
+              </Tooltip>
+              <Tooltip 
+                title={<ApproveTooltipContent />} 
+                arrow
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'rgba(0, 0, 0, 0.87)',
+                      '& .MuiTooltip-arrow': {
+                        color: 'rgba(0, 0, 0, 0.87)',
+                      },
+                    },
+                  },
+                }}
+              >
+                <div>
+                  <ApproveButton
+                    onClick={handleApprovePost}
+                    selected={hasApproved}
+                  />
+                </div>
+              </Tooltip>
             </div>
           )}
           <div style={{ display: 'flex', gap: 8 }}>
