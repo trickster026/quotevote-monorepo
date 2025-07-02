@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useForm } from 'react-hook-form'
 
@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 
-import { CircularProgress } from '@material-ui/core'
+import { CardActions, CircularProgress } from '@material-ui/core'
 import { useMutation } from '@apollo/react-hooks'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -32,6 +32,7 @@ const useStyles = makeStyles({
     textTransform: 'none',
     color: 'white',
     textColor: 'white',
+    width: '100%',
   },
   forgotPassword: {
     textTransform: 'none',
@@ -47,23 +48,16 @@ const useStyles = makeStyles({
   },
 })
 
-function SignupForm({
-  user,
-  token,
-}) {
+function SignupForm({ user, token }) {
   localStorage.setItem('token', token)
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
-  const {
-    register, handleSubmit, errors, setError,
-  } = useForm()
+  const { register, handleSubmit, errors, setError } = useForm()
   const [updateUser, { loading, error, data }] = useMutation(UPDATE_USER)
 
   const onSubmit = async (values) => {
-    const {
-      username, password, email, name,
-    } = values
+    const { username, password, email, name } = values
 
     const result = await updateUser({
       variables: {
@@ -78,13 +72,35 @@ function SignupForm({
     })
 
     if (result && result.data) {
-      dispatch(USER_LOGIN_SUCCESS({
-        data: result.data.updateUser,
-        loading: false,
-        loginError: null,
-      }))
+      dispatch(
+        USER_LOGIN_SUCCESS({
+          data: result.data.updateUser,
+          loading: false,
+          loginError: null,
+        }),
+      )
     }
   }
+
+  const [stripeLoaded, setStripeLoaded] = useState(false)
+
+  useEffect(() => {
+    // Load Stripe script if not already loaded
+    if (!window.Stripe) {
+      const script = document.createElement('script')
+      script.src = 'https://js.stripe.com/v3/buy-button.js'
+      script.async = true
+      script.onload = () => setStripeLoaded(true)
+      document.body.appendChild(script)
+      return () => {
+        if (document.body.contains(script)) {
+          document.body.removeChild(script)
+        }
+      }
+    } else {
+      setStripeLoaded(true)
+    }
+  }, [])
 
   useEffect(() => {
     if (error) {
@@ -194,26 +210,37 @@ function SignupForm({
                 error={errors.password}
                 helperText={errors.password && errors.password.message}
               />
+            </Grid>
 
-            </Grid>
-            <Grid item>
-              <Button
-                className={classes.submitButton}
-                size="large"
-                color="primary"
-                variant="contained"
-                fullWidth
-                type="submit"
-                disabled={loading}
-              >
-                <Typography variant="body1">
-                  Submit
-                  {loading && <CircularProgress size={20} style={{ marginLeft: 5 }} />}
-                </Typography>
-              </Button>
-            </Grid>
+            {stripeLoaded && (
+              <Grid item>
+                <stripe-buy-button
+                  buy-button-id="buy_btn_1RY6bhP3PjIJfZEbu5CpTDjo"
+                  publishable-key="pk_live_51RXriSP3PjIJfZEb1tqnEGBOGFZBHREUxqWHeO22GASJ5It6MKfpakOE3oDtL7II20j5idUR6NuXrBlaKXvszY6q00nn8KxROy"
+                />
+              </Grid>
+            )}
           </Grid>
         </CardBody>
+
+        <CardActions>
+          <Button
+            className={classes.submitButton}
+            size="large"
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="submit"
+            disabled={loading}
+          >
+            <Typography variant="body1">
+              Submit
+              {loading && (
+                <CircularProgress size={20} style={{ marginLeft: 5 }} />
+              )}
+            </Typography>
+          </Button>
+        </CardActions>
       </Card>
     </form>
   );

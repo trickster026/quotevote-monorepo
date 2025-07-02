@@ -8,7 +8,6 @@ import { useQuery } from '@apollo/react-hooks'
 import SignupForm from '../../components/SignupForm/SignupForm'
 import { VERIFY_PASSWORD_RESET_TOKEN } from '../../graphql/query'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import StripePaymentDialog from '../../components/StripePaymentDialog'
 
 const useStyles = makeStyles(styles)
 
@@ -23,16 +22,7 @@ export default function SignupPage() {
   const user = (data && data.verifyUserPasswordResetToken) || false
   const classes = useStyles()
   const [showPaymentDialog, setShowPaymentDialog] = React.useState(true)
-
-  React.useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://js.stripe.com/v3/buy-button.js'
-    script.async = true
-    document.body.appendChild(script)
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
+  
 
   React.useEffect(() => {
     if (!loadingData && !user) history.push('/error')
@@ -52,11 +42,6 @@ export default function SignupPage() {
           <SignupForm user={user} token={token} />
         </GridItem>
       </GridContainer>
-      
-      <StripePaymentDialog 
-        open={showPaymentDialog} 
-        onClose={handleClosePaymentDialog} 
-      />
     </div>
   )
 }
