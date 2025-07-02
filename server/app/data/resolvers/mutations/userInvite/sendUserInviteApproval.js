@@ -111,7 +111,7 @@ export const sendUserInviteApproval = (pubsub) => {
               color: #424555
             }
             .footer-span {
-              color: #00cf6e;
+              color: #52b274;
             }
             .footer-border {
               border-bottom: 1px solid #b0b0dad2;
@@ -228,7 +228,7 @@ export const sendUserInviteApproval = (pubsub) => {
               color: #424555
             }
             .footer-span {
-              color: #00cf6e;
+              color: #52b274;
             }
             .footer-border {
               border-bottom: 1px solid #b0b0dad2;

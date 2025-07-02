@@ -116,7 +116,7 @@ const ActionButtons = ({ status, id }) => {
             color="primary"
             className={classes.button}
             style={{
-              backgroundColor: '#00cf6e',
+              backgroundColor: '#52b274',
             }}
             onClick={handleAccept}
             disabled={loading}
@@ -145,7 +145,7 @@ const ActionButtons = ({ status, id }) => {
           variant="contained"
           className={classes.button}
           style={{
-            backgroundColor: '#00cf6e',
+            backgroundColor: '#52b274',
           }}
           onClick={handleAccept}
           disabled={loading}

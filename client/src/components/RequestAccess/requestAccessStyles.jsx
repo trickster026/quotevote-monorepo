@@ -1,11 +1,11 @@
 const requestAccessStyles = (theme) => ({
   greenBtn: {
     textTransform: 'none',
-    backgroundColor: '#00cf6e',
+    backgroundColor: '#52b274',
     color: 'white',
     float: 'right',
     '&:hover': {
-      backgroundColor: '#00cf6e',
+      backgroundColor: '#52b274',
     },
   },
   header: {
@@ -34,7 +34,7 @@ const requestAccessStyles = (theme) => ({
     width: '22px',
     height: '28px',
     borderRadius: '6px',
-    backgroundColor: '#00cf6e',
+    backgroundColor: '#52b274',
     opacity: 0.85,
     font: 'Roboto',
     fontsize: '18px',
@@ -113,13 +113,13 @@ const requestAccessStyles = (theme) => ({
   },
   requestBtn: {
     textTransform: 'none',
-    backgroundColor: '#00cf6e',
+    backgroundColor: '#52b274',
     color: 'white',
     position: 'absolute',
     bottom: '-5%',
     left: '27%',
     '&:hover': {
-      backgroundColor: '#00cf6e',
+      backgroundColor: '#52b274',
     },
   },
   error: {

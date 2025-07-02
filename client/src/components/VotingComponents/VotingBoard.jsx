@@ -10,7 +10,7 @@ import SelectionPopover from './SelectionPopover'
 
 const useStyles = makeStyles({
   root: {
-    backgroundColor: '#00CF6E',
+    backgroundColor: '#52b274',
     color: 'white',
   },
 })

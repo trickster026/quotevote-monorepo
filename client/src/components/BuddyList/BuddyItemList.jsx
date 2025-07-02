@@ -1,4 +1,3 @@
-import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -46,7 +45,7 @@ const useStyles = makeStyles(() => ({
   friendType: {
     margin: 5,
     padding: 5,
-    background: '#00CF6E',
+    background: '#52b274',
     borderRadius: '5px',
   },
   postType: {

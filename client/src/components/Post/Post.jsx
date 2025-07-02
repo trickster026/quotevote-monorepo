@@ -54,7 +54,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: 10,
   },
   title: {
-    color: '#00cf6e',
+    color: '#52b274',
     marginRight: 5,
     fontFamily: 'Montserrat',
     fontSize: '20px',
@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: 20,
   },
   votes: {
-    color: '#00cf6e',
+    color: '#52b274',
   },
   downVote: {
     color: 'red',

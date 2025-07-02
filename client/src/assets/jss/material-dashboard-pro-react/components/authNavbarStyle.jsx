@@ -1,22 +1,21 @@
-import React from 'react';
 
 import {
-  container,
-  defaultFont,
-  primaryColor,
-  defaultBoxShadow,
-  infoColor,
-  successColor,
-  warningColor,
-  dangerColor,
-  boxShadow,
-  drawerWidth,
-  transition,
-  whiteColor,
-  grayColor,
-  blackColor,
-  hexToRgb,
-} from 'assets/jss/material-dashboard-pro-react'
+    container,
+    defaultFont,
+    primaryColor,
+    defaultBoxShadow,
+    infoColor,
+    successColor,
+    warningColor,
+    dangerColor,
+    boxShadow,
+    drawerWidth,
+    transition,
+    whiteColor,
+    grayColor,
+    blackColor,
+    hexToRgb,
+} from 'assets/jss/material-dashboard-pro-react';
 
 const pagesHeaderStyle = (theme) => ({
   voxPop: {
@@ -132,10 +131,10 @@ const pagesHeaderStyle = (theme) => ({
     },
   },
   listItemTextRequestInvite: {
-    backgroundColor: '#00cf6e',
+    backgroundColor: '#52b274',
     color: 'white',
     '&:hover': {
-      backgroundColor: '#00cf6e',
+      backgroundColor: '#52b274',
     },
     [theme.breakpoints.down('sm')]: {
       height: '35px',
@@ -230,7 +229,7 @@ const pagesHeaderStyle = (theme) => ({
   },
   navLinkActiveAccess: {
     borderRadius: '5px',
-    backgroundColor: '#00cf6e',
+    backgroundColor: '#52b274',
   },
   drawerPaper: {
     border: 'none',

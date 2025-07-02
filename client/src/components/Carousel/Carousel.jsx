@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  createTheme, makeStyles, MuiThemeProvider, useTheme,
+    createTheme, makeStyles, MuiThemeProvider, useTheme,
 } from '@material-ui/core/styles'
 import MobileStepper from '@material-ui/core/MobileStepper'
 import Button from '@material-ui/core/Button'
@@ -13,7 +13,7 @@ import PropTypes from 'prop-types'
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#00cf6e',
+      main: '#52b274',
     },
   },
   typography: {

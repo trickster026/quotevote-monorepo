@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#fdd835',
   },
   upVotedBg: {
-    borderColor: '#00cf6e',
+    borderColor: '#52b274',
   },
   downVotedBg: {
     borderColor: '#ff6060',
@@ -127,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
   },
   upvoteIcon: {
-    color: '#00cf6e',
+    color: '#52b274',
   },
   downvoteIcon: {
     color: '#ff6060',

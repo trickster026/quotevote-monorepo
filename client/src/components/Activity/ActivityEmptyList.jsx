@@ -8,7 +8,7 @@ import { SET_SELECTED_PAGE } from '../../store/ui'
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#00CF6E',
+      main: '#52b274',
     },
     secondary: {
       main: '#E91E63',
