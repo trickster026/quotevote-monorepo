@@ -6,9 +6,10 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import PropTypes from 'prop-types'
-import { Avatar, Typography } from '@material-ui/core'
+import { Avatar, Typography, Tooltip } from '@material-ui/core'
 import classNames from 'classnames'
 import { useDispatch } from 'react-redux'
+import { useRef, useState, useEffect } from 'react'
 import AvatarDisplay from '../Avatar'
 import { SELECTED_CHAT_ROOM } from '../../store/chat'
 
@@ -60,6 +61,27 @@ const useStyles = makeStyles(() => ({
     marginLeft: 5,
     marginTop: 10,
   },
+  listItemText: {
+    flex: '1 1 auto',
+    minWidth: 0, // This is crucial for text truncation to work
+    marginRight: 60, // Give space for the secondary action
+  },
+  primaryText: {
+    display: 'flex',
+    alignItems: 'center',
+    minWidth: 0, // Allow flex item to shrink below content size
+  },
+  textContent: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    flex: '1 1 auto',
+    minWidth: 0, // Allow text to shrink
+  },
+  typeBadge: {
+    flexShrink: 0, // Prevent badge from shrinking
+    marginLeft: 8,
+  },
 }))
 const emptyData = [
   {
@@ -84,6 +106,45 @@ const emptyData = [
     avatar: {},
   },
 ]
+
+// Component to handle text overflow detection and tooltip
+const TruncatedText = ({ text, className }) => {
+  const textRef = useRef(null)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textRef.current) {
+        const element = textRef.current
+        setIsOverflowing(element.scrollWidth > element.clientWidth)
+      }
+    }
+
+    checkOverflow()
+    // Re-check on window resize
+    window.addEventListener('resize', checkOverflow)
+    return () => window.removeEventListener('resize', checkOverflow)
+  }, [text])
+
+  const textElement = (
+    <div ref={textRef} className={className}>
+      {text}
+    </div>
+  )
+
+  return isOverflowing ? (
+    <Tooltip title={text} placement="top">
+      {textElement}
+    </Tooltip>
+  ) : (
+    textElement
+  )
+}
+
+TruncatedText.propTypes = {
+  text: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
+}
 
 function BuddyItemList({ buddyList }) {
   const classes = useStyles()
@@ -115,13 +176,14 @@ function BuddyItemList({ buddyList }) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
+                className={classes.listItemText}
                 primary={(
-                  <Typography>
-                    {item.Text}
-                    <span className={item.type === 'USER' ? classes.friendType : classes.postType}>
+                  <div className={classes.primaryText}>
+                    <TruncatedText text={item.Text} className={classes.textContent} />
+                    <span className={`${item.type === 'USER' ? classes.friendType : classes.postType} ${classes.typeBadge}`}>
                       {item.type === 'USER' ? 'FRIEND' : 'POST'}
                     </span>
-                  </Typography>
+                  </div>
                 )}
               />
               <ListItemSecondaryAction>

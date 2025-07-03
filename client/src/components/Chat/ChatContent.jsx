@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Divider, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import ChatSearchInput from './ChatSearchInput'
@@ -14,8 +13,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: 380,
     [theme.breakpoints.down('lg')]: {
-      paddingLeft: 8
-    }
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: 10,
+    },
   },
 }))
 
@@ -28,12 +31,6 @@ function ChatContent() {
   if (!selectedRoom || !selectedRoom.room) {
     return (
       <div className={classes.root}>
-        {!isMobileDevice && (
-          <Typography className={classes.title} variant="h6">
-            Chat
-          </Typography>
-        )}
-        <Divider />
         <ChatSearchInput setSearch={setSearch} />
         <BuddyList search={search} />
       </div>
