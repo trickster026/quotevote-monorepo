@@ -758,6 +758,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
                   <RejectButton
                     onClick={handleRejectPost}
                     selected={hasRejected}
+                    count={post.rejectedBy ? post.rejectedBy.length : 0}
                   />
                 </div>
               </Tooltip>
@@ -779,6 +780,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
                   <ApproveButton
                     onClick={handleApprovePost}
                     selected={hasApproved}
+                    count={post.approvedBy ? post.approvedBy.length : 0}
                   />
                 </div>
               </Tooltip>
