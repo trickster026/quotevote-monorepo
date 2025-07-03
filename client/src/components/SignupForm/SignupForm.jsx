@@ -13,6 +13,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import CardBody from '../../mui-pro/Card/CardBody'
+import CardHeader from '../../mui-pro/Card/CardHeader'
 import Card from '../../mui-pro/Card/Card'
 import { UPDATE_USER } from '../../graphql/mutations'
 import { USER_LOGIN_SUCCESS } from '../../store/user'
@@ -57,14 +58,14 @@ function SignupForm({ user, token }) {
   const [updateUser, { loading, error, data }] = useMutation(UPDATE_USER)
 
   const onSubmit = async (values) => {
-    const { username, password, email, name } = values
+    const { username, password, email } = values
 
     const result = await updateUser({
       variables: {
         user: {
           _id: user._id,
           email,
-          name,
+          name: "",
           username,
           password,
         },
@@ -120,34 +121,19 @@ function SignupForm({ user, token }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card className={classes.card}>
+        <CardHeader>
+          <Typography className={classes.header}>
+            Complete Your Registration
+          </Typography>
+        </CardHeader>
         <CardBody>
           <Grid
             container
             direction="column"
             alignItems="center"
             justify="space-evenly"
-            spacing={2}
           >
             <Grid item>
-              <Typography className={classes.header}>
-                Complete Your Registration
-              </Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                inputRef={register({
-                  required: 'Name is required',
-                })}
-                className={classes.textfield}
-                placeholder="Name"
-                fullWidth
-                name="name"
-                id="name"
-                error={errors.name}
-                helperText={errors.name && errors.name.message}
-                value={user.name}
-              />
-
               <TextField
                 inputRef={register({
                   required: 'Email is required',

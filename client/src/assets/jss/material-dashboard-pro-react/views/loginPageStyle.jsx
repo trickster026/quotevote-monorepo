@@ -1,19 +1,25 @@
-import React from 'react';
 
 import {
   container,
   cardTitle,
   whiteColor,
   grayColor,
-} from 'assets/jss/material-dashboard-pro-react'
+} from 'assets/jss/material-dashboard-pro-react';
 
 const loginPageStyle = (theme) => ({
   container: {
     ...container,
     zIndex: '4',
+    paddingBottom: '100px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
     [theme.breakpoints.down('sm')]: {
       paddingBottom: '100px',
     },
+    
   },
   cardTitle: {
     ...cardTitle,
