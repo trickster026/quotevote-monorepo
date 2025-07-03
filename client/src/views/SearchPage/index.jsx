@@ -939,7 +939,7 @@ export default function SearchPage() {
                     <Button
                       variant="contained"
                       style={{
-                        background: '#2ecc71',
+                        background: '#52b274',
                         color: '#fff',
                         fontWeight: 600,
                         fontSize: 16,
@@ -1065,7 +1065,7 @@ export default function SearchPage() {
                       <Button
                         variant="contained"
                         style={{
-                          background: '#2ecc71',
+                          background: '#52b274',
                           color: '#fff',
                           fontWeight: 600,
                           fontSize: 18,
@@ -1081,7 +1081,7 @@ export default function SearchPage() {
                       <a
                         href="#more-info"
                         style={{
-                          color: '#2ecc71',
+                          color: '#52b274',
                           fontWeight: 500,
                           fontSize: 22,
                           textDecoration: 'none',

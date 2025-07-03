@@ -130,7 +130,7 @@ function MainNavBar(props) {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ backgroundColor: '#2ecc71', color: 'white' }}
+                  style={{ backgroundColor: '#52b274', color: 'white' }}
                   onClick={() => {
                     handleMenu(2)
                     setOpen(true)
