@@ -19,11 +19,8 @@ import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
 import Button from '@material-ui/core/Button'
 import ChatMenu from '../../components/Chat/ChatMenu'
-import ChatMenu from '../../components/Chat/ChatMenu'
 import AddIcon from '@material-ui/icons/Add'
 import Tooltip from '@material-ui/core/Tooltip'
-import Dialog from '@material-ui/core/Dialog'
-import SubmitPost from '@/components/SubmitPost/SubmitPost'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
