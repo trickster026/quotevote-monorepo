@@ -19,10 +19,10 @@ export default function SignupPage() {
   const user = (data && data.verifyUserPasswordResetToken) || false
   const classes = useStyles()
 
-  // React.useEffect(() => {
-  //   if (!loadingData && !user) history.push('/error')
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loadingData, user])
+  React.useEffect(() => {
+    if (!loadingData && !user) history.push('/error')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingData, user])
 
   if (loadingData) return <LoadingSpinner />
 
