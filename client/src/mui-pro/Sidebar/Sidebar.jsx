@@ -18,6 +18,11 @@ import { SET_SELECTED_PAGE } from '../../store/ui'
 import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
 import Button from '@material-ui/core/Button'
+import ChatMenu from '../../components/Chat/ChatMenu'
+import AddIcon from '@material-ui/icons/Add'
+import Tooltip from '@material-ui/core/Tooltip'
+import Dialog from '@material-ui/core/Dialog'
+import SubmitPost from '@/components/SubmitPost/SubmitPost'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -57,7 +62,8 @@ const MenuSidebar = (props) => {
   const [miniActive, setMiniActive] = useState(true)
   const [MessageDisplay, setMessageDisplay] = useState(null)
   const [collapseStates, setCollapseStates] = useState({})
-
+  const [openCreateQuote, setOpenCreateQuote] = useState(false)
+  
   // Initialize collapse states on mount
   useEffect(() => {
     setCollapseStates(getCollapseStates(routes))
@@ -365,7 +371,22 @@ const MenuSidebar = (props) => {
 
             {loggedIn && (
               <Grid item>
-                <Grid container>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item>
+                    <Tooltip title="Create Quote">
+                      <IconButton
+                        color="secondary"
+                        onClick={() => setOpenCreateQuote(true)}
+                        size="small"
+                        className={classes.rightMenuButton}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <ChatMenu />
+                  </Grid>
                   <Grid item>
                     <NotificationMenu />
                   </Grid>
@@ -403,6 +424,15 @@ const MenuSidebar = (props) => {
           />
         </Grid>
       </Drawer>
+
+      <Dialog
+        open={openCreateQuote}
+        onClose={() => setOpenCreateQuote(false)}
+        fullWidth
+        fullScreen
+      >
+        <SubmitPost setOpen={setOpenCreateQuote} />
+      </Dialog>
     </>
   )
 }

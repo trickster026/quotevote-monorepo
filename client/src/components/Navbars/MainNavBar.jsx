@@ -17,7 +17,8 @@ import AvatarPreview from '../Avatar'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
-
+import { useMobileDetection } from '../../utils/display'
+  
 function MainNavBar(props) {
   const { classes, width } = props
   const selectedPage = useSelector((state) => state.ui.selectedPage)
@@ -40,6 +41,9 @@ function MainNavBar(props) {
   const handleQuoteVote = () => {
     dispatch(SET_SELECTED_PAGE(0))
   }
+
+  
+  const isMobile = useMobileDetection()
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -187,6 +191,7 @@ function MainNavBar(props) {
         onClose={() => setOpen(false)}
         maxWidth="sm"
         fullWidth
+        fullScreen={isMobile}
       >
         <SubmitPost setOpen={setOpen} />
       </Dialog>
