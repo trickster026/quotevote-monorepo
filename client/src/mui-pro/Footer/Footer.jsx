@@ -30,7 +30,7 @@ export default function Footer(props) {
           <Grid item xs={12} sm={9}>
             <Typography>
               &copy;{" "}
-              Quote Voteuli, PBC made with &hearts; on Earth*
+              Quote Vote, PBC made with &hearts; on Earth*
               <div className={classes.grow} />
             </Typography>
           </Grid>

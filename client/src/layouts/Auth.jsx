@@ -18,6 +18,21 @@ import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(styles)
 
+// Available background images
+const backgroundImages = [
+  'viviana-rishe-UC8fvOyG5pU-unsplash.jpg',
+  'steph-smith-3jYcQf9oiJ8-unsplash.jpg',
+  'sergio-rodriguez-rrlEOXRmMAA-unsplash.jpg',
+  'sergio-otoya-gCNh426vB30-unsplash.jpg',
+  'rondell-chaz-mabunga-EHLKkMDxe3M-unsplash.jpg',
+  'rommel-paras-wrHnE3kMplg-unsplash.jpg',
+  'peter-thomas-efLcMHXtrg0-unsplash.jpg',
+  'julia-caesar-jeXkw2HR1SU-unsplash.jpg',
+  'ehmir-bautista-JjDqyWuWZyU-unsplash.jpg',
+  'adam-navarro-qXcl3z7_AOc-unsplash.jpg',
+  'actionvance-guy5aS3GvgA-unsplash.jpg'
+];
+
 export default function Pages(props) {
   // const isRequestAccess = window.location.pathname.indexOf('/auth/request-access') !== -1
   const { ...rest } = props
@@ -25,12 +40,24 @@ export default function Pages(props) {
   const wrapper = React.createRef()
   // styles
   const classes = useStyles()
+  
+  // State to store the selected background image
+  const [selectedBackground, setSelectedBackground] = React.useState(null);
+  
   React.useEffect(() => {
     document.body.style.overflow = 'unset'
+    
+    // Select a random background image on first load
+    if (!selectedBackground) {
+      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+      setSelectedBackground(backgroundImages[randomIndex]);
+    }
+    
     // Specify how to clean up after this effect:
     return function cleanup() {
     }
-  })
+  }, [selectedBackground])
+
   const getRoutes = (routesParameter) => routesParameter.map((prop, key) => {
     if (prop.collapse) {
       return getRoutes(prop.views)
@@ -67,7 +94,7 @@ export default function Pages(props) {
     <div
       className={classes.content}
       style={{
-        backgroundImage: `url('/assets/Mountain.png')`,
+        backgroundImage: selectedBackground ? `url('/assets/bg/${selectedBackground}')` : `url('/assets/Mountain.png')`,
         backgroundPosition: 'left',
       }}
     >
