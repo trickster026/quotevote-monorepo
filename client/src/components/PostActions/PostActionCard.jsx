@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import {
   Card,
   CardActions,
@@ -86,7 +86,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
   let svgIcon
   let voteTags = ''
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!commentSelected) {
       dispatch(SET_FOCUSED_COMMENT(postAction))
       setCommentSelected(true)
@@ -94,7 +94,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
       dispatch(SET_FOCUSED_COMMENT(sharedComment))
       setCommentSelected(false)
     }
-  }
+  }, [commentSelected, dispatch, postAction, sharedComment])
 
   const handleRedirectToProfile = () => {
     history.push(`/Profile/${username}`)

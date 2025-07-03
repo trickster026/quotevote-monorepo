@@ -7,7 +7,6 @@ import Highlighter from 'react-highlight-words'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import SelectionPopover from './SelectionPopover'
-import getTopPostsVoteHighlights from '../../utils/getTopPostsVoteHighlights'
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +29,13 @@ const VotingBoard = ({
   const focusedComment = useSelector((state) => state.ui.focusedComment)
   const { startWordIndex, endWordIndex } = focusedComment || { startWordIndex: 0, endWordIndex: 0 }
   const highlightedText = content.substring(startWordIndex, endWordIndex).replace(/(\r\n|\n|\r)/gm, '')
+
+  console.log({
+    startWordIndex,
+    endWordIndex,
+    highlightedText,
+    focusedComment,
+  })
   
   const handleSelect = (select) => {
     const text = select.toString()
@@ -55,11 +61,6 @@ const VotingBoard = ({
   
   const renderHighlights = () => {
     if (highlights) {
-      // If there are votes, use the vote highlighting logic
-      if (votes && votes.length > 0) {
-        return getTopPostsVoteHighlights(votes, null, content)
-      }
-      
       // If there's a focused comment, highlight it
       if (endWordIndex > startWordIndex) {
         return (
