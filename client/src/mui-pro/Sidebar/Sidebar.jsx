@@ -374,14 +374,14 @@ const MenuSidebar = (props) => {
                 <Grid container spacing={2} alignItems="center">
                   <Grid item>
                     <Tooltip title="Create Quote">
-                      <IconButton
+                      <Button
+                        variant="contained"
                         color="secondary"
                         onClick={() => setOpenCreateQuote(true)}
                         size="small"
-                        className={classes.rightMenuButton}
                       >
                         <AddIcon />
-                      </IconButton>
+                      </Button>
                     </Tooltip>
                   </Grid>
                   <Grid item>
@@ -429,9 +429,8 @@ const MenuSidebar = (props) => {
         open={openCreateQuote}
         onClose={() => setOpenCreateQuote(false)}
         fullScreen
-
       >
-        <SubmitPost setOpen={setOpenCreateQuote}/>
+        <SubmitPost setOpen={setOpenCreateQuote} />
       </Dialog>
     </>
   )
