@@ -1,27 +1,21 @@
-import { makeStyles } from '@material-ui/core/styles'
-import {
-  Grid,
-  Typography,
-  InputBase,
-  Paper,
-  IconButton,
-  Button,
-} from '@material-ui/core'
-import { useQuery } from '@apollo/react-hooks'
-import { useSelector, useDispatch } from 'react-redux'
-import { useState, useEffect } from 'react'
-import SearchIcon from '@material-ui/icons/Search'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import format from 'date-fns/format'
-import { jwtDecode } from 'jwt-decode'
-import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query'
-import { serializePost } from '../../utils/objectIdSerializer'
-import PostsList from '../../components/Post/PostsList'
-import ErrorBoundary from '../../components/ErrorBoundary'
-import Carousel from '../../components/Carousel/Carousel'
-import PostCard from '../../components/Post/PostCard'
-import LoadingSpinner from '../../components/LoadingSpinner'
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Typography, InputBase, Paper, IconButton, Button } from '@material-ui/core';
+import { useQuery } from '@apollo/react-hooks';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import SearchIcon from '@material-ui/icons/Search';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import format from 'date-fns/format';
+import { jwtDecode } from 'jwt-decode';
+import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query';
+import { serializePost } from '../../utils/objectIdSerializer';
+import PostsList from '../../components/Post/PostsList';
+import ErrorBoundary from '../../components/ErrorBoundary';
+import Carousel from '../../components/Carousel/Carousel';
+import PostCard from '../../components/Post/PostCard';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -562,46 +556,63 @@ export default function SearchPage() {
             </Paper>
           </Grid>
           <Grid item className={classes.iconsContainer}>
-            <IconButton
-              aria-label="friends"
-              className={`${classes.icon} ${
-                activeFilters.friends ? classes.activeFilter : ''
-              }`}
-              onClick={handleFriendsFilter}
+            <Tooltip
               title={
                 user && user._id
-                  ? 'Show posts from friends only'
-                  : 'Please log in to use friends filter'
+                  ? 'Following: Show posts from people you follow only'
+                  : 'Following: Please log in to filter by people you follow'
               }
-              disabled={!user || !user._id}
-              style={{ opacity: !user || !user._id ? 0.5 : 1 }}
+              placement="bottom"
+              arrow
             >
-              👥
-            </IconButton>
-            <IconButton
-              aria-label="filter"
-              className={`${classes.icon} ${
-                activeFilters.interactions ? classes.activeFilter : ''
-              }`}
-              onClick={handleInteractionsFilter}
-              title="Sort by most interactions"
+              <span>
+                <IconButton
+                  aria-label="friends"
+                  className={`${classes.icon} ${
+                    activeFilters.friends ? classes.activeFilter : ''
+                  }`}
+                  onClick={handleFriendsFilter}
+                  disabled={!user || !user._id}
+                  style={{ opacity: !user || !user._id ? 0.5 : 1 }}
+                >
+                  👥
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip
+              title="Sort: Arrange posts by most interactions (comments, votes, quotes)"
+              placement="bottom"
+              arrow
             >
-              🧲
-            </IconButton>
-            <IconButton
-              aria-label="calendar"
-              className={`${classes.icon} ${
-                dateRangeFilter.startDate ||
-                dateRangeFilter.endDate ||
-                isCalendarVisible
-                  ? classes.activeFilter
-                  : ''
-              }`}
-              onClick={(e) => handleDateFilterToggle(e)}
-              title="Filter by date range"
+              <IconButton
+                aria-label="filter"
+                className={`${classes.icon} ${
+                  activeFilters.interactions ? classes.activeFilter : ''
+                }`}
+                onClick={handleInteractionsFilter}
+              >
+                🧲
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title="Date Selector: Filter posts by specific date range"
+              placement="bottom"
+              arrow
             >
-              📅
-            </IconButton>
+              <IconButton
+                aria-label="calendar"
+                className={`${classes.icon} ${
+                  dateRangeFilter.startDate ||
+                  dateRangeFilter.endDate ||
+                  isCalendarVisible
+                    ? classes.activeFilter
+                    : ''
+                }`}
+                onClick={(e) => handleDateFilterToggle(e)}
+              >
+                📅
+              </IconButton>
+            </Tooltip>
           </Grid>
 
           {isCalendarVisible && (
