@@ -18,6 +18,7 @@ import { SET_SELECTED_PAGE } from '../../store/ui'
 import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
 import Button from '@material-ui/core/Button'
+import ChatMenu from '../../components/Chat/ChatMenu'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -366,6 +367,9 @@ const MenuSidebar = (props) => {
             {loggedIn && (
               <Grid item>
                 <Grid container>
+                  <Grid item>
+                    <ChatMenu />
+                  </Grid>
                   <Grid item>
                     <NotificationMenu />
                   </Grid>

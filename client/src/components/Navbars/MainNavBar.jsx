@@ -17,6 +17,7 @@ import AvatarPreview from '../Avatar'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
+import ChatMenu from '../Chat/ChatMenu'
 
 function MainNavBar(props) {
   const { classes, width } = props
@@ -170,6 +171,9 @@ function MainNavBar(props) {
                         </Avatar>
                       </Hidden>
                     </NavLink>
+                  </Grid>
+                  <Grid item>
+                    <ChatMenu fontSize={fontSize} />
                   </Grid>
                   <Grid item>
                     <NotificationMenu fontSize={fontSize} />
