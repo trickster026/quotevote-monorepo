@@ -17,8 +17,10 @@ import AvatarPreview from '../Avatar'
 import NotificationMenu from '../Notifications/NotificationMenu'
 import SettingsMenu from '../Settings/SettingsMenu'
 import SubmitPost from '../SubmitPost/SubmitPost'
+import ChatMenu from '../Chat/ChatMenu'
+
 import { useMobileDetection } from '../../utils/display'
-  
+
 function MainNavBar(props) {
   const { classes, width } = props
   const selectedPage = useSelector((state) => state.ui.selectedPage)
@@ -42,7 +44,7 @@ function MainNavBar(props) {
     dispatch(SET_SELECTED_PAGE(0))
   }
 
-  
+
   const isMobile = useMobileDetection()
 
   return (
@@ -174,6 +176,9 @@ function MainNavBar(props) {
                         </Avatar>
                       </Hidden>
                     </NavLink>
+                  </Grid>
+                  <Grid item>
+                    <ChatMenu fontSize={fontSize} />
                   </Grid>
                   <Grid item>
                     <NotificationMenu fontSize={fontSize} />

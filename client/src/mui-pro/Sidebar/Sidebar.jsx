@@ -19,6 +19,7 @@ import NotificationMenu from '../../components/Notifications/NotificationMenu'
 import SettingsMenu from '../../components/Settings/SettingsMenu'
 import Button from '@material-ui/core/Button'
 import ChatMenu from '../../components/Chat/ChatMenu'
+import ChatMenu from '../../components/Chat/ChatMenu'
 import AddIcon from '@material-ui/icons/Add'
 import Tooltip from '@material-ui/core/Tooltip'
 import Dialog from '@material-ui/core/Dialog'
@@ -63,7 +64,7 @@ const MenuSidebar = (props) => {
   const [MessageDisplay, setMessageDisplay] = useState(null)
   const [collapseStates, setCollapseStates] = useState({})
   const [openCreateQuote, setOpenCreateQuote] = useState(false)
-  
+
   // Initialize collapse states on mount
   useEffect(() => {
     setCollapseStates(getCollapseStates(routes))
@@ -424,15 +425,6 @@ const MenuSidebar = (props) => {
           />
         </Grid>
       </Drawer>
-
-      <Dialog
-        open={openCreateQuote}
-        onClose={() => setOpenCreateQuote(false)}
-        fullWidth
-        fullScreen
-      >
-        <SubmitPost setOpen={setOpenCreateQuote} />
-      </Dialog>
     </>
   )
 }
