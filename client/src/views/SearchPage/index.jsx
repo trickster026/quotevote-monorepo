@@ -1,21 +1,29 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, InputBase, Paper, IconButton, Button } from '@material-ui/core';
-import { useQuery } from '@apollo/react-hooks';
-import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
-import SearchIcon from '@material-ui/icons/Search';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import format from 'date-fns/format';
-import { jwtDecode } from 'jwt-decode';
-import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query';
-import { serializePost } from '../../utils/objectIdSerializer';
-import PostsList from '../../components/Post/PostsList';
-import ErrorBoundary from '../../components/ErrorBoundary';
-import Carousel from '../../components/Carousel/Carousel';
-import PostCard from '../../components/Post/PostCard';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import Tooltip from '@material-ui/core/Tooltip';
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  Grid,
+  Typography,
+  InputBase,
+  Paper,
+  IconButton,
+  Button,
+} from '@material-ui/core'
+import { useQuery } from '@apollo/react-hooks'
+import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import SearchIcon from '@material-ui/icons/Search'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import format from 'date-fns/format'
+import { jwtDecode } from 'jwt-decode'
+import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query'
+import { serializePost } from '../../utils/objectIdSerializer'
+import PostsList from '../../components/Post/PostsList'
+import ErrorBoundary from '../../components/ErrorBoundary'
+import Carousel from '../../components/Carousel/Carousel'
+import PostCard from '../../components/Post/PostCard'
+import LoadingSpinner from '../../components/LoadingSpinner'
+import Tooltip from '@material-ui/core/Tooltip'
+import SearchGuestSections from '../../components/SearchContainer/SearchGuestSections'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -363,19 +371,22 @@ export default function SearchPage() {
       return
     }
 
-    setActiveFilters(prev => ({
+    setActiveFilters((prev) => ({
       ...prev,
-      friends: !prev.friends
+      friends: !prev.friends,
     }))
     setOffset(0)
     setShowResults(true)
   }
 
   const handleInteractionsFilter = () => {
-    console.log('Interactions filter clicked, current state:', activeFilters.interactions)
-    setActiveFilters(prev => ({
+    console.log(
+      'Interactions filter clicked, current state:',
+      activeFilters.interactions,
+    )
+    setActiveFilters((prev) => ({
       ...prev,
-      interactions: !prev.interactions
+      interactions: !prev.interactions,
     }))
     setOffset(0)
     setShowResults(true)
@@ -417,20 +428,21 @@ export default function SearchPage() {
 
   // Helper function to check if any filters are active
   const hasActiveFilters = () => {
-    return activeFilters.friends || activeFilters.interactions || 
-           dateRangeFilter.startDate || dateRangeFilter.endDate
+    return (
+      activeFilters.friends ||
+      activeFilters.interactions ||
+      dateRangeFilter.startDate ||
+      dateRangeFilter.endDate
+    )
   }
 
   // Return data exactly as received from API without any sorting
   const processAndSortData = (rawData) => {
     if (!rawData) return null
 
-    if(!rawData.posts || !rawData.posts.entities) {
+    if (!rawData.posts || !rawData.posts.entities) {
       return null
     }
-
-    console.log('Processing data with filter mode:', activeFilters)
-    console.log('Raw data:', rawData)
 
     // Simply serialize the posts and return the data exactly as received
     let processedData = {
@@ -440,8 +452,6 @@ export default function SearchPage() {
         entities: rawData.posts?.entities?.map((post) => serializePost(post)),
       },
     }
-
-    console.log('Returning data exactly as received from API (no sorting applied)')
 
     return processedData
   }
@@ -455,18 +465,6 @@ export default function SearchPage() {
     // If backend doesn't support friendsOnly, fall back to client-side filtering
     console.warn(
       'Backend does not support friendsOnly parameter, using client-side filtering',
-    )
-  }
-
-  if (error) {
-    return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h3>Error loading posts</h3>
-        <p>{error.message}</p>
-        <pre style={{ textAlign: 'left', overflow: 'auto' }}>
-          {JSON.stringify(error, null, 2)}
-        </pre>
-      </div>
     )
   }
 
@@ -697,8 +695,7 @@ export default function SearchPage() {
                 <Typography variant="body2" color="textSecondary">
                   Active Filters:
                   {activeFilters.friends && ' 👥 Friends only'}
-                  {activeFilters.interactions &&
-                    ' 🧲 Sorted by interactions'}
+                  {activeFilters.interactions && ' 🧲 Sorted by interactions'}
                   {dateRangeFilter.startDate &&
                     ` 📅 From ${format(
                       dateRangeFilter.startDate,
@@ -800,10 +797,13 @@ export default function SearchPage() {
                       ? `Please wait while we apply filters: ${
                           activeFilters.friends ? 'Friends only, ' : ''
                         }${
-                          activeFilters.interactions ? 'Sorted by interactions, ' : ''
+                          activeFilters.interactions
+                            ? 'Sorted by interactions, '
+                            : ''
                         }${
-                          dateRangeFilter.startDate || dateRangeFilter.endDate 
-                            ? 'Date range, ' : ''
+                          dateRangeFilter.startDate || dateRangeFilter.endDate
+                            ? 'Date range, '
+                            : ''
                         }`.replace(/,\s*$/, '')
                       : 'Please wait while we fetch the latest conversations'}
                   </Typography>
@@ -821,301 +821,127 @@ export default function SearchPage() {
                 />
               )}
 
-              {(!processedData || processedData?.posts?.entities?.length === 0) && !loading && (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    padding: '2rem',
-                    marginTop: '2rem',
-                  }}
-                >
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
-                    🔍
-                  </div>
-                  <Typography variant="h6" style={{ color: '#666' }}>
-                    No posts found
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    style={{ color: '#999', marginTop: '0.5rem' }}
+              {(!processedData ||
+                processedData?.posts?.entities?.length === 0) &&
+                !loading && (
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      marginTop: '2rem',
+                    }}
                   >
-                    Try adjusting your search or filters
-                  </Typography>
-                </div>
-              )}
+                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+                      🔍
+                    </div>
+                    <Typography variant="h6" style={{ color: '#666' }}>
+                      No posts found
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      style={{ color: '#999', marginTop: '0.5rem' }}
+                    >
+                      Try adjusting your search or filters
+                    </Typography>
+                  </div>
+                )}
             </Grid>
           )}
 
+          {isGuestMode && <SearchGuestSections />}
+
+          
+          {/* Guest Footer Section */}
           {isGuestMode && (
-            <>
-            {/* Discover section */}
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                  maxWidth: 1200,
-                  margin: '2rem auto 0 auto',
-                  padding: '0 5vw',
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="space-between"
+              style={{
+                width: '100%',
+                margin: 0,
+                marginTop: 40,
+                minHeight: 48,
+                padding: '0 16px',
+              }}
+              className="guest-footer"
+            >
+              <Grid item className="footer-text">
+                <Typography 
+                  variant="body1" 
+                  style={{ 
+                    fontSize: 'clamp(14px, 4vw, 18px)', 
+                    fontWeight: 400,
+                    lineHeight: 1.4
+                  }}
+                >
+                  Quote.Vote&nbsp; made with <span style={{ color: 'red', fontSize: 'clamp(16px, 4.5vw, 20px)' }}>❤️</span> on Earth
+                </Typography>
+              </Grid>
+              <Grid 
+                item 
+                className="footer-links"
+                style={{ 
+                  display: 'flex', 
+                  gap: 'clamp(16px, 4vw, 36px)', 
+                  justifyContent: 'center',
+                  flexWrap: 'wrap'
                 }}
               >
-                <Typography
-                  variant="h4"
-                  style={{ fontWeight: 700, marginBottom: "4rem", marginTop: '2rem' }}
-                >
-                  <span style={{ color: '#2ecc71' }}>Discover</span>{' '}
-                  <span style={{ color: '#111' }}>without bias</span>
-                </Typography>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 32,
-                    flexDirection: 'column',
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    marginTop: '2rem',
-                    '@media (min-width: 900px)': {
-                      flexDirection: 'row',
-                    },
+                <a 
+                  href="/auth/request-access" 
+                  style={{ 
+                    color: '#111', 
+                    fontWeight: 400, 
+                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
+                    textDecoration: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    transition: 'background-color 0.2s ease'
                   }}
-                  className="discover-section-flex"
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
-                  {/* Left: Image */}
-                  <div
-                    style={{
-                      flex: '1 1 320px',
-                      minWidth: 220,
-                      maxWidth: 480,
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <img
-                      src={
-                        process.env.PUBLIC_URL + '/assets/three-short-posts.png'
-                      }
-                      alt="Example posts"
-                      style={{
-                        width: '100%',
-                        maxWidth: 600,
-                        height: 'auto',
-                      }}
-                    />
-                  </div>
-                  {/* Right: Text and Button */}
-                  <div
-                    style={{
-                      flex: '2 1 340px',
-                      minWidth: 220,
-                      maxWidth: 600,
-                      width: '100%',
-                      textAlign: 'left',
-                      marginLeft: 0,
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      style={{
-                        fontWeight: 600,
-                        marginBottom: 16,
-                        color: '#222',
-                      }}
-                    >
-                      All conversations are searchable without ads,
-                      <br />
-                      and discovered through exploration, not algorithms.
-                    </Typography>
-                    <ul
-                      style={{
-                        color: '#333',
-                        fontSize: 16,
-                        margin: '0 0 24px 18px',
-                        padding: 0,
-                        lineHeight: 1.7,
-                      }}
-                    >
-                      <li>
-                        Filter by keyword, only show following, sort by most
-                        interactions, or select a date range.
-                      </li>
-                      <li>
-                        Find what people are talking about now, or during a
-                        historical event in the past.
-                      </li>
-                    </ul>
-                    <Button
-                      variant="contained"
-                      style={{
-                        background: '#52b274',
-                        color: '#fff',
-                        fontWeight: 600,
-                        fontSize: 16,
-                        borderRadius: 8,
-                        padding: '10px 32px',
-                        textTransform: 'none',
-                        boxShadow: '0 2px 8px rgba(46,204,113,0.08)',
-                      }}
-                      href="/auth/request-access"
-                    >
-                      Request Invite
-                    </Button>
-                  </div>
-                </div>
-              </Grid>
-
-              {/* Share section */}
-              <Grid
-                item
-                style={{
-                  width: '100%',
-                  maxWidth: 1200,
-                  margin: '2rem auto 0 auto',
-                  padding: '0 5vw',
-                  paddingTop: '4rem',
-                }}
-              >
-                <Typography
-                  variant="h4"
-                  style={{ fontWeight: 700, marginTop: '2rem', marginBottom: '4rem' }}
-                >
-                  <span style={{ color: '#111' }}>Share</span>
-                  <span style={{ color: '#2ecc71' }}>your thoughts</span>{' '}
-                  <span style={{ color: '#111' }}>, ideas and plans</span>
-                </Typography>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 32,
-                    flexDirection: 'column',
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    marginTop: '2rem',
-                    '@media (min-width: 900px)': {
-                      flexDirection: 'row',
-                    },
+                  Request Invite
+                </a>
+                <a 
+                  href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    color: '#111', 
+                    fontWeight: 400, 
+                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
+                    textDecoration: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    transition: 'background-color 0.2s ease'
                   }}
-                  className="discover-section-flex"
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
-                  {/* Left: Image */}
-                  <div
-                    style={{
-                      flex: '1 1 320px',
-                      minWidth: 220,
-                      maxWidth: 480,
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <img
-                      src={
-                        process.env.PUBLIC_URL + '/assets/voting-popup.png'
-                      }
-                      alt="Example posts"
-                      style={{
-                        width: '100%',
-                        maxWidth: 600,
-                        height: 'auto',
-                      }}
-                    />
-                  </div>
-                  {/* Right: Text and Button */}
-                  <div
-                    style={{
-                      flex: '2 1 340px',
-                      minWidth: 220,
-                      maxWidth: 600,
-                      width: '100%',
-                      textAlign: 'left',
-                      marginLeft: 0,
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      style={{
-                        fontWeight: 700,
-                        marginBottom: 12,
-                        color: '#111',
-                        fontSize: 22,
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      Post to your social circle and beyond.
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      style={{
-                        color: '#222',
-                        fontSize: 18,
-                        marginBottom: 12,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Engage in meaningful, respectful discussions, that solve your problem, challenge your perspectives, or create a bit of whimsical fun..
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      style={{
-                        color: '#222',
-                        fontSize: 18,
-                        marginBottom: 8,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Highlight words,<br />then vote or <b>comment to provide feedback.</b>
-                    </Typography>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 32, marginTop: 32 }}>
-                      <Button
-                        variant="contained"
-                        style={{
-                          background: '#52b274',
-                          color: '#fff',
-                          fontWeight: 600,
-                          fontSize: 18,
-                          borderRadius: 8,
-                          padding: '10px 32px',
-                          textTransform: 'none',
-                          boxShadow: '0 2px 8px rgba(46,204,113,0.08)',
-                        }}
-                        href="/auth/request-access"
-                      >
-                        Request Invite
-                      </Button>
-                      <a
-                        href="#more-info"
-                        style={{
-                          color: '#52b274',
-                          fontWeight: 500,
-                          fontSize: 22,
-                          textDecoration: 'none',
-                          display: 'flex',
-                          alignItems: 'center',
-                          marginLeft: 16,
-                        }}
-                      >
-                        More info
-                        <span style={{ fontSize: 28, marginLeft: 6 }}>»</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                  Donate
+                </a>
+                <a 
+                  href="https://github.com/QuoteVote/quotevote-monorepo" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    color: '#111', 
+                    fontWeight: 400, 
+                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
+                    textDecoration: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    transition: 'background-color 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  GitHub
+                </a>
               </Grid>
-
-
-              <Grid item style={{ marginTop: '2rem', textAlign: 'center' }}>
-                <Typography variant="body2" color="textSecondary">
-                  Sign up to join the conversation and create your own posts!
-                </Typography>
-              </Grid>
-            </>
+            </Grid>
           )}
         </Grid>
       </div>
@@ -1133,6 +959,49 @@ if (typeof window !== 'undefined') {
     @media (min-width: 900px) {
       .discover-section-flex {
         flex-direction: row !important;
+      }
+    }
+    
+    /* Guest footer responsive styles */
+    .guest-footer {
+      flex-direction: column;
+      gap: 16px;
+      padding: 0 16px;
+      align-items: center;
+    }
+    
+    .footer-text {
+      text-align: center;
+    }
+    
+    .footer-links {
+      justify-content: center;
+    }
+    
+    @media (min-width: 768px) {
+      .guest-footer {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 24px;
+      }
+      
+      .footer-text {
+        text-align: left;
+      }
+      
+      .footer-links {
+        justify-content: flex-end;
+      }
+    }
+    
+    /* Touch-friendly link styles for mobile */
+    @media (max-width: 767px) {
+      .guest-footer a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   `
