@@ -1,14 +1,19 @@
-import green from '@material-ui/core/colors/green'
-import purple from '@material-ui/core/colors/purple'
-import red from '@material-ui/core/colors/red'
 import lightBlue from '@material-ui/core/colors/lightBlue'
 import teal from '@material-ui/core/colors/teal'
 
 const theme = {
   palette: {
-    primary: green,
-    secondary: purple,
-    error: red,
+    primary: {
+      main: '#fff',
+      contrastText: '#52b274',
+    },
+    secondary: {
+      main: '#52b274',
+      contrastText: '#fff',
+    },
+    background: {
+      default: '#EEF4F9',
+    },
   },
   activityCards: {
     quoted: {

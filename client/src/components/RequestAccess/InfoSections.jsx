@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
 import GuestFooter from 'components/GuestFooter'
 import { useMobileDetection } from 'utils/display'
+import { Grid } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
+import { Button } from '@material-ui/core'
+import { DONATE_URL } from '../SearchContainer/SearchGuestSections'
 
 export default function InfoSections() {
   const missionRef = useRef(null)
@@ -149,7 +153,129 @@ export default function InfoSections() {
           </p>
         </section>
       </div>
-      <GuestFooter isRequestAccess />
+
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+      >
+        <Grid
+          item
+          xs={6}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          <section style={{ marginTop: '3rem' }}>
+            <Grid
+              container
+              spacing={4}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Grid item xs={12}>
+                <Grid
+                  container
+                  spacing={0}
+                  alignItems="center"
+                  justifyContent="center"
+                  direction="row"
+                >
+                  <Grid
+                    item
+                    xs={3}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'right',
+                      marginRight: -20,
+                    }}
+                  >
+                    <img
+                      src="/assets/donate-emoji-1.svg"
+                      alt="Donate Emoji 1"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      style={{
+                        textAlign: 'left',
+                        fontWeight: 500,
+                        marginBottom: 16,
+                      }}
+                    >
+                      Quote.Vote is non-profit, open source, and
+                      donation-supported.
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      style={{
+                        textAlign: 'left',
+                        fontWeight: 500,
+                        marginBottom: 16,
+                      }}
+                    >
+                      Our only funding comes from people like you.
+                    </Typography>
+
+                    <Button
+                      variant="contained"
+                      style={{
+                        fontWeight: 500,
+                        fontSize: 24,
+                      }}
+                      color="secondary"
+                      onClick={() => {
+                        window.location.href = DONATE_URL
+                      }}
+                    >
+                      Please Donate
+                    </Button>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'left',
+                      marginLeft: -20,
+                    }}
+                  >
+                    <img
+                      src="/assets/donate-emoji-2.svg"
+                      alt="Donate Emoji 1"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </section>
+        </Grid>
+
+        <Grid item xs={12}>
+          <img
+            src="/assets/group-image.svg"
+            alt="Group Image"
+            style={{ width: '100%', height: 'auto' }}
+          />
+        </Grid>
+      </Grid>
+
+      <div style={{ marginTop: '2rem', maxWidth: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
+        <GuestFooter />
+      </div>
     </>
   )
 }

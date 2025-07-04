@@ -13,7 +13,7 @@ const landingPageStyle = (theme) => ({
     ...container,
     zIndex: '4',
     minWidth: '100%',
-    minHeight: '70vh',
+    minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

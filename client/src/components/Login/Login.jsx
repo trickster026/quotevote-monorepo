@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useForm } from 'react-hook-form'
 
@@ -143,7 +143,7 @@ function LoginForm({ onSubmit = () => {}, loading, loginError }) {
       <Button
         className={classes.loginButton}
         size="large"
-        color="primary"
+        color="secondary"
         variant="contained"
         fullWidth
         type="submit"
