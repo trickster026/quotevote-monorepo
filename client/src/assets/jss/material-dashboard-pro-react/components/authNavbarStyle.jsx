@@ -1,28 +1,25 @@
 
 import {
-    container,
-    defaultFont,
-    primaryColor,
-    defaultBoxShadow,
-    infoColor,
-    successColor,
-    warningColor,
-    dangerColor,
-    boxShadow,
-    drawerWidth,
-    transition,
-    whiteColor,
-    grayColor,
-    blackColor,
-    hexToRgb,
+  container,
+  defaultFont,
+  primaryColor,
+  defaultBoxShadow,
+  infoColor,
+  successColor,
+  warningColor,
+  dangerColor,
+  boxShadow,
+  drawerWidth,
+  transition,
+  whiteColor,
+  grayColor,
+  blackColor,
+  hexToRgb,
 } from 'assets/jss/material-dashboard-pro-react';
 
 const pagesHeaderStyle = (theme) => ({
   voxPop: {
-    height: '40px',
-    [theme.breakpoints.down('sm')]: {
-      height: '25px',
-    },
+    height: '25px',
   },
   appBar: {
     backgroundColor: 'transparent',

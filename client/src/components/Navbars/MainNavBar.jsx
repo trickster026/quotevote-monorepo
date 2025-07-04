@@ -56,7 +56,7 @@ function MainNavBar(props) {
             <img
               alt="Quote"
               src="/icons/android-chrome-192x192.png"
-              className={classes.quote}
+              style={{ height: "30px", marginLeft: 30, width: "auto" }}
             />
           </NavLink>
         </Grid>

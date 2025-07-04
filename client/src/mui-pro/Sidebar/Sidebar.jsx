@@ -340,7 +340,7 @@ const MenuSidebar = (props) => {
               <img
                 src="/icons/android-chrome-192x192.png"
                 alt="QuoteVote Logo"
-                style={{ height: '35px', width: 'auto' }}
+                style={{ height: '30px', width: 'auto' }}
               />
             </Grid>
 
@@ -379,6 +379,7 @@ const MenuSidebar = (props) => {
                         color="secondary"
                         onClick={() => setOpenCreateQuote(true)}
                         size="small"
+                        style={{ height: '30px', width: '30px' }}
                       >
                         <AddIcon />
                       </Button>
