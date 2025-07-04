@@ -225,7 +225,7 @@ export default function InfoSections() {
                       style={{
                         textAlign: 'left',
                         fontWeight: 500,
-                        fontSize: isMobileDevice ? 16 : z24,
+                        fontSize: isMobileDevice ? 16 : 24,
                         marginBottom: 16,
                       }}
                     >
@@ -236,7 +236,7 @@ export default function InfoSections() {
                       variant="contained"
                       style={{
                         fontWeight: 500,
-                        fontSize: isMobileDevice ? 16 : z24,
+                        fontSize: isMobileDevice ? 16 : 24,
                       }}
                       color="secondary"
                       onClick={() => {
