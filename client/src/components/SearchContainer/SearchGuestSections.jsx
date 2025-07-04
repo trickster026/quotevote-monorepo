@@ -229,7 +229,7 @@ export default function SearchGuestSections() {
             Request Invite
           </Button>
           <a
-            href="/auth/mission"
+            href="/auth/request-access#mission"
             style={{
               color: '#52b274',
               fontWeight: 500,

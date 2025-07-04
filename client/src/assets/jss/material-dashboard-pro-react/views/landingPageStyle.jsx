@@ -1,11 +1,14 @@
-import React from 'react';
-
 import {
   cardTitle, container, grayColor, whiteColor,
-} from 'assets/jss/material-dashboard-pro-react'
-import { green } from '@material-ui/core/colors'
+} from 'assets/jss/material-dashboard-pro-react';
+import { green } from '@material-ui/core/colors';
 
 const landingPageStyle = (theme) => ({
+  logoImage: {
+    width: '100%',
+    maxWidth: 500,
+    height: 'auto',
+  },
   container: {
     ...container,
     zIndex: '4',
@@ -324,6 +327,7 @@ const landingPageStyle = (theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginBottom: 20,
       marginRight: 0,
+      width: '100%',
     },
   },
   requestAccessBtn: {
@@ -338,8 +342,28 @@ const landingPageStyle = (theme) => ({
       backgroundColor: '#00cf6e',
     },
     [theme.breakpoints.down('sm')]: {
-      width: 250,
+      width: "100%",
     },
+  },
+  overlayContainer: {
+    position: 'relative',
+    width: '100%',
+    padding: '16px',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0,0,0,0.45)',
+    zIndex: 1,
+    borderRadius: 8,
+  },
+  overlayContent: {
+    position: 'relative',
+    zIndex: 2,
+    padding: '16px',
   },
 })
 
