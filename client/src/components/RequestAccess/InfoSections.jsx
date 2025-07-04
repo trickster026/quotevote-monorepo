@@ -1,6 +1,7 @@
-
+import GuestFooter from 'components/GuestFooter';
 export default function InfoSections() {
   return (
+    <>
     <div style={{ padding: '2rem 1rem', marginTop: '2rem', borderRadius: 8, maxWidth: "80%", marginLeft: 'auto', marginRight: 'auto' }}>
       <section style={{ marginBottom: '2rem' }}>
         <h2>Mission</h2>
@@ -44,5 +45,7 @@ export default function InfoSections() {
         <p>There are no DMs. All user interactions occur in public Quote Rooms. So 1:1 messages take place interview-style, in the open, where others can vote on what was said. This reinforces a culture of transparency and discourages collaboration.</p>
       </section>
     </div>
+    <GuestFooter isRequestAccess />
+    </>
   );
 } 
