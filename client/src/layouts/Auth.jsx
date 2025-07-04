@@ -14,7 +14,6 @@ import routes from 'mui-pro/mui-routes';
 
 import styles from 'assets/jss/material-dashboard-pro-react/layouts/authStyle';
 
-import { Grid } from '@material-ui/core';
 import InfoSections from 'components/RequestAccess/InfoSections';
 
 const useStyles = makeStyles(styles)
@@ -98,48 +97,54 @@ export default function Pages(props) {
   )
 
   return (
-    <div className={classes.content}>
-      <Grid
-        container
-        direction="column"
-        justify="space-between"
-        alignItems="stretch"
-      >
-        {getActiveRoute(routes)?.hideNavbar ? null : (
-          <Grid item>
-            <AuthNavbar brandText={getActiveRoute(routes)?.name} {...rest} />
-          </Grid>
-        )}
-        <Grid item>
-          <div
-            className={classes.wrapper}
-            ref={wrapper}
-            style={{
-              backgroundImage: selectedBackground ? `url('/assets/bg/${selectedBackground}')` : `url('/assets/Mountain.png')`,
-              backgroundPosition: 'left',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-            }}
-          >
+    <div className={classes.content} style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      minHeight: '100vh' 
+    }}>
+      {/* Header */}
+      {getActiveRoute(routes)?.hideNavbar ? null : (
+        <div>
+          <AuthNavbar brandText={getActiveRoute(routes)?.name} {...rest} />
+        </div>
+      )}
+      
+      {/* Body - takes full remaining height */}
+      <div style={{ flexGrow: 1, height: '100%' }}>
+        <div
+          className={classes.wrapper}
+          ref={wrapper}
+          style={{
+            backgroundImage: selectedBackground ? `url('/assets/bg/${selectedBackground}')` : `url('/assets/Mountain.png')`,
+            backgroundPosition: 'left',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            height: '100%',
+          }}
+        >
+          <div className={classes.cardContainer}>
             <div className={classes.fullPage}>
               <Switch>
                 {getRoutes(routes)}
               </Switch>
             </div>
           </div>
-        </Grid>
-        {showRequestAccessFooter || getActiveRoute(routes)?.hideNavbar ? null : (
-          <Grid item>
-            <Footer white />
-          </Grid>
-        )}
-        {/* Only show InfoSections on /auth/request-access, after the Footer */}
-        {window.location.pathname === '/auth/request-access' && (
-          <Grid item>
-            <InfoSections />
-          </Grid>
-        )}
-      </Grid>
+        </div>
+      </div>
+      
+      {/* Footer - always at bottom */}
+      {showRequestAccessFooter || getActiveRoute(routes)?.hideNavbar ? null : (
+        <div>
+          <Footer white />
+        </div>
+      )}
+      
+      {/* InfoSections - only on request-access page */}
+      {window.location.pathname === '/auth/request-access' && (
+        <div>
+          <InfoSections />
+        </div>
+      )}
     </div>
   )
 }

@@ -1,4 +1,3 @@
-
 import {
   container,
   cardTitle,
@@ -10,16 +9,16 @@ const loginPageStyle = (theme) => ({
   container: {
     ...container,
     zIndex: '4',
-    paddingBottom: '100px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '100vh',
+    height: '100%',
+    margin: 0,
+    padding: 0,
     [theme.breakpoints.down('sm')]: {
-      paddingBottom: '100px',
+      paddingBottom: '0',
     },
-    
   },
   cardTitle: {
     ...cardTitle,

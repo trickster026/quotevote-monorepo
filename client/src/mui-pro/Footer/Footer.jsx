@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import cx from 'classnames'
 
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Link from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
 
@@ -18,16 +19,19 @@ export default function Footer(props) {
     [classes.containerFluid]: fluid,
     [classes.whiteColor]: white,
   })
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
     <footer className={classes.footer}>
       <div className={container}>
         <Grid
           container
-          direction="row"
-          justify="space-between"
+          direction={isMobile ? 'column' : 'row'}
+          justify={isMobile ? 'flex-start' : 'space-between'}
           alignItems="center"
         >
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} sm={9} style={isMobile ? { textAlign: 'left', marginBottom: 8 } : {}}>
             <Typography>
               Quote.Vote made with ❤️ on Earth
               <div className={classes.grow} />
@@ -37,19 +41,22 @@ export default function Footer(props) {
           <Grid
             item
             xs={12}
-            sm={3}
+            lg={3}
             style={{
               fontSize: '14px',
               fontWeight: 400,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: isMobile ? 'flex-start' : 'flex-end',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: isMobile ? 8 : 0,
+              textAlign: isMobile ? 'left' : 'right',
             }}
           >
             <Link
               href="/auth/request-access"
               color="inherit"
-              style={{ marginRight: '1rem' }}
+              style={isMobile ? { margin: 0 } : { marginRight: '1rem' }}
             >
               <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
                 Request Invite
@@ -58,7 +65,7 @@ export default function Footer(props) {
             <Link
               href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
               color="inherit"
-              style={{ marginLeft: '1rem' }}
+              style={isMobile ? { margin: 0 } : { marginLeft: '1rem' }}
             >
               <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
                 Donate
@@ -67,7 +74,7 @@ export default function Footer(props) {
             <Link
               href="https://github.com/QuoteVote/quotevote-monorepo"
               color="inherit"
-              style={{ marginLeft: '1rem' }}
+              style={isMobile ? { margin: 0 } : { marginLeft: '1rem' }}
             >
               <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
                 GitHub

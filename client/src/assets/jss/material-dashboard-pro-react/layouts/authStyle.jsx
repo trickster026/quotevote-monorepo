@@ -1,10 +1,8 @@
-import React from 'react';
-
 import {
   whiteColor,
   blackColor,
   hexToRgb,
-} from 'assets/jss/material-dashboard-pro-react'
+} from 'assets/jss/material-dashboard-pro-react';
 
 const pagesStyle = (theme) => ({
   content: {
@@ -13,6 +11,11 @@ const pagesStyle = (theme) => ({
     '-moz-background-size': 'cover',
     '-o-background-size': 'cover',
     backgroundPosition: 'center center',
+    padding: '0',
+    minHeight: '100vh',
+    height: '100vh',
+    width: '100vw',
+    position: 'relative',
     '& footer': {
       position: 'absolute',
       bottom: '0',
@@ -30,16 +33,21 @@ const pagesStyle = (theme) => ({
       zIndex: '2',
     },
     [theme.breakpoints.down('sm')]: {
-      minHeight: 'fit-content!important',
-      paddingBottom: 150,
+      minHeight: '100vh',
+      height: '100vh',
+      width: '100vw',
       backgroundSize: 'cover',
+      padding: '0',
     },
   },
   wrapper: {
-    height: 'auto',
-    minHeight: '100vh',
     position: 'relative',
     top: '0',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
   fullPage: {
     position: 'relative',
@@ -47,7 +55,7 @@ const pagesStyle = (theme) => ({
     margin: '0',
     border: '0',
     color: whiteColor,
-    top: 80,
+    top: 0,
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       minHeight: 'fit-content!important',
@@ -85,6 +93,18 @@ const pagesStyle = (theme) => ({
       top: '0',
       left: '0',
       zIndex: '2',
+    },
+  },
+  cardContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    [theme.breakpoints.down('sm')]: {
+      minHeight: 'unset',
+      width: '100%',
+      padding: '0 8px',
     },
   },
 })
