@@ -19,45 +19,13 @@ export default function InfoSections() {
 
   return (
     <>
-      {isMobileDevice && (
-        <div
-          style={{
-            padding: '2rem 1rem',
-            borderRadius: 8,
-            maxWidth: '80%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          <section style={{ marginBottom: '2rem' }}>
-            <h2>No Ads, No Algorithms</h2>
-            <p>
-              There is no ranking, boosting, or personalization engine. You
-              can't pay to be seen. Users seek to find quotes.
-            </p>
-          </section>
-
-          <section style={{ marginBottom: '2rem' }}>
-            <h2>Open Source, Non Profit</h2>
-            <p>
-              The platform is non-profit, open source, and donation-supported.
-              You can't pay to be seen.
-            </p>
-            <p>
-              The only economic model is when users like what they experience,
-              and give money via donations.
-            </p>
-          </section>
-        </div>
-      )}
-
       <div
         id="mission"
         ref={missionRef}
         style={{
-          padding: '2rem 1rem',
+          padding: isMobileDevice ? '0.5rem 0.5rem' : '2rem 1rem',
           borderRadius: 8,
-          maxWidth: '80%',
+          maxWidth: isMobileDevice ? '90%' : '80%',
           marginLeft: 'auto',
           marginRight: 'auto',
         }}
@@ -159,7 +127,7 @@ export default function InfoSections() {
         direction="column"
         justifyContent="center"
         alignItems="center"
-        spacing={2}
+        spacing={isMobileDevice ? 2 : 4}
       >
         <Grid
           item
@@ -170,10 +138,10 @@ export default function InfoSections() {
             justifyContent: 'center',
           }}
         >
-          <section style={{ marginTop: '3rem' }}>
+          <section style={{ marginTop: isMobileDevice ? 1 : '2rem' }}>
             <Grid
               container
-              spacing={4}
+              spacing={isMobileDevice ? 0 : 4}
               alignItems="center"
               justifyContent="center"
             >
@@ -187,21 +155,27 @@ export default function InfoSections() {
                 >
                   <Grid
                     item
-                    xs={3}
+                    xs={1}
+                    lg={3}
                     style={{
                       display: 'flex',
                       justifyContent: 'right',
-                      marginRight: -20,
+                      marginRight: isMobileDevice ? 0 : -20,
                     }}
                   >
                     <img
                       src="/assets/donate-emoji-1.svg"
                       alt="Donate Emoji 1"
+                      style={{
+                        width: isMobileDevice ? 200 : '100%',
+                        height: isMobileDevice ? 200 : '100%',
+                      }}
                     />
                   </Grid>
                   <Grid
                     item
-                    xs={6}
+                    xs={10}
+                    lg={6}
                     style={{
                       display: 'flex',
                       flexDirection: 'column',
@@ -209,11 +183,11 @@ export default function InfoSections() {
                     }}
                   >
                     <Typography
-                      variant="body1"
+                      variant={isMobileDevice ? 'body2' : 'body1'}
                       style={{
                         textAlign: 'left',
                         fontWeight: 500,
-                        fontSize: isMobileDevice ? 16 : 24,
+                        fontSize: isMobileDevice ? 14 : 24,
                         marginBottom: 16,
                       }}
                     >
@@ -221,11 +195,11 @@ export default function InfoSections() {
                       donation-supported.
                     </Typography>
                     <Typography
-                      variant="body1"
+                      variant={isMobileDevice ? 'body2' : 'body1'}
                       style={{
                         textAlign: 'left',
                         fontWeight: 500,
-                        fontSize: isMobileDevice ? 16 : 24,
+                        fontSize: isMobileDevice ? 14 : 24,
                         marginBottom: 16,
                       }}
                     >
@@ -249,16 +223,21 @@ export default function InfoSections() {
                   </Grid>
                   <Grid
                     item
-                    xs={3}
+                    xs={1}
+                    lg={3}
                     style={{
                       display: 'flex',
                       justifyContent: 'left',
-                      marginLeft: -20,
+                      marginLeft: isMobileDevice ? 0 : -20,
                     }}
                   >
                     <img
                       src="/assets/donate-emoji-2.svg"
                       alt="Donate Emoji 1"
+                      style={{
+                        width: isMobileDevice ? 200 : '100%',
+                        height: isMobileDevice ? 200 : '100%',
+                      }}
                     />
                   </Grid>
                 </Grid>

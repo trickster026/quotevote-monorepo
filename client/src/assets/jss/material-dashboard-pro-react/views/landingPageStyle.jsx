@@ -347,8 +347,12 @@ const landingPageStyle = (theme) => ({
   },
   overlayContainer: {
     position: 'relative',
-    width: '100%',
+    width: '70%',
     padding: '16px',
+    [theme.breakpoints.down('lg')]: {
+      width: '100%',
+      padding: '2px',
+    },
   },
   overlay: {
     position: 'absolute',
@@ -364,6 +368,9 @@ const landingPageStyle = (theme) => ({
     position: 'relative',
     zIndex: 2,
     padding: '16px',
+    [theme.breakpoints.down('md')]: {
+      padding: '8px',
+    },
   },
 })
 

@@ -88,7 +88,7 @@ export default function RequestAccessPage() {
           container
           display="flex"
           alignItems="center"
-          justifyContent="flex-start"
+          justifyContent="space-around"
           direction="column"
           spacing={2}
         >
@@ -104,7 +104,10 @@ export default function RequestAccessPage() {
             <img
               src="/assets/quote-vote-white.svg"
               alt="logo"
-              style={{ width: '100%', height: 'auto' }}
+              style={{
+                width: '100%',
+                height: 'auto',
+              }}
             />
           </Grid>
 
@@ -123,77 +126,83 @@ export default function RequestAccessPage() {
             </Button>
             {duplicate}
           </Grid>
-
-          {!isMobileDevice && (
-            <Grid item xs={12}>
-              <div
-                className={classes.overlayContainer}
-                style={{ maxWidth: '100%', margin: '3rem auto 0 auto' }}
+          <Grid item xs={12}>
+            <div
+              className={classes.overlayContainer}
+              style={{
+                maxWidth: '100%',
+                margin: isMobileDevice ? 1 : '3rem auto 0 auto',
+              }}
+            >
+              <div className={classes.overlay} />
+              <Grid
+                container
+                spacing={isMobileDevice ? 2 : 6}
+                justifyContent="center"
+                alignItems="flex-start"
+                className={classes.overlayContent}
+                direction="row"
               >
-                <div className={classes.overlay} />
-                <Grid
-                  container
-                  spacing={4}
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  className={classes.overlayContent}
-                >
-                  <Grid item xs={12} md={6}>
-                    <Box>
-                      <Typography
-                        variant="h5"
-                        gutterBottom
-                        style={{ textAlign: 'center' }}
-                      >
-                        No Ads, No Algorithms
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        style={{
-                          marginBottom: 8,
-                          textAlign: 'left',
-                        }}
-                      >
-                        There is no ranking, boosting, or personalization
-                        engine. You can't pay to be seen. Users seek to find
-                        quotes.
-                      </Typography>
-                      <Typography variant="body1" style={{ textAlign: 'left' }}>
-                        Discovery is deliberate. Feeds are chronological. An
-                        experience of hunting and discovery, not passive
-                        scrolling.
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Box>
-                      <Typography
-                        variant="h5"
-                        gutterBottom
-                        style={{ textAlign: 'center' }}
-                      >
-                        Open Source, Non Profit
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        style={{
-                          marginBottom: 8,
-                          textAlign: 'left',
-                        }}
-                      >
-                        The platform is non-profit, open source, and
-                        donation-supported. You can't pay to be seen.
-                      </Typography>
-                      <Typography variant="body1" textAlign="left">
-                        The only economic model is when users like what they
-                        experience, and give money via donations.
-                      </Typography>
-                    </Box>
-                  </Grid>
+                <Grid item xs={12} md={6}>
+                  <Box>
+                    <Typography
+                      variant={isMobileDevice ? 'subtitle1' : 'h5'}
+                      gutterBottom
+                      style={{ textAlign: 'center' }}
+                    >
+                      No Ads, No Algorithms
+                    </Typography>
+                    <Typography
+                      variant={isMobileDevice ? 'caption' : 'body1'}
+                      style={{
+                        marginBottom: isMobileDevice ? 4 : 8,
+                        textAlign: 'left',
+                      }}
+                    >
+                      There is no ranking, boosting, or personalization engine.
+                      You can't pay to be seen. Users seek to find quotes.
+                    </Typography>
+                    <Typography
+                      variant={isMobileDevice ? 'caption' : 'body1'}
+                      style={{ textAlign: 'left' }}
+                    >
+                      Discovery is deliberate. Feeds are chronological. An
+                      experience of hunting and discovery, not passive
+                      scrolling.
+                    </Typography>
+                  </Box>
                 </Grid>
-              </div>
-            </Grid>
-          )}
+                <Grid item xs={12} md={6}>
+                  <Box>
+                    <Typography
+                      variant={isMobileDevice ? 'subtitle1' : 'h5'}
+                      gutterBottom
+                      style={{ textAlign: 'center' }}
+                    >
+                      Open Source, Non Profit
+                    </Typography>
+                    <Typography
+                      variant={isMobileDevice ? 'caption' : 'body1'}
+                      style={{
+                        marginBottom: isMobileDevice ? 4 : 8,
+                        textAlign: 'left',
+                      }}
+                    >
+                      The platform is non-profit, open source, and
+                      donation-supported. You can't pay to be seen.
+                    </Typography>
+                    <Typography
+                      variant={isMobileDevice ? 'caption' : 'body1'}
+                      textAlign="left"
+                    >
+                      The only economic model is when users like what they
+                      experience, and give money via donations.
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </div>
+          </Grid>
         </Grid>
       </div>
     </>

@@ -143,8 +143,6 @@ export default function Pages(props) {
       {window.location.pathname === '/auth/request-access' && (
         <div>
           <InfoSections />
-
-          
         </div>
       )}
     </div>
