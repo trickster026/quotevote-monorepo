@@ -122,7 +122,7 @@ export default function Pages(props) {
             height: '100%',
           }}
         >
-          <div className={classes.cardContainer}>
+          <div className={classes.cardContainer} style={{ position: 'relative', zIndex: 3 }}>
             <div className={classes.fullPage}>
               <Switch>
                 {getRoutes(routes)}
