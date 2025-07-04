@@ -118,7 +118,6 @@ function PostActionCard({ postAction, postUrl, selected }) {
     }
   }, [postAction, selected, dispatch])
 
-
   if (postAction.text) {
     return <PostChatMessage message={postAction} key={postAction._id} />
   }
@@ -147,6 +146,11 @@ function PostActionCard({ postAction, postUrl, selected }) {
             {type === 'Quote' && '❝ '}
             {postContent}
             {type === 'Quote' && ' ❞'}
+          </p>
+          <p>
+            {type === 'Comment' &&
+              postAction.commentQuote &&
+              `❝ ${postAction.commentQuote} ❞`}
           </p>
         </CardContent>
       )}

@@ -118,7 +118,13 @@ function PostPage({ postId }) {
     let postActions = []
 
     if (!isEmpty(comments)) {
-      postActions = postActions.concat(comments)
+      const commentsWithContent = comments.map((comment) => ({
+        ...comment,
+        commentQuote: post.text
+          .substring(comment.startWordIndex, comment.endWordIndex)
+          .replace(/(\r\n|\n|\r)/gm, ''),
+      }))
+      postActions = postActions.concat(commentsWithContent)
     }
 
     if (!isEmpty(votes)) {
