@@ -1,3 +1,4 @@
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from 'assets/jss/material-dashboard-pro-react/views/loginPageStyle'

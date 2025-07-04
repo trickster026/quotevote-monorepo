@@ -212,12 +212,12 @@ function SignupForm({ user, token }) {
         <CardActions>
           <Button
             className={classes.submitButton}
-            size="large"
-            color="primary"
+            color="secondary"
             variant="contained"
             fullWidth
             type="submit"
             disabled={loading}
+            size={"small"}
           >
             <Typography variant="body1">
               Submit
