@@ -1,20 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable consistent-return */
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from 'react'
+import { Switch, Route } from 'react-router-dom'
 
 // @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles'
 
 // core components
-import AuthNavbar from 'mui-pro/Navbars/AuthNavbar';
-import Footer from 'mui-pro/Footer/Footer';
+import AuthNavbar from 'mui-pro/Navbars/AuthNavbar'
 
-import routes from 'mui-pro/mui-routes';
+import routes from 'mui-pro/mui-routes'
 
-import styles from 'assets/jss/material-dashboard-pro-react/layouts/authStyle';
+import styles from 'assets/jss/material-dashboard-pro-react/layouts/authStyle'
 
-import { Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core'
+import InfoSections from 'components/RequestAccess/InfoSections'
+import GuestFooter from 'components/GuestFooter'
 
 const useStyles = makeStyles(styles)
 
@@ -30,8 +31,8 @@ const backgroundImages = [
   'julia-caesar-jeXkw2HR1SU-unsplash.jpg',
   'ehmir-bautista-JjDqyWuWZyU-unsplash.jpg',
   'adam-navarro-qXcl3z7_AOc-unsplash.jpg',
-  'actionvance-guy5aS3GvgA-unsplash.jpg'
-];
+  'actionvance-guy5aS3GvgA-unsplash.jpg',
+]
 
 export default function Pages(props) {
   // const isRequestAccess = window.location.pathname.indexOf('/auth/request-access') !== -1
@@ -40,39 +41,39 @@ export default function Pages(props) {
   const wrapper = React.createRef()
   // styles
   const classes = useStyles()
-  
+
   // State to store the selected background image
-  const [selectedBackground, setSelectedBackground] = React.useState(null);
-  
+  const [selectedBackground, setSelectedBackground] = React.useState(null)
+
   React.useEffect(() => {
     document.body.style.overflow = 'unset'
-    
+
     // Select a random background image on first load
     if (!selectedBackground) {
-      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-      setSelectedBackground(backgroundImages[randomIndex]);
+      const randomIndex = Math.floor(Math.random() * backgroundImages.length)
+      setSelectedBackground(backgroundImages[randomIndex])
     }
-    
+
     // Specify how to clean up after this effect:
-    return function cleanup() {
-    }
+    return function cleanup() {}
   }, [selectedBackground])
 
-  const getRoutes = (routesParameter) => routesParameter.map((prop, key) => {
-    if (prop.collapse) {
-      return getRoutes(prop.views)
-    }
-    if (prop.layout === '/auth') {
-      return (
-        <Route
-          path={prop.layout + prop.path}
-          component={prop.component}
-          key={key}
-        />
-      )
-    }
-    return null
-  })
+  const getRoutes = (routesParameter) =>
+    routesParameter.map((prop, key) => {
+      if (prop.collapse) {
+        return getRoutes(prop.views)
+      }
+      if (prop.layout === '/auth') {
+        return (
+          <Route
+            path={prop.layout + prop.path}
+            component={prop.component}
+            key={key}
+          />
+        )
+      }
+      return null
+    })
 
   const getActiveRoute = (routesParameter) => {
     const activeRoute = { name: 'Default Brand Text' }
@@ -83,7 +84,9 @@ export default function Pages(props) {
           return collapseActiveRoute
         }
       } else if (
-        window.location.href.indexOf(routesParameter[i].layout + routesParameter[i].path) !== -1
+        window.location.href.indexOf(
+          routesParameter[i].layout + routesParameter[i].path,
+        ) !== -1
       ) {
         return routesParameter[i]
       }
@@ -91,13 +94,7 @@ export default function Pages(props) {
     return activeRoute
   }
   return (
-    <div
-      className={classes.content}
-      style={{
-        backgroundImage: selectedBackground ? `url('/assets/bg/${selectedBackground}')` : `url('/assets/Mountain.png')`,
-        backgroundPosition: 'left',
-      }}
-    >
+    <div className={classes.content}>
       <Grid
         container
         direction="column"
@@ -110,19 +107,33 @@ export default function Pages(props) {
           </Grid>
         )}
         <Grid item>
-          <div className={classes.wrapper} ref={wrapper}>
-            <div
-              className={classes.fullPage}
-            >
-              <Switch>
-                {getRoutes(routes)}
-              </Switch>
+          <div
+            className={classes.wrapper}
+            ref={wrapper}
+            style={{
+              backgroundImage: selectedBackground
+                ? `url('/assets/bg/${selectedBackground}')`
+                : `url('/assets/Mountain.png')`,
+              backgroundPosition: 'left',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+            }}
+          >
+            <div className={classes.fullPage}>
+              <Switch>{getRoutes(routes)}</Switch>
             </div>
           </div>
         </Grid>
+        {/* Only show InfoSections on /auth/request-access, after the Footer */}
+        {window.location.pathname === '/auth/request-access' && (
+          <Grid item>
+            <InfoSections />
+          </Grid>
+        )}
+
         {getActiveRoute(routes)?.hideNavbar ? null : (
           <Grid item>
-            <Footer white />
+            <GuestFooter isRequestAccess={window.location.pathname === '/auth/request-access'} />
           </Grid>
         )}
       </Grid>

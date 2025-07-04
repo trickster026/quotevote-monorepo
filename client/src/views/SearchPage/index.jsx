@@ -24,6 +24,7 @@ import PostCard from '../../components/Post/PostCard'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import Tooltip from '@material-ui/core/Tooltip'
 import SearchGuestSections from '../../components/SearchContainer/SearchGuestSections'
+import GuestFooter from '../../components/GuestFooter'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -852,97 +853,7 @@ export default function SearchPage() {
 
           
           {/* Guest Footer Section */}
-          {isGuestMode && (
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="space-between"
-              style={{
-                width: '100%',
-                margin: 0,
-                marginTop: 40,
-                minHeight: 48,
-                padding: '0 16px',
-              }}
-              className="guest-footer"
-            >
-              <Grid item className="footer-text">
-                <Typography 
-                  variant="body1" 
-                  style={{ 
-                    fontSize: 'clamp(14px, 4vw, 18px)', 
-                    fontWeight: 400,
-                    lineHeight: 1.4
-                  }}
-                >
-                  Quote.Vote&nbsp; made with <span style={{ color: 'red', fontSize: 'clamp(16px, 4.5vw, 20px)' }}>❤️</span> on Earth
-                </Typography>
-              </Grid>
-              <Grid 
-                item 
-                className="footer-links"
-                style={{ 
-                  display: 'flex', 
-                  gap: 'clamp(16px, 4vw, 36px)', 
-                  justifyContent: 'center',
-                  flexWrap: 'wrap'
-                }}
-              >
-                <a 
-                  href="/auth/request-access" 
-                  style={{ 
-                    color: '#111', 
-                    fontWeight: 400, 
-                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
-                    textDecoration: 'none',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                >
-                  Request Invite
-                </a>
-                <a 
-                  href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  style={{ 
-                    color: '#111', 
-                    fontWeight: 400, 
-                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
-                    textDecoration: 'none',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                >
-                  Donate
-                </a>
-                <a 
-                  href="https://github.com/QuoteVote/quotevote-monorepo" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  style={{ 
-                    color: '#111', 
-                    fontWeight: 400, 
-                    fontSize: 'clamp(14px, 3.5vw, 18px)', 
-                    textDecoration: 'none',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                >
-                  GitHub
-                </a>
-              </Grid>
-            </Grid>
-          )}
+          {isGuestMode && <GuestFooter />}
         </Grid>
       </div>
     </ErrorBoundary>

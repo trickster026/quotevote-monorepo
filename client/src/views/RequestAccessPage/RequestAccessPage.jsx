@@ -84,23 +84,25 @@ export default function RequestAccessPage() {
   )
 
   return (
-    <div className={classes.container}>
-      <Grid
-        container
-        display="flex"
-        justify="center"
-        alignItems="center"
-        className={classes.inputContainer}
-      >
-        <Input
-          disableUnderline
-          placeholder="Enter Email"
-          className={classes.input}
-          onChange={(event) => setUserDetails(event.target.value)}
-        />
-        <Button className={classes.requestAccessBtn} onClick={() => onSubmit()}>Request Invite</Button>
-        {duplicate}
-      </Grid>
-    </div>
+    <>
+      <div className={classes.container}>
+        <Grid
+          container
+          display="flex"
+          justify="center"
+          alignItems="center"
+          className={classes.inputContainer}
+        >
+          <Input
+            disableUnderline
+            placeholder="Enter Email"
+            className={classes.input}
+            onChange={(event) => setUserDetails(event.target.value)}
+          />
+          <Button className={classes.requestAccessBtn} onClick={() => onSubmit()}>Request Invite</Button>
+          {duplicate}
+        </Grid>
+      </div>
+    </>
   )
 }
