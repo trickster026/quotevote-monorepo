@@ -86,9 +86,8 @@ export default function RequestAccessPage() {
       <div className={classes.container}>
         <Grid
           container
-          display="flex"
           alignItems="center"
-          justifyContent="space-around"
+          justifyContent="flex-start"
           direction="column"
           spacing={2}
         >
@@ -96,7 +95,6 @@ export default function RequestAccessPage() {
             item
             xs={12}
             style={{
-              display: 'flex',
               justifyContent: 'center',
               marginBottom: '2rem',
             }}

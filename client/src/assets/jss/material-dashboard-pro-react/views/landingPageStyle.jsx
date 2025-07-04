@@ -14,7 +14,6 @@ const landingPageStyle = (theme) => ({
     zIndex: '4',
     minWidth: '100%',
     minHeight: '100vh',
-    display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
   },

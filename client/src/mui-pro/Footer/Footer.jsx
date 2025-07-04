@@ -25,63 +25,89 @@ export default function Footer(props) {
   return (
     <footer className={classes.footer}>
       <div className={container}>
-        <Grid
-          container
-          direction={isMobile ? 'column' : 'row'}
-          justify={isMobile ? 'flex-start' : 'space-between'}
-          alignItems="center"
-        >
-          <Grid item xs={12} sm={9} style={isMobile ? { textAlign: 'left', marginBottom: 8 } : {}}>
-            <Typography>
-              Quote.Vote made with ❤️ on Earth
-              <div className={classes.grow} />
-            </Typography>
+        {isMobile ? (
+          <Grid container direction="column" alignItems="center">
+            <Grid item xs={12} style={{ textAlign: 'center', marginBottom: 16 }}>
+              <Typography>
+                Quote.Vote made with ❤️ on Earth
+              </Typography>
+            </Grid>
+            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', gap: 24 }}>
+              <Link href="/auth/request-access" color="inherit">
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  Request Invite
+                </Typography>
+              </Link>
+              <Link href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" color="inherit">
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  Donate
+                </Typography>
+              </Link>
+              <Link href="https://github.com/QuoteVote/quotevote-monorepo" color="inherit">
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  GitHub
+                </Typography>
+              </Link>
+            </Grid>
           </Grid>
-
+        ) : (
           <Grid
-            item
-            xs={12}
-            lg={3}
-            style={{
-              fontSize: '14px',
-              fontWeight: 400,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: isMobile ? 'flex-start' : 'flex-end',
-              flexDirection: isMobile ? 'column' : 'row',
-              gap: isMobile ? 8 : 0,
-              textAlign: isMobile ? 'left' : 'right',
-            }}
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
           >
-            <Link
-              href="/auth/request-access"
-              color="inherit"
-              style={isMobile ? { margin: 0 } : { marginRight: '1rem' }}
-            >
-              <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
-                Request Invite
+            <Grid item xs={12} sm={9}>
+              <Typography>
+                Quote.Vote made with ❤️ on Earth
+                <div className={classes.grow} />
               </Typography>
-            </Link>
-            <Link
-              href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
-              color="inherit"
-              style={isMobile ? { margin: 0 } : { marginLeft: '1rem' }}
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              lg={3}
+              style={{
+                fontSize: '14px',
+                fontWeight: 400,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                flexDirection: 'row',
+                gap: 0,
+                textAlign: 'right',
+              }}
             >
-              <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
-                Donate
-              </Typography>
-            </Link>
-            <Link
-              href="https://github.com/QuoteVote/quotevote-monorepo"
-              color="inherit"
-              style={isMobile ? { margin: 0 } : { marginLeft: '1rem' }}
-            >
-              <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
-                GitHub
-              </Typography>
-            </Link>
+              <Link
+                href="/auth/request-access"
+                color="inherit"
+                style={{ marginRight: '1rem' }}
+              >
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  Request Invite
+                </Typography>
+              </Link>
+              <Link
+                href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+                color="inherit"
+                style={{ marginLeft: '1rem' }}
+              >
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  Donate
+                </Typography>
+              </Link>
+              <Link
+                href="https://github.com/QuoteVote/quotevote-monorepo"
+                color="inherit"
+                style={{ marginLeft: '1rem' }}
+              >
+                <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
+                  GitHub
+                </Typography>
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </div>
     </footer>
   )

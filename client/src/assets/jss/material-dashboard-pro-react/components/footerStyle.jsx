@@ -1,4 +1,3 @@
-
 import {
   defaultFont,
   container,
@@ -29,6 +28,10 @@ const footerStyle = (theme) => ({
     bottom: '0',
     borderTop: `1px solid ${grayColor[15]}`,
     ...defaultFont,
+    background: 'rgba(0,0,0,0.7)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    boxShadow: '0 4px 32px 0 rgba(0,0,0,0.15)',
   },
   container: {
     zIndex: 3,
