@@ -160,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     cursor: 'pointer',
     [theme.breakpoints.down('sm')]: {
-      fontSize: 12,
+      fontSize: 18,
     },
   },
   rankNumber: {
@@ -184,6 +184,9 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '1.5',
     maxHeight: '72px',
     textAlign: 'left',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14,
+    },
   },
   votes: {
     height: 12,
