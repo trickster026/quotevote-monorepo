@@ -213,6 +213,7 @@ export default function InfoSections() {
                       style={{
                         textAlign: 'left',
                         fontWeight: 500,
+                        fontSize: isMobileDevice ? 16 : 24,
                         marginBottom: 16,
                       }}
                     >
@@ -224,6 +225,7 @@ export default function InfoSections() {
                       style={{
                         textAlign: 'left',
                         fontWeight: 500,
+                        fontSize: isMobileDevice ? 16 : z24,
                         marginBottom: 16,
                       }}
                     >
@@ -234,12 +236,13 @@ export default function InfoSections() {
                       variant="contained"
                       style={{
                         fontWeight: 500,
-                        fontSize: 24,
+                        fontSize: isMobileDevice ? 16 : z24,
                       }}
                       color="secondary"
                       onClick={() => {
                         window.location.href = DONATE_URL
                       }}
+                      size={isMobileDevice ? 'small' : 'large'}
                     >
                       Please Donate
                     </Button>
@@ -273,7 +276,14 @@ export default function InfoSections() {
         </Grid>
       </Grid>
 
-      <div style={{ marginTop: '2rem', maxWidth: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
+      <div
+        style={{
+          marginTop: '2rem',
+          maxWidth: '80%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
         <GuestFooter />
       </div>
     </>
