@@ -32,6 +32,7 @@ export const GET_USERS = gql`
       _id
       name
       username
+      contributorBadge
     }
   }
 `
@@ -58,6 +59,7 @@ export const GET_POST = gql`
         name
         avatar
         username
+        contributorBadge
       }
       comments {
         _id
@@ -74,6 +76,7 @@ export const GET_POST = gql`
           username
           name
           avatar
+          contributorBadge
         }
       }
       votes {
@@ -88,6 +91,7 @@ export const GET_POST = gql`
           username
           name
           avatar
+          contributorBadge
         }
       }
       quotes {
@@ -101,6 +105,7 @@ export const GET_POST = gql`
           username
           name
           avatar
+          contributorBadge
         }
       }
       messageRoom {
@@ -178,6 +183,7 @@ export const GET_ROOM_MESSAGES = gql`
         name
         username
         avatar
+        contributorBadge
       }
     }
   }
@@ -241,6 +247,7 @@ export const GET_TOP_POSTS = gql`
           username
           avatar
           _id
+          contributorBadge
         }
         votes {
           _id
@@ -304,6 +311,7 @@ export const GET_FRIENDS_POSTS = gql`
           username
           avatar
           _id
+          contributorBadge
         }
         votes {
           _id
@@ -344,6 +352,7 @@ export const GET_USER = gql`
       _followingId
       _followersId
       avatar
+      contributorBadge
     }
   }
 `
@@ -376,6 +385,7 @@ export const GET_USER_ACTIVITY = gql`
           name
           username
           avatar
+          contributorBadge
         }
         activityType
         content
@@ -403,12 +413,13 @@ export const GET_USER_ACTIVITY = gql`
           }
           bookmarkedBy
           created
-          creator {
-            _id
-            name
-            username
-            avatar
-          }
+                  creator {
+          _id
+          name
+          username
+          avatar
+          contributorBadge
+        }
         }
         voteId
         vote {
@@ -474,6 +485,7 @@ export const GET_NOTIFICATIONS = gql`
         name
         avatar
         username
+        contributorBadge
       }
       label
       status
@@ -496,6 +508,7 @@ export const GET_LATEST_QUOTES = gql`
       user {
         _id
         username
+        contributorBadge
       }
     }
   }
@@ -517,6 +530,7 @@ export const GET_FEATURED_POSTS = gql`
         username
         avatar
         _id
+        contributorBadge
       }
       votes {
         _id
