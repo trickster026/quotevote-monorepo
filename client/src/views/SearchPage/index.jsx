@@ -8,7 +8,7 @@ import {
   Button,
 } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import SearchIcon from '@material-ui/icons/Search'
 import DatePicker from 'react-datepicker'
@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     textAlign: 'center',
     backgroundColor: '#f0f2f5',
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   container: {
     marginLeft: '10%',
@@ -242,7 +244,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchPage() {
   const classes = useStyles()
-  const dispatch = useDispatch()
   const [showResults, setShowResults] = useState(true)
   const [searchKey, setSearchKey] = useState('')
   const hiddenPosts = useSelector((state) => state.ui.hiddenPosts) || []
@@ -512,6 +513,7 @@ export default function SearchPage() {
           direction="column"
           alignItems="center"
           className={classes.container}
+          spacing={1}
         >
           <Grid item>
             <div className={classes.logoContainer}>
@@ -851,7 +853,6 @@ export default function SearchPage() {
 
           {isGuestMode && <SearchGuestSections />}
 
-          
           {/* Guest Footer Section */}
           {isGuestMode && <GuestFooter />}
         </Grid>
