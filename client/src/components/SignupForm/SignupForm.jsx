@@ -54,10 +54,22 @@ function SignupForm({ user, token }) {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
-  const { register, handleSubmit, errors, setError } = useForm()
+  const { register, handleSubmit, errors, setError, formState, watch } = useForm({
+    mode: 'onChange', // Validate on change
+    reValidateMode: 'onChange', // Re-validate on change
+  })
   const [updateUser, { loading, error, data }] = useMutation(UPDATE_USER)
 
+  // Watch form values to track validity
+  const watchedFields = watch(['username', 'password'])
+
   const onSubmit = async (values) => {
+    // Double-check that there are no form errors before proceeding
+    if (Object.keys(errors).length > 0) {
+      console.warn('Form submission blocked due to validation errors:', errors)
+      return
+    }
+
     const { username, password, email } = values
 
     const result = await updateUser({
@@ -118,6 +130,9 @@ function SignupForm({ user, token }) {
     }
   }, [data, loading, history])
 
+  // Check if form is valid
+  const isFormValid = formState.isValid && !loading
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card className={classes.card}>
@@ -174,8 +189,8 @@ function SignupForm({ user, token }) {
                 inputRef={register({
                   required: 'Password is required',
                   minLength: {
-                    value: 6,
-                    message: 'Password should be more than six characters',
+                    value: 8,
+                    message: 'Password should be at least 8 characters',
                   },
                   maxLength: {
                     value: 20,
@@ -216,7 +231,7 @@ function SignupForm({ user, token }) {
             variant="contained"
             fullWidth
             type="submit"
-            disabled={loading}
+            disabled={loading || !isFormValid}
             size={"small"}
           >
             <Typography variant="body1">
