@@ -271,7 +271,7 @@ export default function SearchGuestSections() {
               }}
             >
               <span style={{ color: '#2ecc71' }}>Discover</span>{' '}
-              <span style={{ color: '#111' }}>witout bias</span>
+              <span style={{ color: '#111' }}>without bias</span>
             </Typography>
             <Typography
               variant="body2"
