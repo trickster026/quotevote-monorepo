@@ -60,14 +60,16 @@ const PersonalForm = (props) => {
           </Grid>
           {requestInviteSuccessful ? (
             <Grid container item xs={12} md={6} justify="center" alignItems="center">
-              <Typography className={classes.message}>
-                <br />
-                When an account becomes available, an
-                <br />
-                invite will be sent to the email address you
-                <br />
-                provided.
-              </Typography>
+              <div className={classes.opaqueBackground}>
+                <Typography className={classes.message}>
+                  <br />
+                  When an account becomes available, an
+                  <br />
+                  invite will be sent to the email address you
+                  <br />
+                  provided.
+                </Typography>
+              </div>
             </Grid>
           ) : (
             <Grid item container xs={11} md={6} spacing={2}>

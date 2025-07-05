@@ -146,6 +146,15 @@ const requestAccessStyles = (theme) => ({
       flexDirection: 'column',
     },
   },
+  opaqueBackground: {
+    background: 'rgba(0,0,0,0.5)', // black with 50% opacity
+    padding: '12px',
+    borderRadius: '12px',
+    color: '#fff',
+    textAlign: 'center',
+    maxWidth: '90%',
+    margin: '0 auto',
+  },
 })
 
 export default requestAccessStyles
