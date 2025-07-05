@@ -272,14 +272,6 @@ function PostCard(props) {
   const { messages } = messageRoom
   const contentLimit = limitText ? 20 : 200
   let postText = stringLimit(text, contentLimit)
-  
-  // Debug logging
-  console.log('PostCard debug:', {
-    textLength: text.length,
-    contentLimit,
-    limitText,
-    shouldShowToggle: text.length > contentLimit
-  })
 
   let interactions = []
 

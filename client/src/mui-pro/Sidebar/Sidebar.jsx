@@ -6,8 +6,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Collapse from '@material-ui/core/Collapse'
 import Grid from '@material-ui/core/Grid'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -22,7 +20,11 @@ import ChatMenu from '../../components/Chat/ChatMenu'
 import AddIcon from '@material-ui/icons/Add'
 import Tooltip from '@material-ui/core/Tooltip'
 import Dialog from '@material-ui/core/Dialog'
-import SubmitPost from '@/components/SubmitPost/SubmitPost'
+import SubmitPost from '../../components/SubmitPost/SubmitPost'
+import Avatar from '@material-ui/core/Avatar'
+import AvatarPreview from '../../components/Avatar'
+import Typography from '@material-ui/core/Typography'
+import { useSelector } from 'react-redux'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -56,6 +58,11 @@ const MenuSidebar = (props) => {
     miniActive: propsMiniActive,
     color,
   } = props
+
+  // Get user data from Redux like MainNavBar
+  const avatar = useSelector((state) => state.user.data.avatar)
+  const name = useSelector((state) => state.user.data.name)
+  const loggedIn = useSelector((state) => !!state.user.data._id)
 
   // State management
   const [openAvatar, setOpenAvatar] = useState(false)
@@ -113,7 +120,7 @@ const MenuSidebar = (props) => {
           style={{ height: '30px', width: 'auto' }}
         />
       </ListItem>,
-      <ListItem key="donate">
+      <ListItem key="donate" style={{ padding: '4px 8px' }}>
         <a
           href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
           target="_blank"
@@ -123,12 +130,15 @@ const MenuSidebar = (props) => {
             textDecoration: 'none',
             width: '100%',
             display: 'block',
+            padding: '8px 12px',
+            fontSize: '14px',
           }}
         >
-          Donate 🤲
+          <span style={{ fontSize: '16px', marginRight: '8px' }}>🤲</span>
+          <span>Donate</span>
         </a>
       </ListItem>,
-      <ListItem key="volunteer">
+      <ListItem key="volunteer" style={{ padding: '4px 8px' }}>
         <a
           href="mailto:volunteer@quote.vote"
           style={{
@@ -136,12 +146,15 @@ const MenuSidebar = (props) => {
             textDecoration: 'none',
             width: '100%',
             display: 'block',
+            padding: '8px 12px',
+            fontSize: '14px',
           }}
         >
-          Volunteer 🫱
+          <span style={{ fontSize: '16px', marginRight: '8px' }}>🫱</span>
+          <span>Volunteer</span>
         </a>
       </ListItem>,
-      <ListItem key="github">
+      <ListItem key="github" style={{ padding: '4px 8px' }}>
         <a
           href="https://github.com/QuoteVote/quotevote-monorepo"
           target="_blank"
@@ -152,140 +165,248 @@ const MenuSidebar = (props) => {
             textDecoration: 'none',
             width: '100%',
             display: 'block',
+            padding: '8px 12px',
+            fontSize: '14px',
           }}
         >
-          GitHub 🛠️
+          <i
+            className="fab fa-github"
+            style={{ fontSize: 16, marginRight: '8px' }}
+          />
+          <span>GitHub</span>
         </a>
       </ListItem>,
-      <ListItem key="request-invite">
-        <a
-          onClick={() => history.push('/auth/request-access')}
+      <ListItem key="request-invite" style={{ padding: '4px 8px' }}>
+        <NavLink
+          to="/auth/request-access"
+          onClick={() => handleDrawerToggle(false)}
           style={{
             color: 'inherit',
             textDecoration: 'none',
             width: '100%',
             display: 'block',
-            cursor: 'pointer',
+            padding: '8px 12px',
+            fontSize: '14px',
           }}
         >
-          Request Invite 💌
-        </a>
+          <span style={{ fontSize: '16px', marginRight: '8px' }}>💌</span>
+          <span>Request Invite</span>
+        </NavLink>
       </ListItem>,
-      <ListItem key="login">
-        <a
-          onClick={() => history.push('/auth/login')}
+      <ListItem key="login" style={{ padding: '4px 8px' }}>
+        <NavLink
+          to="/auth/login"
+          onClick={() => handleDrawerToggle(false)}
           style={{
             color: 'inherit',
             textDecoration: 'none',
             width: '100%',
             display: 'block',
-            cursor: 'pointer',
+            padding: '8px 12px',
+            fontSize: '14px',
           }}
         >
-          Login 👤
-        </a>
+          <span style={{ fontSize: '16px', marginRight: '8px' }}>👤</span>
+          <span>Login</span>
+        </NavLink>
       </ListItem>,
     ]
   }
 
   const createLinks = (routes) => {
-    const loggedIn = !!localStorage.getItem('token')
     const guestLinks = !loggedIn ? createGuestLinks() : []
     const routeLinks = loggedIn
-      ? routes.map((prop, key) => {
-          if (prop.path === '/post') return null
-          if (prop.path === 'Home') return null
-          if (prop.redirect) {
-            return null
-          }
-          if (prop.collapse) {
-            return (
-              <ListItem
-                key={key}
-                className={cx(
-                  { [classes.item]: prop.icon !== undefined },
-                  { [classes.collapseItem]: prop.icon === undefined },
-                )}
-              >
-                <Collapse in={collapseStates[prop.state]} unmountOnExit>
-                  <List className={`${classes.list} ${classes.collapseList}`}>
-                    {createLinks(prop.views)}
-                  </List>
-                </Collapse>
-              </ListItem>
-            )
-          }
-          const innerNavLinkClasses = `${classes.collapseItemLink} ${cx({
-            [` ${classes[color]}`]: activeRoute(prop.path),
-          })}`
-          const collapseItemMini = `${classes.collapseItemMini} ${cx({
-            [classes.collapseItemMiniRTL]: rtlActive,
-          })}`
-          const navLinkClasses = `${classes.itemLink} ${cx({
-            [` ${classes[color]}`]: activeRoute(prop.path),
-          })}`
-          const itemText = `${classes.itemText} ${cx({
-            [classes.itemTextMini]: propsMiniActive && miniActive,
-            [classes.itemTextMiniRTL]:
-              rtlActive && propsMiniActive && miniActive,
-            [classes.itemTextRTL]: rtlActive,
-          })}`
-          const collapseItemText = `${classes.collapseItemText} ${cx({
-            [classes.collapseItemTextMini]: propsMiniActive && miniActive,
-            [classes.collapseItemTextMiniRTL]:
-              rtlActive && propsMiniActive && miniActive,
-            [classes.collapseItemTextRTL]: rtlActive,
-          })}`
-          const itemIcon = `${classes.itemIcon} ${cx({
-            [classes.itemIconRTL]: rtlActive,
-          })}`
-          return (
-            <ListItem
-              key={key}
-              className={cx(
-                { [classes.item]: prop.icon !== undefined },
-                { [classes.collapseItem]: prop.icon === undefined },
-              )}
+      ? [
+          // Profile Section
+          <ListItem key="profile" style={{ padding: '8px 12px' }}>
+            <NavLink
+              to="/Profile"
+              onClick={() => handleDrawerToggle(false)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+              }}
             >
-              <NavLink
-                to={prop.layout + prop.path}
-                className={cx(
-                  { [navLinkClasses]: prop.icon !== undefined },
-                  { [innerNavLinkClasses]: prop.icon === undefined },
-                )}
-              >
-                {/* eslint-disable-next-line no-nested-ternary */}
-                {prop.icon !== undefined ? (
-                  typeof prop.icon === 'string' ? (
-                    <img
-                      alt=""
-                      src={prop.icon}
-                      className={itemIcon}
-                      style={{ height: '30px' }}
-                    />
-                  ) : (
-                    /** <Icon className={itemIcon}>{prop.icon}</Icon> */
-                    <prop.icon className={itemIcon} />
-                  )
-                ) : (
-                  <span className={collapseItemMini}>
-                    {rtlActive ? prop.rtlMini : prop.mini}
-                  </span>
-                )}
-                {prop.name !== 'My Profile' && (
-                  <ListItemText
-                    primary={rtlActive ? prop.rtlName : prop.name}
-                    disableTypography
-                    className={cx(
-                      { [itemText]: prop.icon !== undefined },
-                      { [collapseItemText]: prop.icon === undefined },
-                    )}
-                  />
-                )}
-              </NavLink>
-            </ListItem>
-          )
-        })
+              <Grid container alignItems="center" spacing={1}>
+                <Grid item>
+                  <Avatar style={{ height: 32, width: 32 }}>
+                    <AvatarPreview height="32" width="32" {...avatar} />
+                  </Avatar>
+                </Grid>
+                <Grid item xs>
+                  <Typography
+                    variant="body2"
+                    style={{ margin: 0, fontSize: '14px' }}
+                  >
+                    {name || 'Profile'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </NavLink>
+          </ListItem>,
+          // Divider
+          <ListItem key="divider" style={{ padding: '4px 12px' }}>
+            <hr
+              style={{
+                width: '100%',
+                border: 'none',
+                borderTop: '1px solid #e0e0e0',
+              }}
+            />
+          </ListItem>,
+          // Search
+          <ListItem key="search" style={{ padding: '4px 8px' }}>
+            <NavLink
+              to="/search"
+              onClick={() => handleDrawerToggle(false)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '8px' }}>🔍</span>
+              <span>Search</span>
+            </NavLink>
+          </ListItem>,
+          // New Quote
+          <ListItem key="new-quote" style={{ padding: '4px 8px' }}>
+            <NavLink
+              to="#"
+              onClick={() => {
+                setOpenCreateQuote(true)
+                handleDrawerToggle(false)
+              }}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '8px' }}>✍️</span>
+              <span>Create Quote</span>
+            </NavLink>
+          </ListItem>,
+
+          // Profile (simplified)
+          <ListItem key="profile-simple" style={{ padding: '4px 8px' }}>
+            <NavLink
+              to="/Profile"
+              onClick={() => handleDrawerToggle(false)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '8px' }}>👤</span>
+              <span>Profile</span>
+            </NavLink>
+          </ListItem>,
+          // Alerts
+          <ListItem key="alerts" style={{ padding: '4px 8px' }}>
+            <NavLink
+              to="/notifications"
+              onClick={() => handleDrawerToggle(false)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '12px' }}>🔔</span>
+              <span>Alerts</span>
+            </NavLink>
+          </ListItem>,
+
+          // Settings
+          <ListItem key="settings" style={{ padding: '4px 8px' }}>
+            <NavLink
+              to="/settings"
+              onClick={() => handleDrawerToggle(false)}
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '8px' }}>⚙️</span>
+              <span>Settings</span>
+            </NavLink>
+          </ListItem>,
+          // GitHub
+          <ListItem key="github" style={{ padding: '4px 8px' }}>
+            <a
+              href="https://github.com/QuoteVote/quotevote-monorepo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                width: '100%',
+                display: 'block',
+                padding: '8px 12px',
+                fontSize: '14px',
+              }}
+            >
+              <i
+                className="fab fa-github"
+                style={{ fontSize: 16, marginRight: '8px' }}
+              />
+              <span>GitHub</span>
+            </a>
+          </ListItem>,
+          // Divider before sign out
+          <ListItem key="signout-divider" style={{ padding: '4px 12px' }}>
+            <hr
+              style={{
+                width: '100%',
+                border: 'none',
+                borderTop: '1px solid #e0e0e0',
+              }}
+            />
+          </ListItem>,
+          // Sign Out
+          <ListItem key="signout" style={{ padding: '4px 8px' }}>
+            <Button
+              onClick={() => {
+                localStorage.removeItem('token')
+                window.location.reload()
+                handleDrawerToggle(false)
+              }}
+              fullWidth
+              style={{
+                justifyContent: 'flex-start',
+                padding: '8px 12px',
+                fontSize: '14px',
+                minHeight: 'auto',
+                color: '#f44336',
+                textTransform: 'none',
+              }}
+            >
+              <span style={{ fontSize: '16px', marginRight: '8px' }}>🚪</span>
+              Sign Out
+            </Button>
+          </ListItem>,
+        ]
       : []
     return [...guestLinks, ...routeLinks]
   }
@@ -311,8 +432,6 @@ const MenuSidebar = (props) => {
     dispatch(SET_SELECTED_PAGE(0))
     history.push('/search')
   }
-
-  const loggedIn = !!localStorage.getItem('token')
 
   return (
     <>
@@ -384,6 +503,27 @@ const MenuSidebar = (props) => {
                         <AddIcon />
                       </Button>
                     </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <a
+                      href="https://github.com/QuoteVote/quotevote-monorepo"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="GitHub"
+                      style={{
+                        color: 'black',
+                        textDecoration: 'none',
+                        width: '100%',
+                        display: 'block',
+                        padding: '8px 12px',
+                        fontSize: '18px',
+                      }}
+                    >
+                      <i
+                        className="fab fa-github"
+                        style={{ fontSize: 28, marginRight: '8px', color: "black" }}
+                      />
+                    </a>
                   </Grid>
                   <Grid item>
                     <ChatMenu />
