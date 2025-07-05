@@ -58,7 +58,7 @@ const GuestFooter = ({isRequestAccess = false}) => {
           Request Invite
         </a>
         <a 
-          href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" 
+                          href="mailto:volunteer@quote.vote" 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ 

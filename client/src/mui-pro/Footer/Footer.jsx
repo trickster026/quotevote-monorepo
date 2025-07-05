@@ -38,7 +38,7 @@ export default function Footer(props) {
                   Request Invite
                 </Typography>
               </Link>
-              <Link href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00" color="inherit">
+              <Link href="mailto:volunteer@quote.vote" color="inherit">
                 <Typography style={{ fontSize: '14px', fontWeight: 400 }}>
                   Donate
                 </Typography>
@@ -88,7 +88,7 @@ export default function Footer(props) {
                 </Typography>
               </Link>
               <Link
-                href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+                href="mailto:volunteer@quote.vote"
                 color="inherit"
                 style={{ marginLeft: '1rem' }}
               >

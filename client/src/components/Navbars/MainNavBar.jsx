@@ -77,7 +77,7 @@ function MainNavBar(props) {
                 <Button
                   variant="outlined"
                   color="inherit"
-                  href="https://donate.stripe.com/28E5kF6Egdaz9ZF6nhdfG00"
+                  href="mailto:volunteer@quote.vote"
                   target="_blank"
                   className={classes.rightMenuButton}
                   style={{ borderWidth: 2, borderStyle: 'solid' }}
