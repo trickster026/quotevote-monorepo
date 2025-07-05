@@ -204,8 +204,11 @@ export default function RequestAccessPage() {
               className={classes.requestAccessBtn}
               onClick={() => {
                 window.location.hash = 'mission'
-                // Force navigation even if hash is already set
-                window.dispatchEvent(new HashChangeEvent('hashchange'))
+                // Directly scroll to mission element
+                const missionElement = document.getElementById('mission')
+                if (missionElement) {
+                  missionElement.scrollIntoView({ behavior: 'smooth' })
+                }
               }}
               style={{ marginTop: '2rem', display: 'block', margin: '2rem auto 0 auto' }}
             >
