@@ -242,6 +242,8 @@ export const GET_TOP_POSTS = gql`
         bookmarkedBy
         created
         url
+        rejectedBy
+        approvedBy
         creator {
           name
           username

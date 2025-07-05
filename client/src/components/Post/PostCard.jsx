@@ -23,7 +23,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { tokenValidator } from 'store/user'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 const GET_GROUP = gql`
   query getGroup($groupId: String!) {
@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       animationName: 'post',
       animationDuration: '0.25s',
-      boxShadow: '10px 7px 10px 0 rgba(0, 188, 212, 0.4), 0 4px 20px 0 rgba(0, 0, 0, 0.14)',
+      boxShadow:
+        '10px 7px 10px 0 rgba(0, 188, 212, 0.4), 0 4px 20px 0 rgba(0, 0, 0, 0.14)',
     },
   },
   postedBg: {
@@ -234,7 +235,7 @@ const useStyles = makeStyles((theme) => ({
     '&:before': {
       content: '"•"',
       marginRight: '4px',
-    }
+    },
   },
 }))
 
@@ -265,8 +266,21 @@ function PostCard(props) {
   const { width } = props
   const [isContentExpanded, setIsContentExpanded] = useState(false)
   const {
-    _id, text, title, url, bookmarkedBy, created, creator,
-    activityType, limitText, votes, comments, quotes, messageRoom,
+    _id,
+    text,
+    title,
+    url,
+    bookmarkedBy,
+    approvedBy,
+    rejectedBy,
+    created,
+    creator,
+    activityType,
+    limitText,
+    votes,
+    comments,
+    quotes,
+    messageRoom,
     groupId,
   } = props
   const { messages } = messageRoom
@@ -298,8 +312,20 @@ function PostCard(props) {
     history.push(`/Profile/${username}`)
   }
 
-  const upvotes = votes.filter(vote => vote.type === 'UPVOTE').length
-  const downvotes = votes.filter(vote => vote.type === 'DOWNVOTE').length
+  // TODO: show quote up/down
+  const { upQuote, downQuote } = useMemo(() => {
+    if (!votes || votes?.length === 0) {
+      return {
+        upQuote: 0,
+        downQuote: 0,
+      }
+    }
+
+    return {
+      upQuote: votes.filter((vote) => vote.type === 'UPVOTE' || vote.type?.toUpperCase() === 'UP').length,
+      downQuote: votes.filter((vote) => vote.type === 'DOWNVOTE' || vote.type?.toUpperCase() === 'DOWN').length,
+    }
+  }, [votes])
 
   const { data: groupData } = useQuery(GET_GROUP, {
     variables: { groupId },
@@ -313,7 +339,7 @@ function PostCard(props) {
       history.push('/search')
       return
     }
-    
+
     // For authenticated users, proceed with normal post navigation
     dispatch(SET_SELECTED_POST(_id))
     history.push(url.replace(/\?/g, ''))
@@ -324,24 +350,38 @@ function PostCard(props) {
     setIsContentExpanded(!isContentExpanded)
   }
 
-  const truncatedTitle = stringLimit(title, limitText ? 20 : postTitleStringLimit)
-  const isTitleTruncated = title.length > (limitText ? 20 : postTitleStringLimit)
+  const truncatedTitle = stringLimit(
+    title,
+    limitText ? 20 : postTitleStringLimit,
+  )
+  const isTitleTruncated =
+    title.length > (limitText ? 20 : postTitleStringLimit)
 
   return (
     <Card
-      className={classNames(classes.cardRootStyle, classes[cardBg], classes.fontColor)}
+      className={classNames(
+        classes.cardRootStyle,
+        classes[cardBg],
+        classes.fontColor,
+      )}
       onClick={handleCardClick}
     >
       <CardContent className={classes.cardBodyStyle}>
         <div className={classes.voteCounts}>
           <div className={classes.voteSection}>
             <div className={classes.voteItem}>
-              <ArrowUpwardIcon className={classNames(classes.voteIcon, classes.upvoteIcon)} />
-              <Typography className={classes.voteNumber}>{upvotes}</Typography>
+              <ArrowUpwardIcon
+                className={classNames(classes.voteIcon, classes.upvoteIcon)}
+              />
+              <Typography className={classes.voteNumber}>{approvedBy?.length}</Typography>
             </div>
             <div className={classes.voteItem}>
-              <ArrowDownwardIcon className={classNames(classes.voteIcon, classes.downvoteIcon)} />
-              <Typography className={classes.voteNumber}>{downvotes}</Typography>
+              <ArrowDownwardIcon
+                className={classNames(classes.voteIcon, classes.downvoteIcon)}
+              />
+              <Typography className={classes.voteNumber}>
+                {rejectedBy?.length}
+              </Typography>
             </div>
             {groupData?.group && (
               <Typography className={classes.groupName}>
@@ -361,31 +401,29 @@ function PostCard(props) {
           spacing={2}
         >
           <Grid item xs={12}>
-            <Tooltip 
-              title={isTitleTruncated ? title : ''} 
+            <Tooltip
+              title={isTitleTruncated ? title : ''}
               placement="top"
               arrow
             >
-              <Typography
-                className={classes.postTitle}
-              >
+              <Typography className={classes.postTitle}>
                 {truncatedTitle}
               </Typography>
             </Tooltip>
           </Grid>
           <Grid item xs={12}>
             <div className={classes.contentSection}>
-              <Typography 
+              <Typography
                 className={classNames(
                   classes.postContent,
-                  isContentExpanded && classes.postContentExpanded
+                  isContentExpanded && classes.postContentExpanded,
                 )}
               >
                 {isContentExpanded ? text : postText}
               </Typography>
               {text.length > contentLimit && (
-                <Tooltip 
-                  title={isContentExpanded ? "Show less" : "Show more"} 
+                <Tooltip
+                  title={isContentExpanded ? 'Show less' : 'Show more'}
                   placement="bottom"
                   arrow
                 >
@@ -394,7 +432,11 @@ function PostCard(props) {
                     onClick={handleToggleContent}
                     size="small"
                   >
-                    {isContentExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    {isContentExpanded ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
+                    )}
                   </IconButton>
                 </Tooltip>
               )}
