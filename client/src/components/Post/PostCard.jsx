@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Tooltip } from '@material-ui/core'
 import Card from 'mui-pro/Card/Card'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
@@ -18,9 +18,12 @@ import withWidth from '@material-ui/core/withWidth'
 import getTopPostsVoteHighlights from '../../utils/getTopPostsVoteHighlights'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { tokenValidator } from 'store/user'
+import { useState } from 'react'
 
 const GET_GROUP = gql`
   query getGroup($groupId: String!) {
@@ -188,6 +191,25 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 14,
     },
   },
+  postContentExpanded: {
+    display: 'block',
+    WebkitLineClamp: 'unset',
+    maxHeight: 'none',
+    overflow: 'visible',
+  },
+  toggleButton: {
+    padding: '4px',
+    marginTop: '8px',
+    color: '#666',
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    },
+  },
+  contentSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
   votes: {
     height: 12,
     font: 'Roboto',
@@ -241,13 +263,23 @@ function PostCard(props) {
   const user = useSelector((state) => state.user.data)
   const classes = useStyles(props)
   const { width } = props
+  const [isContentExpanded, setIsContentExpanded] = useState(false)
   const {
     _id, text, title, url, bookmarkedBy, created, creator,
     activityType, limitText, votes, comments, quotes, messageRoom,
     groupId,
   } = props
   const { messages } = messageRoom
-  let postText = stringLimit(text, limitText ? 20 : 10000)
+  const contentLimit = limitText ? 20 : 200
+  let postText = stringLimit(text, contentLimit)
+  
+  // Debug logging
+  console.log('PostCard debug:', {
+    textLength: text.length,
+    contentLimit,
+    limitText,
+    shouldShowToggle: text.length > contentLimit
+  })
 
   let interactions = []
 
@@ -295,6 +327,14 @@ function PostCard(props) {
     history.push(url.replace(/\?/g, ''))
   }
 
+  const handleToggleContent = (e) => {
+    e.stopPropagation()
+    setIsContentExpanded(!isContentExpanded)
+  }
+
+  const truncatedTitle = stringLimit(title, limitText ? 20 : postTitleStringLimit)
+  const isTitleTruncated = title.length > (limitText ? 20 : postTitleStringLimit)
+
   return (
     <Card
       className={classNames(classes.cardRootStyle, classes[cardBg], classes.fontColor)}
@@ -329,16 +369,44 @@ function PostCard(props) {
           spacing={2}
         >
           <Grid item xs={12}>
-            <Typography
-              className={classes.postTitle}
+            <Tooltip 
+              title={isTitleTruncated ? title : ''} 
+              placement="top"
+              arrow
             >
-              {stringLimit(title, limitText ? 20 : postTitleStringLimit)}
-            </Typography>
+              <Typography
+                className={classes.postTitle}
+              >
+                {truncatedTitle}
+              </Typography>
+            </Tooltip>
           </Grid>
           <Grid item xs={12}>
-            <Typography className={classes.postContent}>
-              {postText}
-            </Typography>
+            <div className={classes.contentSection}>
+              <Typography 
+                className={classNames(
+                  classes.postContent,
+                  isContentExpanded && classes.postContentExpanded
+                )}
+              >
+                {isContentExpanded ? text : postText}
+              </Typography>
+              {text.length > contentLimit && (
+                <Tooltip 
+                  title={isContentExpanded ? "Show less" : "Show more"} 
+                  placement="bottom"
+                  arrow
+                >
+                  <IconButton
+                    className={classes.toggleButton}
+                    onClick={handleToggleContent}
+                    size="small"
+                  >
+                    {isContentExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </IconButton>
+                </Tooltip>
+              )}
+            </div>
           </Grid>
         </Grid>
       </CardContent>
