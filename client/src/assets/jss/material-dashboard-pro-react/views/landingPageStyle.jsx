@@ -333,7 +333,7 @@ const landingPageStyle = (theme) => ({
     textTransform: 'none',
     backgroundColor: '#00cf6e',
     color: 'white',
-    width: 150,
+    width: 200,
     height: 45,
     fontSize: 16,
     marginRight: 5,

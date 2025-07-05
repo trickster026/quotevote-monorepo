@@ -200,6 +200,13 @@ export default function RequestAccessPage() {
                 </Grid>
               </Grid>
             </div>
+            <Button
+              className={classes.requestAccessBtn}
+              onClick={() => window.location.hash = 'mission'}
+              style={{ marginTop: '2rem', display: 'block', margin: '2rem auto 0 auto' }}
+            >
+              Read Our Mission
+            </Button>
           </Grid>
         </Grid>
       </div>
