@@ -20,7 +20,7 @@ type Query {
   posts(offset: Int, limit: Int, searchKey: String, startDateRange: String, endDateRange: String, friendsOnly: Boolean, groupId: String, userId: String, approved: Boolean, deleted: Boolean, interactions: Boolean): Posts
 
   " Posts selected for homepage carousel "
-  featuredPosts: [Post]
+  featuredPosts(offset: Int, limit: Int, searchKey: String, startDateRange: String, endDateRange: String, friendsOnly: Boolean, groupId: String, userId: String, approved: Boolean, deleted: Boolean, interactions: Boolean): Posts
 
   " This will query a post message room"
   postMessageRoom(postId: String!): MessageRoom

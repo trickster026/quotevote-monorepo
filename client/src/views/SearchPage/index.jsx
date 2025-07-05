@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import { useSelector } from 'react-redux'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import SearchIcon from '@material-ui/icons/Search'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -326,7 +326,27 @@ export default function SearchPage() {
     pollInterval: 3000, // Poll every 3 seconds
   })
 
-  const { data: featuredData } = useQuery(GET_FEATURED_POSTS)
+  const { data: featuredData, refetch: refetchFeatured, loading: featuredLoading } = useQuery(GET_FEATURED_POSTS, {
+    variables: {
+      limit: 10,
+      offset: 0,
+      searchKey: searchKey,
+      startDateRange: dateRangeFilter.startDate
+        ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
+        : '',
+      endDateRange: dateRangeFilter.endDate
+        ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
+        : '',
+      friendsOnly: false,
+      interactions: activeFilters.interactions,
+    },
+    skip: !isGuestMode,
+    fetchPolicy: 'cache-first', // Use cache for better performance
+    errorPolicy: 'all',
+    notifyOnNetworkStatusChange: false, // Reduce unnecessary updates
+    // Add cache time to reduce refetches
+    nextFetchPolicy: 'cache-first',
+  })
 
   // Auto-show results for guest mode
   useEffect(() => {
@@ -343,13 +363,17 @@ export default function SearchPage() {
     }
   }
 
-  // Refetch when active filters change
+  // Refetch when active filters change - only for interactions filter
   useEffect(() => {
     if (showResults) {
       console.log('Active filters changed, refetching query')
       refetch(variables)
     }
-  }, [activeFilters, showResults])
+    // Only refetch featured posts when interactions filter changes
+    if (isGuestMode && activeFilters.interactions !== undefined) {
+      refetchFeatured()
+    }
+  }, [activeFilters.interactions, showResults, isGuestMode])
 
   // Refetch when date range changes
   useEffect(() => {
@@ -357,7 +381,22 @@ export default function SearchPage() {
       console.log('Date range changed, refetching query')
       refetch(variables)
     }
-  }, [dateRangeFilter.startDate, dateRangeFilter.endDate, showResults])
+    // Only refetch featured posts when date range changes
+    if (isGuestMode && (dateRangeFilter.startDate || dateRangeFilter.endDate)) {
+      refetchFeatured()
+    }
+  }, [dateRangeFilter.startDate, dateRangeFilter.endDate, showResults, isGuestMode])
+
+  // Refetch featured posts when search key changes in guest mode - with debouncing
+  useEffect(() => {
+    if (isGuestMode && searchKey) {
+      const timeoutId = setTimeout(() => {
+        refetchFeatured()
+      }, 300) // Debounce search for 300ms
+      
+      return () => clearTimeout(timeoutId)
+    }
+  }, [searchKey, isGuestMode])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -472,15 +511,17 @@ export default function SearchPage() {
 
   const processedData = processAndSortData(data)
 
-  const featuredPosts = (featuredData?.featuredPosts || []).map((post) =>
-    serializePost(post),
-  )
+  const featuredPosts = useMemo(() => {
+    return (featuredData?.featuredPosts?.entities || []).map((post) =>
+      serializePost(post),
+    )
+  }, [featuredData?.featuredPosts?.entities])
 
   // Create carousel items from posts for guest mode
-  const createCarouselItems = (posts) => {
-    if (!posts || !posts.length) return []
+  const createCarouselItems = useMemo(() => {
+    if (!featuredPosts || !featuredPosts.length) return []
 
-    return posts.map((post) => (
+    return featuredPosts.map((post) => (
       <div
         key={post._id}
         style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}
@@ -503,7 +544,7 @@ export default function SearchPage() {
         />
       </div>
     ))
-  }
+  }, [featuredPosts])
 
   return (
     <ErrorBoundary>
@@ -735,8 +776,12 @@ export default function SearchPage() {
               {featuredData?.featuredPosts ? (
                 featuredPosts.length > 0 ? (
                   <Grid item style={{ width: '100%', maxWidth: '800px' }}>
+                    <Typography variant="h6" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                      Featured Posts
+                      {searchKey && ` - "${searchKey}"`}
+                    </Typography>
                     <Carousel navButtonsAlwaysVisible autoplay={false}>
-                      {createCarouselItems(featuredPosts)}
+                      {createCarouselItems}
                     </Carousel>
                   </Grid>
                 ) : (
@@ -745,17 +790,22 @@ export default function SearchPage() {
                       ⭐
                     </div>
                     <Typography variant="h6" style={{ color: '#666' }}>
-                      No featured posts available
+                      No featured posts found
                     </Typography>
                     <Typography
                       variant="body2"
                       style={{ color: '#999', marginTop: '0.5rem' }}
                     >
-                      Check back later for featured content
+                      {searchKey 
+                        ? `No featured posts match "${searchKey}"`
+                        : hasActiveFilters()
+                        ? 'No featured posts match your filters'
+                        : 'Check back later for featured content'
+                      }
                     </Typography>
                   </div>
                 )
-              ) : (
+              ) : featuredLoading ? (
                 <div style={{ textAlign: 'center', padding: '2rem' }}>
                   <LoadingSpinner size={60} />
                   <Typography
@@ -771,7 +821,7 @@ export default function SearchPage() {
                     Please wait while we fetch featured content
                   </Typography>
                 </div>
-              )}
+              ) : null}
             </>
           )}
 

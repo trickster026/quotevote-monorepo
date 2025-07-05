@@ -513,42 +513,73 @@ export const GET_LATEST_QUOTES = gql`
     }
   }
 `
-export const GET_FEATURED_POSTS = gql`
-  query featuredPosts {
-    featuredPosts {
-      _id
-      userId
-      title
-      text
-      upvotes
-      downvotes
-      bookmarkedBy
-      created
-      url
-      creator {
-        name
-        username
-        avatar
+export const GET_FEATURED_POSTS = gql` 
+  query featuredPosts(
+    $limit: Int
+    $offset: Int
+    $searchKey: String
+    $startDateRange: String
+    $endDateRange: String
+    $friendsOnly: Boolean
+    $groupId: String
+    $userId: String
+    $approved: Boolean
+    $deleted: Boolean
+    $interactions: Boolean
+  ) {
+    featuredPosts(
+      limit: $limit
+      offset: $offset
+      searchKey: $searchKey
+      startDateRange: $startDateRange
+      endDateRange: $endDateRange
+      friendsOnly: $friendsOnly
+      groupId: $groupId
+      userId: $userId
+      approved: $approved
+      deleted: $deleted
+      interactions: $interactions
+    ) {
+      entities {
         _id
-        contributorBadge
-      }
-      votes {
-        _id
-        startWordIndex
-        endWordIndex
-        type
-      }
-      comments {
-        _id
-      }
-      quotes {
-        _id
-      }
-      messageRoom {
-        _id
-        messages {
+        userId
+        title
+        text
+        upvotes
+        downvotes
+        bookmarkedBy
+        created
+        url
+        creator {
+          name
+          username
+          avatar
+          _id
+          contributorBadge
+        }
+        votes {
+          _id
+          startWordIndex
+          endWordIndex
+          type
+        }
+        comments {
           _id
         }
+        quotes {
+          _id
+        }
+        messageRoom {
+          _id
+          messages {
+            _id
+          }
+        }
+      }
+      pagination {
+        total_count
+        limit
+        offset
       }
     }
   }

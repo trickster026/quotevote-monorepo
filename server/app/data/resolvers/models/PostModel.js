@@ -97,5 +97,14 @@ const schema = mongoose.Schema({
 
 schema.index({ title: 'text', text: 'text' });
 schema.index({ featuredSlot: 1 }, { unique: true, sparse: true });
+// Add indexes for filtering performance
+schema.index({ featuredSlot: 1, created: -1 });
+schema.index({ featuredSlot: 1, pointTimestamp: -1 });
+schema.index({ featuredSlot: 1, userId: 1 });
+schema.index({ featuredSlot: 1, groupId: 1 });
+schema.index({ featuredSlot: 1, deleted: 1 });
+schema.index({ featuredSlot: 1, approved: 1 });
+schema.index({ userId: 1, featuredSlot: 1 });
+schema.index({ groupId: 1, featuredSlot: 1 });
 
 export default mongoose.model('posts', schema);
