@@ -202,7 +202,11 @@ export default function RequestAccessPage() {
             </div>
             <Button
               className={classes.requestAccessBtn}
-              onClick={() => window.location.hash = 'mission'}
+              onClick={() => {
+                window.location.hash = 'mission'
+                // Force navigation even if hash is already set
+                window.dispatchEvent(new HashChangeEvent('hashchange'))
+              }}
               style={{ marginTop: '2rem', display: 'block', margin: '2rem auto 0 auto' }}
             >
               Read Our Mission
