@@ -16,6 +16,7 @@ export const getFeaturedPosts = () => {
       approved,
       deleted,
       interactions,
+      sortOrder,
     } = args;
 
     // Build search arguments - always include featured slot requirement
@@ -95,6 +96,9 @@ export const getFeaturedPosts = () => {
       searchArgs.deleted = deleted;
     }
 
+    // Determine sort direction based on sortOrder parameter
+    const sortDirection = sortOrder === 'asc' ? 1 : -1;
+
     let featuredPosts;
     let totalPosts;
 
@@ -129,11 +133,11 @@ export const getFeaturedPosts = () => {
         },
         {
           $sort: {
-            totalInteractions: -1,
-            commentCount: -1,
-            voteCount: -1,
+            totalInteractions: sortDirection,
+            commentCount: sortDirection,
+            voteCount: sortDirection,
             featuredSlot: 1,
-            created: -1,
+            created: sortDirection,
           },
         },
         {
@@ -165,7 +169,7 @@ export const getFeaturedPosts = () => {
 
       const sortCriteria = {
         featuredSlot: 1,
-        created: 'desc',
+        created: sortOrder === 'asc' ? 'asc' : 'desc',
       };
 
       featuredPosts = await PostModel.find(searchArgs)

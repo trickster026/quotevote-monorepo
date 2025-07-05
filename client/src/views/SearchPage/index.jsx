@@ -266,6 +266,9 @@ export default function SearchPage() {
   // Guest mode state
   const [isGuestMode, setIsGuestMode] = useState(false)
 
+  // Sort order state - null for not toggled, 'desc' for newest first, 'asc' for oldest first
+  const [sortOrder, setSortOrder] = useState(null)
+
   // Simple authentication check that doesn't dispatch Redux actions
   const checkAuthentication = () => {
     const storedToken = localStorage.getItem('token')
@@ -305,6 +308,7 @@ export default function SearchPage() {
       : '',
     friendsOnly: activeFilters.friends,
     interactions: activeFilters.interactions,
+    ...(sortOrder ? { sortOrder } : {}),
     // Add a dummy variable that changes when filters change to force refetch
     filterKey: `${activeFilters.friends}-${activeFilters.interactions}-${
       dateRangeFilter.startDate
@@ -314,7 +318,7 @@ export default function SearchPage() {
       dateRangeFilter.endDate
         ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
         : ''
-    }`,
+    }-${sortOrder}`,
   }
 
   const { loading, error, data, fetchMore, refetch } = useQuery(GET_TOP_POSTS, {
@@ -339,6 +343,7 @@ export default function SearchPage() {
         : '',
       friendsOnly: false,
       interactions: activeFilters.interactions,
+      // Don't apply sort order for guest mode - let backend use default ordering
     },
     skip: !isGuestMode,
     fetchPolicy: 'cache-first', // Use cache for better performance
@@ -374,6 +379,16 @@ export default function SearchPage() {
       refetchFeatured()
     }
   }, [activeFilters.interactions, showResults, isGuestMode])
+
+  // Refetch when sort order changes
+  useEffect(() => {
+    if (showResults) {
+      console.log('Sort order changed, refetching query')
+      refetch(variables)
+    }
+    // Don't refetch featured posts when sort order changes for guest mode
+    // since we don't apply sort order to featured posts in guest mode
+  }, [sortOrder, showResults])
 
   // Refetch when date range changes
   useEffect(() => {
@@ -433,6 +448,17 @@ export default function SearchPage() {
     setShowResults(true)
   }
 
+  const handleSortOrderToggle = () => {
+    console.log('Sort order toggle clicked, current state:', sortOrder)
+    setSortOrder((prev) => {
+      if (prev === null) return 'asc'
+      if (prev === 'asc') return 'desc'
+      return null
+    })
+    setOffset(0)
+    setShowResults(true)
+  }
+
   const handleDateFilterToggle = (event) => {
     const willBeVisible = !isCalendarVisible
     setIsCalendarVisible(willBeVisible)
@@ -473,7 +499,8 @@ export default function SearchPage() {
       activeFilters.friends ||
       activeFilters.interactions ||
       dateRangeFilter.startDate ||
-      dateRangeFilter.endDate
+      dateRangeFilter.endDate ||
+      sortOrder !== null // Consider non-default sort order as an active filter
     )
   }
 
@@ -655,6 +682,79 @@ export default function SearchPage() {
                 📅
               </IconButton>
             </Tooltip>
+            <Tooltip
+              title={
+                isGuestMode
+                  ? 'Sort: Please log in to use sort filters'
+                  : sortOrder === null
+                  ? 'Sort: Default order (click to sort by oldest first)'
+                  : sortOrder === 'asc'
+                  ? 'Sort: Oldest first (click to sort by newest first)'
+                  : 'Sort: Newest first (click to clear sort)'
+              }
+              placement="bottom"
+              arrow
+            >
+              <span>
+                <IconButton
+                  aria-label="sort"
+                  className={`${classes.icon} ${
+                    sortOrder !== null ? classes.activeFilter : ''
+                  }`}
+                  onClick={handleSortOrderToggle}
+                  disabled={isGuestMode}
+                  style={{ opacity: isGuestMode ? 0.5 : 1 }}
+                >
+                  <span style={{
+                    filter: sortOrder === null ? 'grayscale(1) opacity(0.5)' : 'none',
+                    fontSize: '1.5rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    position: 'relative',
+                  }}>
+                    🕐
+                    {sortOrder === 'asc' && (
+                      <span style={{
+                        position: 'absolute',
+                        bottom: '-2px',
+                        right: '-2px',
+                        fontSize: '0.6em',
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        borderRadius: '50%',
+                        width: '12px',
+                        height: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        lineHeight: 1,
+                      }}>
+                        ⬆️
+                      </span>
+                    )}
+                    {sortOrder === 'desc' && (
+                      <span style={{
+                        position: 'absolute',
+                        bottom: '-2px',
+                        right: '-2px',
+                        fontSize: '0.6em',
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        borderRadius: '50%',
+                        width: '12px',
+                        height: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        lineHeight: 1,
+                      }}>
+                        ⬇️
+                      </span>
+                    )}
+                  </span>
+                </IconButton>
+              </span>
+            </Tooltip>
           </Grid>
 
           {isCalendarVisible && (
@@ -740,6 +840,8 @@ export default function SearchPage() {
                   Active Filters:
                   {activeFilters.friends && ' 👥 Friends only'}
                   {activeFilters.interactions && ' 🧲 Sorted by interactions'}
+                  {sortOrder === 'asc' && ' 🕐⬆️ Oldest first'}
+                  {sortOrder === 'desc' && ' 🕐⬇️ Newest first'}
                   {dateRangeFilter.startDate &&
                     ` 📅 From ${format(
                       dateRangeFilter.startDate,
@@ -765,6 +867,24 @@ export default function SearchPage() {
                   >
                     Posts sorted by total interactions (comments + votes +
                     quotes)
+                  </Typography>
+                )}
+                {sortOrder === 'asc' && (
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={{ display: 'block', marginTop: 8 }}
+                  >
+                    Posts sorted by creation date (oldest to newest)
+                  </Typography>
+                )}
+                {sortOrder === 'desc' && (
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    style={{ display: 'block', marginTop: 8 }}
+                  >
+                    Posts sorted by creation date (newest to oldest)
                   </Typography>
                 )}
               </Paper>

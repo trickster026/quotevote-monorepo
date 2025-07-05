@@ -221,6 +221,7 @@ export const GET_TOP_POSTS = gql`
     $friendsOnly: Boolean
     $interactions: Boolean
     $userId: String
+    $sortOrder: String
   ) {
     posts(
       limit: $limit
@@ -231,6 +232,7 @@ export const GET_TOP_POSTS = gql`
       friendsOnly: $friendsOnly
       interactions: $interactions
       userId: $userId
+      sortOrder: $sortOrder
     ) {
       entities {
         _id
@@ -528,6 +530,7 @@ export const GET_FEATURED_POSTS = gql`
     $approved: Boolean
     $deleted: Boolean
     $interactions: Boolean
+    $sortOrder: String
   ) {
     featuredPosts(
       limit: $limit
@@ -541,6 +544,7 @@ export const GET_FEATURED_POSTS = gql`
       approved: $approved
       deleted: $deleted
       interactions: $interactions
+      sortOrder: $sortOrder
     ) {
       entities {
         _id
