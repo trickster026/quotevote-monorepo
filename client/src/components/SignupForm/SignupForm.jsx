@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { useForm } from 'react-hook-form'
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
 
-import { makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
-import { CardActions, CircularProgress } from '@material-ui/core'
-import { useMutation } from '@apollo/react-hooks'
-import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import CardBody from '../../mui-pro/Card/CardBody'
-import CardHeader from '../../mui-pro/Card/CardHeader'
-import Card from '../../mui-pro/Card/Card'
-import { UPDATE_USER } from '../../graphql/mutations'
-import { USER_LOGIN_SUCCESS } from '../../store/user'
+import { CardActions, CircularProgress } from '@material-ui/core';
+import { useMutation } from '@apollo/react-hooks';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import CardBody from '../../mui-pro/Card/CardBody';
+import CardHeader from '../../mui-pro/Card/CardHeader';
+import Card from '../../mui-pro/Card/Card';
+import { UPDATE_USER } from '../../graphql/mutations';
+import { USER_LOGIN_SUCCESS } from '../../store/user';
 
 const useStyles = makeStyles({
   header: {
@@ -95,25 +95,6 @@ function SignupForm({ user, token }) {
     }
   }
 
-  const [stripeLoaded, setStripeLoaded] = useState(false)
-
-  useEffect(() => {
-    // Load Stripe script if not already loaded
-    if (!window.Stripe) {
-      const script = document.createElement('script')
-      script.src = 'https://js.stripe.com/v3/buy-button.js'
-      script.async = true
-      script.onload = () => setStripeLoaded(true)
-      document.body.appendChild(script)
-      return () => {
-        if (document.body.contains(script)) {
-          document.body.removeChild(script)
-        }
-      }
-    } else {
-      setStripeLoaded(true)
-    }
-  }, [])
 
   useEffect(() => {
     if (error) {
@@ -212,15 +193,6 @@ function SignupForm({ user, token }) {
                 helperText={errors.password && errors.password.message}
               />
             </Grid>
-
-            {stripeLoaded && (
-              <Grid item>
-                <stripe-buy-button
-                  buy-button-id="buy_btn_1RY6bhP3PjIJfZEbu5CpTDjo"
-                  publishable-key="pk_live_51RXriSP3PjIJfZEb1tqnEGBOGFZBHREUxqWHeO22GASJ5It6MKfpakOE3oDtL7II20j5idUR6NuXrBlaKXvszY6q00nn8KxROy"
-                />
-              </Grid>
-            )}
           </Grid>
         </CardBody>
 
