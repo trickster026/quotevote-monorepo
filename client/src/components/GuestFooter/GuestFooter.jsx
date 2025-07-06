@@ -41,8 +41,8 @@ const GuestFooter = ({isRequestAccess = false}) => {
           flexWrap: 'wrap'
         }}
       >
-        <a 
-          href="/auth/request-access" 
+        <a
+          href="/auth/request-access"
           style={{ 
             color: isRequestAccess ? theme.palette.primary.main : theme.palette.secondary.main, 
             fontWeight: 400, 

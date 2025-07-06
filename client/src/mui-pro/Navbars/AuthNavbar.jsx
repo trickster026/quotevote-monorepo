@@ -126,7 +126,7 @@ export default function AuthNavbar(props) {
           </ListItem>
         </div>
       )}
-      {activeRoute('/auth/plans') && (
+      {activeRoute('/auth/request-access') && (
         <div className={classes.buttonDisplay}>
           <ListItem className={classes.listItem}>
             <Button
