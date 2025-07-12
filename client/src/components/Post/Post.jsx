@@ -741,20 +741,6 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
           />
         )}
 
-        {user._id === userId && !post.enable_voting && (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={post.enable_voting}
-                onChange={handleToggleVoteButtons}
-                color="primary"
-              />
-            }
-            label="Disable Voting"
-            style={{ marginLeft: 20 }}
-          />
-        )}
-
         <CardActions
           disableSpacing
           style={{
