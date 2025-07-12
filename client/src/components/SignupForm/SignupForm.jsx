@@ -7,8 +7,14 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 
-import { CardActions, CircularProgress } from '@material-ui/core';
+import {
+  CardActions,
+  CircularProgress,
+  Checkbox,
+  FormControlLabel,
+} from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -62,6 +68,8 @@ function SignupForm({ user, token }) {
 
   // Watch form values to track validity
   const watchedFields = watch(['username', 'password'])
+  const tosAccepted = watch('tos')
+  const cocAccepted = watch('coc')
 
   const onSubmit = async (values) => {
     // Double-check that there are no form errors before proceeding
@@ -190,21 +198,81 @@ function SignupForm({ user, token }) {
                 id="password"
                 type="password"
                 error={errors.password}
-                helperText={errors.password && errors.password.message}
-              />
-            </Grid>
+              helperText={errors.password && errors.password.message}
+            />
           </Grid>
-        </CardBody>
+        </Grid>
+        <FormControlLabel
+          control={(
+            <Checkbox
+              color="default"
+              style={{ color: 'gray' }}
+              name="tos"
+              inputRef={register({ required: true })}
+            />
+          )}
+          label={(
+            <Typography variant="body2">
+              I agree to the
+              {' '}
+              <Link
+                href="/quote_vote_terms_of_service.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classes.link}
+                underline="always"
+              >
+                Terms of Service
+              </Link>
+            </Typography>
+          )}
+        />
+        {errors.tos && (
+          <Typography color="error" variant="caption">
+            Acceptance required
+          </Typography>
+        )}
+        <FormControlLabel
+          control={(
+            <Checkbox
+              color="default"
+              style={{ color: 'gray' }}
+              name="coc"
+              inputRef={register({ required: true })}
+            />
+          )}
+          label={(
+            <Typography variant="body2">
+              I agree to the
+              {' '}
+              <Link
+                href="/quote_vote_code_of_conduct.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classes.link}
+                underline="always"
+              >
+                Code of Conduct
+              </Link>
+            </Typography>
+          )}
+        />
+        {errors.coc && (
+          <Typography color="error" variant="caption">
+            Acceptance required
+          </Typography>
+        )}
+      </CardBody>
 
-        <CardActions>
-          <Button
-            className={classes.submitButton}
+      <CardActions>
+        <Button
+          className={classes.submitButton}
             color="secondary"
             variant="contained"
             fullWidth
             type="submit"
-            disabled={loading || !isFormValid}
-            size={"small"}
+          disabled={loading || !isFormValid || !tosAccepted || !cocAccepted}
+          size={"small"}
           >
             <Typography variant="body1">
               Submit
