@@ -149,7 +149,8 @@ function LoginForm({ onSubmit = () => {}, loading, loginError }) {
       <FormControlLabel
         control={(
           <Checkbox
-            color="primary"
+            color="default"
+            style={{ color: 'gray' }}
             name="tos"
             inputRef={register({ required: true })}
           />
@@ -158,7 +159,13 @@ function LoginForm({ onSubmit = () => {}, loading, loginError }) {
           <Typography variant="body2">
             I agree to the
             {' '}
-            <Link href="/quote_vote_terms_of_service.md" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="/quote_vote_terms_of_service.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.link}
+              underline="always"
+            >
               Terms of Service
             </Link>
           </Typography>
@@ -172,7 +179,8 @@ function LoginForm({ onSubmit = () => {}, loading, loginError }) {
       <FormControlLabel
         control={(
           <Checkbox
-            color="primary"
+            color="default"
+            style={{ color: 'gray' }}
             name="coc"
             inputRef={register({ required: true })}
           />
@@ -181,7 +189,13 @@ function LoginForm({ onSubmit = () => {}, loading, loginError }) {
           <Typography variant="body2">
             I agree to the
             {' '}
-            <Link href="/quote_vote_code_of_conduct.md" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="/quote_vote_code_of_conduct.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.link}
+              underline="always"
+            >
               Code of Conduct
             </Link>
           </Typography>
