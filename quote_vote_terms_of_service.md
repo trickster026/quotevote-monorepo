@@ -1,5 +1,5 @@
 ## Quote.Vote Terms of Service
-*Effective Date: [Insert Date]*
+*Effective Date: [06.13.25]*
 
 Welcome to **Quote.Vote**, a nonprofit civic platform dedicated to public dialogue through shared text, voting, and commentary. These Terms of Service (“Terms”) govern your access to and use of our platform, which is operated by a single steward of the open-source codebase. Quote.Vote is hosted at https://quote.vote.
 
