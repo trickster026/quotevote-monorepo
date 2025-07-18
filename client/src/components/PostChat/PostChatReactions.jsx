@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { InsertEmoticon } from '@material-ui/icons'
 import { useSelector } from 'react-redux'
 import { useMutation } from '@apollo/react-hooks'
+import { useHistory } from 'react-router-dom'
 import { Picker } from 'emoji-mart'
 import Emoji from 'a11y-react-emoji'
 import _ from 'lodash'
@@ -24,6 +25,27 @@ const useStyles = makeStyles(() => ({
   },
   time: {
     paddingRight: 10,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  userName: {
+    fontSize: '1rem',
+    color: '#666',
+    fontFamily: 'Roboto',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
+  userNameReverse: {
+    fontSize: '1rem',
+    color: '#ffffff',
+    fontFamily: 'Roboto',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
   },
   emoji: {
     padding: 3,
@@ -50,10 +72,11 @@ const useStyles = makeStyles(() => ({
 function PostChatReactions(props) {
   const userId = useSelector((state) => state.user.data._id)
   const classes = useStyles()
+  const history = useHistory()
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const {
-    created, messageId, reactions, isDefaultDirection,
+    created, messageId, reactions, isDefaultDirection, userName, username,
   } = props
   const parsedTime = parseCommentDate(created)
   const ensureAuth = useGuestGuard()
@@ -119,6 +142,10 @@ function PostChatReactions(props) {
     setOpen(false)
   }, [userId, messageId, userReaction, updateReaction, addReaction, ensureAuth])
 
+  const handleRedirectToProfile = () => {
+    history.push(`/Profile/${username}`)
+  }
+
   const emojiElements = []
 
   Object.keys(groupedReactions).map((emoji, _id) => emojiElements.push(
@@ -136,6 +163,12 @@ function PostChatReactions(props) {
       alignItems="center"
     >
       <Grid item className={classes.time}>
+        <Typography
+          className={isDefaultDirection ? classes.userName : classes.userNameReverse}
+          onClick={handleRedirectToProfile}
+        >
+          {userName}
+        </Typography>
         <Typography>{parsedTime}</Typography>
       </Grid>
       <Grid item className={classes.container}>
@@ -172,6 +205,8 @@ PostChatReactions.propTypes = {
   messageId: PropTypes.string,
   reactions: PropTypes.array,
   isDefaultDirection: PropTypes.bool,
+  userName: PropTypes.string,
+  username: PropTypes.string,
 }
 
 export default PostChatReactions

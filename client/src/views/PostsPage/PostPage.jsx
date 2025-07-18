@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, useMediaQuery } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery, useSubscription } from '@apollo/react-hooks';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { Redirect } from 'react-router-dom';
 import Post from '../../components/Post/Post';
@@ -23,19 +23,63 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '100vh',
     overflow: 'hidden',
     marginTop: 0,
+    display: 'flex',
+    flexDirection: 'column',
   },
   desktopContainer: {
+    height: '100vh',
+    maxHeight: '100vh',
+    overflow: 'hidden',
     marginTop: 10,
   },
   mobilePostSection: {
-    height: '50vh',
+    flex: '0 0 auto',
+    maxHeight: '40vh',
+    overflow: 'auto',
+    padding: theme.spacing(2),
+  },
+  desktopPostSection: {
+    height: '100%',
     overflow: 'auto',
     padding: theme.spacing(2),
   },
   mobileInteractionSection: {
-    height: '50vh',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0, // Important for flex child
+    position: 'relative',
+  },
+  mobileMessagesContainer: {
+    flex: 1,
     overflow: 'auto',
     padding: theme.spacing(2),
+    // Add bottom padding to account for fixed chat input
+    paddingBottom: theme.spacing(8), // Adjust based on chat input height
+  },
+  mobileChatInputContainer: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    backgroundColor: theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    boxShadow: '0 -2px 10px rgba(0,0,0,0.1)',
+  },
+  desktopInteractionSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  desktopMessagesContainer: {
+    flex: 1,
+    overflow: 'auto',
+    marginBottom: theme.spacing(2),
+  },
+  desktopChatInputContainer: {
+    flexShrink: 0,
+    padding: 0,
   },
   emptyPost: {
     marginTop: 100,
@@ -54,12 +98,13 @@ function PostPage({ postId }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [postHeight, setPostHeight] = useState()
+  const dispatch = useDispatch()
 
   const idSelector = useSelector((state) => state.ui.selectedPost.id)
   const user = useSelector((state) => state.user.data)
 
   // Check if user is authenticated
-  const isAuthenticated = user && user._id && tokenValidator()
+  const isAuthenticated = user && user._id && tokenValidator(dispatch)
 
   const {
     loading: loadingPost,
@@ -175,7 +220,7 @@ function PostPage({ postId }) {
         xs={12} 
         md={isAuthenticated ? 6 : 12} // Full width for guests
         id="post"
-        className={isMobile ? classes.mobilePostSection : ''}
+        className={isMobile ? classes.mobilePostSection : classes.desktopPostSection}
       >
         {loadingPost ? (
           <PostSkeleton />
@@ -196,14 +241,18 @@ function PostPage({ postId }) {
           item 
           xs={12} 
           md={6}
-          className={isMobile ? classes.mobileInteractionSection : ''}
+          className={isMobile ? classes.mobileInteractionSection : classes.desktopInteractionSection}
         >
-          <PostChatSend messageRoomId={messageRoomId} title={title} />
-          <PostActionList
-            loading={loadingPost}
-            postActions={postActions}
-            postUrl={url}
-          />
+          <div className={isMobile ? classes.mobileMessagesContainer : classes.desktopMessagesContainer}>
+            <PostActionList
+              loading={loadingPost}
+              postActions={postActions}
+              postUrl={url}
+            />
+          </div>
+          <div className={isMobile ? classes.mobileChatInputContainer : classes.desktopChatInputContainer}>
+            <PostChatSend messageRoomId={messageRoomId} title={title} />
+          </div>
         </Grid>
       )}
     </Grid>
