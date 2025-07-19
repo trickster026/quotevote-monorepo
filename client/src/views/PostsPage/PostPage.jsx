@@ -141,12 +141,12 @@ function PostPage({ postId }) {
     data: messageData,
     refetch: refetchMessages,
   } = useQuery(GET_ROOM_MESSAGES, {
-    skip: !messageRoomId || !isAuthenticated, // Skip for guests
+    skip: !messageRoomId, // Allow all users (including guests) to see messages
     variables: { messageRoomId },
   })
 
   useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
-    skip: !messageRoomId || !isAuthenticated, // Skip for guests
+    skip: !messageRoomId, // Allow all users (including guests) to see new messages
     variables: { messageRoomId },
     onSubscriptionData: async () => {
       await refetchMessages()
@@ -191,8 +191,8 @@ function PostPage({ postId }) {
       postActions = postActions.concat(quotes)
     }
 
-    // Only include messages for authenticated users
-    if (isAuthenticated && !isEmpty(messages)) {
+    // Include messages for all users (guests can view but not interact)
+    if (!isEmpty(messages)) {
       postActions = postActions.concat(messages)
     }
 
@@ -218,7 +218,7 @@ function PostPage({ postId }) {
       <Grid 
         item 
         xs={12} 
-        md={isAuthenticated ? 6 : 12} // Full width for guests
+        md={6} // Always use 6 columns for post section
         id="post"
         className={isMobile ? classes.mobilePostSection : classes.desktopPostSection}
       >
@@ -235,8 +235,7 @@ function PostPage({ postId }) {
           />
         )}
       </Grid>
-      {/* Only show interaction section for authenticated users */}
-      {isAuthenticated && (
+      {/* Show interaction section for all users (guests can view but not interact) */}
         <Grid 
           item 
           xs={12} 
@@ -254,7 +253,6 @@ function PostPage({ postId }) {
             <PostChatSend messageRoomId={messageRoomId} title={title} />
           </div>
         </Grid>
-      )}
     </Grid>
   )
 }
