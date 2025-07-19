@@ -19,7 +19,7 @@ export const reportPost = () => {
             reported: (post.reported || 0) + 1,
             reportedBy: post.reportedBy.concat([args.userId]),
           },
-        }
+        },
       );
     } catch (err) {
       throw new Error(`Reporting Post: ${err}`);
@@ -28,5 +28,4 @@ export const reportPost = () => {
 
     return updatedPost;
   };
-
 };

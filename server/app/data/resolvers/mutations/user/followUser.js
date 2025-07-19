@@ -1,8 +1,7 @@
+import __ from 'lodash';
 import UserModel from '../../models/UserModel';
 import NotificationsModel from '../../models/NotificationModel';
 import { addNotification } from '~/resolvers/utils/notifications/addNotification';
-import __ from 'lodash'
-
 
 export const followUser = (pubsub) => {
   return async (_, args, context) => {
@@ -21,7 +20,7 @@ export const followUser = (pubsub) => {
 
       if (followAction === args.action) {
         console.log('Following...');
-        const ObjectId = require('mongodb').ObjectId;
+        const { ObjectId } = require('mongodb');
         const followerUserObjectId = new ObjectId(followingUserId);
         if (!userData._followingId.includes(followerUserObjectId)) {
           console.log('Inserting user to userData._followingId');
@@ -36,9 +35,9 @@ export const followUser = (pubsub) => {
 
         // Prevent duplicate 'following' notification.
         const beenFollowed = await NotificationsModel.findOne({
-          userId: userId,
+          userId,
           entityId: followingUserId,
-          notificationType: 'FOLLOW'
+          notificationType: 'FOLLOW',
         });
         if (!beenFollowed) {
           await addNotification({
@@ -59,11 +58,11 @@ export const followUser = (pubsub) => {
 
       await UserModel.updateOne({ _id: userId }, userData, {
         upsert: true,
-        new: true
+        new: true,
       });
       await UserModel.updateOne({ _id: followingUserId }, followingUserData, {
         upsert: true,
-        new: true
+        new: true,
       });
       return userData;
     } catch (err) {

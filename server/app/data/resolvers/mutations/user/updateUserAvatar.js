@@ -3,11 +3,11 @@ import UserModel from '../../models/UserModel';
 export const updateUserAvatar = (pubsub) => {
   return async (_, args) => {
     console.log('updateUserAvatar called args=>', args);
-    const { user_id, avatarQualities } = args
+    const { user_id, avatarQualities } = args;
     //  Update user
 
     const conditions = {
-      _id : user_id,
+      _id: user_id,
     };
     const update = {
       avatar: avatarQualities,

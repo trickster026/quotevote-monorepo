@@ -17,7 +17,6 @@ export const getUserVoteLogs = () => {
         user = await UserModel.findOne({ _id: userId });
       }
 
-
       // Check user
       const b = Object.is(user, null);
       if (b) {

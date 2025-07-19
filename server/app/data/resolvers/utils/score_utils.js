@@ -1,10 +1,10 @@
 import chalk from 'chalk';
+import Promise from 'promise';
 import VotesModel from '../models/VoteModel';
 import ArtistsModel from '../models/Artists';
 import UsersModel from '../models/UserModel';
-import Promise from 'promise';
 
-const filters = args => {
+const filters = (args) => {
   const filter = {};
   if (args.user_id) filter._userId = args.user_id;
   if (args.song_id) filter._songId = args.song_id;
@@ -18,12 +18,12 @@ const reducer = (bucket, currentValue) => {
   return bucket + currentValue.tokens * polar;
 };
 
-export const scoreUtil = async args => {
+export const scoreUtil = async (args) => {
   const songs = await VotesModel.find({ ...filters(args) });
   return songs.reduce(reducer, 0);
 };
 
-export const voteTypeUtil = async args => {
+export const voteTypeUtil = async (args) => {
   const votes = await VotesModel.find({
     ...filters(args),
     isUpvote: args.vote_type,
@@ -31,7 +31,7 @@ export const voteTypeUtil = async args => {
   return votes.reduce(reducer, 0);
 };
 
-export const scoreBySong = pubsub => {
+export const scoreBySong = (pubsub) => {
   return async (_, args) => {
     console.log(chalk.bgYellow(chalk.black('Function: scoreBySong')));
 
@@ -45,7 +45,7 @@ export const scoreBySong = pubsub => {
   };
 };
 
-export const score = pubsub => {
+export const score = (pubsub) => {
   return async (_, args) => {
     console.log(chalk.bgYellow(chalk.black('Function: scoreBySong')));
 
@@ -58,7 +58,7 @@ export const score = pubsub => {
   };
 };
 
-export const upvotes = pubsub => {
+export const upvotes = (pubsub) => {
   return async (_, args) => {
     console.log(chalk.bgYellow(chalk.black('Function: upvotes')));
 
@@ -67,7 +67,7 @@ export const upvotes = pubsub => {
   };
 };
 
-export const downvotes = pubsub => {
+export const downvotes = (pubsub) => {
   return async (_, args) => {
     console.log(chalk.bgYellow(chalk.black('Function: downvotes')));
 
@@ -76,14 +76,14 @@ export const downvotes = pubsub => {
   };
 };
 
-export const topArtists = pubsub => {
+export const topArtists = (pubsub) => {
   return async (_, args) => {
-    const limit = args.limit;
+    const { limit } = args;
     const artists = await ArtistsModel.find({});
 
-    const artistsIds = artists.map(artist => artist.artistId);
+    const artistsIds = artists.map((artist) => artist.artistId);
 
-    const scoresList = await Promise.all(artistsIds.map(async id => {
+    const scoresList = await Promise.all(artistsIds.map(async (id) => {
       const ownedVotes = await VotesModel.find({ _artistId: id });
       const totalScore = ownedVotes.reduce(reducer, 0);
 
@@ -102,13 +102,13 @@ export const topArtists = pubsub => {
   };
 };
 
-export const topUsers = pubsub => {
+export const topUsers = (pubsub) => {
   return async (_, args) => {
-    const limit = args.limit;
+    const { limit } = args;
     const users = await UsersModel.find({});
-    const usersIds = users.map(user => user._id);
+    const usersIds = users.map((user) => user._id);
 
-    const userVoteCounts = await Promise.all(usersIds.map(async id => {
+    const userVoteCounts = await Promise.all(usersIds.map(async (id) => {
       const userVotes = await VotesModel.find({ _userId: id });
       const score = userVotes.reduce(reducer, 0);
 

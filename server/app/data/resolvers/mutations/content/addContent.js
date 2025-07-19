@@ -1,14 +1,14 @@
-import { logger } from '../../../utils/logger';
 import crypto from 'crypto';
+import { isEmpty, uniq } from 'lodash';
+import { logger } from '../../../utils/logger';
 import ContentsModel from '../../models/ContentModel';
 import UserModel from '../../models/UserModel';
 import DomainsModel from '../../models/DomainModel';
-import { isEmpty, uniq } from 'lodash';
 import NotificationsModel from '../../models/NotificationModel';
 import { NOTIFICATION_CREATED } from '../../../utils/constants';
 import { logActivity } from '../../utils/activities_utils';
 
-export const addContent = pubsub => {
+export const addContent = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: add content');
     const newContent = {
@@ -26,12 +26,12 @@ export const addContent = pubsub => {
       const contentDomain = await DomainsModel.findOne({ _id: content.domainId });
       const followers = uniq(
         contentCreator._followersId.map(
-          followers => followers.toString().trim()
-        )
+          (followers) => followers.toString().trim(),
+        ),
       );
       if (!isEmpty(followers)) {
-        followers.forEach(async follower => {
-          const ObjectId = require('mongodb').ObjectId;
+        followers.forEach(async (follower) => {
+          const { ObjectId } = require('mongodb');
           const userId = new ObjectId(follower);
           const postNotifAdded = await new NotificationsModel({
             userId,
@@ -46,7 +46,7 @@ export const addContent = pubsub => {
           if (postNotifAdded) {
             const notify = await NotificationsModel.find({ userId });
             const notificationCreated = [];
-            notify.forEach(item => {
+            notify.forEach((item) => {
               const notification = {
                 _id: item._id,
                 userId: item.userId,

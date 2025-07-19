@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import DomainsModel from '../../models/DomainModel';
 
-export const acceptUserToBoard = pubsub => {
+export const acceptUserToBoard = (pubsub) => {
   return async (_, args, context) => {
     logger.info('Function: acceptUserToBoard');
 
@@ -9,7 +9,7 @@ export const acceptUserToBoard = pubsub => {
       const domain = await DomainsModel.findById(args.domainId);
       const allowedUserIds = [...domain.allowedUserIds, args.userId];
       const userIndex = domain.pendingUserIds.findIndex(
-        id => id === args.userId
+        (id) => id === args.userId,
       );
       const pendingUserIds = [...domain.pendingUserIds];
       pendingUserIds.splice(userIndex, 1);
@@ -20,7 +20,7 @@ export const acceptUserToBoard = pubsub => {
           allowedUserIds,
           pendingUserIds,
         },
-        { new: true }
+        { new: true },
       );
     } catch (err) {
       throw new Error(err);

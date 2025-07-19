@@ -1,7 +1,7 @@
 import ReactionModel from '../../models/ReactionModel';
 import { USER_REACTION } from '../../../utils/constants';
 
-export const deleteUserReaction = pubsub => {
+export const deleteUserReaction = (pubsub) => {
   return async (_, args, context) => {
     console.log('[MUTATION] deleteUserReaction');
     try {

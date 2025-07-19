@@ -180,17 +180,17 @@ export const getFeaturedPosts = () => {
 
     // Optimize creator population using aggregation instead of N+1 queries
     if (featuredPosts.length > 0) {
-      const userIds = featuredPosts.map(post => post.userId || post.userId);
+      const userIds = featuredPosts.map((post) => post.userId || post.userId);
       const uniqueUserIds = [...new Set(userIds)];
 
       // Fetch all creators in one query
       const creators = await UserModel.find({
-        _id: { $in: uniqueUserIds }
+        _id: { $in: uniqueUserIds },
       }).select('_id name username avatar');
 
       // Create a map for fast lookup
       const creatorMap = new Map();
-      creators.forEach(creator => {
+      creators.forEach((creator) => {
         creatorMap.set(creator._id.toString(), creator);
       });
 
@@ -198,7 +198,7 @@ export const getFeaturedPosts = () => {
       const postsWithCreator = featuredPosts.map((post) => {
         const postObj = post.toObject ? post.toObject() : post;
         const creator = creatorMap.get((post.userId || post.userId).toString());
-        
+
         return {
           ...postObj,
           creator: creator

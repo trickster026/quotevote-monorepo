@@ -11,19 +11,19 @@ export const postRelationship = () => {
       const result = await findUserById()(root, { user_id: userId });
       return result;
     },
-    async comments(post){
+    async comments(post) {
       const comments = await CommentModel.find({ postId: post._id });
-      return comments
+      return comments;
     },
-    async votes(post){
+    async votes(post) {
       const votes = await VoteModel.find({ postId: post._id });
-      return votes
+      return votes;
     },
-    async quotes(post){
+    async quotes(post) {
       const quotes = await QuoteModel.find({ postId: post._id });
-      return quotes
+      return quotes;
     },
-    async messageRoom(post){
+    async messageRoom(post) {
       const messageRoom = await MessageRoomModel.findOne({ postId: post._id });
       return messageRoom;
     },

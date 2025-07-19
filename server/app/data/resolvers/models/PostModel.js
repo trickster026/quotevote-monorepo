@@ -23,7 +23,7 @@ const schema = mongoose.Schema({
   },
   bookmarkedBy: {
     type: Array,
-    required: false
+    required: false,
   },
   rejectedBy: {
     type: Array,
@@ -63,11 +63,11 @@ const schema = mongoose.Schema({
   },
   dayPoints: {
     type: Number,
-    default: 0
+    default: 0,
   },
   pointTimestamp: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   featuredSlot: {
     type: Number,
@@ -92,7 +92,7 @@ const schema = mongoose.Schema({
   enable_voting: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 schema.index({ title: 'text', text: 'text' });

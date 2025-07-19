@@ -1,7 +1,7 @@
 import CommentsModel from '../../models/CommentModel';
 import ContentsModel from '../../models/ContentModel';
 
-export const getComments = pubsub => {
+export const getComments = (pubsub) => {
   return async (_, args, context) => {
     const comments = await CommentsModel.find({ ...args });
     const commentWithContentDetails = await Promise.all(
@@ -36,7 +36,7 @@ export const getComments = pubsub => {
             },
           };
         }
-      })
+      }),
     );
     return commentWithContentDetails;
   };

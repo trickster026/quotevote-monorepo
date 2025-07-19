@@ -28,30 +28,30 @@ logger.info('Database', process.env.DATABASE_URL);
 
 mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 
 const app = express();
 
 // ✅ GLOBAL CORS middleware
 app.use(cors({
-  origin: function (origin, callback) {
+  origin(origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     const allowedOrigins = [
       'http://localhost:3000',
       'https://www.quote.vote',
       'https://quote.vote',
     ];
-    
+
     // Check if origin matches allowed origins or patterns
-    if (allowedOrigins.includes(origin) || 
-        /\.netlify\.app$/.test(origin) || 
-        /\.quote\.vote$/.test(origin)) {
+    if (allowedOrigins.includes(origin)
+        || /\.netlify\.app$/.test(origin)
+        || /\.quote\.vote$/.test(origin)) {
       return callback(null, true);
     }
-    
+
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -131,7 +131,7 @@ const server = new ApolloServer({
 
 async function startServer() {
   await server.start();
-  
+
   // Apply Apollo Server middleware with explicit CORS handling
   server.applyMiddleware({
     app,
@@ -140,7 +140,7 @@ async function startServer() {
   });
 
   const httpServer = createServer(app);
-  
+
   // Apollo Server v3 handles subscriptions automatically when using applyMiddleware
   // No need for installSubscriptionHandlers
 

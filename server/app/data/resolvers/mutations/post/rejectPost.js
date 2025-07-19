@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import PostModel from '../../models/PostModel';
 
-export const rejectPost = pubsub => {
+export const rejectPost = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: reject post');
     const post = await PostModel.findOne({ _id: args.postId });
@@ -10,7 +10,7 @@ export const rejectPost = pubsub => {
       let newRejectedBy;
       if (args.remove) {
         newRejectedBy = post.rejectedBy.filter(
-          userId => userId.toString() !== args.userId.toString()
+          (userId) => userId.toString() !== args.userId.toString(),
         );
       } else {
         // Only add if not already present
@@ -24,10 +24,10 @@ export const rejectPost = pubsub => {
           $set: {
             rejectedBy: newRejectedBy,
             approvedBy: post.approvedBy.filter(
-              userId => userId.toString() !== args.userId.toString()
+              (userId) => userId.toString() !== args.userId.toString(),
             ),
           },
-        }
+        },
       );
     } catch (err) {
       throw new Error(`Rejecting Post: ${err}`);

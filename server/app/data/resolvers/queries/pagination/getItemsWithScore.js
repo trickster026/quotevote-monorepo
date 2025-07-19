@@ -2,7 +2,7 @@ import VotesModal from '../../models/VoteModel';
 
 export const getItemsWithScore = async (items, typeId) => {
   const itemsWithScore = await Promise.all(
-    items.map(async item => {
+    items.map(async (item) => {
       const upvotes = await VotesModal.find({
         [typeId]: item._id,
         type: 'upvote',
@@ -15,9 +15,9 @@ export const getItemsWithScore = async (items, typeId) => {
         ...item,
         scoreDetails: { upvotes: upvotes.length, downvotes: downvotes.length },
       };
-    })
+    }),
   );
-  return itemsWithScore.map(item => ({
+  return itemsWithScore.map((item) => ({
     ...item._doc,
     scoreDetails: item.scoreDetails,
   }));

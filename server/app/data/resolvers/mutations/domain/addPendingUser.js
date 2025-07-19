@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import DomainsModel from '../../models/DomainModel';
 
-export const addPendingUser = pubsub => {
+export const addPendingUser = (pubsub) => {
   return async (_, args, context) => {
     logger.info('Function: addPendingUser');
 
@@ -11,7 +11,7 @@ export const addPendingUser = pubsub => {
       return await DomainsModel.findByIdAndUpdate(
         args.domainId,
         { pendingUserIds },
-        { new: true }
+        { new: true },
       );
     } catch (err) {
       throw new Error(err);

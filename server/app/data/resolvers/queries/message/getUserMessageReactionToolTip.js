@@ -1,6 +1,6 @@
 import ReactionModel from '../../models/ReactionModel';
 
-export const getUserMessageReactionToolTip = pubsub => {
+export const getUserMessageReactionToolTip = (pubsub) => {
   return async (_, args, context) => {
     const { reactionId, messageId } = args;
     if (!reactionId || !messageId) {

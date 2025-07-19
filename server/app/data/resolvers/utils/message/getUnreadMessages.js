@@ -5,7 +5,7 @@ export const getUnreadMessages = async (messageRoomId, context) => {
   const unReadMessages = await MessageModel.find({
     messageRoomId,
     userId: { $ne: userId },
-    readBy: { $nin: userId }
+    readBy: { $nin: userId },
   });
   return unReadMessages;
 };

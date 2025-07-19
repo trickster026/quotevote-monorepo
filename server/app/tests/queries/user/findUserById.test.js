@@ -21,7 +21,6 @@ const userData = {
   ],
 };
 
-
 describe('Queries > user > findUserById', () => {
   let usersModelStub;
   let votesModelStub;

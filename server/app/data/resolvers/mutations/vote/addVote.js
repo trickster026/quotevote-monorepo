@@ -5,19 +5,19 @@ import { updateScore } from './updateScore';
 import { logActivity } from '../../utils/activities_utils';
 import { addNotification } from '~/resolvers/utils/notifications/addNotification';
 
-export const addVote = pubsub => {
+export const addVote = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: add vote');
     const voteData = {
       ...args.vote,
-      created: new Date()
+      created: new Date(),
     };
 
     try {
       // Check if user has already voted on this post
       const existingVote = await VoteModel.findOne({
         postId: voteData.postId,
-        userId: voteData.userId
+        userId: voteData.userId,
       });
 
       if (existingVote) {
@@ -32,9 +32,9 @@ export const addVote = pubsub => {
         {
           postId: vote.postId,
           userId: vote.userId,
-          voteId: vote._id
+          voteId: vote._id,
         },
-        `${vote.type === 'up' ? 'Upvoted' : 'Downvoted'} '${post.title}' post.`
+        `${vote.type === 'up' ? 'Upvoted' : 'Downvoted'} '${post.title}' post.`,
       );
 
       await addNotification({

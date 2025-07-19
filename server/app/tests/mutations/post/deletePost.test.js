@@ -54,4 +54,3 @@ describe('Queries > post > getPost with deleted post', () => {
     sinon.assert.calledWith(res.status, 404);
   });
 });
-

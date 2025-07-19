@@ -23,7 +23,7 @@ const schema = mongoose.Schema({
   readBy: {
     type: [mongoose.Schema.Types.ObjectId],
     required: true,
-  }
+  },
 });
 
 export default mongoose.model('Messages', schema);

@@ -4,7 +4,7 @@ export const addActionReactions = () => {
   return async (_, args, context) => {
     console.log('[MUTATION] addReaction', args);
     try {
-      const user = context.user;
+      const { user } = context;
       const addReaction = await new ReactionModel({
         emoji: args.reaction.emoji,
         actionId: args.reaction.actionId,

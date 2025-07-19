@@ -6,7 +6,7 @@ export const toggleVoting = () => {
     logger.info('Function: toggle voting');
     const { postId } = args;
     const { user } = context;
-    
+
     if (!user) {
       throw new Error('Authentication required');
     }
@@ -25,7 +25,7 @@ export const toggleVoting = () => {
       const newVotingState = !post.enable_voting;
       await PostModel.updateOne(
         { _id: postId },
-        { $set: { enable_voting: newVotingState } }
+        { $set: { enable_voting: newVotingState } },
       );
     } catch (err) {
       throw new Error(`Toggling voting: ${err}`);
@@ -34,4 +34,4 @@ export const toggleVoting = () => {
     const updatedPost = await PostModel.findOne({ _id: postId });
     return updatedPost;
   };
-}; 
+};

@@ -22,7 +22,7 @@ export const updateTrending = async (postId) => {
           pointTimestamp: new Date(),
           dayPoints: 1,
         },
-      }
+      },
     );
   } else {
     // increment dayPoint by 1 and update pointTimestamp using currentDate
@@ -33,7 +33,7 @@ export const updateTrending = async (postId) => {
           pointTimestamp: new Date(),
           dayPoints: post.dayPoints + 1,
         },
-      }
+      },
     );
   }
 

@@ -15,7 +15,7 @@ const PUBLIC_QUERIES = [
 
 const requireAuth = (query) => {
   let requireAuth = true;
-  for (let publicQuery of PUBLIC_QUERIES) {
+  for (const publicQuery of PUBLIC_QUERIES) {
     const isFound = query.includes(publicQuery);
     if (isFound) {
       requireAuth = false;

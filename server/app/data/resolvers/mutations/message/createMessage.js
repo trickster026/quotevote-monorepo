@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server-express';
 import UserModel from '../../models/UserModel';
 import MessageModel from '~/resolvers/models/MessageModel';
 import { createUserMessageRoom } from '~/resolvers/mutations/message/createUserMessageRoom';
@@ -5,14 +6,15 @@ import { createPostMessageRoom } from '~/resolvers/mutations/message/createPostM
 import { pubsub } from '~/resolvers/subscriptions';
 import { MUTATION_CREATED } from '~/resolvers/constants/common';
 import MessageRoomModel from '~/resolvers/models/MessageRoomModel';
-import { UserInputError } from 'apollo-server-express';
 
 // eslint-disable-next-line import/prefer-default-export
 export const createMessage = () => {
   return async (_, args, context) => {
     console.log('[MUTATION] createMessage');
 
-    let { type, text, title, messageRoomId, componentId } = args.message;
+    let {
+      type, text, title, messageRoomId, componentId,
+    } = args.message;
 
     const { user } = context;
     const userDetails = await UserModel.findById(user._id);
@@ -42,7 +44,6 @@ export const createMessage = () => {
       });
     }
 
-
     // eslint-disable-next-line no-underscore-dangle
     messageRoomId = messageRoom._id;
     const userMessage = await new MessageModel({
@@ -64,7 +65,7 @@ export const createMessage = () => {
       text: userMessage.text,
       type,
       created: userMessage.created,
-      mutation_type: MUTATION_CREATED
+      mutation_type: MUTATION_CREATED,
     };
     await pubsub.publish('messageEvent', { message });
     return message;

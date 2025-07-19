@@ -22,7 +22,7 @@ const schema = mongoose.Schema({
   status: {
     type: String,
     required: false,
-    default: "new",
+    default: 'new',
   },
   created: {
     type: Date,

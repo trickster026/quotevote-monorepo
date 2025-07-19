@@ -1,10 +1,12 @@
 import ActivityModel from '../../models/ActivityModel';
 import UserModel from '~/resolvers/models/UserModel';
 
-export const getUserActivities = pubsub => {
+export const getUserActivities = (pubsub) => {
   return async (_, args, context) => {
     console.log('Function: activities', args);
-    let { limit, offset, searchKey, startDateRange, endDateRange, activityEvent, user_id } = args;
+    let {
+      limit, offset, searchKey, startDateRange, endDateRange, activityEvent, user_id,
+    } = args;
     //  Will need to provide date arguments as well
     const searchArgs = searchKey ? {
       $text: {
@@ -29,9 +31,8 @@ export const getUserActivities = pubsub => {
       const followingIds = userDetails._followingId;
       console.log({ followingIds });
       searchArgs.userId = {
-        $in: followingIds
+        $in: followingIds,
       };
-
     }
 
     if (startDateRange && endDateRange) {
@@ -54,8 +55,8 @@ export const getUserActivities = pubsub => {
       pagination: {
         total_count: total,
         limit,
-        offset
-      }
+        offset,
+      },
     };
   };
 };
