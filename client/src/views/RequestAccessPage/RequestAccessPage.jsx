@@ -118,20 +118,17 @@ export default function RequestAccessPage() {
           {/* Show explanatory message if user was redirected from a contribution action */}
           {wasRedirected && (
             <Grid item xs={12}>
-              <Typography
-                variant="body1"
-                style={{
-                  textAlign: 'center',
-                  color: '#fff',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  padding: '16px',
-                  borderRadius: '8px',
-                  marginBottom: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                }}
-              >
-                You need an account to contribute. Viewing is public, but posting, voting, and quoting require an invite.
-              </Typography>
+              <div className={classes.overlayContainer} style={{marginBottom: 16}}>
+                <div className={classes.overlay} />
+                <div className={classes.overlayContent}>
+                  <Typography
+                    variant="body1"
+                    style={{ textAlign: 'center', color: '#fff' }}
+                  >
+                    You need an account to contribute. Viewing is public, but posting, voting, and quoting require an invite.
+                  </Typography>
+                </div>
+              </div>
             </Grid>
           )}
           <Grid item xs={12}>
