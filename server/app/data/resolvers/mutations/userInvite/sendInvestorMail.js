@@ -16,7 +16,7 @@ export const sendInvestorMail = (pubsub) => {
         name: tempName, // temporary
         email,
         status: 1, // prospect,
-        plan: 'investor'
+        plan: 'investor',
       };
       user = await new UserModel(userArgs).save();
     }
@@ -34,7 +34,7 @@ export const sendInvestorMail = (pubsub) => {
     if (sendMailResult) {
       console.log(`SUCCESS: User invite sent successfully to ${email}.`);
     } else {
-      console.log(`FAILURE: Mail transporter failed to return a response`);
+      console.log('FAILURE: Mail transporter failed to return a response');
     }
 
     return user || existingUser;

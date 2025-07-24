@@ -1,11 +1,11 @@
 import MessageRoomModel from '../../models/MessageRoomModel';
 
-export const getBookmarkedContents = pubsub => {
+export const getBookmarkedContents = (pubsub) => {
   return async (_, args, context) => {
     try {
       const messageType = 'CONTENT';
       const userId = context.user._id;
-      const ObjectId = require('mongodb').ObjectId;
+      const { ObjectId } = require('mongodb');
       const userObjectId = new ObjectId(userId);
       const bookmarkedMessageRooms = await MessageRoomModel.find({
         messageType,

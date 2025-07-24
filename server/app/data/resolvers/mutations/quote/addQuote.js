@@ -4,7 +4,7 @@ import { logActivity } from '../../utils/activities_utils';
 import { logger } from '../../../utils/logger';
 import { updateTrending } from '../../utils/post_utils';
 
-export const addQuote = pubsub => {
+export const addQuote = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: addQuote');
     const quoteData = { ...args.quote, created: new Date() };
@@ -16,7 +16,7 @@ export const addQuote = pubsub => {
       await logActivity(
         'QUOTED',
         { userId: quote.quoter, postId: quote.postId, quoteId: quote._id },
-        `Quoted on '${post.title}' post.`
+        `Quoted on '${post.title}' post.`,
       );
       return quote;
     } catch (err) {

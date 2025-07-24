@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
+
 export const sendEmail = async function (options) {
-  console.log(options)
+  console.log(options);
   console.log('Sending email: host %s smtp %s', process.env.SMTP_HOST, process.env.SMTP_USER);
 
   const smtpConfig = {
@@ -15,7 +16,7 @@ export const sendEmail = async function (options) {
     },
   };
 
-  console.log(smtpConfig.host)
+  console.log(smtpConfig.host);
 
   const transporter = nodemailer.createTransport(smtpConfig);
   const transportResponse = await transporter.sendMail(options);

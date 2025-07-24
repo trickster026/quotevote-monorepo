@@ -1,20 +1,20 @@
-import UserModel from '../../models/UserModel'
-import { logger } from '../../../utils/logger'
-import { UserInputError } from 'apollo-server-express'
-import { addCreatorToUser } from '~/utils/authentication'
+import { UserInputError } from 'apollo-server-express';
+import UserModel from '../../models/UserModel';
+import { logger } from '../../../utils/logger';
+import { addCreatorToUser } from '~/utils/authentication';
 import sendGridEmail, {
   SENGRID_TEMPLATE_IDS,
-} from '../../../utils/send-grid-mail'
+} from '../../../utils/send-grid-mail';
 
 export const sendPasswordResetEmail = (pubsub) => {
   return async (_, args) => {
     try {
-      const { email } = args
-      const user = await UserModel.findOne({ email })
+      const { email } = args;
+      const user = await UserModel.findOne({ email });
       if (user) {
         //  ***   Send the email   ***
-        const { username } = user
-        const expiresIn = 60 * 60 // seconds * minutes
+        const { username } = user;
+        const expiresIn = 60 * 60; // seconds * minutes
         const token = await addCreatorToUser(
           {
             username,
@@ -25,8 +25,8 @@ export const sendPasswordResetEmail = (pubsub) => {
           false,
           expiresIn,
           true,
-        )
-        const clientUrl = process.env.CLIENT_URL
+        );
+        const clientUrl = process.env.CLIENT_URL;
         const mailOptions = {
           to: email,
           from: `Team Quote.Vote <${process.env.SENDGRID_SENDER_EMAIL}>`,
@@ -34,19 +34,18 @@ export const sendPasswordResetEmail = (pubsub) => {
           dynamicTemplateData: {
             change_password_url: `${clientUrl}auth/password-reset?token=${token}&username=${username}`,
           },
-        }
+        };
 
-        await sendGridEmail(mailOptions)
+        await sendGridEmail(mailOptions);
 
-        return user
-      } else {
-        throw new UserInputError('Email not found', {
-          invalidArgs: Object.keys(args),
-        })
+        return user;
       }
+      throw new UserInputError('Email not found', {
+        invalidArgs: Object.keys(args),
+      });
     } catch (err) {
-      logger.error(JSON.stringify(err))
-      throw `Update failed! ${err}`
+      logger.error(JSON.stringify(err));
+      throw `Update failed! ${err}`;
     }
-  }
-}
+  };
+};

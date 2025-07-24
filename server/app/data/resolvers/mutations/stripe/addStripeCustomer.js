@@ -1,6 +1,6 @@
 import createStripeCustomer from '~/resolvers/utils/stripe/createStripeCustomer';
 
-export const addStripeCustomer = pubsub => {
+export const addStripeCustomer = (pubsub) => {
   return async (_, args, context) => {
     console.log('[MUTATION] addStripeCustomer');
     try {

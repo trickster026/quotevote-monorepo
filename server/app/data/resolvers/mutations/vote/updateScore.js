@@ -1,14 +1,14 @@
+import { findIndex } from 'lodash';
 import PostModel from '../../models/PostModel';
 
 import { updateTrending } from '../../utils/post_utils';
-import { findIndex } from 'lodash';
 
 export const updateScore = async (vote) => {
   const post = await PostModel.findById(vote.postId);
 
   const index = findIndex(
     post.votedBy,
-    voteObj => voteObj.userId.toString() === vote.userId.toString()
+    (voteObj) => voteObj.userId.toString() === vote.userId.toString(),
   );
 
   // user changes vote
@@ -22,7 +22,7 @@ export const updateScore = async (vote) => {
           upvotes: vote.type === 'up' ? post.upvotes + 1 : post.upvotes,
           downvotes: vote.type === 'down' ? post.downvotes + 1 : post.downvotes,
         },
-      }
+      },
     );
   } else {
     // new user adds vote
@@ -34,7 +34,7 @@ export const updateScore = async (vote) => {
           upvotes: vote.type === 'up' ? post.upvotes + 1 : post.upvotes,
           downvotes: vote.type === 'down' ? post.upvotes + 1 : post.downvotes,
         },
-      }
+      },
     );
     await updateTrending(vote.postId);
   }

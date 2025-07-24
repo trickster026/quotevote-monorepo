@@ -1,5 +1,5 @@
-import { logger } from '../../../utils/logger';
 import bcrypt from 'bcryptjs';
+import { logger } from '../../../utils/logger';
 import UserModel from '../../models/UserModel';
 
 export const addUser = (pubsub) => {

@@ -1,6 +1,6 @@
+import { isUndefined } from 'lodash';
 import UserModel from '../../models/UserModel';
 import VotesModel from '../../models/VoteModel';
-import { isUndefined } from 'lodash';
 import * as utils from '../../utils';
 
 export const findUserById = () => {
@@ -15,7 +15,7 @@ export const findUserById = () => {
       } else if (userId !== '' && userId !== undefined) {
         user = await UserModel.findOne({ _id: userId });
       } else if ('creatorId' in args && args.creatorId !== undefined) {
-        const ObjectId = require('mongodb').ObjectId;
+        const { ObjectId } = require('mongodb');
         user = await UserModel.findOne({ creatorId: new ObjectId(args.creatorId) });
       } else {
         userId = context.user._id;

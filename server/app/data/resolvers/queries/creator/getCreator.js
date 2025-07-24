@@ -1,6 +1,6 @@
 import CreatorModel from '../../models/CreatorModel';
 
-export const getCreator = pubsub => {
+export const getCreator = (pubsub) => {
   return async (_, args, context) => {
     switch (context.domain) {
       case 'hiphop':

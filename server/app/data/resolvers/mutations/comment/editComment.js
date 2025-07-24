@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import CommentsModel from '../../models/CommentModel';
 
-export const editComment = pubsub => {
+export const editComment = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: editComment');
 
@@ -9,7 +9,7 @@ export const editComment = pubsub => {
       const comment = await CommentsModel.findByIdAndUpdate(
         args.comment_id,
         args.comment,
-        { new: true, upsert: true }
+        { new: true, upsert: true },
       );
       return comment;
     } catch (err) {
@@ -18,7 +18,7 @@ export const editComment = pubsub => {
   };
 };
 
-export const deleteComment = pubsub => {
+export const deleteComment = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: deleteComment');
 

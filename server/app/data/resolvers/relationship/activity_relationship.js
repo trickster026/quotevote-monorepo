@@ -6,12 +6,12 @@ import UserModel from '~/resolvers/models/UserModel';
 
 export const activityRelationship = () => {
   return {
-    async post(data, root,) {
+    async post(data, root) {
       const { postId } = data;
       const result = await getPost()(root, { postId });
       return result;
     },
-    async vote(data, root,) {
+    async vote(data, root) {
       const { voteId } = data;
       const result = await getVote()(root, { voteId });
       return result;

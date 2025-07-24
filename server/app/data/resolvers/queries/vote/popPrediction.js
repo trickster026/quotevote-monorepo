@@ -1,6 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
 
-export const popPrediction = pubsub => {
+export const popPrediction = (pubsub) => {
   return async (_, args) => {
     try {
       const { comment } = args;
@@ -13,20 +13,20 @@ export const popPrediction = pubsub => {
                 \n  }
             \n}
         \n`,
-        variables: { 'comment': comment }
+        variables: { comment },
       });
 
       const config = {
         method: 'get',
         url: 'https://tranquil-reaches-15918.herokuapp.com/graphql',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        data: dataParams
+        data: dataParams,
       };
 
-      const { data } = await axios(config)
-      console.log({data})
+      const { data } = await axios(config);
+      console.log({ data });
 
       return data && data.data;
     } catch (err) {

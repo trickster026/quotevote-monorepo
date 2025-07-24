@@ -6,10 +6,12 @@ import QuotesModel from '../../models/QuoteModel';
 import PostModel from '../../models/PostModel';
 import UserModel from '../../models/UserModel';
 
-export const getActivities = pubsub => {
+export const getActivities = (pubsub) => {
   return async (_, args) => {
     console.log('Function: activities', args);
-    const { limit, offset, searchKey, startDateRange, endDateRange, activityEvent, user_id } = args;
+    const {
+      limit, offset, searchKey, startDateRange, endDateRange, activityEvent, user_id,
+    } = args;
 
     //  Will need to provide date arguments as well
     const searchArgs = searchKey ? {
@@ -23,19 +25,21 @@ export const getActivities = pubsub => {
       searchArgs.activityType = { $in: activityEvent };
     }
     if (user_id) {
-      searchArgs.userId = user_id
+      searchArgs.userId = user_id;
     }
     if (startDateRange || endDateRange) {
       // Deal with Date Range Here
     }
 
-    console.log('searchArgs', { searchArgs, limit, offset, activityEvent });
+    console.log('searchArgs', {
+      searchArgs, limit, offset, activityEvent,
+    });
     const total = await ActivityModel.find(searchArgs).count();
     const activitiesResult = await ActivityModel.find(searchArgs).sort({ created: 'desc' }).skip(offset).limit(limit);
     if (activitiesResult.length > 0) {
       const
         activities = await Promise.all(
-          activitiesResult.map(async activity => {
+          activitiesResult.map(async (activity) => {
             let data;
             let response;
             let content;
@@ -86,7 +90,7 @@ export const getActivities = pubsub => {
                 break;
             }
             return response;
-          })
+          }),
         );
       return { activities, total };
     }

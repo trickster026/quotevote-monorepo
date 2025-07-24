@@ -6,6 +6,6 @@ export const quoteRelationship = () => {
       const { quoter } = data;
       const result = await findUserById()(root, { user_id: quoter });
       return result;
-    }
+    },
   };
 };

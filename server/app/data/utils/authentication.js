@@ -1,11 +1,10 @@
 import jwt from 'jsonwebtoken';
-import jsonwebtoken from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 
+import { AuthenticationError } from 'apollo-server-express';
 import { logger } from './logger';
 import UserModel from '../resolvers/models/UserModel';
-import { AuthenticationError } from 'apollo-server-express';
 
 export const createGuestUser = (req, res) => {
   logger.info(req.body);
@@ -64,13 +63,15 @@ export const register = (req, res) => {
           });
         return;
       }
-      const { name, email, username, password } = req.body;
+      const {
+        name, email, username, password,
+      } = req.body;
       const hash_password = generateHashPassword(password);
       const userData = {
         name,
         email,
         username,
-        hash_password
+        hash_password,
       };
 
       const creatorData = {
@@ -99,11 +100,11 @@ const invalidUserPassword = (res) => {
 };
 
 export const addCreatorToUser = async ({ username, password, requirePassword }, res, authenticate, expiresIn = (60 * 60 * 24), tokenOnly = false) => {
-  let query
+  let query;
   if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(username)) {
-    query = { email: username }
+    query = { email: username };
   } else {
-    query = { username }
+    query = { username };
   }
   const user = await UserModel.findOne(query);
 
@@ -120,15 +121,14 @@ export const addCreatorToUser = async ({ username, password, requirePassword }, 
   let updatedUser = user || {};
   updatedUser = Object.keys(updatedUser).length > 0 ? updatedUser : user;
   const token = jwt.sign({
-      email: updatedUser.email,
-      fullName: updatedUser.fullName,
-      _id: updatedUser._id,
-      admin: updatedUser.admin,
-      primary: updatedUser.primary,
-    },
-    process.env.SECRET,
-    { expiresIn }
-  );
+    email: updatedUser.email,
+    fullName: updatedUser.fullName,
+    _id: updatedUser._id,
+    admin: updatedUser.admin,
+    primary: updatedUser.primary,
+  },
+  process.env.SECRET,
+  { expiresIn });
 
   if (tokenOnly) {
     return token;
@@ -163,12 +163,12 @@ export const login = async (req, res) => {
   await addCreatorToUser({
     username,
     password,
-    requirePassword: true
+    requirePassword: true,
   }, res, false);
 };
 
 export const authenticate = async (req, res) => {
-  console.log("authenticate", req.body)
+  console.log('authenticate', req.body);
   logger.info(req.body);
   let errorMessage = '';
   if (!('username' in req.body)) {
@@ -187,7 +187,6 @@ export const authenticate = async (req, res) => {
     password,
     requirePassword: true,
   }, res, true);
-
 };
 
 export const verifyToken = async (authToken) => {
@@ -213,4 +212,3 @@ export const verifyToken = async (authToken) => {
     }
   }
 };
-

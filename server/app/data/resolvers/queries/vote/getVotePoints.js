@@ -1,6 +1,6 @@
 import VotesModel from '../../models/VoteModel';
 
-export const getVotePoints = pubsub => {
+export const getVotePoints = (pubsub) => {
   return async (_, args, context) => {
     return {
       total: (await VotesModel.find({ ...args })).length,

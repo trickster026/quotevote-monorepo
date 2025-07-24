@@ -11,6 +11,6 @@ export const notificationRelationship = () => {
     async post(data, root) {
       const { postId } = data;
       return await PostModel.findById(postId);
-    }
+    },
   };
 };

@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
+import { UserInputError } from 'apollo-server-express';
 import UserModel from '../../models/UserModel';
 import { logger } from '../../../utils/logger';
 import PostModel from '~/resolvers/models/PostModel';
-import { UserInputError } from 'apollo-server-express';
 
 export const updateUser = (pubsub) => {
   return async (_, args) => {
@@ -24,7 +24,6 @@ export const updateUser = (pubsub) => {
           throw new UserInputError('Username already exists!', {
             invalidArgs: Object.keys(args),
           });
-
         }
       }
 
@@ -40,7 +39,7 @@ export const updateUser = (pubsub) => {
 
       await UserModel.update({ _id: userData._id }, userData, {
         upsert: true,
-        new: true
+        new: true,
       });
       const query = { _id: userData._id };
       const user = await UserModel.findOne(query);

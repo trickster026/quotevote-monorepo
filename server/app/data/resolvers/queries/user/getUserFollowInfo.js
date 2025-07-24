@@ -1,6 +1,6 @@
+import { isUndefined } from 'lodash';
 import UserModel from '../../models/UserModel';
 import VotesModel from '../../models/VoteModel';
-import { isUndefined } from 'lodash';
 import * as utils from '../../utils';
 
 /**
@@ -29,7 +29,7 @@ export function getUserFollowInfo() {
 
     return Promise.all(
       uniqueUserIds.map(async (f) => {
-        let composedUser = await mapFollowsToUserData(f);
+        const composedUser = await mapFollowsToUserData(f);
         composedUser.profileFollows = userData._followingId.includes(composedUser._id);
         return composedUser;
       }),

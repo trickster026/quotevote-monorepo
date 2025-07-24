@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import GroupModel from '../../models/GroupModel';
 
-export const createGroup = pubsub => {
+export const createGroup = (pubsub) => {
   return async (_, args, context) => {
     logger.info('Function: createGroup');
     try {
@@ -24,7 +24,7 @@ export const createGroup = pubsub => {
           $set: {
             url,
           },
-        }
+        },
       );
 
       return {

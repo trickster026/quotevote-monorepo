@@ -1,13 +1,13 @@
+import { nanoid } from 'nanoid';
 import { logger } from '../../../utils/logger';
 import { logActivity } from '../../utils/activities_utils';
 import GroupModel from '../../models/GroupModel';
 import PostModel from '../../models/PostModel';
 import MessageRoomModel from '../../models/MessageRoomModel';
-import { nanoid } from 'nanoid'
 
-export const addPost = pubsub => {
+export const addPost = (pubsub) => {
   return async (_, args) => {
-    console.log("ARGS:   ", args);
+    console.log('ARGS:   ', args);
     logger.info('Function: add post');
     let newPost = {};
     const group = await GroupModel.findById(args.post.groupId);
@@ -29,7 +29,7 @@ export const addPost = pubsub => {
       await PostModel.findByIdAndUpdate(newPost._id, { url });
       newPost.url = url;
 
-      const messageRoom = await MessageRoomModel.create({users: newPost.userId, postId: newPost._id, messageType: "POST"});
+      const messageRoom = await MessageRoomModel.create({ users: newPost.userId, postId: newPost._id, messageType: 'POST' });
 
       const ids = {
         postId: newPost._id,

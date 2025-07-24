@@ -25,4 +25,3 @@ type Post {
   quotes: [Quote]
   messageRoom: MessageRoom
 }`;
-

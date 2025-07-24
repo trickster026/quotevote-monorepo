@@ -15,6 +15,21 @@ const usersData = [
   },
 ];
 
+const expectedUsersData = [
+  {
+    _id: '59b003750e3766041440171f',
+    userId: '59b003750e3766041440171f',
+  },
+  {
+    _id: '59b006a2dba5fb0027f48c76',
+    userId: '59b006a2dba5fb0027f48c76',
+  },
+  {
+    _id: '5a8021eaf0b7f71bc8c6dbdc',
+    userId: '5a8021eaf0b7f71bc8c6dbdc',
+  },
+];
+
 describe('Queries > user > getUsers', () => {
   let usersModelStub;
 
@@ -27,9 +42,14 @@ describe('Queries > user > getUsers', () => {
   });
 
   it('should return all users', async () => {
-    usersModelStub.resolves(usersData);
+    // Mock the UserModel.find to return data with _doc property like Mongoose does
+    const mockUsers = usersData.map((user) => ({
+      _id: user._id,
+      _doc: user,
+    }));
+    usersModelStub.resolves(mockUsers);
     const result = await getUsers()(undefined, {}, undefined);
-    expect(usersData).is.equal(result);
+    expect(result).to.deep.equal(expectedUsersData);
     sinon.assert.called(usersModelStub);
   });
 });

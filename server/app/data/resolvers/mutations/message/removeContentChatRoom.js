@@ -1,6 +1,6 @@
 import MessageRoomModel from '../../models/MessageRoomModel';
 
-export const removeContentChatRoom = pubsub => {
+export const removeContentChatRoom = (pubsub) => {
   return async (_, args, context) => {
     console.log('[MUTATION] removeContentChatRoom');
     const messageType = 'CONTENT';
@@ -13,7 +13,7 @@ export const removeContentChatRoom = pubsub => {
       });
       if (messageRoom) {
         const { users, _id } = messageRoom;
-        const newUsers = users.filter(user => user.toString() !== userId);
+        const newUsers = users.filter((user) => user.toString() !== userId);
         messageRoom = await MessageRoomModel.findByIdAndUpdate(_id, { users: newUsers }, { new: true });
       } else {
         throw new Error('Bookmarked content not found!');

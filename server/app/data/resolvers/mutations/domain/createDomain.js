@@ -1,7 +1,7 @@
 import { logger } from '../../../utils/logger';
 import DomainsModel from '../../models/DomainModel';
 
-export const createDomain = pubsub => {
+export const createDomain = (pubsub) => {
   return async (_, args, context) => {
     logger.info('Function: createDomain');
     try {

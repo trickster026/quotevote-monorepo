@@ -5,7 +5,7 @@ import { updateTrending } from '../../utils/post_utils';
 import { logActivity } from '../../utils/activities_utils';
 import { addNotification } from '~/resolvers/utils/notifications/addNotification';
 
-export const addComment = pubsub => {
+export const addComment = (pubsub) => {
   return async (_, args) => {
     logger.info('Function: addComment');
 
@@ -24,9 +24,9 @@ export const addComment = pubsub => {
         {
           userId: comment.userId,
           postId: comment.postId,
-          commentId: comment._id
+          commentId: comment._id,
         },
-        `Commented on '${post.title}' post.`
+        `Commented on '${post.title}' post.`,
       );
 
       await addNotification({
