@@ -34,7 +34,7 @@ export const requestUserAccess = (pubsub) => {
     const result = await sendGridEmail(mailOptions);
 
     if (result.error) {
-      throw new Error(error);
+      throw new Error(result.error);
     }
 
     return user;

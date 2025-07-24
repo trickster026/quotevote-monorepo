@@ -232,7 +232,7 @@ function SubmitPostForm({ options = [], user, setOpen }) {
         <CardHeader
           title={
             <Typography className={classes.title} variant="body2">
-              Create a Post
+              Create Quote
             </Typography>
           }
           action={
