@@ -26,6 +26,7 @@ import AvatarPreview from '../../components/Avatar'
 import Typography from '@material-ui/core/Typography'
 import { useSelector } from 'react-redux'
 import Hidden from '@material-ui/core/Hidden'
+import { useMobileDetection } from '../../utils/display'
 
 // We've created this component so we can have a ref to the wrapper of the links that appears in our sidebar.
 // This was necessary so that we could initialize PerfectScrollbar on the links.
@@ -64,6 +65,7 @@ const MenuSidebar = (props) => {
   const avatar = useSelector((state) => state.user.data.avatar)
   const name = useSelector((state) => state.user.data.name)
   const loggedIn = useSelector((state) => !!state.user.data._id)
+  const isMobile = useMobileDetection()
 
   // State management
   const [openAvatar, setOpenAvatar] = useState(false)
@@ -374,6 +376,14 @@ const MenuSidebar = (props) => {
   const handleDrawerOpen = () => {
     handleDrawerToggle(true)
   }
+  
+  const handleLogoClick = (e) => {
+    if (isMobile) {
+      e.preventDefault()
+      handleDrawerOpen()
+    }
+  }
+  
   const handleVoxPop = () => {
     dispatch(SET_SELECTED_PAGE(0))
     history.push('/search')
@@ -402,7 +412,7 @@ const MenuSidebar = (props) => {
               >
                 <MenuIcon />
               </IconButton>
-              <NavLink to="/" style={{ display: 'inline-block' }}>
+              <NavLink to="/" style={{ display: 'inline-block' }} onClick={handleLogoClick}>
                 <img
                   src="/icons/android-chrome-192x192.png"
                   alt="QuoteVote Logo"
