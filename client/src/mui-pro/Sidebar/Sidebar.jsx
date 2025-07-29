@@ -277,27 +277,6 @@ const MenuSidebar = (props) => {
               <span>Search</span>
             </NavLink>
           </ListItem>,
-          // New Quote
-          <ListItem key="new-quote" style={{ padding: '4px 8px' }}>
-            <NavLink
-              to="#"
-              onClick={() => {
-                setOpenCreateQuote(true)
-                handleDrawerToggle(false)
-              }}
-              style={{
-                color: 'inherit',
-                textDecoration: 'none',
-                width: '100%',
-                display: 'block',
-                padding: '8px 12px',
-                fontSize: '14px',
-              }}
-            >
-              <span style={{ fontSize: '16px', marginRight: '8px' }}>✍️</span>
-              <span>Create Quote</span>
-            </NavLink>
-          </ListItem>,
 
           // Profile (simplified)
           <ListItem key="profile-simple" style={{ padding: '4px 8px' }}>
@@ -317,43 +296,7 @@ const MenuSidebar = (props) => {
               <span>Profile</span>
             </NavLink>
           </ListItem>,
-          // Alerts
-          <ListItem key="alerts" style={{ padding: '4px 8px' }}>
-            <NavLink
-              to="/notifications"
-              onClick={() => handleDrawerToggle(false)}
-              style={{
-                color: 'inherit',
-                textDecoration: 'none',
-                width: '100%',
-                display: 'block',
-                padding: '8px 12px',
-                fontSize: '14px',
-              }}
-            >
-              <span style={{ fontSize: '16px', marginRight: '12px' }}>🔔</span>
-              <span>Alerts</span>
-            </NavLink>
-          </ListItem>,
 
-          // Settings
-          <ListItem key="settings" style={{ padding: '4px 8px' }}>
-            <NavLink
-              to="/settings"
-              onClick={() => handleDrawerToggle(false)}
-              style={{
-                color: 'inherit',
-                textDecoration: 'none',
-                width: '100%',
-                display: 'block',
-                padding: '8px 12px',
-                fontSize: '14px',
-              }}
-            >
-              <span style={{ fontSize: '16px', marginRight: '8px' }}>⚙️</span>
-              <span>Settings</span>
-            </NavLink>
-          </ListItem>,
           // GitHub
           <ListItem key="github" style={{ padding: '4px 8px' }}>
             <a
