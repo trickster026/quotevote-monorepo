@@ -41,6 +41,14 @@ const useStyles = makeStyles((theme) => ({
   container: {
     marginLeft: '10%',
     marginRight: '10%',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '5px',
+      marginRight: '5px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: '2px',
+      marginRight: '2px',
+    },
   },
   logoContainer: {
     display: 'flex',
@@ -76,12 +84,36 @@ const useStyles = makeStyles((theme) => ({
   },
   iconsContainer: {
     marginTop: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    gap: theme.spacing(4),
+    minWidth: '280px',
+    [theme.breakpoints.down('sm')]: {
+      gap: theme.spacing(2.5),
+      minWidth: '240px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      gap: theme.spacing(2),
+      minWidth: '200px',
+    },
   },
   icon: {
-    margin: theme.spacing(0, 2),
+    margin: 0,
     color: theme.palette.text.secondary,
     fontSize: '1.5rem',
     transition: 'all 0.2s ease-in-out',
+    minWidth: 'auto',
+    padding: theme.spacing(1.5),
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.5rem',
+      padding: theme.spacing(1),
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '1.5rem',
+      padding: theme.spacing(0.75),
+    },
     '&:hover': {
       transform: 'scale(1.1)',
       backgroundColor: theme.palette.action.hover,
@@ -631,7 +663,7 @@ export default function SearchPage() {
               </IconButton>
             </Paper>
           </Grid>
-          <Grid item className={classes.iconsContainer}>
+          <Grid item className={classes.iconsContainer} style={{ width: '100%' }}>
             <Tooltip
               title={
                 user && user._id
