@@ -55,7 +55,7 @@ function ProfileView({
           <Typography variant="h6" align="center">
             Invalid user
           </Typography>
-          <Link href="/home" className={classes.link}>
+          <Link href="/search" className={classes.link}>
             Return to homepage.
           </Link>
         </div>

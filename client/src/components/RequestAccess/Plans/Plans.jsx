@@ -23,7 +23,7 @@ export default function Plans() {
   const history = useHistory()
 
   React.useEffect(() => {
-    if (tokenValidator(dispatch)) history.push('/Home')
+    if (tokenValidator(dispatch)) history.push('/search')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

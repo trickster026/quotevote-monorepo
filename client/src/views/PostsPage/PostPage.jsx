@@ -16,10 +16,12 @@ import { tokenValidator } from 'store/user';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: 10,
+    height: '85vh',
+    overflow: 'hidden',
+    marginTop: 0,
   },
   mobileContainer: {
-    height: '100vh',
+    height: '85vh',
     maxHeight: '100vh',
     overflow: 'hidden',
     marginTop: 0,
@@ -27,10 +29,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   desktopContainer: {
-    height: '100vh',
-    maxHeight: '100vh',
+    height: '85vh',
+    maxHeight: '85vh',
     overflow: 'hidden',
-    marginTop: 10,
+    marginTop: 0,
+    display: 'flex',
   },
   mobilePostSection: {
     flex: '0 0 auto',
@@ -39,23 +42,24 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   desktopPostSection: {
-    height: '100%',
+    flex: '0 0 50%',
+    height: '85vh',
     overflow: 'auto',
     padding: theme.spacing(2),
+    borderRight: `1px solid ${theme.palette.divider}`,
   },
   mobileInteractionSection: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 0, // Important for flex child
+    minHeight: 0,
     position: 'relative',
   },
   mobileMessagesContainer: {
     flex: 1,
     overflow: 'auto',
     padding: theme.spacing(2),
-    // Add bottom padding to account for fixed chat input
-    paddingBottom: theme.spacing(8), // Adjust based on chat input height
+    paddingBottom: theme.spacing(8),
   },
   mobileChatInputContainer: {
     position: 'fixed',
@@ -68,18 +72,23 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: '0 -2px 10px rgba(0,0,0,0.1)',
   },
   desktopInteractionSection: {
+    flex: '0 0 50%',
+    height: '85vh',
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
+    overflow: 'hidden',
   },
   desktopMessagesContainer: {
     flex: 1,
     overflow: 'auto',
-    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
   },
   desktopChatInputContainer: {
+    marginLeft: 15,
     flexShrink: 0,
-    padding: 0,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
   },
   emptyPost: {
     marginTop: 100,
@@ -121,7 +130,7 @@ function PostPage({ postId }) {
   useEffect(() => {
     window.scrollTo(0, 0)
     if (post) {
-      setPostHeight(document.getElementById('post').clientHeight)
+      setPostHeight(document.getElementById('post')?.clientHeight)
     }
   }, [post])
 
@@ -141,12 +150,12 @@ function PostPage({ postId }) {
     data: messageData,
     refetch: refetchMessages,
   } = useQuery(GET_ROOM_MESSAGES, {
-    skip: !messageRoomId, // Allow all users (including guests) to see messages
+    skip: !messageRoomId,
     variables: { messageRoomId },
   })
 
   useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
-    skip: !messageRoomId, // Allow all users (including guests) to see new messages
+    skip: !messageRoomId,
     variables: { messageRoomId },
     onSubscriptionData: async () => {
       await refetchMessages()
@@ -167,61 +176,76 @@ function PostPage({ postId }) {
     let postActions = []
 
     if (!isEmpty(comments)) {
-      const commentsWithContent = comments.map((comment) => ({
-        ...comment,
-        commentQuote: post.text
-          .substring(comment.startWordIndex, comment.endWordIndex)
-          .replace(/(\r\n|\n|\r)/gm, ''),
-      }))
-      postActions = postActions.concat(commentsWithContent)
+      postActions = postActions.concat(
+        comments.map((comment) => ({
+          ...comment,
+          __typename: 'Comment',
+        }))
+      )
     }
 
     if (!isEmpty(votes)) {
-      // Add voted text content to each vote based on startWordIndex and endWordIndex
-      const votesWithContent = votes.map((vote) => ({
-        ...vote,
-        content: post.text
-          .substring(vote.startWordIndex, vote.endWordIndex)
-          .replace(/(\r\n|\n|\r)/gm, ''),
-      }))
-      postActions = postActions.concat(votesWithContent)
+      postActions = postActions.concat(
+        votes.map((vote) => ({
+          ...vote,
+          __typename: 'Vote',
+        }))
+      )
     }
 
     if (!isEmpty(quotes)) {
-      postActions = postActions.concat(quotes)
-    }
-
-    // Include messages for all users (guests can view but not interact)
-    if (!isEmpty(messages)) {
-      postActions = postActions.concat(messages)
+      postActions = postActions.concat(
+        quotes.map((quote) => ({
+          ...quote,
+          __typename: 'Quote',
+        }))
+      )
     }
 
     return postActions
-  }, [comments, votes, quotes, messages, post, isAuthenticated])
-
-  if (!loadingPost && !post) {
-    return <Redirect to="/error" />
-  }
+  }, [comments, votes, quotes])
 
   const { url } = (!loadingPost && post) || {}
 
+  if (isMobile) {
+    // Mobile layout - vertical stacking
+    return (
+      <div className={classes.mobileContainer}>
+        <div className={classes.mobilePostSection} id="post">
+          {loadingPost ? (
+            <PostSkeleton />
+          ) : (
+            <Post
+              post={post}
+              loading={loadingPost}
+              user={user}
+              postHeight={postHeight}
+              postActions={postActions}
+              refetchPost={refetchPost}
+            />
+          )}
+        </div>
+        <div className={classes.mobileInteractionSection}>
+          <div className={classes.mobileMessagesContainer}>
+            <PostActionList
+              loading={loadingPost}
+              postActions={postActions}
+              postUrl={url}
+            />
+          </div>
+          <div className={classes.mobileChatInputContainer}>
+            <PostChatSend messageRoomId={messageRoomId} title={title} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Desktop layout - side by side panels
   return (
-    <Grid
-      container
-      direction={{ xs: 'column', md: 'row' }}
-      justify={{ xs: 'flex-start', md: 'space-around' }}
-      alignItems={{ xs: 'stretch', md: 'flex-start' }}
-      spacing={4}
-      className={isMobile ? classes.mobileContainer : classes.desktopContainer}
-      style={{ position: 'relative' }}
-    >
-      <Grid 
-        item 
-        xs={12} 
-        md={6} // Always use 6 columns for post section
-        id="post"
-        className={isMobile ? classes.mobilePostSection : classes.desktopPostSection}
-      >
+    <div className={classes.desktopContainer}>
+      {/* Left Panel - Post Content */}
+      <div className={classes.desktopPostSection} id="post">
         {loadingPost ? (
           <PostSkeleton />
         ) : (
@@ -234,26 +258,22 @@ function PostPage({ postId }) {
             refetchPost={refetchPost}
           />
         )}
-      </Grid>
-      {/* Show interaction section for all users (guests can view but not interact) */}
-        <Grid 
-          item 
-          xs={12} 
-          md={6}
-          className={isMobile ? classes.mobileInteractionSection : classes.desktopInteractionSection}
-        >
-          <div className={isMobile ? classes.mobileMessagesContainer : classes.desktopMessagesContainer}>
-            <PostActionList
-              loading={loadingPost}
-              postActions={postActions}
-              postUrl={url}
-            />
-          </div>
-          <div className={isMobile ? classes.mobileChatInputContainer : classes.desktopChatInputContainer}>
-            <PostChatSend messageRoomId={messageRoomId} title={title} />
-          </div>
-        </Grid>
-    </Grid>
+      </div>
+      
+      {/* Right Panel - Actions, Chat Messages, and Chat Input */}
+      <div className={classes.desktopInteractionSection}>
+        <div className={classes.desktopMessagesContainer}>
+          <PostActionList
+            loading={loadingPost}
+            postActions={postActions}
+            postUrl={url}
+          />
+        </div>
+        <div className={classes.desktopChatInputContainer}>
+          <PostChatSend messageRoomId={messageRoomId} title={title} />
+        </div>
+      </div>
+    </div>
   )
 }
 
