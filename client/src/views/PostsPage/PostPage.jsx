@@ -180,6 +180,12 @@ function PostPage({ postId }) {
         comments.map((comment) => ({
           ...comment,
           __typename: 'Comment',
+          commentQuote:
+            comment.endWordIndex > comment.startWordIndex
+              ? post.text
+                  .substring(comment.startWordIndex, comment.endWordIndex)
+                  .replace(/(\r\n|\n|\r)/gm, '')
+              : null,
         }))
       )
     }
