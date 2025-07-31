@@ -77,7 +77,7 @@ export default function RequestAccessPage() {
 
   // TODO: Abstract validation into custom hook
   useEffect(() => {
-    if (tokenValidator(dispatch)) history.push('/Home')
+    if (tokenValidator(dispatch)) history.push('/search')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

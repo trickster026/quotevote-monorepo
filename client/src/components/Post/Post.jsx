@@ -646,7 +646,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
       dispatch(
         SET_SNACKBAR({ open: true, message: 'Post deleted', type: 'success' }),
       )
-      history.push('/home')
+      history.push('/search')
     } catch (err) {
       dispatch(
         SET_SNACKBAR({

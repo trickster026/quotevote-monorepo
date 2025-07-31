@@ -1,23 +1,13 @@
-import HomePage from 'views/Homepage/Homepage'
 import Profile from 'views/Profile'
 import ControlPanel from 'views/ControlPanel/ControlPanel'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PostPage from 'views/PostsPage'
 import LogoutPage from './components/LogoutPage'
-import HomeSvg from './assets/svg/Home'
 import ProfileAvatar from './components/Profile/ProfileAvatar'
 import NotificationMobileView from './components/Notifications/NotificationMobileView'
 import SearchPage from 'views/SearchPage'
 
 const routes = [
-  {
-    path: 'Home',
-    name: 'Home Page',
-    rtlName: 'لوحة القيادة',
-    icon: HomeSvg,
-    component: HomePage,
-    layout: '/',
-  },
   {
     path: 'search',
     name: 'Search',

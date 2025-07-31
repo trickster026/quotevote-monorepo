@@ -115,7 +115,7 @@ function SignupForm({ user, token }) {
 
   useEffect(() => {
     if (!loading && data) {
-      history.push('/Home')
+      history.push('/search')
     }
   }, [data, loading, history])
 
