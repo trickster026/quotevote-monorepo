@@ -39,7 +39,6 @@ const routes = [
     icon: ProfileAvatar,
     component: Profile,
     layout: '/',
-    requiresAuth: true,
   },
   {
     path: '/logout',
