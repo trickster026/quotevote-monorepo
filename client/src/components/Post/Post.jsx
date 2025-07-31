@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
   postCard: {
     height: 'auto',
     overflow: 'auto',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.down('sm')]: {
       height: (props) => props.postHeight >= 742 ? '83vh' : 'auto',
     },
   },

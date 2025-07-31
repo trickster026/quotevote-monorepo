@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   chat: {
-    marginBottom: 10, // Changed from marginTop to marginBottom for bottom positioning
     fontWeight: 600,
     fontSize: 14,
     color: '#666',
@@ -33,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     paddingLeft: 10,
     width: '80%',
+    [theme.breakpoints.up('md')]: {
+      width: '85%',
+    },
   },
   send: {
     float: 'right',

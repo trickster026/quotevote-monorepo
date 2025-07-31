@@ -88,6 +88,15 @@ const pagesStyle = (theme) => ({
       width: '100%',
       padding: '0 8px',
     },
+    // Special styling for login page to override default margins
+    '& .login-page': {
+      marginTop: '0',
+      paddingTop: '0',
+      paddingBottom: '0',
+      [theme.breakpoints.down('sm')]: {
+        padding: '0',
+      },
+    },
   },
 })
 

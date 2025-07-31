@@ -19,6 +19,29 @@ import CardBody from '../../mui-pro/Card/CardBody'
 import Card from '../../mui-pro/Card/Card'
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    paddingTop: '2rem',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    textAlign: 'center',
+    backgroundColor: '#f0f2f5',
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  container: {
+    marginLeft: '10%',
+    marginRight: '10%',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '5px',
+      marginRight: '5px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: '2px',
+      marginRight: '2px',
+    },
+  },
   header: {
     fontFamily: 'Montserrat',
     fontWeight: 600,
@@ -242,42 +265,54 @@ function Login({ onSubmit = () => {}, loading = false }) {
   const loginError = useSelector((state) => state.user.loginError)
 
   return (
-    <Card className={classes.card}>
-      <CardBody>
-        <Grid
-          container
-          direction="column"
-          alignItems="center"
-          justify="space-evenly"
-          spacing={2}
-        >
-          <Grid item>
-            <Typography className={classes.header}>
-              Login
-            </Typography>
-          </Grid>
-          <Grid item>
-            <LoginForm onSubmit={onSubmit} loading={loading} loginError={loginError} />
-          </Grid>
-          <Grid item className={classes.forgotPasswordContainer}>
-            <Typography variant="body1">
-              <Link className={classes.link} href="/auth/forgot">
-                Forgot password?
-              </Link>
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body1">
-              No account?
-              <span style={{ marginRight: 5 }} />
-              <Link className={classes.link} href="/auth/request-access">
-                Request Access
-              </Link>
-            </Typography>
-          </Grid>
+    <div className={`${classes.root} login-page`}>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        className={classes.container}
+        spacing={1}
+      >
+        <Grid item>
+          <Card className={classes.card}>
+            <CardBody>
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                justify="space-evenly"
+                spacing={2}
+              >
+                <Grid item>
+                  <Typography className={classes.header}>
+                    Login
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <LoginForm onSubmit={onSubmit} loading={loading} loginError={loginError} />
+                </Grid>
+                <Grid item className={classes.forgotPasswordContainer}>
+                  <Typography variant="body1">
+                    <Link className={classes.link} href="/auth/forgot">
+                      Forgot password?
+                    </Link>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="body1">
+                    No account?
+                    <span style={{ marginRight: 5 }} />
+                    <Link className={classes.link} href="/auth/request-access">
+                      Request Access
+                    </Link>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardBody>
+          </Card>
         </Grid>
-      </CardBody>
-    </Card>
+      </Grid>
+    </div>
   )
 }
 

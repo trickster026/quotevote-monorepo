@@ -9,7 +9,7 @@ export default function ProfileRouter() {
     window.scrollTo(0, 0)
   }, [])
   return (
-    <div style={{ margin: '0 10%' }}>
+    <div style={{ margin: '0' }}>
       <Route exact path="/Profile">
         <Profile />
       </Route>
