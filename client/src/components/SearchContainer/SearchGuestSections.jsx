@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import { REQUEST_USER_ACCESS_MUTATION } from '../../graphql/mutations'
 
-export const DONATE_URL = 'mailto:volunteer@quote.vote'
+export const DONATE_URL = 'mailto:admin@quote.vote'
 
 export default function SearchGuestSections() {
   const [email, setEmail] = useState('')

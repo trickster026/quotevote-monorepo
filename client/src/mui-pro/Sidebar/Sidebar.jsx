@@ -127,7 +127,7 @@ const MenuSidebar = (props) => {
       </ListItem>,
       <ListItem key="donate" style={{ padding: '4px 8px' }}>
         <a
-                          href="mailto:volunteer@quote.vote"
+                          href="mailto:admin@quote.vote"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -145,7 +145,7 @@ const MenuSidebar = (props) => {
       </ListItem>,
       <ListItem key="volunteer" style={{ padding: '4px 8px' }}>
         <a
-          href="mailto:volunteer@quote.vote"
+          href="mailto:admin@quote.vote"
           style={{
             color: 'inherit',
             textDecoration: 'none',

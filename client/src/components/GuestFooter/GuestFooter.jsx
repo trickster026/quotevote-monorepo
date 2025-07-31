@@ -58,7 +58,7 @@ const GuestFooter = ({isRequestAccess = false}) => {
           Request Invite
         </a>
         <a 
-                          href="mailto:volunteer@quote.vote" 
+                          href="mailto:admin@quote.vote"
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ 

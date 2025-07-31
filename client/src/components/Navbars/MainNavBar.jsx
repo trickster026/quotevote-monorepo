@@ -77,7 +77,7 @@ function MainNavBar(props) {
                 <Button
                   variant="outlined"
                   color="inherit"
-                  href="mailto:volunteer@quote.vote"
+                  href="mailto:admin@quote.vote"
                   target="_blank"
                   className={classes.rightMenuButton}
                   style={{ borderWidth: 2, borderStyle: 'solid' }}
@@ -89,7 +89,7 @@ function MainNavBar(props) {
                 <Button
                   variant="outlined"
                   color="inherit"
-                  href="mailto:volunteer@quote.vote"
+                  href="mailto:admin@quote.vote"
                   className={classes.rightMenuButton}
                   style={{ borderWidth: 2, borderStyle: 'solid' }}
                 >
