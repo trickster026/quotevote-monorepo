@@ -28,7 +28,7 @@ const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
         ...operation.getContext().headers,
-        authorization: token,
+        authorization: `Bearer ${token}`,
       },
     })
   }
@@ -40,7 +40,7 @@ const authLink = new ApolloLink((operation, forward) => {
 const wsLink = typeof window !== 'undefined' ? new GraphQLWsLink(createClient({
   url: process.env.REACT_APP_SERVER_WS ? `${process.env.REACT_APP_SERVER_WS}/graphql` : 'wss://api.quote.vote/graphql',
   connectionParams: () => ({
-    authToken: localStorage.getItem('token'),
+    authToken: `Bearer ${localStorage.getItem('token')}`,
   }),
   retryAttempts: 5,
   shouldRetry: () => true,

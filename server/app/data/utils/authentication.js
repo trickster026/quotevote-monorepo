@@ -191,14 +191,17 @@ export const authenticate = async (req, res) => {
 
 export const verifyToken = async (authToken) => {
   const authSecret = process.env.SECRET;
-  const jwt = (jsonwebtoken);
-  const decodedJwtTokenRequest = jwt.decode(authToken, { complete: true });
+  
+  // Remove 'Bearer ' prefix if present
+  const token = authToken.startsWith('Bearer ') ? authToken.substring(7) : authToken;
+  
+  const decodedJwtTokenRequest = jwt.decode(token, { complete: true });
   if (!decodedJwtTokenRequest) {
     throw new AuthenticationError('Auth token supplied is corrupted');
   }
   const user = { ...decodedJwtTokenRequest.payload };
   try {
-    await jwt.verify(authToken, authSecret);
+    await jwt.verify(token, authSecret);
     return user;
   } catch (err) {
     logger.error(err.message);
