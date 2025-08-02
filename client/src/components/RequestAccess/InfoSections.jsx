@@ -111,15 +111,6 @@ export default function InfoSections() {
             about what is tolerated and what is not.
           </p>
         </section>
-        <section>
-          <h2>Public Direct Messages</h2>
-          <p>
-            There are no DMs. All user interactions occur in public Quote Rooms.
-            So 1:1 messages take place interview-style, in the open, where
-            others can vote on what was said. This reinforces a culture of
-            transparency and discourages collaboration.
-          </p>
-        </section>
       </div>
 
       <Grid

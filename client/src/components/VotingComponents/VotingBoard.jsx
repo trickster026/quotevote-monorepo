@@ -103,11 +103,12 @@ const VotingBoard = ({
   }
 
   return (
-    <Container>
-      <div data-selectable>
+    <Container style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div data-selectable style={{ flex: 1, overflow: 'auto' }}>
         <p
           className="voting_board-content"
           onContextMenu={disableContextMenu}
+          style={{ margin: 0, padding: 0, height: '100%' }}
         >
           {renderHighlights()}
         </p>
