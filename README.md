@@ -275,7 +275,7 @@ npm run start:server  # Uses PM2 for production
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the LGPL-3.0 license - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Team
 
