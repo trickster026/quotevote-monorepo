@@ -35,7 +35,29 @@ function CommentList({ comments, loading, postUrl }) {
           </Typography>
         </Grid>
         <Grid item>
-          <IconButton style={{ marginLeft: 'auto' }}>
+          <IconButton 
+            style={{ 
+              marginLeft: 'auto',
+              backgroundColor: 'rgba(0, 0, 0, 0.04)',
+              borderRadius: '12px',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              padding: '12px',
+              transition: 'all 0.2s ease-in-out',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.08)';
+              e.target.style.border = '1px solid rgba(0, 0, 0, 0.24)';
+              e.target.style.transform = 'scale(1.02)';
+              e.target.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.04)';
+              e.target.style.border = '1px solid rgba(0, 0, 0, 0.12)';
+              e.target.style.transform = 'scale(1)';
+              e.target.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            }}
+          >
             <FilterIcon
               width="32"
               height="32"
