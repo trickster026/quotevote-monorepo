@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     height: '85vh',
     overflow: 'hidden',
     marginTop: 0,
+    width: '100% !important',
+    marginLeft: '0 !important',
+    marginRight: '0 !important',
+    padding: '0 !important',
   },
   mobileContainer: {
     height: '85vh',
@@ -33,7 +37,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '85vh',
     overflow: 'hidden',
     marginTop: 0,
+    marginLeft: '0 !important',
+    marginRight: '0 !important',
+    padding: '0 !important',
     display: 'flex',
+    width: '100% !important',
   },
   mobilePostSection: {
     flex: '0 0 auto',
@@ -45,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     flex: '0 0 50%',
     height: '85vh',
     overflow: 'auto',
-    padding: theme.spacing(2),
+    padding: 0,
     borderRight: `1px solid ${theme.palette.divider}`,
   },
   mobileInteractionSection: {
@@ -81,11 +89,11 @@ const useStyles = makeStyles((theme) => ({
   desktopMessagesContainer: {
     flex: 1,
     overflow: 'auto',
-    padding: theme.spacing(2),
+    padding: 0,
     paddingBottom: theme.spacing(1),
   },
   desktopChatInputContainer: {
-    marginLeft: 15,
+    marginLeft: 0,
     flexShrink: 0,
     borderTop: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,

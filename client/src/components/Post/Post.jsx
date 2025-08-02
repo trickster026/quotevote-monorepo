@@ -75,7 +75,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 10,
   },
   postCard: {
-    height: 'auto',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
       height: (props) => props.postHeight >= 742 ? '83vh' : 'auto',
@@ -692,7 +694,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
           }
           action={pointsHeader}
         />
-        <CardContent style={{ fontSize: '16px' }}>
+        <CardContent style={{ fontSize: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
           {hasVoted && (
             <div style={{ 
               backgroundColor: '#e3f2fd', 
@@ -712,6 +714,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
             selectedText={selectedText}
             highlights
             votes={post.votes}
+            style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
           >
             {({ text }) => (
               <VotingPopup
