@@ -8,11 +8,11 @@ import { MockedProvider } from '@apollo/react-testing'
 import { act, create } from 'react-test-renderer'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from 'store/store'
+import store from './store/store'
 import { Mutation, Query } from 'react-apollo'
 import { ApolloProvider, useMutation, useQuery } from '@apollo/react-hooks'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import client from 'config/apollo'
+import client from './config/apollo'
 import 'mutationobserver-shim'
 
 const cache = new InMemoryCache()

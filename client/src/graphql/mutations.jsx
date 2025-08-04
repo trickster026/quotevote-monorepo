@@ -87,6 +87,13 @@ export const SEND_MESSAGE = gql`
       text
       type
       created
+      user {
+        _id
+        name
+        username
+        avatar
+        contributorBadge
+      }
     }
   }
 `

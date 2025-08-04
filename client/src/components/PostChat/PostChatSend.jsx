@@ -54,6 +54,10 @@ function PostChatSend(props) {
   const [createMessage] = useMutation(SEND_MESSAGE, {
     onError: (err) => {
       setError(err)
+      dispatch(CHAT_SUBMITTING(false))
+    },
+    onCompleted: () => {
+      dispatch(CHAT_SUBMITTING(false))
     },
     refetchQueries: [{
       query: GET_ROOM_MESSAGES,
@@ -65,16 +69,16 @@ function PostChatSend(props) {
 
   const handleSubmit = async () => {
     if (!ensureAuth()) return
+    if (!text.trim()) return // Don't submit empty messages
+    
     dispatch(CHAT_SUBMITTING(true))
 
     const message = {
       title,
       type,
       messageRoomId,
-      text,
+      text: text.trim(),
     }
-
-    setText('')
 
     const dateSubmitted = new Date()
     await createMessage({
@@ -88,7 +92,7 @@ function PostChatSend(props) {
           userName: user.name,
           userId: user._id,
           title,
-          text,
+          text: text.trim(),
           type,
           created: dateSubmitted,
           user: {
@@ -104,10 +108,6 @@ function PostChatSend(props) {
         // Read the data from our cache for this query.
         const data = proxy.readQuery({ query: GET_ROOM_MESSAGES, variables: { messageRoomId } })
         if (data) {
-          if (commentInputRef && commentInputRef.current) {
-            // clear the input field
-            commentInputRef.current.children[0].value = ''
-          }
           // Write our data back to the cache with the new message in it
           proxy.writeQuery({
             query: GET_ROOM_MESSAGES,
@@ -120,6 +120,9 @@ function PostChatSend(props) {
         }
       },
     })
+    
+    // Clear the text input after successful submission
+    setText('')
   }
 
   return (
@@ -141,6 +144,7 @@ function PostChatSend(props) {
             ref={commentInputRef}
             placeholder="type a message..."
             className={classes.input}
+            value={text}
             onChange={(event) => {
               const { value } = event.target
               setText(value)
