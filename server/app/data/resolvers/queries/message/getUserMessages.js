@@ -14,16 +14,17 @@ export const getUserMessages = () => {
           _id, messageRoomId, userId, title, text, created,
         } = message;
         const user = await UserModel.findOne({ _id: userId });
+        
         return {
           _id,
           messageRoomId,
           userId,
-          userName: user.name,
-          userAvatar: user.avatar,
+          userName: user ? user.name : 'Unknown User',
+          userAvatar: user ? user.avatar : '',
           title,
           text,
           created,
-          type: messageRoom.messageType,
+          type: messageRoom ? messageRoom.messageType : 'POST',
         };
       }),
     );

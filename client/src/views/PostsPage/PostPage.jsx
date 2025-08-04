@@ -149,18 +149,24 @@ function PostPage({ postId }) {
   let messageRoomId
   let title
   if (post) {
-    messageRoomId = postData.post.messageRoom._id
+    messageRoomId = postData.post.messageRoom?._id
     title = postData.post.title
   }
 
   const {
     loading: loadingMessages,
+    error: messageError,
     data: messageData,
     refetch: refetchMessages,
   } = useQuery(GET_ROOM_MESSAGES, {
     skip: !messageRoomId,
     variables: { messageRoomId },
   })
+
+  // Add error logging
+  if (messageError) {
+    console.error('[CLIENT] PostPage - message query error:', messageError);
+  }
 
   useSubscription(NEW_MESSAGE_SUBSCRIPTION, {
     skip: !messageRoomId,
@@ -216,8 +222,19 @@ function PostPage({ postId }) {
       )
     }
 
+    // Add messages to postActions so they get displayed
+    if (!isEmpty(messages)) {
+      postActions = postActions.concat(
+        messages.map((message) => ({
+          ...message,
+          __typename: 'Message',
+          text: message.text, // Ensure text field is present for PostActionCard to recognize it as a message
+        }))
+      )
+    }
+
     return postActions
-  }, [comments, votes, quotes])
+  }, [comments, votes, quotes, messages])
 
   const { url } = (!loadingPost && post) || {}
 

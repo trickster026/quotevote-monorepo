@@ -1,13 +1,19 @@
+import { ObjectId } from 'mongodb';
 import MessageRoomModel from '../../models/MessageRoomModel';
 
 export const createPostMessageRoom = () => {
   return async (_, args, context) => {
     const userId = context.user._id;
     const { postId } = args;
+    
+    // Convert postId to ObjectId if it's a string
+    const postObjectId = typeof postId === 'string' ? new ObjectId(postId) : postId;
+    
     let messageRoom = await MessageRoomModel.findOne({
-      postId,
+      postId: postObjectId,
       messageType: 'POST',
     });
+    
     if (messageRoom) {
       // Check user if exist
       const { users, _id } = messageRoom;
@@ -22,7 +28,7 @@ export const createPostMessageRoom = () => {
       console.log('Creating Content chatroom...');
       const messageRoomData = {
         users: [userId],
-        postId,
+        postId: postObjectId,
         messageType: 'POST',
       };
       messageRoom = await new MessageRoomModel(messageRoomData).save();

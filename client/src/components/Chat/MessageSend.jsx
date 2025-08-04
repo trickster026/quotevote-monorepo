@@ -31,6 +31,10 @@ export default function MessageSend({ messageRoomId, type, title }) {
   const [createMessage, { loading }] = useMutation(SEND_MESSAGE, {
     onError: (err) => {
       setError(err)
+      dispatch(CHAT_SUBMITTING(false))
+    },
+    onCompleted: () => {
+      dispatch(CHAT_SUBMITTING(false))
     },
     refetchQueries: [{
       query: GET_ROOM_MESSAGES,
@@ -42,15 +46,16 @@ export default function MessageSend({ messageRoomId, type, title }) {
 
   const handleSubmit = async () => {
     if (!ensureAuth()) return
+    if (!text.trim()) return // Don't submit empty messages
+    
     dispatch(CHAT_SUBMITTING(true))
 
     const message = {
       title,
       type,
       messageRoomId,
-      text,
+      text: text.trim(),
     }
-    setText('')
 
     const dateSubmitted = new Date()
     await createMessage({
@@ -64,7 +69,7 @@ export default function MessageSend({ messageRoomId, type, title }) {
           userName: user.name,
           userId: user._id,
           title,
-          text,
+          text: text.trim(),
           type,
           created: dateSubmitted,
           user: {
@@ -92,6 +97,9 @@ export default function MessageSend({ messageRoomId, type, title }) {
         }
       },
     })
+    
+    // Clear the text input after successful submission
+    setText('')
   }
   return (
     <Paper className={classes.root}>
