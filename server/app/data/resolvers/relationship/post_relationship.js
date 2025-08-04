@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { findUserById } from '~/resolvers/queries/user';
 import CommentModel from '~/resolvers/models/CommentModel';
 import VoteModel from '~/resolvers/models/VoteModel';
@@ -24,7 +25,9 @@ export const postRelationship = () => {
       return quotes;
     },
     async messageRoom(post) {
-      const messageRoom = await MessageRoomModel.findOne({ postId: post._id });
+      // Convert post._id to ObjectId if it's a string
+      const postObjectId = typeof post._id === 'string' ? new ObjectId(post._id) : post._id;
+      const messageRoom = await MessageRoomModel.findOne({ postId: postObjectId });
       return messageRoom;
     },
   };
