@@ -27,6 +27,7 @@ function PostActionList({
   postActions,
   loading,
   postUrl,
+  refetchPost,
 }) {
   const classes = useStyles({ postActions })
   const location = useLocation()
@@ -76,6 +77,7 @@ function PostActionList({
                 postAction={action}
                 postUrl={postUrl}
                 selected={`#${action._id}` === hash}
+                refetchPost={refetchPost}
               />
             </ListItem>
           ))}

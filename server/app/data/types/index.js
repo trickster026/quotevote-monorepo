@@ -15,3 +15,7 @@ export * from './User';
 export * from './UserInvite';
 export * from './Vote';
 export * from './DeletedPost';
+export * from './DeletedQuote';
+export * from './DeletedComment';
+export * from './DeletedVote';
+export * from './DeletedMessage';

@@ -9,5 +9,6 @@ type Comment {
   postId: String
   url: String
   reaction: String
+  deleted: Boolean
   user: User
 }`;

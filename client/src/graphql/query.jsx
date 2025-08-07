@@ -86,6 +86,7 @@ export const GET_POST = gql`
         created
         type
         tags
+        content
         user {
           _id
           username

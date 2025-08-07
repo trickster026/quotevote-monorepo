@@ -1,8 +1,12 @@
-import { Avatar, Grid, Paper } from '@material-ui/core'
+import { Avatar, Grid, Paper, IconButton } from '@material-ui/core'
+import { Delete } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { useMutation } from '@apollo/react-hooks'
 import AvatarDisplay from '../Avatar'
+import { DELETE_MESSAGE } from '../../graphql/mutations'
+import { SET_SNACKBAR } from '../../store/ui'
 
 const useStyles = makeStyles(() => ({
   bubble: {
@@ -24,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
   bubbleReverse: {
     position: 'relative',
-          background: '#52b274',
+    background: '#52b274',
     minHeight: 30,
     minWidth: 250,
     color: 'white',
@@ -40,12 +44,68 @@ const useStyles = makeStyles(() => ({
       right: '-10px',
     },
   },
+  deleteIcon: {
+    color: '#f44336',
+    fontSize: '16px',
+  },
+  messageContainer: {
+    position: 'relative',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: '-8px',
+    right: '-8px',
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    padding: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+  },
 }))
+
 function MessageItem({ message }) {
   const classes = useStyles()
-  const userId = useSelector((state) => state.user.data._id)
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.data)
+  const userId = user._id
   const isDefaultDirection = message.userId !== userId
   const direction = isDefaultDirection ? 'row' : 'row-reverse'
+
+  const [deleteMessage] = useMutation(DELETE_MESSAGE, {
+    update(cache, { data: { deleteMessage } }) {
+      cache.modify({
+        fields: {
+          messages(existing = [], { readField }) {
+            return existing.filter(
+              (messageRef) => readField('_id', messageRef) !== deleteMessage._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    try {
+      await deleteMessage({ variables: { messageId: message._id } })
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: 'Message deleted successfully',
+          type: 'success',
+        }),
+      )
+    } catch (err) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: `Delete Error: ${err.message}`,
+          type: 'danger',
+        }),
+      )
+    }
+  }
+
   return (
     <Grid
       container
@@ -58,12 +118,21 @@ function MessageItem({ message }) {
           <AvatarDisplay height={40} width={40} {...message.user.avatar} />
         </Avatar>
       </Grid>
-      <Grid item>
+      <Grid item className={classes.messageContainer}>
         <Paper
           className={isDefaultDirection ? classes.bubble : classes.bubbleReverse}
         >
           {message.text}
         </Paper>
+        {(user._id === message.userId || user.admin) && (
+          <IconButton 
+            onClick={handleDelete} 
+            className={classes.deleteButton}
+            size="small"
+          >
+            <Delete className={classes.deleteIcon} />
+          </IconButton>
+        )}
       </Grid>
     </Grid>
   )

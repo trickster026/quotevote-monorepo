@@ -26,8 +26,12 @@ const schema = mongoose.Schema({
     type: Number,
     required: false,
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 schema.index({ content: 'text' });
 
-export default mongoose.model('quotes', schema);
+export default mongoose.model('Quotes', schema);

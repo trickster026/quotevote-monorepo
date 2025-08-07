@@ -6,3 +6,4 @@ export * from './deleteUserReaction';
 export * from './removeContentChatRoom';
 export * from './updateMessageReadBy';
 export * from './updateReaction';
+export * from './deleteMessage';

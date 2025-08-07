@@ -1,46 +1,29 @@
-import { useEffect, useState, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import {
-  Card,
-  CardActions,
-  CardContent,
-  IconButton,
-  Typography,
-  SvgIcon,
+  Card, CardActions, CardContent, IconButton, Typography,
 } from '@material-ui/core'
-import { InsertLink } from '@material-ui/icons'
+import { InsertLink, Delete } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { useQuery } from '@apollo/react-hooks'
 import { useDispatch, useSelector } from 'react-redux'
-import { get } from 'lodash'
+import { useHistory } from 'react-router-dom'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import { get, isEmpty } from 'lodash'
 import copy from 'clipboard-copy'
 import SweetAlert from 'react-bootstrap-sweetalert'
-import { useHistory } from 'react-router-dom'
 import AvatarDisplay from '../Avatar'
 import { parseCommentDate } from '../../utils/momentUtils'
-import { SET_FOCUSED_COMMENT, SET_SHARED_COMMENT } from '../../store/ui'
+import { SET_FOCUSED_COMMENT, SET_SHARED_COMMENT, SET_SNACKBAR } from '../../store/ui'
+import { DELETE_VOTE, DELETE_COMMENT, DELETE_QUOTE } from '../../graphql/mutations'
 import { GET_ACTION_REACTIONS } from '../../graphql/query'
-import DislikeIcon from '../../assets/svg/Dislike.jsx'
-import LikeIcon from '../../assets/svg/Like.jsx'
-import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
-import PostChatMessage from '../PostChat/PostChatMessage'
 import CommentReactions from '../Comment/CommentReactions'
+import PostChatMessage from '../PostChat/PostChatMessage'
+import LikeIcon from '../../assets/svg/Like.jsx'
+import DislikeIcon from '../../assets/svg/Dislike.jsx'
+import { SvgIcon } from '@material-ui/core'
+import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
 
 const useStyles = makeStyles((theme) => ({
-  content: {
-    marginLeft: 10,
-    marginRight: 40,
-    marginBottom: -20,
-    fontSize: 16,
-  },
-  expand: {
-    marginLeft: 'auto',
-  },
-  created: {
-    verticalAlign: 'middle',
-    marginTop: 20,
-    marginRight: 10,
-  },
   root: {
     backgroundColor: theme.palette.background.paper,
     width: '100%',
@@ -49,25 +32,38 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#f1e8c1',
     width: '100%',
   },
-  ...buttonStyle,
-  date: {
-    color: '#949292',
+  content: {
+    marginLeft: 60,
+    marginRight: 40,
+    marginTop: -20,
+    marginBottom: -20,
+  },
+  expand: {
+    marginLeft: 'auto',
   },
   userName: {
+    fontWeight: 600,
+    color: '#52b274',
     cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
   },
+  date: {
+    color: '#888',
+    marginLeft: 8,
+  },
+  deleteIcon: {
+    color: '#f44336',
+  },
+  ...buttonStyle,
 }))
 
-function PostActionCard({ postAction, postUrl, selected }) {
+function PostActionCard({ postAction, postUrl, selected, refetchPost }) {
   const [commentSelected, setCommentSelected] = useState()
   const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { user, content, created, _id } = postAction
-  const { username, avatar, name } = user
+  const user = useSelector((state) => state.user.data)
+  const { user: actionUser, content, created, _id } = postAction
+  const { username, avatar, name } = actionUser
   const parsedDate = parseCommentDate(created)
   const voteType = get(postAction, 'type')
   const quote = get(postAction, 'quote')
@@ -91,6 +87,92 @@ function PostActionCard({ postAction, postUrl, selected }) {
   let postContent = content
   let svgIcon
   let voteTags = ''
+
+  const [deleteVote] = useMutation(DELETE_VOTE, {
+    update(cache, { data: { deleteVote } }) {
+      cache.modify({
+        fields: {
+          votes(existing = [], { readField }) {
+            return existing.filter(
+              (voteRef) => readField('_id', voteRef) !== deleteVote._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const [deleteComment] = useMutation(DELETE_COMMENT, {
+    update(cache, { data: { deleteComment } }) {
+      cache.modify({
+        fields: {
+          comments(existing = [], { readField }) {
+            return existing.filter(
+              (commentRef) => readField('_id', commentRef) !== deleteComment._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const [deleteQuote] = useMutation(DELETE_QUOTE, {
+    update(cache, { data: { deleteQuote } }) {
+      cache.modify({
+        fields: {
+          quotes(existing = [], { readField }) {
+            return existing.filter(
+              (quoteRef) => readField('_id', quoteRef) !== deleteQuote._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    try {
+      if (type === 'Vote') {
+        await deleteVote({ variables: { voteId: _id } })
+        dispatch(
+          SET_SNACKBAR({
+            open: true,
+            message: 'Vote deleted successfully',
+            type: 'success',
+          }),
+        )
+        if (refetchPost) refetchPost()
+      } else if (type === 'Comment') {
+        await deleteComment({ variables: { commentId: _id } })
+        dispatch(
+          SET_SNACKBAR({
+            open: true,
+            message: 'Comment deleted successfully',
+            type: 'success',
+          }),
+        )
+        if (refetchPost) refetchPost()
+      } else if (type === 'Quote') {
+        await deleteQuote({ variables: { quoteId: _id } })
+        dispatch(
+          SET_SNACKBAR({
+            open: true,
+            message: 'Quote deleted successfully',
+            type: 'success',
+          }),
+        )
+        if (refetchPost) refetchPost()
+      }
+    } catch (err) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: `Delete Error: ${err.message}`,
+          type: 'danger',
+        }),
+      )
+    }
+  }
 
   const handleClick = useCallback(() => {
     if (!commentSelected) {
@@ -150,7 +232,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
       {type === 'Vote' && (
         <CardContent className={classes.content}>
           <Typography display="inline">
-            {`❝ ${postAction.content} ❞`}
+            {`❝ ${postAction.content ? postAction.content : '(no text selected)'} ❞`}
           </Typography>
         </CardContent>
       )}
@@ -182,6 +264,11 @@ function PostActionCard({ postAction, postUrl, selected }) {
         <IconButton onClick={handleCopy}>
           <InsertLink />
         </IconButton>
+        {(user._id === actionUser._id || user.admin) && (
+          <IconButton onClick={handleDelete} className={classes.deleteIcon}>
+            <Delete />
+          </IconButton>
+        )}
       </CardActions>
       {open && (
         <SweetAlert
@@ -189,7 +276,7 @@ function PostActionCard({ postAction, postUrl, selected }) {
           success
           onConfirm={hideAlert}
           onCancel={hideAlert}
-          title="Comment URL copied!"
+          title="Link copied!"
           timeout={1000}
         />
       )}

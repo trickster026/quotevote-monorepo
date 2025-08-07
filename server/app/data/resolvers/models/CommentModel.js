@@ -29,8 +29,12 @@ const schema = mongoose.Schema({
     type: String,
     required: false,
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 schema.index({ content: 'text' });
 
-export default mongoose.model('comments', schema);
+export default mongoose.model('Comments', schema);

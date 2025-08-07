@@ -22,14 +22,26 @@ export const Mutation = `type Mutation {
   # Mutation for updating/inserting votes
   addVote(vote: VoteInput!): Vote
 
+  # Mutation for deleting a vote
+  deleteVote(voteId: String!): DeletedVote
+
   # Mutation for creating new comments
   addComment(comment: CommentInput!): Comment
+
+  # Mutation for deleting a comment
+  deleteComment(commentId: String!): DeletedComment
 
   # Mutation for creating new quote
   addQuote(quote: QuoteInput!): Quote
 
+  # Mutation for deleting a quote
+  deleteQuote(quoteId: String!): DeletedQuote
+
   # Mutation for adding a message
    createMessage(message: MessageInput!): Message
+
+  # Mutation for deleting a message
+   deleteMessage(messageId: String!): DeletedMessage
 
   # Mutation for creating a post chat room
    createPostMessageRoom(postId: String!): MessageRoom

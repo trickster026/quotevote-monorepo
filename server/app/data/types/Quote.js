@@ -8,6 +8,7 @@ type Quote {
   quoter: String
   startWordIndex: Int
   endWordIndex: Int
+  deleted: Boolean
   user: User
 }
 `;

@@ -10,6 +10,7 @@ type Message {
   created: Date
   type: String
   mutation_type: String
+  deleted: Boolean
   user: User
   readBy: JSON
 }
