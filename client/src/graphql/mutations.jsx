@@ -52,6 +52,14 @@ export const VOTE = gql`
   }
 `
 
+export const DELETE_VOTE = gql`
+  mutation deleteVote($voteId: String!) {
+    deleteVote(voteId: $voteId) {
+      _id
+    }
+  }
+`
+
 export const ADD_COMMENT = gql`
   mutation addComment($comment: CommentInput!) {
     addComment(comment: $comment) {
@@ -60,9 +68,25 @@ export const ADD_COMMENT = gql`
   }
 `
 
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($commentId: String!) {
+    deleteComment(commentId: $commentId) {
+      _id
+    }
+  }
+`
+
 export const ADD_QUOTE = gql`
   mutation addQuote($quote: QuoteInput!) {
     addQuote(quote: $quote) {
+      _id
+    }
+  }
+`
+
+export const DELETE_QUOTE = gql`
+  mutation deleteQuote($quoteId: String!) {
+    deleteQuote(quoteId: $quoteId) {
       _id
     }
   }
@@ -94,6 +118,14 @@ export const SEND_MESSAGE = gql`
         avatar
         contributorBadge
       }
+    }
+  }
+`
+
+export const DELETE_MESSAGE = gql`
+  mutation deleteMessage($messageId: String!) {
+    deleteMessage(messageId: $messageId) {
+      _id
     }
   }
 `

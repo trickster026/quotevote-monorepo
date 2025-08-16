@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
-    Grid, Paper, Typography, Avatar,
+    Grid, Paper, Typography, Avatar, IconButton,
 } from '@material-ui/core'
+import { Delete } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import AvatarDisplay from '../Avatar'
 import PostChatReactions from './PostChatReactions'
 import { GET_MESSAGE_REACTIONS } from '../../graphql/query'
+import { DELETE_MESSAGE } from '../../graphql/mutations'
+import { SET_SNACKBAR } from '../../store/ui'
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -56,6 +59,23 @@ const useStyles = makeStyles(() => ({
       right: '-10px',
     },
   },
+  deleteIcon: {
+    color: '#f44336',
+    fontSize: '16px',
+  },
+  messageContainer: {
+    position: 'relative',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: '-8px',
+    right: '-8px',
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    padding: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+  },
 }))
 
 function PostChatMessage(props) {
@@ -63,7 +83,9 @@ function PostChatMessage(props) {
   const { username, name } = message.user
   const history = useHistory()
   const classes = useStyles()
-  const userId = useSelector((state) => state.user.data._id)
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.data)
+  const userId = user._id
   const isDefaultDirection = message.userId !== userId
   const direction = isDefaultDirection ? 'row' : 'row-reverse'
 
@@ -72,6 +94,41 @@ function PostChatMessage(props) {
   })
 
   const { messageReactions } = (!loading && data) || []
+
+  const [deleteMessage] = useMutation(DELETE_MESSAGE, {
+    update(cache, { data: { deleteMessage } }) {
+      cache.modify({
+        fields: {
+          messages(existing = [], { readField }) {
+            return existing.filter(
+              (messageRef) => readField('_id', messageRef) !== deleteMessage._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    try {
+      await deleteMessage({ variables: { messageId: message._id } })
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: 'Message deleted successfully',
+          type: 'success',
+        }),
+      )
+    } catch (err) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: `Delete Error: ${err.message}`,
+          type: 'danger',
+        }),
+      )
+    }
+  }
 
   const handleRedirectToProfile = () => {
     history.push(`/Profile/${username}`)
@@ -93,7 +150,7 @@ function PostChatMessage(props) {
           <AvatarDisplay {...message.user.avatar} />
         </Avatar>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={10} className={classes.messageContainer}>
         <Paper elevation={0} className={isDefaultDirection ? classes.bubble : classes.bubbleReverse}>
           <Typography className={classes.text}>
             {message.text}
@@ -107,6 +164,15 @@ function PostChatMessage(props) {
             username={username}
           />
         </Paper>
+        {(user._id === message.userId || user.admin) && (
+          <IconButton 
+            onClick={handleDelete} 
+            className={classes.deleteButton}
+            size="small"
+          >
+            <Delete className={classes.deleteIcon} />
+          </IconButton>
+        )}
       </Grid>
     </Grid>
   )

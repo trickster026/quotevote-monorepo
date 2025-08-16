@@ -27,14 +27,17 @@ export const resolver_mutations = function () {
     // Domain
     createGroup: groupMutations.createGroup(),
 
-    // // Votes mutations
+    // Votes mutations
     addVote: voteMutations.addVote(),
+    deleteVote: voteMutations.deleteVote(),
 
     // Comment mutations
     addComment: commentMutations.addComment(),
+    deleteComment: commentMutations.deleteComment(),
 
     // Quote mutation
     addQuote: quoteMutations.addQuote(),
+    deleteQuote: quoteMutations.deleteQuote(),
 
     // Message mutations
     createMessage: messageMutations.createMessage(),
@@ -42,6 +45,7 @@ export const resolver_mutations = function () {
     updateMessageReadBy: messageMutations.updateMessageReadBy(),
     addMessageReaction: messageMutations.addMessageReaction(),
     updateReaction: messageMutations.updateReaction(),
+    deleteMessage: messageMutations.deleteMessage(),
 
     // Stripe mutations
     addStripeCustomer: stripeMutations.addStripeCustomer(),

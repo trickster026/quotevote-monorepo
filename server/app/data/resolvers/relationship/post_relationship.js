@@ -13,15 +13,15 @@ export const postRelationship = () => {
       return result;
     },
     async comments(post) {
-      const comments = await CommentModel.find({ postId: post._id });
+      const comments = await CommentModel.find({ postId: post._id, deleted: { $ne: true } });
       return comments;
     },
     async votes(post) {
-      const votes = await VoteModel.find({ postId: post._id });
+      const votes = await VoteModel.find({ postId: post._id, deleted: { $ne: true } });
       return votes;
     },
     async quotes(post) {
-      const quotes = await QuoteModel.find({ postId: post._id });
+      const quotes = await QuoteModel.find({ postId: post._id, deleted: { $ne: true } });
       return quotes;
     },
     async messageRoom(post) {

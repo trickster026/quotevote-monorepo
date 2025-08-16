@@ -97,7 +97,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
   const parsedCreated = moment(created).format('LLL')
 
   // State declarations
-  const [selectedText, setSelectedText] = useState('')
+  const [selectedText, setSelectedText] = useState({ text: '', startIndex: 0, endIndex: 0 })
   const [open, setOpen] = useState(false)
   const [openInvite, setOpenInvite] = useState(false)
 
@@ -304,14 +304,14 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
     Array.isArray(post.rejectedBy) &&
     post.rejectedBy.some((id) => id?.toString() === userIdStr)
 
-  // Check if user has already voted on this post
+  // Check if user has already voted on this post (ignore deleted votes)
   const hasVoted = Array.isArray(post.votedBy) && 
-    post.votedBy.some((vote) => vote.userId?.toString() === userIdStr)
+    post.votedBy.some((vote) => vote.userId?.toString() === userIdStr && vote.deleted !== true)
 
-  // Get the user's vote type if they have voted
+  // Get the user's vote type if they have voted (ignore deleted votes)
   const getUserVoteType = () => {
     if (!hasVoted) return null
-    const userVote = post.votedBy.find((vote) => vote.userId?.toString() === userIdStr)
+    const userVote = post.votedBy.find((vote) => vote.userId?.toString() === userIdStr && vote.deleted !== true)
     return userVote ? userVote.type : null
   }
 
@@ -454,7 +454,6 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
   }
   const handleVoting = async (obj) => {
     if (!ensureAuth()) return
-    
     // Check if user has already voted
     if (hasVoted) {
       dispatch(
@@ -468,7 +467,7 @@ function Post({ post, user, postHeight, postActions, refetchPost }) {
     }
     
     const vote = {
-      content: selectedText.text,
+      content: selectedText.text || '',
       postId: post._id,
       userId: user._id,
       type: obj.type,

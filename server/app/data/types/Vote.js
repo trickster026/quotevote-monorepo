@@ -8,6 +8,8 @@ type Vote {
   tags: String
   startWordIndex: Int
   endWordIndex: Int
+  deleted: Boolean
   user: User
+  content: String
 }
 `;

@@ -3,16 +3,18 @@ import React, { useState, useEffect } from 'react'
 import {
   Card, CardActions, CardContent, CardHeader, IconButton,
 } from '@material-ui/core'
-import { InsertEmoticon, InsertLink } from '@material-ui/icons'
+import { InsertEmoticon, InsertLink, Delete } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { useMutation } from '@apollo/react-hooks'
 import copy from 'clipboard-copy'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import AvatarDisplay from '../Avatar'
 import { parseCommentDate } from '../../utils/momentUtils'
-import { SET_FOCUSED_COMMENT } from '../../store/ui'
+import { SET_FOCUSED_COMMENT, SET_SNACKBAR } from '../../store/ui'
+import { DELETE_COMMENT } from '../../graphql/mutations'
 import buttonStyle from '../../assets/jss/material-dashboard-pro-react/components/buttonStyle'
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#f1e8c1',
     width: '100%',
   },
+  deleteIcon: {
+    color: '#f44336',
+  },
   ...buttonStyle,
 }))
 
@@ -50,6 +55,7 @@ function Comment({ comment, postUrl, selected }) {
   const history = useHistory()
   const parsedDate = parseCommentDate(created)
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user.data)
   const [open, setOpen] = useState(false)
   const hideAlert = () => {
     setOpen(false)
@@ -59,6 +65,41 @@ function Comment({ comment, postUrl, selected }) {
   const handleCopy = async () => {
     await copy(`${baseUrl}${postUrl}/comment#${_id}`)
     setOpen(true)
+  }
+
+  const [deleteComment] = useMutation(DELETE_COMMENT, {
+    update(cache, { data: { deleteComment } }) {
+      cache.modify({
+        fields: {
+          comments(existing = [], { readField }) {
+            return existing.filter(
+              (commentRef) => readField('_id', commentRef) !== deleteComment._id,
+            )
+          },
+        },
+      })
+    },
+  })
+
+  const handleDelete = async () => {
+    try {
+      await deleteComment({ variables: { commentId: _id } })
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: 'Comment deleted successfully',
+          type: 'success',
+        }),
+      )
+    } catch (err) {
+      dispatch(
+        SET_SNACKBAR({
+          open: true,
+          message: `Delete Error: ${err.message}`,
+          type: 'danger',
+        }),
+      )
+    }
   }
 
   useEffect(() => {
@@ -99,6 +140,11 @@ function Comment({ comment, postUrl, selected }) {
         <IconButton onClick={handleCopy}>
           <InsertLink />
         </IconButton>
+        {(user._id === comment.userId || user.admin) && (
+          <IconButton onClick={handleDelete} className={classes.deleteIcon}>
+            <Delete />
+          </IconButton>
+        )}
       </CardActions>
       {open && (
         <SweetAlert

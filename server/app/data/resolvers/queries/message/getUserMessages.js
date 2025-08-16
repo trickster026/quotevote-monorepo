@@ -6,7 +6,10 @@ import UserModel from '../../models/UserModel';
 export const getUserMessages = () => {
   return async (_, args) => {
     const messageRoomObjectId = new ObjectId(args.messageRoomId);
-    const messages = await MessageModel.find({ messageRoomId: messageRoomObjectId });
+    const messages = await MessageModel.find({ 
+      messageRoomId: messageRoomObjectId,
+      deleted: { $ne: true }
+    });
     const messageRoom = await MessageRoomModel.findById(messageRoomObjectId);
     const messagesWithUserData = await Promise.all(
       messages.map(async (message) => {

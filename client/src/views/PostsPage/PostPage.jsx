@@ -186,12 +186,19 @@ function PostPage({ postId }) {
     quotes: [],
   }
 
+  // Filter out deleted comments
+  const filteredComments = comments.filter((c) => !c.deleted)
+  // Filter out deleted quotes
+  const filteredQuotes = quotes.filter((q) => !q.deleted)
+  // Filter out deleted votes
+  const filteredVotes = votes.filter((v) => !v.deleted)
+
   const postActions = useMemo(() => {
     let postActions = []
 
-    if (!isEmpty(comments)) {
+    if (!isEmpty(filteredComments)) {
       postActions = postActions.concat(
-        comments.map((comment) => ({
+        filteredComments.map((comment) => ({
           ...comment,
           __typename: 'Comment',
           commentQuote:
@@ -204,18 +211,18 @@ function PostPage({ postId }) {
       )
     }
 
-    if (!isEmpty(votes)) {
+    if (!isEmpty(filteredVotes)) {
       postActions = postActions.concat(
-        votes.map((vote) => ({
+        filteredVotes.map((vote) => ({
           ...vote,
           __typename: 'Vote',
         }))
       )
     }
 
-    if (!isEmpty(quotes)) {
+    if (!isEmpty(filteredQuotes)) {
       postActions = postActions.concat(
-        quotes.map((quote) => ({
+        filteredQuotes.map((quote) => ({
           ...quote,
           __typename: 'Quote',
         }))
@@ -262,6 +269,7 @@ function PostPage({ postId }) {
               loading={loadingPost}
               postActions={postActions}
               postUrl={url}
+              refetchPost={refetchPost}
             />
           </div>
           <div className={classes.mobileChatInputContainer}>
@@ -298,6 +306,7 @@ function PostPage({ postId }) {
             loading={loadingPost}
             postActions={postActions}
             postUrl={url}
+            refetchPost={refetchPost}
           />
         </div>
         <div className={classes.desktopChatInputContainer}>

@@ -6,6 +6,7 @@ export const getUnreadMessages = async (messageRoomId, context) => {
     messageRoomId,
     userId: { $ne: userId },
     readBy: { $nin: userId },
+    deleted: { $ne: true },
   });
   return unReadMessages;
 };

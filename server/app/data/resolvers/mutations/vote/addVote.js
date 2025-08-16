@@ -14,10 +14,11 @@ export const addVote = (pubsub) => {
     };
 
     try {
-      // Check if user has already voted on this post
+      // Check if user has already voted on this post (ignore deleted votes)
       const existingVote = await VoteModel.findOne({
         postId: voteData.postId,
         userId: voteData.userId,
+        deleted: { $ne: true },
       });
 
       if (existingVote) {

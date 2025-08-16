@@ -34,9 +34,12 @@ const schema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 schema.index({ content: 'text' });
-schema.index({ postId: 1, userId: 1 }, { unique: true });
 
-export default mongoose.model('votes', schema);
+export default mongoose.model('Votes', schema);
