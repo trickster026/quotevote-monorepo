@@ -50,7 +50,24 @@
     "npm": ">=8"
   },
   "author": "Oliver Molina <olivermolina10@gmail.com>",
-  "license": "MIT",
+  "contributors": [
+    "Neo Isaac Amao",
+    "Jovan Cahiles",
+    "Matt Polini",
+    "Sarah Naas",
+    "Jason Ribble",
+    "Micah Shute",
+    "Krishna Biradar",
+    "Akunna Nwosu",
+    "John May",
+    "Rafael Rodríguez",
+    "Dhiren Patel",
+    "David Nicholson",
+    "Vishal Thukral",
+    "Jon Kolman",
+    "Brahmananda Reddy"
+  ],  
+  "license": "LGPL-3.0-or-later",
   "dependencies": {
     "react-swipeable-views": "^0.14.0"
   }
