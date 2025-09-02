@@ -66,8 +66,13 @@ const useStyles = makeStyles((theme) => ({
   },
   groupInput: {
     backgroundColor: 'rgb(160, 243, 204, 0.6)',
-    width: 180,
+    width: '100%',
+    maxWidth: 220,
     marginLeft: 20,
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 4,
+      maxWidth: '100%',
+    },
   },
   label: {
     color: '#52b274',
@@ -83,6 +88,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '20px',
     marginRight: '20px',
     overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '16px',
+      marginRight: '16px',
+    },
   },
   scrollableContent: {
     flex: 1,
@@ -99,6 +108,38 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '20px',
     paddingBottom: '20px',
     borderTop: '1px solid #e0e0e0',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: '16px',
+      paddingRight: '16px',
+      paddingTop: '16px',
+      paddingBottom: '16px',
+    },
+  },
+  autocompletePopper: {
+    '& .MuiAutocomplete-paper': {
+      margin: '2px 0',
+      boxShadow: '0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12)',
+      borderRadius: '4px',
+    },
+  },
+  autocompleteListbox: {
+    backgroundColor: 'white',
+    maxHeight: '200px',
+    padding: '2px 0',
+    '& li': {
+      padding: '8px 16px',
+      minHeight: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      fontSize: '14px',
+      lineHeight: '1.2',
+      '&:hover': {
+        backgroundColor: 'rgba(82, 178, 116, 0.08)',
+      },
+      '&[data-focus="true"]': {
+        backgroundColor: 'rgba(82, 178, 116, 0.12)',
+      },
+    },
   },
 }))
 
@@ -114,22 +155,34 @@ function SubmitPostForm({ options = [], user, setOpen }) {
 
   const onSubmit = async (values) => {
     const { title, text, group } = values
+    
+    // Handle case where group might be a string (typed value)
+    const groupData = typeof group === 'string' ? { title: group } : group
+    
     try {
       let newGroup
-      const isNewGroup = group && !('_id' in group)
-      if (isNewGroup) {
-        newGroup = await createGroup({
-          variables: {
-            group: {
-              creatorId: user._id,
-              title: group.title,
-              description: `Description for: ${group.title} group`,
-              privacy: 'public',
+      const isNewGroup = groupData && !('_id' in groupData)
+      
+              if (isNewGroup) {
+          setIsCreatingGroup(true)
+          setNewGroupName(groupData.title)
+          
+          newGroup = await createGroup({
+            variables: {
+              group: {
+                creatorId: user._id,
+                title: groupData.title,
+                description: `Description for: ${groupData.title} group`,
+                privacy: 'public',
+              },
             },
-          },
-        })
+          })
+        
+        setIsCreatingGroup(false)
+        setNewGroupName('')
       }
-      const postGroupId = isNewGroup ? newGroup.data.createGroup._id : group._id
+      
+              const postGroupId = isNewGroup ? newGroup.data.createGroup._id : groupData._id
       const submitResult = await submitPost({
         variables: {
           post: {
@@ -145,6 +198,8 @@ function SubmitPostForm({ options = [], user, setOpen }) {
       setShareableLink(url)
       setShowAlert(true)
     } catch (err) {
+      setIsCreatingGroup(false)
+      setNewGroupName('')
       setError(err)
       setShowAlert(true)
     }
@@ -152,6 +207,8 @@ function SubmitPostForm({ options = [], user, setOpen }) {
 
   const [shareableLink, setShareableLink] = React.useState('')
   const [showAlert, setShowAlert] = React.useState(false)
+  const [isCreatingGroup, setIsCreatingGroup] = React.useState(false)
+  const [newGroupName, setNewGroupName] = React.useState('')
   const hideAlert = () => {
     setShowAlert(false)
     setShareableLink('')
@@ -240,7 +297,10 @@ function SubmitPostForm({ options = [], user, setOpen }) {
                 x
               </IconButton>
           }
-          style={{ padding: "20px", margin: 0 }}
+                     style={{ 
+             padding: isMobile ? "16px" : "20px", 
+             margin: 0 
+           }}
         />
         <Box className={classes.cardBody}>
           <InputBase
@@ -284,19 +344,48 @@ function SubmitPostForm({ options = [], user, setOpen }) {
         <CardActions className={classes.cardActions}>
           <Grid
             container
-            direction="row"
+            direction={isMobile ? "column" : "row"}
             justify="flex-start"
-            alignItems="center"
+            alignItems={isMobile ? "flex-start" : "center"}
+            spacing={isMobile ? 2 : 0}
+            style={{ width: '100%' }}
           >
-            <Typography>Who can see your post</Typography>
+            <Typography style={{ 
+              marginRight: isMobile ? '0px' : '10px',
+              marginBottom: isMobile ? '12px' : '0px',
+              fontWeight: 500
+            }}>
+              Who can see your post
+            </Typography>
+            
+            {isCreatingGroup && (
+              <Typography 
+                variant="caption" 
+                style={{ 
+                  color: '#52b274', 
+                  marginLeft: isMobile ? '0px' : '10px',
+                  marginBottom: isMobile ? '8px' : '0px',
+                  fontStyle: 'italic'
+                }}
+              >
+                Creating group "{newGroupName}"...
+              </Typography>
+            )}
 
             <Controller
               render={({ onChange, ...props }) => (
-                <Autocomplete
-                  {...props}
-                  variant="outlined"
-                  size="small"
-                  className={classes.groupInput}
+                                 <Autocomplete
+                   {...props}
+                   variant="outlined"
+                   size="small"
+                   className={classes.groupInput}
+                   freeSolo
+                   classes={{
+                     popper: classes.autocompletePopper,
+                     listbox: classes.autocompleteListbox,
+                   }}
+
+                  
                   onChange={(event, newValue) => {
                     let data
                     if (typeof newValue === 'string') {
@@ -308,29 +397,36 @@ function SubmitPostForm({ options = [], user, setOpen }) {
                       data = {
                         title: newValue.inputValue,
                       }
+                    } else if (newValue && newValue.title) {
+                      // Handle both existing groups and new typed values
+                      data = newValue
                     } else {
                       data = newValue
                     }
                     onChange(data)
                   }}
                   filterOptions={(groupOptions, params) => {
+                    // Use Material-UI's built-in filtering first
                     const filtered = filter(groupOptions, params)
-
-                    // Suggest the creation of a new value
-                    if (params.inputValue !== '') {
+                    
+                    // Add "Create new group" option if input doesn't match any existing option
+                    if (params.inputValue !== '' && 
+                        !groupOptions.some(option => 
+                          option.title.toLowerCase() === params.inputValue.toLowerCase()
+                        )) {
                       filtered.push({
                         inputValue: params.inputValue,
-                        title: `Add "${params.inputValue}"`,
+                        title: `Create new group: "${params.inputValue}"`,
                       })
                     }
-
+                    
                     return filtered
                   }}
                   selectOnFocus
-                  clearOnBlur
                   handleHomeEndKeys
-                  id="hashtag"
+                  id="group-selector"
                   options={options}
+
                   getOptionLabel={(option) => {
                     // Value selected with enter, right from the input
                     if (typeof option === 'string') {
@@ -343,37 +439,49 @@ function SubmitPostForm({ options = [], user, setOpen }) {
                     // Regular option
                     return option.title
                   }}
-                  renderOption={(option) => option.title}
+                  renderOption={(option) => (
+                    <span>
+                      {option.title}
+                    </span>
+                  )}
                   renderInput={(params) => (
                     <TextField
                       variant="outlined"
-                      className={classes.label}
                       {...params}
-                      label="Select a hashtag"
-                      name="hashtag"
-                      id="hashtag"
-                      inputRef={register({
-                        required: 'hashtag is required',
-                      })}
+                      label="Select or create a group"
+                      placeholder="Type to search or create new group"
+                      name="group"
+                      id="group-selector"
+                      error={errors.group}
+                      helperText={errors.group?.message}
                     />
                   )}
-                  inputRef={register({
-                    required: 'Hashtag is required',
-                  })}
                 />
               )}
               onChange={([, data]) => data}
               name="group"
               control={control}
               defaultValue=""
-            />
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="flex-end"
-            alignItems="flex-end"
-          >
+              rules={{ 
+                required: 'Group selection is required',
+                validate: (value) => {
+                  // Allow both selected groups and typed values
+                  if (!value) return 'Group selection is required'
+                  if (typeof value === 'string' && value.trim() === '') return 'Group selection is required'
+                  if (value && value.title && value.title.trim() === '') return 'Group selection is required'
+                  return true
+                }
+              }}
+                         />
+           </Grid>
+           
+           <Grid
+             container
+             direction="row"
+             justify="flex-end"
+             alignItems="flex-end"
+             style={{ marginTop: isMobile ? '16px' : '20px' }}
+           >
             <Button
               id="submit-button"
               type="submit"
