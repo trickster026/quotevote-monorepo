@@ -17,7 +17,7 @@ import format from 'date-fns/format'
 import { jwtDecode } from 'jwt-decode'
 import { GET_TOP_POSTS, GET_FEATURED_POSTS } from '../../graphql/query'
 import { serializePost } from '../../utils/objectIdSerializer'
-import PostsList from '../../components/Post/PostsList'
+import PaginatedPostsList from '../../components/Post/PaginatedPostsList'
 import ErrorBoundary from '../../components/ErrorBoundary'
 import Carousel from '../../components/Carousel/Carousel'
 import PostCard from '../../components/Post/PostCard'
@@ -25,6 +25,8 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import Tooltip from '@material-ui/core/Tooltip'
 import SearchGuestSections from '../../components/SearchContainer/SearchGuestSections'
 import GuestFooter from '../../components/GuestFooter'
+import SEOHead from '../../components/common/SEOHead'
+import { generateCanonicalUrl, generatePaginationUrls, generatePageTitle, generatePageDescription, extractUrlParams } from '../../utils/seo'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -300,10 +302,7 @@ export default function SearchPage() {
   const classes = useStyles()
   const [showResults, setShowResults] = useState(true)
   const [searchKey, setSearchKey] = useState('')
-  const hiddenPosts = useSelector((state) => state.ui.hiddenPosts) || []
   const user = useSelector((state) => state.user.data)
-  const limit = 12 + hiddenPosts.length
-  const [offset, setOffset] = useState(0)
   const [dateRangeFilter, setDateRangeFilter] = useState({
     startDate: null,
     endDate: null,
@@ -353,42 +352,6 @@ export default function SearchPage() {
     setIsGuestMode(guestMode)
   }, [user])
 
-  const variables = {
-    limit,
-    offset,
-    searchKey,
-    startDateRange: dateRangeFilter.startDate
-      ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
-      : '',
-    endDateRange: dateRangeFilter.endDate
-      ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
-      : '',
-    friendsOnly: (user && user._id) ? activeFilters.friends : false,
-    interactions: activeFilters.interactions,
-    ...(sortOrder === 'asc' ? { sortOrder } : {}), // Only include sortOrder if it's 'asc' (non-default)
-    // Add a dummy variable that changes when filters change to force refetch
-    filterKey: `${activeFilters.friends}-${activeFilters.interactions}-${
-      dateRangeFilter.startDate
-        ? format(dateRangeFilter.startDate, 'yyyy-MM-dd')
-        : ''
-    }-${
-      dateRangeFilter.endDate
-        ? format(dateRangeFilter.endDate, 'yyyy-MM-dd')
-        : ''
-    }-${sortOrder}`,
-  }
-  
-  // Debug logging for query variables
-  console.log('Query variables:', { ...variables, sortOrder })
-
-  const { loading, error, data, fetchMore, refetch } = useQuery(GET_TOP_POSTS, {
-    variables,
-    fetchPolicy: 'network-only',
-    skip: !showResults, // Always show results when showResults is true
-    errorPolicy: 'all', // Allow partial errors
-    notifyOnNetworkStatusChange: true,
-    pollInterval: 3000, // Poll every 3 seconds
-  })
 
   const { data: featuredData, refetch: refetchFeatured, loading: featuredLoading } = useQuery(GET_FEATURED_POSTS, {
     variables: {
@@ -428,50 +391,6 @@ export default function SearchPage() {
     }
   }, [activeFilters, sortOrder, dateRangeFilter])
 
-  // Function to trigger query refetch when filters change
-  const triggerQueryRefetch = () => {
-    console.log('Triggering query refetch with variables:', variables)
-    if (showResults) {
-      refetch(variables)
-    }
-  }
-
-  // Refetch when active filters change
-  useEffect(() => {
-    if (showResults) {
-      console.log('Active filters changed, refetching query')
-      refetch(variables)
-    }
-  }, [activeFilters.friends, activeFilters.interactions, showResults])
-
-  // Refetch when sort order changes
-  useEffect(() => {
-    if (showResults) {
-      console.log('Sort order changed, refetching query')
-      refetch(variables)
-    }
-    // Don't refetch featured posts when sort order changes for guest mode
-    // since we don't apply sort order to featured posts in guest mode
-  }, [sortOrder, showResults])
-
-  // Refetch when date range changes
-  useEffect(() => {
-    if (showResults && (dateRangeFilter.startDate || dateRangeFilter.endDate)) {
-      console.log('Date range changed, refetching query')
-      refetch(variables)
-    }
-  }, [dateRangeFilter.startDate, dateRangeFilter.endDate, showResults])
-
-  // Refetch when search key changes - with debouncing
-  useEffect(() => {
-    if (searchKey && showResults) {
-      const timeoutId = setTimeout(() => {
-        refetch(variables)
-      }, 300) // Debounce search for 300ms
-      
-      return () => clearTimeout(timeoutId)
-    }
-  }, [searchKey, showResults])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -479,12 +398,6 @@ export default function SearchPage() {
     setHasEverInteractedWithFilters(true)
     
     setShowResults(true)
-    // Trigger a refetch of the main posts query for all users
-    if (searchKey.trim()) {
-      setTimeout(() => {
-        refetch(variables)
-      }, 100)
-    }
   }
 
   const handleFriendsFilter = () => {
@@ -500,7 +413,6 @@ export default function SearchPage() {
         ...prev,
         friends: !prev.friends,
       }))
-      setOffset(0)
       setShowResults(true)
       return
     }
@@ -509,7 +421,6 @@ export default function SearchPage() {
       ...prev,
       friends: !prev.friends,
     }))
-    setOffset(0)
     setShowResults(true)
   }
 
@@ -525,7 +436,6 @@ export default function SearchPage() {
       ...prev,
       interactions: !prev.interactions,
     }))
-    setOffset(0)
     setShowResults(true)
   }
 
@@ -539,7 +449,6 @@ export default function SearchPage() {
       console.log('Sort order changing from', prev, 'to', newSortOrder)
       return newSortOrder
     })
-    setOffset(0)
     setShowResults(true)
   }
 
@@ -555,10 +464,6 @@ export default function SearchPage() {
     setHasEverInteractedWithFilters(true)
     
     setDateRangeFilter({ startDate, endDate })
-    setOffset(0)
-    setTimeout(() => {
-      triggerQueryRefetch()
-    }, 100)
     if (startDate && endDate) {
       setIsCalendarVisible(false)
       setFocusedInput(null)
@@ -568,10 +473,6 @@ export default function SearchPage() {
 
   const clearDateFilter = () => {
     setDateRangeFilter({ startDate: null, endDate: null })
-    setOffset(0)
-    setTimeout(() => {
-      triggerQueryRefetch()
-    }, 100)
   }
 
   const clearDateFilterAndClose = () => {
@@ -591,51 +492,7 @@ export default function SearchPage() {
     )
   }
 
-  // Return data exactly as received from API without any sorting
-  const processAndSortData = (rawData) => {
-    if (!rawData) return null
 
-    if (!rawData.posts || !rawData.posts.entities) {
-      return null
-    }
-
-    // Simply serialize the posts and return the data exactly as received
-    let processedData = {
-      ...rawData,
-      posts: {
-        ...rawData.posts,
-        entities: rawData.posts?.entities?.map((post) => serializePost(post)),
-      },
-    }
-
-    return processedData
-  }
-
-  // Handle GraphQL errors gracefully
-  const hasError =
-    error && error.graphQLErrors && error.graphQLErrors.length > 0
-  const errorMessage = hasError ? error.graphQLErrors[0].message : null
-
-  if (hasError && errorMessage?.includes('friendsOnly')) {
-    // If backend doesn't support friendsOnly, fall back to client-side filtering
-    console.warn(
-      'Backend does not support friendsOnly parameter, using client-side filtering',
-    )
-  }
-
-  const processedData = processAndSortData(data)
-  
-  // Debug logging for data processing
-  console.log('Data state:', {
-    loading,
-    error: error?.message,
-    data: data?.posts?.entities?.length || 0,
-    processedData: processedData?.posts?.entities?.length || 0,
-    showResults,
-    hasActiveFilters: hasActiveFilters(),
-    hasEverInteractedWithFilters,
-    sortOrder
-  })
 
   const featuredPosts = useMemo(() => {
     return (featuredData?.featuredPosts?.entities || []).map((post) =>
@@ -672,8 +529,45 @@ export default function SearchPage() {
     ))
   }, [featuredPosts])
 
+  // Generate SEO meta tags
+  const urlParams = extractUrlParams({ search: window.location.search })
+  const baseUrl = window.location.origin + window.location.pathname
+  const canonicalUrl = generateCanonicalUrl(baseUrl, {
+    ...urlParams,
+    searchKey,
+    sortOrder,
+    friendsOnly: activeFilters.friends,
+    interactions: activeFilters.interactions,
+    startDateRange: dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : '',
+    endDateRange: dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : '',
+  })
+
+  const pageTitle = generatePageTitle(
+    'Search Posts - QuoteVote',
+    urlParams.page,
+    1, // We don't have total pages here, but it's not critical for title
+    searchKey
+  )
+
+  const pageDescription = generatePageDescription(
+    'Search and discover posts, quotes, and conversations on QuoteVote. Find interesting discussions and join the conversation.',
+    urlParams.page,
+    1,
+    searchKey,
+    0, // We don't have total count here
+    urlParams.pageSize
+  )
+
   return (
     <ErrorBoundary>
+      <SEOHead
+        title={pageTitle}
+        description={pageDescription}
+        canonicalUrl={canonicalUrl}
+        keywords="search, posts, quotes, conversations, discussions, social media"
+        ogImage="/assets/search-quote-vote.png"
+        ogType="website"
+      />
       <div className={classes.root}>
         <Grid
           container
@@ -1053,80 +947,29 @@ export default function SearchPage() {
             </>
           )}
 
-          {/* Show database results when authenticated, searching, any filter is active, or user has ever interacted with filters */}
-          {(!isGuestMode || searchKey.trim() || hasActiveFilters() || hasEverInteractedWithFilters) && (
+          {/* Show database results when authenticated, searching, any filter is active, user has ever interacted with filters, */}
+          {/* OR when the URL contains a page parameter (>1). This ensures back-navigation with ?page works. */}
+          {(() => {
+            const { page } = extractUrlParams({ search: window.location.search })
+            const shouldShowDbResults = !isGuestMode || searchKey.trim() || hasActiveFilters() || hasEverInteractedWithFilters || page > 1
+            return shouldShowDbResults
+          })() && (
             <Grid item xs={12} className={classes.list}>
-              {loading && !processedData && (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <LoadingSpinner size={60} />
-                  <Typography
-                    variant="h6"
-                    style={{ marginTop: '1rem', color: '#666' }}
-                  >
-                    {searchKey
-                      ? 'Searching posts...'
-                      : hasActiveFilters()
-                      ? 'Applying filters...'
-                      : 'Loading posts...'}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    style={{ marginTop: '0.5rem', color: '#999' }}
-                  >
-                    {searchKey
-                      ? `Please wait while we search for "${searchKey}"`
-                      : hasActiveFilters()
-                      ? `Please wait while we apply filters: ${
-                          activeFilters.friends ? 'Friends only, ' : ''
-                        }${
-                          activeFilters.interactions
-                            ? 'Sorted by interactions, '
-                            : ''
-                        }${
-                          dateRangeFilter.startDate || dateRangeFilter.endDate
-                            ? 'Date range, '
-                            : ''
-                        }`.replace(/,\s*$/, '')
-                      : 'Please wait while we fetch the latest conversations'}
-                  </Typography>
-                </div>
-              )}
-
-              {processedData && (
-                <PostsList
-                  data={processedData}
-                  loading={loading}
-                  limit={limit}
-                  fetchMore={fetchMore}
-                  variables={variables}
-                  cols={1}
-                />
-              )}
-
-              {(!processedData ||
-                processedData?.posts?.entities?.length === 0) &&
-                !loading && (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      padding: '2rem',
-                      marginTop: '2rem',
-                    }}
-                  >
-                    <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
-                      🔍
-                    </div>
-                    <Typography variant="h6" style={{ color: '#666' }}>
-                      No posts found
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      style={{ color: '#999', marginTop: '0.5rem' }}
-                    >
-                      Try adjusting your search or filters
-                    </Typography>
-                  </div>
-                )}
+              <PaginatedPostsList
+                searchKey={searchKey}
+                startDateRange={dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : ''}
+                endDateRange={dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : ''}
+                friendsOnly={(user && user._id) ? activeFilters.friends : false}
+                interactions={activeFilters.interactions}
+                sortOrder={sortOrder === 'asc' ? sortOrder : undefined}
+                defaultPageSize={20}
+                pageParam="page"
+                pageSizeParam="page_size"
+                cols={1}
+                showPageInfo={true}
+                showFirstLast={true}
+                maxVisiblePages={5}
+              />
             </Grid>
           )}
 
