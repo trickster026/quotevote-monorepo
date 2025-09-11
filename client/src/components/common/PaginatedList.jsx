@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, CircularProgress, Typography } from '@material-ui/core'
+import { Skeleton } from '@material-ui/lab'
 import Pagination from './Pagination'
 import StickyPaginationWrapper from './StickyPaginationWrapper'
 import { usePagination } from '../../hooks/usePagination'
@@ -131,15 +132,14 @@ function PaginatedList({
       {/* Content */}
       <Box className={`${classes.content} ${contentClassName || ''}`}>
         {/* Handle loading state */}
-        {loading && !data ? (
+        {loading && (!data || data.length === 0) ? (
           renderLoading ? (
             renderLoading()
           ) : (
             <Box className={classes.loading}>
-              <CircularProgress size={40} />
-              <Typography variant="body2" style={{ marginLeft: 16 }}>
-                Loading...
-              </Typography>
+              <Box style={{ width: '100%', maxWidth: '600px' }}>
+                <Skeleton variant="rect" height={200} style={{ borderRadius: '8px' }} />
+              </Box>
             </Box>
           )
         ) : error ? (
@@ -172,8 +172,8 @@ function PaginatedList({
               )}
             </Box>
           )
-        ) : !data || data.length === 0 ? (
-          /* Handle empty state */
+        ) : !loading && (!data || data.length === 0) ? (
+          /* Handle empty state - only show when not loading and no data */
           renderEmpty ? (
             renderEmpty()
           ) : (

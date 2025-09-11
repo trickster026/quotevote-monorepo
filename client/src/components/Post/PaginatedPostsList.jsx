@@ -6,6 +6,7 @@ import { Grid, Box } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import { SET_HIDDEN_POSTS } from 'store/ui'
 import PostCard from './PostCard'
+import PostSkeleton from './PostSkeleton'
 import PaginatedList from '../common/PaginatedList'
 import { GET_TOP_POSTS } from '../../graphql/query'
 import { createGraphQLVariables, extractPaginationData } from '../../utils/pagination'
@@ -128,6 +129,7 @@ function PaginatedPostsList({
 
   // Extract and process data
   const { entities, pagination: paginationData } = extractPaginationData(data, 'posts')
+
   
   // Filter out hidden posts and add rank
   const processedPosts = entities
@@ -184,10 +186,17 @@ function PaginatedPostsList({
 
   // Render loading state
   const renderLoading = () => (
-    <Box style={{ textAlign: 'center', padding: '2rem' }}>
-      <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
-      <p style={{ color: '#666' }}>Loading posts...</p>
-    </Box>
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="stretch"
+      spacing={2}
+    >
+      <Grid item className={classes.postCard} style={{ width: '100%', maxWidth: '100%' }}>
+        <PostSkeleton />
+      </Grid>
+    </Grid>
   )
 
   return (

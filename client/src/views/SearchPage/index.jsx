@@ -948,10 +948,11 @@ export default function SearchPage() {
           )}
 
           {/* Show database results when authenticated, searching, any filter is active, user has ever interacted with filters, */}
-          {/* OR when the URL contains a page parameter (>1). This ensures back-navigation with ?page works. */}
+          {/* OR when the URL contains a page parameter. This ensures back-navigation with ?page works. */}
           {(() => {
             const { page } = extractUrlParams({ search: window.location.search })
-            const shouldShowDbResults = !isGuestMode || searchKey.trim() || hasActiveFilters() || hasEverInteractedWithFilters || page > 1
+            const hasPageParam = window.location.search.includes('page=')
+            const shouldShowDbResults = !isGuestMode || searchKey.trim() || hasActiveFilters() || hasEverInteractedWithFilters || hasPageParam
             return shouldShowDbResults
           })() && (
             <Grid item xs={12} className={classes.list}>

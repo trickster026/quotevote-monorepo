@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { IconButton, Tooltip } from '@material-ui/core'
+import { IconButton, Button } from '@material-ui/core'
 import Card from 'mui-pro/Card/Card'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
@@ -32,6 +32,7 @@ const GET_GROUP = gql`
     }
   }
 `
+
 
 const useStyles = makeStyles((theme) => ({
   cardRootStyle: {
@@ -160,8 +161,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#000000',
-    whiteSpace: 'nowrap',
     cursor: 'pointer',
+    wordWrap: 'break-word',
+    overflowWrap: 'break-word',
+    hyphens: 'auto',
     [theme.breakpoints.down('sm')]: {
       fontSize: 18,
     },
@@ -179,17 +182,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: 300,
     color: '#000000',
+    lineHeight: '1.5',
+    textAlign: 'left',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 14,
+    },
+  },
+  postContentTruncated: {
     display: '-webkit-box',
     WebkitLineClamp: 4,
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    lineHeight: '1.5',
     maxHeight: '72px',
-    textAlign: 'left',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 14,
-    },
   },
   contentSection: {
     display: 'flex',
@@ -212,14 +217,31 @@ const useStyles = makeStyles((theme) => ({
     color: '#000000',
   },
   groupName: {
-    fontSize: '14px',
-    color: '#666',
+    fontSize: '12px',
+    color: '#52b274',
+    fontWeight: 600,
     padding: '4px 8px',
-    borderRadius: '4px',
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    borderRadius: '12px',
+    backgroundColor: 'rgba(82, 178, 116, 0.1)',
+    border: '1px solid rgba(82, 178, 116, 0.2)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
     '&:before': {
-      content: '"•"',
-      marginRight: '4px',
+      content: '"#"',
+      marginRight: '2px',
+    },
+  },
+  showMoreButton: {
+    color: '#52b274',
+    fontSize: '14px',
+    fontWeight: 500,
+    textTransform: 'none',
+    padding: '4px 0',
+    marginTop: '8px',
+    minWidth: 'auto',
+    '&:hover': {
+      backgroundColor: 'transparent',
+      textDecoration: 'underline',
     },
   },
 }))
@@ -249,6 +271,9 @@ function PostCard(props) {
   const user = useSelector((state) => state.user.data)
   const classes = useStyles(props)
   const { width } = props
+  
+  // State for show more/less functionality
+  const [isExpanded, setIsExpanded] = useState(false)
   const {
     _id,
     text,
@@ -269,7 +294,11 @@ function PostCard(props) {
   } = props
   const { messages } = messageRoom
   const contentLimit = limitText ? 20 : 200
-  let postText = stringLimit(text, contentLimit)
+  const isContentTruncated = text && text.length > contentLimit
+  const shouldShowButton = isContentTruncated && !limitText
+  
+  // Determine what text to show based on expanded state
+  let postText = isExpanded || !shouldShowButton ? text : stringLimit(text, contentLimit)
 
   let interactions = []
 
@@ -291,7 +320,6 @@ function PostCard(props) {
   }
 
   const cardBg = getCardBg(activityType)
-  const postTitleStringLimit = width === 'xs' ? 25 : 50
   const guestGuard = useGuestGuard()
   
   const handleRedirectToProfile = (username) => {
@@ -303,7 +331,7 @@ function PostCard(props) {
   // TODO: show quote up/down
   const { upQuote, downQuote } = useMemo(() => {
     if (!votes || votes?.length === 0) {
-      return {
+return {
         upQuote: 0,
         downQuote: 0,
       }
@@ -315,10 +343,14 @@ function PostCard(props) {
     }
   }, [votes])
 
-  const { data: groupData } = useQuery(GET_GROUP, {
+  const { data: groupData, loading: groupLoading, error: groupError } = useQuery(GET_GROUP, {
     variables: { groupId },
     skip: !groupId,
+    errorPolicy: 'all', // Don't fail the entire component if group query fails
+    fetchPolicy: 'cache-first', // Use cache if available
   })
+
+  // Debug logging removed
 
   const handleCardClick = () => {
     // For all users (including guests), allow viewing posts
@@ -326,13 +358,10 @@ function PostCard(props) {
     history.push(url.replace(/\?/g, ''))
   }
 
-
-  const truncatedTitle = stringLimit(
-    title,
-    limitText ? 20 : postTitleStringLimit,
-  )
-  const isTitleTruncated =
-    title.length > (limitText ? 20 : postTitleStringLimit)
+  const handleShowMoreToggle = (e) => {
+    e.stopPropagation() // Prevent card click when clicking show more button
+    setIsExpanded(!isExpanded)
+  }
 
   return (
     <Card
@@ -360,11 +389,6 @@ function PostCard(props) {
                 {rejectedBy?.length}
               </Typography>
             </div>
-            {groupData?.group && (
-              <Typography className={classes.groupName}>
-                {groupData.group.title}
-              </Typography>
-            )}
           </div>
           <div className={classes.interactions}>
             <Typography>{interactions.length} interactions</Typography>
@@ -378,21 +402,42 @@ function PostCard(props) {
           spacing={2}
         >
           <Grid item xs={12}>
-            <Tooltip
-              title={isTitleTruncated ? title : ''}
-              placement="top"
-              arrow
-            >
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
               <Typography className={classes.postTitle}>
-                {truncatedTitle}
+                {title}
               </Typography>
-            </Tooltip>
+              {groupId && (
+                <Typography className={classes.groupName}>
+                  {groupData?.group 
+                    ? groupData.group.title 
+                    : groupLoading 
+                      ? 'Loading...'
+                      : groupError 
+                        ? `#GROUP` // Show generic group indicator as fallback
+                        : ''
+                  }
+                </Typography>
+              )}
+            </div>
           </Grid>
           <Grid item xs={12}>
             <div className={classes.contentSection}>
-              <Typography className={classes.postContent}>
+              <Typography 
+                className={classNames(
+                  classes.postContent,
+                  shouldShowButton && !isExpanded && classes.postContentTruncated
+                )}
+              >
                 {postText}
               </Typography>
+              {shouldShowButton && (
+                <Button
+                  className={classes.showMoreButton}
+                  onClick={handleShowMoreToggle}
+                >
+                  {isExpanded ? 'Show Less' : 'Show More'}
+                </Button>
+              )}
             </div>
           </Grid>
         </Grid>

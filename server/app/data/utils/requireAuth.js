@@ -17,6 +17,8 @@ const PUBLIC_QUERIES = [
   'messageReactions',
   'user',
   'getUserFollowInfo',
+  'group',
+  'groups',
   // add more public queries/mutations
 ];
 

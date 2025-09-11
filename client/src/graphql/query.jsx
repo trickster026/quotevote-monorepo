@@ -238,6 +238,7 @@ export const GET_TOP_POSTS = gql`
       entities {
         _id
         userId
+        groupId
         title
         text
         upvotes
@@ -309,6 +310,7 @@ export const GET_PAGINATED_POSTS = gql`
       entities {
         _id
         userId
+        groupId
         title
         text
         upvotes
@@ -621,6 +623,7 @@ export const GET_FEATURED_POSTS = gql`
       entities {
         _id
         userId
+        groupId
         title
         text
         upvotes
