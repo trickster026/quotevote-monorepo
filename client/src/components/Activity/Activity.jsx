@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import SubHeader from '../SubHeader'
-import ActivityList from './ActivityList'
-import { GET_USER_ACTIVITY } from '../../graphql/query'
+import PaginatedActivityList from './PaginatedActivityList'
 import { FILTER_VALUE } from '../../store/filter'
 import ErrorBoundary from '../ErrorBoundary'
 
@@ -30,13 +28,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Activity({ showSubHeader = true, userId = '' }) {
   const dispatch = useDispatch()
   const classes = useStyles()
-  const limit = 15
-  const [offset, setOffset] = useState(0)
   // const conditions = ['POSTED', 'VOTED', 'COMMENTED', 'QUOTED', 'LIKED']
   const conditions = ['POSTED']
   const [selectedEvent, setSelectedEvent] = useState(conditions)
   const [dateRangeFilter, setDateRangeFilter] = useState({ startDate: '', endDate: '' })
   const [selectAll, setSelectAll] = useState('ALL')
+  
   const handleSelectAll = (event, newSelectAll) => {
     if (newSelectAll.length) {
       setSelectedEvent(conditions)
@@ -44,6 +41,7 @@ export default function Activity({ showSubHeader = true, userId = '' }) {
     }
     setSelectAll(newSelectAll)
   }
+  
   const handleActivityEvent = (event, newActivityEvent) => {
     if (selectAll.length) {
       const newFilter = conditions.filter((condition) => !newActivityEvent.includes(condition))
@@ -61,20 +59,6 @@ export default function Activity({ showSubHeader = true, userId = '' }) {
       dispatch(FILTER_VALUE(newActivityEvent))
     }
   }
-
-  const searchKey = ''
-  const variables = {
-    limit,
-    offset,
-    searchKey,
-    activityEvent: JSON.stringify(selectedEvent),
-    user_id: userId,
-    startDateRange: dateRangeFilter.startDate,
-    endDateRange: dateRangeFilter.endDate,
-  }
-  const { loading, data, fetchMore } = useQuery(GET_USER_ACTIVITY, {
-    variables,
-  })
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -103,15 +87,18 @@ export default function Activity({ showSubHeader = true, userId = '' }) {
         )}
 
         <Grid item xs={12} className={classes.list}>
-          <ActivityList
-            data={data}
-            loading={loading}
-            limit={limit}
-            selectAll={selectAll}
-            handleSelectAll={handleSelectAll}
-            handleActivityEvent={handleActivityEvent}
-            fetchMore={fetchMore}
-            variables={variables}
+          <PaginatedActivityList
+            userId={userId}
+            searchKey=""
+            startDateRange={dateRangeFilter.startDate}
+            endDateRange={dateRangeFilter.endDate}
+            activityEvent={selectedEvent}
+            defaultPageSize={15}
+            pageParam="page"
+            pageSizeParam="page_size"
+            showPageInfo={true}
+            showFirstLast={true}
+            maxVisiblePages={5}
           />
         </Grid>
       </Grid>

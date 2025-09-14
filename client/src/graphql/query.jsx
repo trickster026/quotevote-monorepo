@@ -238,6 +238,79 @@ export const GET_TOP_POSTS = gql`
       entities {
         _id
         userId
+        groupId
+        title
+        text
+        upvotes
+        downvotes
+        bookmarkedBy
+        created
+        url
+        rejectedBy
+        approvedBy
+        creator {
+          name
+          username
+          avatar
+          _id
+          contributorBadge
+        }
+        votes {
+          _id
+          startWordIndex
+          endWordIndex
+          type
+        }
+        comments {
+          _id
+        }
+        quotes {
+          _id
+        }
+        messageRoom {
+          _id
+          messages {
+            _id
+          }
+        }
+      }
+      pagination {
+        total_count
+        limit
+        offset
+      }
+    }
+  }
+`
+
+// Paginated version of GET_TOP_POSTS for page-based pagination
+export const GET_PAGINATED_POSTS = gql`
+  query paginatedPosts(
+    $limit: Int!
+    $offset: Int!
+    $searchKey: String!
+    $startDateRange: String
+    $endDateRange: String
+    $friendsOnly: Boolean
+    $interactions: Boolean
+    $userId: String
+    $sortOrder: String
+  ) {
+    posts(
+      limit: $limit
+      offset: $offset
+      searchKey: $searchKey
+      startDateRange: $startDateRange
+      endDateRange: $endDateRange
+      friendsOnly: $friendsOnly
+      interactions: $interactions
+      userId: $userId
+      sortOrder: $sortOrder
+    ) {
+      entities {
+        _id
+        userId
+        groupId
         title
         text
         upvotes
@@ -550,6 +623,7 @@ export const GET_FEATURED_POSTS = gql`
       entities {
         _id
         userId
+        groupId
         title
         text
         upvotes

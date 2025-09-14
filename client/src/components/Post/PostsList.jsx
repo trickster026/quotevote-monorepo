@@ -4,11 +4,12 @@ import { SET_HIDDEN_POSTS } from 'store/ui'
 import InfiniteScroll from 'react-infinite-scroller'
 import { Grid } from '@material-ui/core'
 import PostCard from './PostCard'
+import PostSkeleton from './PostSkeleton'
 import AlertSkeletonLoader from '../AlertSkeletonLoader'
 import LoadingSpinner from '../LoadingSpinner'
 
 export function LoadPostsList({
-  data, onLoadMore,
+  data, onLoadMore, loading = false,
 }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user.data)
@@ -17,10 +18,28 @@ export function LoadPostsList({
     dispatch(SET_HIDDEN_POSTS(post._id))
   }
 
-  if (!data || data.posts === 0) {
+  // Show loading state when loading and no data yet
+  if (loading && (!data || !data.posts || data.posts.entities.length === 0)) {
+    return (
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="stretch"
+        spacing={2}
+      >
+        <Grid item>
+          <PostSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
+
+  // Only show empty state when not loading and no data
+  if (!loading && (!data || data.posts === 0)) {
     return (
       <div style={{ width: '90%', textAlign: 'center' }}>
-        <span>No posts fetched.</span>
+        <span>No posts found.</span>
         <br />
       </div>
     )
@@ -64,17 +83,33 @@ export function LoadPostsList({
 LoadPostsList.propTypes = {
   data: PropTypes.object,
   onLoadMore: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
 
 export default function PostList({
   data, loading, limit, fetchMore, variables, cols,
 }) {
-  if (loading && !data) return <AlertSkeletonLoader limit={limit} rows={cols} />
+  if (loading && !data) {
+    return (
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="stretch"
+        spacing={2}
+      >
+        <Grid item>
+          <PostSkeleton />
+        </Grid>
+      </Grid>
+    )
+  }
 
   const newOffset = data && data.posts.entities.length
   return (
     <LoadPostsList
       data={data}
+      loading={loading}
       onLoadMore={() => fetchMore({
         variables: {
           ...variables,
