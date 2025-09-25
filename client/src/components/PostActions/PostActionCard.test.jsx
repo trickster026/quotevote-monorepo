@@ -1,3 +1,9 @@
+import { vi } from 'vitest'
+
+vi.mock('store/user', () => ({
+  tokenValidator: vi.fn(),
+}))
+
 import React from 'react'
 import { render } from '@testing-library/react'
 
