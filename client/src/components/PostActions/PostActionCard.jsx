@@ -41,14 +41,37 @@ const useStyles = makeStyles((theme) => ({
   expand: {
     marginLeft: 'auto',
   },
+  userContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
+    gridTemplateRows: 'auto auto',
+    columnGap: 0,
+    alignItems: 'start',
+    '& > .MuiIconButton-root': {
+      gridRow: '1 / 3',
+      gridColumn: 1,
+      padding: 0,
+    },
+  },
+  userInfo: {
+    display: 'grid',
+    gridTemplateRows: 'auto auto',
+    gridRow: '1 / 3',
+    gridColumn: 2,
+  },
   userName: {
+    padding: '0.5em 0em 0em 0em',
     fontWeight: 600,
     color: '#52b274',
+    gridRow: 1,
+    gridColumn: 1,
     cursor: 'pointer',
   },
   date: {
+    gridRow: 2,
+    gridColumn: 1,
+    fontSize: '0.85em',
     color: '#888',
-    marginLeft: 8,
   },
   deleteIcon: {
     color: '#f44336',
@@ -215,20 +238,25 @@ function PostActionCard({ postAction, postUrl, selected, refetchPost }) {
       onClick={() => handleClick()}
       className={selected ? classes.selectedRoot : classes.root}
     >
-      <IconButton onClick={() => handleRedirectToProfile()}>
-        <AvatarDisplay height={20} width={20} {...avatar} />
-      </IconButton>
-      <Typography display="inline">
-        <span 
-          className={classes.userName}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRedirectToProfile();
-          }}
-        >
-          {name}
-        </span> <span className={classes.date}>{parsedDate}</span>
-      </Typography>
+      <div className={classes.userContainer}>
+        <IconButton onClick={() => handleRedirectToProfile()}>
+          <AvatarDisplay height={20} width={20} {...avatar} />
+        </IconButton>
+
+        <Typography display="inline" className={classes.userInfo}>
+          <span
+            className={classes.userName}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRedirectToProfile();
+            }}
+          >
+            {name}
+            {type === 'Vote' && username}
+          </span>
+          <span className={classes.date}>{parsedDate}</span>
+        </Typography>
+      </div>
       {type === 'Vote' && (
         <CardContent className={classes.content}>
           <Typography display="inline">
@@ -241,6 +269,7 @@ function PostActionCard({ postAction, postUrl, selected, refetchPost }) {
           <p>
             {type === 'Quote' && '❝ '}
             {postContent}
+            {username}
             {type === 'Quote' && ' ❞'}
           </p>
           <p>
