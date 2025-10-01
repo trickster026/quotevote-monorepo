@@ -325,6 +325,9 @@ export default function SearchPage() {
   // Track if user has ever interacted with filters - once true, never show featured posts again
   const [hasEverInteractedWithFilters, setHasEverInteractedWithFilters] = useState(false)
 
+  // Track total count for results
+  const [totalCount, setTotalCount] = useState(0)
+
   // Simple authentication check that doesn't dispatch Redux actions
   const checkAuthentication = () => {
     const storedToken = localStorage.getItem('token')
@@ -955,23 +958,35 @@ export default function SearchPage() {
             const shouldShowDbResults = !isGuestMode || searchKey.trim() || hasActiveFilters() || hasEverInteractedWithFilters || hasPageParam
             return shouldShowDbResults
           })() && (
-            <Grid item xs={12} className={classes.list}>
-              <PaginatedPostsList
-                searchKey={searchKey}
-                startDateRange={dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : ''}
-                endDateRange={dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : ''}
-                friendsOnly={(user && user._id) ? activeFilters.friends : false}
-                interactions={activeFilters.interactions}
-                sortOrder={sortOrder === 'asc' ? sortOrder : undefined}
-                defaultPageSize={20}
-                pageParam="page"
-                pageSizeParam="page_size"
-                cols={1}
-                showPageInfo={true}
-                showFirstLast={true}
-                maxVisiblePages={5}
-              />
-            </Grid>
+            <>
+              {/* Total Count Display */}
+              {totalCount > 0 && (
+                <Grid item style={{ width: '100%', textAlign: 'center', marginTop: 16 }}>
+                  <Typography variant="h6" style={{ color: '#666', fontWeight: 500 }}>
+                    {totalCount.toLocaleString()} {totalCount === 1 ? 'result' : 'results'} found
+                  </Typography>
+                </Grid>
+              )}
+              
+              <Grid item xs={12} className={classes.list}>
+                <PaginatedPostsList
+                  searchKey={searchKey}
+                  startDateRange={dateRangeFilter.startDate ? format(dateRangeFilter.startDate, 'yyyy-MM-dd') : ''}
+                  endDateRange={dateRangeFilter.endDate ? format(dateRangeFilter.endDate, 'yyyy-MM-dd') : ''}
+                  friendsOnly={(user && user._id) ? activeFilters.friends : false}
+                  interactions={activeFilters.interactions}
+                  sortOrder={sortOrder === 'asc' ? sortOrder : undefined}
+                  defaultPageSize={20}
+                  pageParam="page"
+                  pageSizeParam="page_size"
+                  cols={1}
+                  showPageInfo={true}
+                  showFirstLast={true}
+                  maxVisiblePages={5}
+                  onTotalCountChange={setTotalCount}
+                />
+              </Grid>
+            </>
           )}
 
           {/* Show landing page content only when no filters are active and user has never interacted with filters */}

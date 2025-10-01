@@ -55,6 +55,7 @@ function PaginatedPostsList({
   onPageChange,
   onPageSizeChange,
   onRefresh,
+  onTotalCountChange,
   
   // Styling
   className,
@@ -129,6 +130,13 @@ function PaginatedPostsList({
 
   // Extract and process data
   const { entities, pagination: paginationData } = extractPaginationData(data, 'posts')
+
+  // Notify parent of total count changes
+  useEffect(() => {
+    if (onTotalCountChange && paginationData.total_count !== undefined) {
+      onTotalCountChange(paginationData.total_count)
+    }
+  }, [paginationData.total_count, onTotalCountChange])
 
   
   // Filter out hidden posts and add rank
@@ -261,6 +269,7 @@ PaginatedPostsList.propTypes = {
   onPageChange: PropTypes.func,
   onPageSizeChange: PropTypes.func,
   onRefresh: PropTypes.func,
+  onTotalCountChange: PropTypes.func,
   
   // Styling
   className: PropTypes.string,
