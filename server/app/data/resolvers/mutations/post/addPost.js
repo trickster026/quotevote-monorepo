@@ -8,7 +8,7 @@ import { RateLimiterMemory, RateLimiterRedis } from 'rate-limiter-flexible';
 import Redis from 'ioredis'
 
 const POST_LIMIT_COUNT = Number(process.env.POST_CREATION_LIMIT_COUNT_5MIN || 2);
-const POST_LIMIT_WINDOW = Number(process.env.POST_CREATION_LIMIT_WINDOW_5MIN || 5);
+const POST_LIMIT_WINDOW = Number(process.env.POST_CREATION_LIMIT_WINDOW_5MIN || 10);
 
 let addPostLimiter;
 if (process.env.REDIS_URL) {
