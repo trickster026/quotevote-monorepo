@@ -7,47 +7,30 @@ import MessageRoomModel from '../../models/MessageRoomModel';
 import { RateLimiterMemory, RateLimiterRedis } from 'rate-limiter-flexible';
 import Redis from 'ioredis'
 
-const POST_LIMIT_COUNT_5MIN = Number(process.env.POST_CREATION_LIMIT_COUNT_5MIN || 2);
-const POST_LIMIT_WINDOW_5MIN = Number(process.env.POST_CREATION_LIMIT_WINDOW_5MIN || 5);
-const POST_LIMIT_COUNT_60MIN = Number(process.env.POST_CREATION_LIMIT_COUNT_60MIN || 6);
-const POST_LIMIT_WINDOW_60MIN = Number(process.env.POST_CREATION_LIMIT_WINDOW_60MIN || 60);
+const POST_LIMIT_COUNT = Number(process.env.POST_CREATION_LIMIT_COUNT_5MIN || 2);
+const POST_LIMIT_WINDOW = Number(process.env.POST_CREATION_LIMIT_WINDOW_5MIN || 5);
 
-let addPostLimiter5Min;
-let addPostLimiter60Min;
+let addPostLimiter;
 if (process.env.REDIS_URL) {
   const redisClient = new Redis(process.env.REDIS_URL, {
     lazyConnect: true,
     maxRetriesPerRequest: 1
   })
 
-  addPostLimiter5Min = new RateLimiterRedis({
+  addPostLimiter = new RateLimiterRedis({
     store: redisClient,
-    keyPrefix: 'rl:addPost:5min',
-    points: POST_LIMIT_COUNT_5MIN,
-    duration: POST_LIMIT_WINDOW_5MIN * 60,
-    blockDuration: POST_LIMIT_WINDOW_5MIN * 60,
-  })
-
-  addPostLimiter60Min = new RateLimiterRedis({
-    store: redisClient,
-    keyPrefix: 'rl:addPost:60min',
-    points: POST_LIMIT_COUNT_60MIN,
-    duration: POST_LIMIT_WINDOW_60MIN * 60,
-    blockDuration: POST_LIMIT_WINDOW_60MIN * 60,
+    keyPrefix: 'rl:addPost',
+    points: POST_LIMIT_COUNT,
+    duration: POST_LIMIT_WINDOW * 60,
+    blockDuration: POST_LIMIT_WINDOW * 60,
   })
 
   logger.info("Rate Limiting using Redis Store")
 } else {
-  addPostLimiter5Min = new RateLimiterMemory({
-    points: POST_LIMIT_COUNT_5MIN,
-    duration: POST_LIMIT_WINDOW_5MIN * 60,
-    blockDuration: POST_LIMIT_WINDOW_5MIN * 60,
-  })
-
-  addPostLimiter60Min = new RateLimiterMemory({
-    points: POST_LIMIT_COUNT_60MIN,
-    duration: POST_LIMIT_WINDOW_60MIN * 60,
-    blockDuration: POST_LIMIT_WINDOW_60MIN * 60,
+  addPostLimiter = new RateLimiterMemory({
+    points: POST_LIMIT_COUNT,
+    duration: POST_LIMIT_WINDOW * 60,
+    blockDuration: POST_LIMIT_WINDOW * 60,
   })
 
   logger.info("Rate Limiting using Memory Store")
@@ -65,29 +48,13 @@ export const addPost = (pubsub) => {
 
     const isAdmin = !!user.admin;
     if (!isAdmin) {
-      // Try 5 min rate limiting first
       try {
-        await addPostLimiter5Min.consume(String(user._id));
-      } catch (fiveMinError) {
-        const message = `You have reached the limit of ${POST_LIMIT_COUNT_5MIN} posts per ${POST_LIMIT_WINDOW_5MIN} minutes. Please try again after ${POST_LIMIT_WINDOW_5MIN} minutes.`;
+        await addPostLimiter.consume(String(user._id));
+      } catch (limitError) {
+        const message = `You have reached the limit of ${POST_LIMIT_COUNT} posts per ${POST_LIMIT_WINDOW} minutes. Please try again after ${POST_LIMIT_WINDOW} minutes.`;
         logger.warn('[RATE_LIMIT_EXCEEDED] addPost:5min', {
           userId: user._id,
-          retryAfter: Math.round(fiveMinError.msBeforeNext / 1000),
-        });
-
-        const error = new Error(message);
-        error.extensions = { code: 'RATE_LIMIT_EXCEEDED' };
-        throw error;
-      }
-
-      // Try 60 min limit
-      try {
-        await addPostLimiter60Min.consume(String(user._id));
-      } catch (sixtyMinError) {
-        const message = `You have reached the limit of ${POST_LIMIT_COUNT_60MIN} posts per ${POST_LIMIT_WINDOW_60MIN} minutes. Please try again after ${POST_LIMIT_WINDOW_60MIN} minutes.`;
-        logger.warn('[RATE_LIMIT_EXCEEDED] addPost:60min', {
-          userId: user._id,
-          retryAfter: Math.round(sixtyMinError.msBeforeNext / 1000),
+          retryAfter: Math.round(limitError.msBeforeNext / 1000),
         });
 
         const error = new Error(message);
