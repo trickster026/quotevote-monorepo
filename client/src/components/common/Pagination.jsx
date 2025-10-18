@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '8px',
     fontWeight: 500,
     fontSize: '13px',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'background-color 0.3s cubic-bezier(0.4,0,0.2,1), color 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1)',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
     [theme.breakpoints.down('sm')]: {
       minWidth: '32px',
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '36px',
     height: '36px',
     borderRadius: '8px',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
     [theme.breakpoints.down('sm')]: {
       minWidth: '32px',

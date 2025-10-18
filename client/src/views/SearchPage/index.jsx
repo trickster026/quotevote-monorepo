@@ -582,7 +582,7 @@ export default function SearchPage() {
     if (!isGuestMode) return false
     
     const { page } = extractUrlParams({ search: window.location.search })
-    const hasPageParam = window.location.search.includes('page=')
+    const hasPageParam = Boolean(page)
     
     // Show landing page only when no search, no filters, no interactions, and no page params
     return !searchKey.trim() && !hasActiveFilters() && !hasEverInteractedWithFilters && !hasPageParam
