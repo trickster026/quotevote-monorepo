@@ -170,20 +170,6 @@ Located in `client/src/layouts/`
 
 ---
 
-### TokenExpired.jsx
-
-**Purpose**: Displays a modal to the user when their authentication token has expired.
-
-**Use Case**: Forcing a user to re-authenticate after a session timeout.
-
-**Props/API**:
-
-```javascript
-// This component does not accept any props.
-```
-
----
-
 ## Core UI Components
 
 Located in `client/src/components/`
@@ -196,7 +182,8 @@ Located in `client/src/components/`
 
 **Props/API**:
 
-```javascript
+*Note: This interface is illustrative; the codebase is currently JavaScript.*
+```ts
 interface AlertProps {
   AlertTitle: string;
   AlertBody: string;
@@ -231,8 +218,9 @@ interface AlertProps {
 
 **Props/API**:
 
-```javascript
-interface DisplayAvatarProps {
+*Note: This interface is illustrative; the codebase is currently JavaScript.*
+```ts
+interface AvatarProps {
   topType: string;
   accessoriesType: string;
   hairColor: string;
@@ -245,14 +233,14 @@ interface DisplayAvatarProps {
   mouthType: string;
   skinColor: string;
   hatColor: string;
-  height: any;
+  height?: number | string;
 }
 ```
 
 **Usage Example**:
 
 ```jsx
-<DisplayAvatar
+<Avatar
   topType="LongHairMiaWallace"
   accessoriesType="Prescription02"
   hairColor="BrownDark"
@@ -301,7 +289,8 @@ interface DisplayAvatarProps {
 
 **Props/API**:
 
-```javascript
+*Note: This interface is illustrative; the codebase is currently JavaScript.*
+```ts
 interface DatepickerProps {
   setOffset: (offset: number) => void;
   setDateRangeFilter: (range: { startDate: Date, endDate: Date }) => void;
@@ -314,7 +303,7 @@ interface DatepickerProps {
 
 ---
 
-### completSearch.jsx
+### CompleteSearch.jsx
 
 **Purpose**: Autocomplete search functionality
 
@@ -327,7 +316,7 @@ interface DatepickerProps {
 
 ---
 
-### customExpansionPanel.jsx
+### CustomExpansionPanel.jsx
 
 **Purpose**: Collapsible content sections
 
@@ -366,11 +355,25 @@ interface DatepickerProps {
 
 ---
 
-### activityBar.jsx
+### ActivityBar.jsx
 
 **Purpose**: Activity indicator and navigation bar
 
 **Use Case**: Show user activity status and quick navigation
+
+---
+
+### TokenExpired.jsx
+
+**Purpose**: Displays a modal to the user when their authentication token has expired.
+
+**Use Case**: Forcing a user to re-authenticate after a session timeout.
+
+**Props/API**:
+
+```javascript
+// This component does not accept any props.
+```
 
 ---
 
@@ -384,24 +387,26 @@ This directory contains basic, foundational UI components.
 
 **Props/API**:
 
-```javascript
+*Note: This interface is illustrative; the codebase is currently JavaScript.*
+```ts
+import * as React from 'react';
 interface ActivityCardProps {
-  avatar?: any;
+  avatar?: React.ReactNode | string;
   cardColor?: string;
   name?: string;
   date?: string;
   content?: string;
-  comments?: array;
-  quotes?: array;
-  messages?: array;
-  votes?: array;
+  comments?: any[];
+  quotes?: any[];
+  messages?: any[];
+  votes?: any[];
   liked?: boolean;
   width?: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
   onLike?: () => void;
   onCardClick?: () => void;
   handleRedirectToProfile?: () => void;
   username?: string;
-  post?: object;
+  post?: Record<string, unknown>;
   activityType?: string;
 }
 ```
@@ -414,7 +419,8 @@ interface ActivityCardProps {
 
 **Props/API**:
 
-```javascript
+*Note: This interface is illustrative; the codebase is currently JavaScript.*
+```ts
 interface DialogProps {
   title?: string;
   body?: string;
@@ -568,7 +574,7 @@ import CardBody from 'mui-pro/Card/CardBody';
 
 ### Specialized Components
 
-#### Button.jsx (CustomButtons)
+#### CustomButtons/Button.jsx
 **Purpose**: Enhanced button component with multiple variants
 **Features**:
 - Multiple sizes and colors
@@ -728,6 +734,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+const styles = {
+  root: {
+    padding: '1rem',
+  },
+};
 const useStyles = makeStyles(styles);
 
 export default function Component(props) {
@@ -934,17 +945,18 @@ NewComponent.propTypes = {
 ```
 client/src/
 ├── components/
-│   ├── activityBar.jsx
+│   ├── ActivityBar.jsx
 │   ├── Alert.jsx
 │   ├── AlertList.jsx
 │   ├── AlertSkeletonLoader.jsx
-│   ├── Avatar.jsx
-│   ├── completSearch.jsx
+│   ├── CompleteSearch.jsx
 │   ├── ContentList.jsx
-│   ├── customExpansionPanel.jsx
+│   ├── CustomExpansionPanel.jsx
 │   ├── DateSearchBar.jsx
+│   ├── Avatar.jsx
 │   ├── ErrorBoundary.jsx
 │   ├── LoadingSpinner.jsx
+│   ├── TokenExpired.jsx
 │   ├── Icons/
 │   │   ├── index.jsx
 │   │   ├── Calendar.jsx
@@ -960,7 +972,8 @@ client/src/
 ├── layouts/
 │   ├── Admin.jsx
 │   ├── Auth.jsx
-│   └── RTL.jsx
+│   ├── RTL.jsx
+│   └── Scoreboard.jsx
 ├── mui-pro/
 │   ├── Badge/
 │   ├── Card/
@@ -978,7 +991,8 @@ client/src/
 │   ├── Timeline/
 │   └── views/
 ├── ui/
-│   └── [basic UI primitives - to be documented]
+│   ├── ActivityCard/
+│   └── Dialog/
 └── views/
     └── [page-level components]
 ```
