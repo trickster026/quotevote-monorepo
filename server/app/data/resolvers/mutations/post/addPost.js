@@ -9,12 +9,13 @@ import Redis from 'ioredis'
 
 const POST_LIMIT_COUNT = Number(process.env.POST_CREATION_LIMIT_COUNT_5MIN || 2);
 const POST_LIMIT_WINDOW = Number(process.env.POST_CREATION_LIMIT_WINDOW_5MIN || 10);
+const MAX_RETRIES_PER_REQUEST = Number(process.env.MAX_RETRIES_PER_REQUEST || 1)
 
 let addPostLimiter;
 if (process.env.REDIS_URL) {
   const redisClient = new Redis(process.env.REDIS_URL, {
     lazyConnect: true,
-    maxRetriesPerRequest: 1
+    maxRetriesPerRequest: MAX_RETRIES_PER_REQUEST
   })
 
   addPostLimiter = new RateLimiterRedis({
